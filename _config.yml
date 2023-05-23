@@ -90,14 +90,15 @@ comments:
     issue_term: # < url | pathname | title | ...>
   # Giscus options › https://giscus.app
   giscus:
-    repo: # <gh-username>/<repo>
-    repo_id:
-    category:
-    category_id:
+    repo: "NovusEdge/NovusEdge.github.io"
+    repo_id: "R_kgDOJl7Ehg"
+    category: "General"
+    category_id: "DIC_kwDOJl7Ehs4CWq_Q"
     mapping: # optional, default to 'pathname'
     input_position: # optional, default to 'bottom'
     lang: # optional, default to the value of `site.lang`
     reactions_enabled: # optional, default to the value of `1`
+    crossorigin: "anonymous"
 
 # Self-hosted static assets, optional › https://github.com/cotes2020/chirpy-static-assets
 assets:
