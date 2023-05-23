@@ -6,4 +6,4 @@ categories: [Lifestyle]
 tags: [Lifestyle]
 ---
 
-![](assets/gifs/hello, world!.gif)
+![](assets/gifs/helloworld.gif)
