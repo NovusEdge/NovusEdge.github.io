@@ -6,6 +6,4 @@ categories: [Lifestyle]
 tags: [Lifestyle]
 ---
 
-First post!!!
-
-### Hello World!
+![](assets/gifs/hello, world!.gif)
