@@ -1,6 +1,6 @@
 ---
 layout: post
-title: THM Writeup\: Alfred
+title: Alfred Writeup
 categories: 
 	- CTF Writeup
 tags:
