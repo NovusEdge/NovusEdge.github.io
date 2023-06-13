@@ -2,12 +2,12 @@
 layout: post
 title: Alfred Writeup
 categories: 
-	- CTF Writeup
+- CTF Writeup
 tags:
-	- writeup
-	- ctf
-	- cybersecurity
-	- tryhackme
+- writeup
+- ctf
+- cybersecurity
+- tryhackme
 ---
 
 Hey reader!
