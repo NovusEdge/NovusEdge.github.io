@@ -311,9 +311,8 @@ meterpreter > cat "C:\Windows\System32\config\root.txt"
 
 ## Conclusion
 
-If this writeup helps, please consider following me on github (https://github.com/NovusEdge) and/or dropping a star on the repository: https://github.com/NovusEdge/thm-writeups
+If this writeup helps, please consider following me on [github](https://github.com/NovusEdge) and/or dropping a star on the repository: https://github.com/NovusEdge/thm-writeups
 
 ---
 
-- Author: Aliasgar Khimani
 - Room: [Alfred](https://tryhackme.com/room/alfred)
