@@ -1,13 +1,14 @@
 ---
 layout: post
 title: Alfred Writeup
-categories: 
+categories:
 - CTF Writeup
 tags:
 - writeup
 - ctf
 - cybersecurity
 - tryhackme
+date: 2023-06-13 15:55 +0530
 ---
 
 Hey reader!
