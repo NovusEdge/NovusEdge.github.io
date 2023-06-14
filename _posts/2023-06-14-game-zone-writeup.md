@@ -44,8 +44,6 @@ On the page, there's 2 input forms. One for `Site Search` and another for `User 
   <img src="/assets/img/writeup_assets/game-zone/sqli-simple-login.png" />
 </p>
 
-![](/assets/img/writeup_assets/game-zone/sqli-simple-login.png)
-
 Successfully logging into the service directs us to the following page:
 ![](/assets/img/writeup_assets/game-zone/portal-login-dash.png)
 
