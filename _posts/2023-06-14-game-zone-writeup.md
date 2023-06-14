@@ -40,6 +40,7 @@ Visiting the http-service on port 80, we're greeted with the following page:
 > Answer: Agent 47
 
 On the page, there's 2 input forms. One for `Site Search` and another for `User Login`. We can test for a possibility of a database (SQL) injection by entering some SQLi strings:
+
 <p align="center">
   <img src="/assets/img/writeup_assets/game-zone/sqli-simple-login.png" />
 </p>
