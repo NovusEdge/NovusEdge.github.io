@@ -108,7 +108,7 @@ $ gobuster dir -u http://TARGET_IP/ -w /usr/share/seclists/Discovery/Web-Content
 /cli                  (Status: 301) [Size: 231] [--> http://TARGET_IP/cli/]
 ```
 Visiting the `/administrator` path, we're taken to the following page:
-![](/assets/img/writeup-assets/daily-bugle/login-page.png)
+![](/assets/img/writeup_assets/daily-bugle/login-page.png)
 
 As per the [Joomla Documentation](https://docs.joomla.org/Administrator_(User)):
 > The default Super Users is admin and is installed with every Joomla! site.
@@ -278,7 +278,7 @@ User jjameson may run the following commands on dailybugle:
 
 OOOOOOOO, WE HAVE A HIT BOYS!!! Visiting the trusty ol' GTFObins and searching for `yum` shows us 2 options for getting a root shell using `sudo`:
 
-![](/assets/img/writeup-assets/daily-bugle/yum-privesc.png)
+![](/assets/img/writeup_assets/daily-bugle/yum-privesc.png)
 
 ```shell-session
 # Just copy-paste into shell:
