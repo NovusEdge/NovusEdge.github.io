@@ -126,7 +126,7 @@ $ mv output/* .
 
 Let's call this new theme... "glitch\_wall" (yes I called mine that please don't roast me, naming things is hard). Assuming that we have 140 images or so, we need to modify the `template.script` and also rename it:
 
-```script
+```
 # Nice colour on top of the screen fading to
 Window.SetBackgroundTopColor (0.0, 0.00, 0.0);
 
@@ -157,8 +157,8 @@ Plymouth.SetRefreshFunction (refresh_callback);
 $ mv template.script glitch_wall.script
 ```
 
-Now, we need to modify the `template.plymouth` script a bit:
-```script
+We also need to modify the `template.plymouth` script a bit:
+```
 [Plymouth Theme]
 Name=glitch_wall
 Description=Cool discription here!
