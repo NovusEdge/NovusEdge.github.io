@@ -10,7 +10,7 @@ categories:
 - Linux Journeys
 date: 2023-07-07 18:42 +0530
 ---
-Last night, being the weeb I am, I was watching [That Time I Got Reincarnated as a Slime](https://tensura.fandom.com/wiki/Tensei_Shitara_Slime_Datta_Ken_Wiki) and I found the `Great Sage` to be quite cool. istg those sound effects had me drooling. Like HOW DO YOU MAKE THEM SO GOOD?! Anyways, this also reminded me of Jarvis AND some cool stuff from The WatchDogs series, which eventually had me thinking... _How tf do people get these cool animations running on their systems, I mean... Linux probably has a way to customize **everything**... :thinking:._ Next thing you know I was down the rabithole of "_ricing_" systems. 
+Last night, being the weeb I am, I was watching [That Time I Got Reincarnated as a Slime](https://tensura.fandom.com/wiki/Tensei_Shitara_Slime_Datta_Ken_Wiki) and I found the `Great Sage` to be quite cool. istg those sound effects had me drooling. Like HOW DO YOU MAKE THEM SO GOOD?! Anyways, this also reminded me of Jarvis AND some cool stuff from The WatchDogs series, which eventually had me thinking... _How tf do people get these cool animations running on their systems, I mean... Linux probably has a way to customize **everything**... 🤔._ Next thing you know I was down the rabithole of "_ricing_" systems. 
 
 The first thing I wanted to do was change the thing that's displayed whenever I boot into my system (which I later found out is a little something known as the _bootsplash animation/screen_). A quick google search directed me to a nifty tool called: [`plymouth`](https://wiki.debian.org/plymouth) that enables us to change the bootsplash and I quote:
 > Provide eye-candy and a more professional presentation for scenarios where the default high-information text output might be undesirable.
@@ -34,7 +34,7 @@ $ sudo apt install plymouth-theme-breeze kde-config-plymouth
 
 ## Setting the Bootsplash Theme
 
-So, now that we have plymouth, we need the theme animation we wanna play. To our dismay, an MP4 file won't do. _Furthermore_ you cannot have a sound play (at least I could not figure out a way to do so :sob:), hence the need for `ffmpeg` to create a custom animation thing, but imma get back to that later. [@adi1090x](https://github.com/adi1090x) has compiled a [very nice repository](https://github.com/adi1090x/plymouth-themes) of some animations. I settled on the [_Hexagon Dots Alt_](https://github.com/adi1090x/plymouth-themes/tree/master/pack_2/hexagon_dots_alt) animation from the second pack, here's what it looks like:
+So, now that we have plymouth, we need the theme animation we wanna play. To our dismay, an MP4 file won't do. _Furthermore_ you cannot have a sound play (at least I could not figure out a way to do so 😭), hence the need for `ffmpeg` to create a custom animation thing, but imma get back to that later. [@adi1090x](https://github.com/adi1090x) has compiled a [very nice repository](https://github.com/adi1090x/plymouth-themes) of some animations. I settled on the [_Hexagon Dots Alt_](https://github.com/adi1090x/plymouth-themes/tree/master/pack_2/hexagon_dots_alt) animation from the second pack, here's what it looks like:
 
 ![Hexagon Dots Alt Animation Preview](/assets/gifs/hexagon_dots_alt.gif)
 
