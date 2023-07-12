@@ -10,13 +10,6 @@ tags:
 - tryhackme
 date: 2023-07-12 07:54 +0530
 ---
-## Index
-
-1. [Setup](#setup)
-2. [Reconnaissance](#reconnaissance)
-3. [Gaining Access](#gaining-access)
-4. [Privilege Escalation](#privilege-escalation)
-5. [Conclusion](#conclusion)
 
 ## Setup 
 
