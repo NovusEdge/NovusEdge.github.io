@@ -23,10 +23,10 @@ Complete rework of NovusEdge.github.io as a custom-built personal website for we
 1. **Landing** (`/`) — TSX, hero + intro
 2. **Blog** (`/blog`) — TSX, timeline list with year markers + search
 3. **Blog Post** (`/blog/:slug`) — TSX wrapper rendering markdown content
-4. **Portfolio** (`/portfolio`) — TSX, projects grid
-5. **Project** (`/portfolio/:slug`) — TSX, custom styled per-project
-6. **Research** (`/research`) — TSX, papers list
-7. **Paper** (`/research/:slug`) — TSX, custom styled per-paper
+4. **Portfolio** (`/portfolio`) — TSX, full-page scroll sections
+5. **Project** (`/portfolio/:slug`) — TSX, custom design per-project
+6. **Research** (`/research`) — TSX, cards grid + list toggle
+7. **Paper** (`/research/:slug`) — TSX, custom design per-paper
 
 ### File Structure
 
@@ -76,9 +76,24 @@ Old content in `OLD_CONTENT/` to port:
 
 ### Components
 - Custom-built, no presets/templates
-- Blog page: Timeline list with year markers (no bento grid)
 - Floating header with search bar
 - Minimal interactivity — keep it clean
+
+#### Blog
+- Timeline list with year markers
+- Search bar filters posts
+
+#### Portfolio
+- Full-page scroll sections (scroll-snap)
+- Each section = one project, full viewport height
+- Layout: text left | vertical line | image right
+- Transitions/animations between sections
+- Individual project subpages: custom design per project
+
+#### Research
+- Cards grid (default view)
+- List view toggle
+- Individual paper subpages: custom design per paper
 
 ## Build Phases
 
@@ -100,14 +115,14 @@ Old content in `OLD_CONTENT/` to port:
 - Individual post pages
 
 ### Phase 4: Portfolio
-- Projects grid
-- Individual project pages
-- Custom styling per project
+- Full-page scroll sections with scroll-snap
+- Text left / line / image right layout
+- Scroll transitions/animations
+- Individual project subpages (custom per project)
 
 ### Phase 5: Research
-- Papers list
-- Individual paper pages
-- Custom styling per paper
+- Cards grid with list view toggle
+- Individual paper subpages (custom per paper)
 
 ### Phase 6: Content Migration
 - Port old blog posts
