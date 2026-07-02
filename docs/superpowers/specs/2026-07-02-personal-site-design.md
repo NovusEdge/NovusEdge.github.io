@@ -13,6 +13,7 @@ Complete rework of NovusEdge.github.io as a custom-built personal website for we
 | Language | TypeScript |
 | Routing | react-router-dom v7 (remix-run) |
 | Styling | Tailwind CSS |
+| Animation | Framer Motion + GSAP (scroll-triggered) |
 | Markdown | react-markdown or MDX (TBD) |
 | Deploy | GitHub Pages (static build) |
 
@@ -79,9 +80,17 @@ Old content in `OLD_CONTENT/` to port:
 - Floating header with search bar
 - Minimal interactivity — keep it clean
 
+#### Header
+- Pill-shaped, floating, glassmorphic
+- Consistent across all pages
+
+#### Landing
+- Hero only — clean and focused
+- No additional sections
+
 #### Blog
-- Timeline list with year markers
-- Search bar filters posts
+- Index: Timeline list with year markers, search bar
+- Post: Centered single column (Medium-style reading)
 
 #### Portfolio
 - Full-page scroll sections (scroll-snap)
