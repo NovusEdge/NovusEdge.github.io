@@ -21,7 +21,7 @@ Complete rework of NovusEdge.github.io as a custom-built personal website for we
 ### Pages
 
 1. **Landing** (`/`) — TSX, hero + intro
-2. **Blog** (`/blog`) — TSX, bento grid hero + chronological post list
+2. **Blog** (`/blog`) — TSX, timeline list with year markers + search
 3. **Blog Post** (`/blog/:slug`) — TSX wrapper rendering markdown content
 4. **Portfolio** (`/portfolio`) — TSX, projects grid
 5. **Project** (`/portfolio/:slug`) — TSX, custom styled per-project
@@ -36,7 +36,7 @@ src/
   routes/
     index.tsx           # Landing
     blog/
-      index.tsx         # Bento hero + post list
+      index.tsx         # Timeline list + search
       [slug].tsx        # Post renderer (loads markdown)
     portfolio/
       index.tsx         # Projects grid
@@ -59,12 +59,26 @@ Old content in `OLD_CONTENT/` to port:
 - `_drafts/*.md` — 1 draft
 - `assets/` — images, gifs
 
-## Design (TBD)
+## Design
 
-- Color scheme: User has one in mind (to be specified)
-- Component library: Custom-built, no presets
-- Bento grid: For blog hero section
-- Visual vibe: To be determined
+### Color Scheme
+
+| Role | Light Mode | Dark Mode |
+|------|------------|-----------|
+| Background | Bone white `#f5f2eb` | Charcoal black `#1a1a1a` |
+| Text | Charcoal black `#1a1a1a` | Bone white `#f5f2eb` |
+| Primary accent | Paper blue `#6b8cae` | Paper blue `#6b8cae` |
+| Secondary accent | Gold yellow `#d4a03c` | Gold yellow `#d4a03c` |
+
+### Theme Toggle
+- System preference as default
+- Manual toggle in header to override
+
+### Components
+- Custom-built, no presets/templates
+- Blog page: Timeline list with year markers (no bento grid)
+- Floating header with search bar
+- Minimal interactivity — keep it clean
 
 ## Build Phases
 
@@ -80,8 +94,8 @@ Old content in `OLD_CONTENT/` to port:
 - Navigation
 
 ### Phase 3: Blog
-- Bento grid hero
-- Post list component
+- Timeline list with year markers
+- Search functionality
 - Markdown rendering pipeline
 - Individual post pages
 
@@ -107,9 +121,3 @@ Old content in `OLD_CONTENT/` to port:
 - SEO/meta tags
 - Deploy to GitHub Pages
 
-## Open Questions
-
-1. Color scheme details?
-2. Specific component designs (bento grid style, cards, etc.)?
-3. Any interactive features beyond navigation?
-4. Dark mode / light mode toggle?
