@@ -63,6 +63,10 @@ Old content in `OLD_CONTENT/` to port:
 
 **URL Redirects:** Old Chirpy URLs (`/posts/hello-world/`) must redirect to new scheme (`/blog/hello-world`) to preserve inbound links.
 
+**External content to port (Phase 6, fetch later):**
+- Blog post: https://blog.engrammic.ai/on-building-something-engrammic
+- Research papers: https://engrammic.ai/research (includes DOI links) → seed `/research`
+
 ## Technical Considerations
 
 - **Prerendering:** Required for GitHub Pages — deep links 404 without it. Use vite-prerender-plugin in Phase 1.
