@@ -1,0 +1,38 @@
+@import 'tailwindcss';
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --color-bone: #f5f2eb;
+  --color-bone-tint: #e8e4da;
+  --color-charcoal: #1a1a1a;
+  --color-charcoal-tint: #242424;
+  --color-paper: #6b8cae;
+  --color-paper-deep: #4a7095;
+  --color-gold: #d4a03c;
+
+  --font-display: 'Zen Kaku Gothic New', sans-serif;
+  --font-body: 'Inter', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+}
+
+@layer base {
+  html {
+    @apply bg-bone text-charcoal font-body antialiased dark:bg-charcoal dark:text-bone;
+  }
+  ::selection {
+    @apply bg-gold/30;
+  }
+}
+
+/* Hover underline that draws left-to-right (spec: 150ms) */
+@utility link-draw {
+  background-image: linear-gradient(currentColor, currentColor);
+  background-repeat: no-repeat;
+  background-position: left bottom;
+  background-size: 0% 1px;
+  transition: background-size 150ms ease-out;
+  &:hover {
+    background-size: 100% 1px;
+  }
+}
