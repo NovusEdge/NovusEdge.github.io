@@ -13,7 +13,7 @@ Complete rework of NovusEdge.github.io as a custom-built personal website for we
 | Language | TypeScript |
 | Routing | react-router-dom v7 (remix-run) |
 | Styling | Tailwind CSS |
-| Animation | Framer Motion + GSAP (scroll-triggered) |
+| Animation | GSAP (scroll + transitions) |
 | Markdown | react-markdown or MDX (TBD) |
 | Deploy | GitHub Pages (static build) |
 
@@ -74,6 +74,38 @@ Old content in `OLD_CONTENT/` to port:
 ### Theme Toggle
 - System preference as default
 - Manual toggle in header to override
+
+### Visual Direction — "Open + Anime"
+
+**Typography**
+- Display: Zen Kaku Gothic New or M PLUS 1 (Google Fonts)
+- Body: Inter or same as display
+- Mono accent: JetBrains Mono — small, uppercase, tracked-out for dates/tags/nav
+- Signature: tiny vertical Japanese labels beside headings (ブログ, 研究, 作品)
+
+**Graphic Motifs**
+- Thin 1px rules with gold dot/square terminus
+- Registration marks (+) at section corners
+- Numbered sections: "01 / PORTFOLIO" in mono
+- Optional: subtle halftone dot texture at low opacity
+
+**Motion (GSAP)**
+- Fast-then-settle easing: power3.out, 0.6-0.8s
+- Color wipe page transitions (charcoal panel sweep)
+- Staggered text reveals on headings
+- Hover: underline draws left-to-right, links shift 2px (150ms)
+- prefers-reduced-motion: disable wipes/parallax, keep opacity fades
+
+**Color Discipline**
+- 90% bone/charcoal as primary
+- Gold = rare accent moments (active nav, selection, hero detail)
+- Paper blue = links/interactive only
+- Near-invisible warm gray for alternating section tints (#e8e4da light / #242424 dark)
+
+**Anti-Cheese Rules**
+- No particles, glow, neon, or anime characters
+- Japanese text only as small structural labels
+- Max one wipe per navigation
 
 ### Components
 - Custom-built, no presets/templates
