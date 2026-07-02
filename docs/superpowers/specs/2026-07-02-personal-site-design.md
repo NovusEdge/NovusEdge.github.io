@@ -16,6 +16,7 @@ Complete rework of NovusEdge.github.io as a custom-built personal website for we
 | Animation | GSAP (scroll + transitions) |
 | Markdown | react-markdown or MDX (TBD) |
 | Deploy | GitHub Pages (static build) |
+| Prerender | vite-prerender-plugin (for deep links + SEO) |
 
 ## Site Structure
 
@@ -60,6 +61,17 @@ Old content in `OLD_CONTENT/` to port:
 - `_drafts/*.md` — 1 draft
 - `assets/` — images, gifs
 
+**URL Redirects:** Old Chirpy URLs (`/posts/hello-world/`) must redirect to new scheme (`/blog/hello-world`) to preserve inbound links.
+
+## Technical Considerations
+
+- **Prerendering:** Required for GitHub Pages — deep links 404 without it. Use vite-prerender-plugin in Phase 1.
+- **SEO:** Per-page meta tags + OG images require prerendering. Add RSS feed + sitemap in Phase 7.
+- **Theme flash:** Inline `<head>` script to set dark/light class before hydration.
+- **Markdown pipeline:** Frontmatter schema (title, date, tags, description), syntax highlighting (shiki/rehype-pretty-code), image path handling.
+- **Reduced motion:** Respect prefers-reduced-motion — disable wipes/parallax, keep opacity fades.
+- **Mobile:** Full-page scroll-snap can be janky on mobile/trackpad — fallback to plain stacked sections.
+
 ## Design
 
 ### Color Scheme
@@ -68,7 +80,7 @@ Old content in `OLD_CONTENT/` to port:
 |------|------------|-----------|
 | Background | Bone white `#f5f2eb` | Charcoal black `#1a1a1a` |
 | Text | Charcoal black `#1a1a1a` | Bone white `#f5f2eb` |
-| Primary accent | Paper blue `#6b8cae` | Paper blue `#6b8cae` |
+| Primary accent | Paper blue `#4a7095` | Paper blue `#6b8cae` |
 | Secondary accent | Gold yellow `#d4a03c` | Gold yellow `#d4a03c` |
 
 ### Theme Toggle
@@ -142,6 +154,8 @@ Old content in `OLD_CONTENT/` to port:
 - Vite + React + TypeScript setup
 - react-router-dom routing
 - Tailwind CSS config
+- Prerendering setup (vite-prerender-plugin)
+- Theme toggle with inline head script (no flash)
 - Basic layout/nav component
 
 ### Phase 2: Landing Page
@@ -171,9 +185,9 @@ Old content in `OLD_CONTENT/` to port:
 - Migrate images/gifs
 
 ### Phase 7: Polish
-- Color scheme implementation
-- Responsive design
-- Dark/light mode (if desired)
-- SEO/meta tags
+- Responsive design + mobile fallbacks
+- SEO meta tags + OG images
+- RSS feed + sitemap
+- 404 page
 - Deploy to GitHub Pages
 
