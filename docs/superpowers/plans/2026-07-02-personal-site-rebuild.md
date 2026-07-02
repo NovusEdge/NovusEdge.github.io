@@ -745,6 +745,11 @@ export default function Landing() {
             </Link>
           ))}
         </nav>
+
+        {/* animated strip: /assets/cosmos.webp has loop-count 3 baked in — plays 3x, freezes on last frame, no JS */}
+        <div data-reveal className="mt-12 max-w-3xl">
+          <img src="/assets/cosmos.webp" alt="" className="w-full border border-charcoal/15 dark:border-bone/15" />
+        </div>
       </section>
     </>
   )

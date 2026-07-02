@@ -135,6 +135,7 @@ Old content in `OLD_CONTENT/` to port:
 #### Landing
 - Hero only — clean and focused
 - No additional sections
+- Animated cosmos strip (`public/assets/cosmos.webp`): plays 3 times then freezes on last frame (loop count encoded in the file, no JS)
 
 #### Blog
 - Index: Timeline list with year markers, search bar
