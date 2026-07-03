@@ -1,5 +1,7 @@
-import { Routes, Route } from 'react-router-dom'
+import { useEffect } from 'react'
+import { Routes, Route, useLocation } from 'react-router'
 import { Header } from './components/header'
+import { PageWipe } from './components/page-wipe'
 import Landing from './routes/index'
 import BlogIndex from './routes/blog/index'
 import BlogPost from './routes/blog/post'
@@ -10,9 +12,13 @@ import PaperPage from './routes/research/paper'
 import NotFound from './routes/not-found'
 
 export default function App() {
+  const { pathname } = useLocation()
+  useEffect(() => window.scrollTo(0, 0), [pathname])
+
   return (
     <>
       <Header />
+      <PageWipe />
       <Routes>
         <Route path="/" element={<Landing />} />
         <Route path="/blog" element={<BlogIndex />} />
