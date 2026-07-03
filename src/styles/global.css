@@ -1,4 +1,5 @@
 @import 'tailwindcss';
+@plugin "@tailwindcss/typography";
 
 @custom-variant dark (&:where(.dark, .dark *));
 
@@ -36,3 +37,14 @@
     background-size: 100% 1px;
   }
 }
+
+/* code highlighting — quiet, in-palette */
+.prose pre {
+  @apply border border-charcoal/10 bg-bone-tint dark:border-bone/10 dark:bg-charcoal-tint;
+}
+.prose :not(pre) > code {
+  @apply rounded-sm bg-bone-tint px-1 py-0.5 dark:bg-charcoal-tint;
+}
+.hljs-keyword, .hljs-built_in, .hljs-type { @apply text-paper-deep dark:text-paper; }
+.hljs-string, .hljs-title, .hljs-attr { @apply text-gold; }
+.hljs-comment, .hljs-meta { @apply text-charcoal/50 dark:text-bone/50; }
