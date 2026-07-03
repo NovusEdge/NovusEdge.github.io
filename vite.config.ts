@@ -4,6 +4,8 @@ import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
 import { vitePrerenderPlugin } from 'vite-prerender-plugin'
+import { projects } from './src/content/projects'
+import { papers } from './src/content/papers'
 
 const require = createRequire(import.meta.url)
 
@@ -28,6 +30,8 @@ export default defineConfig({
       additionalPrerenderRoutes: [
         '/blog', '/portfolio', '/research', '/404',
         ...blogSlugs.map((s) => `/blog/${s}`),
+        ...projects.map((p) => '/portfolio/' + p.slug),
+        ...papers.map((p) => '/research/' + p.slug),
       ],
     }),
     {

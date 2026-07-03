@@ -1,4 +1,5 @@
-import { readFileSync, readdirSync, writeFileSync, mkdirSync, cpSync } from 'node:fs'
+import { readFileSync, readdirSync, writeFileSync, mkdirSync, cpSync, existsSync, statSync } from 'node:fs'
+import { join } from 'node:path'
 
 const ORIGIN = 'https://novusedge.github.io'
 const dist = 'dist'
@@ -40,7 +41,11 @@ const items = posts
     <title>${esc(p.title)}</title>
     <link>${ORIGIN}/blog/${p.slug}</link>
     <guid>${ORIGIN}/blog/${p.slug}</guid>
-    <pubDate>${new Date(p.date).toUTCString()}</pubDate>
+    <pubDate>${(() => {
+      const d = new Date(p.date)
+      if (isNaN(d.getTime())) throw new Error(`postbuild: invalid date for post "${p.slug}": ${JSON.stringify(p.date)}`)
+      return d.toUTCString()
+    })()}</pubDate>
     <description>${esc(p.description)}</description>
   </item>`,
   )
@@ -56,9 +61,23 @@ ${items}
 </channel></rss>`,
 )
 
-// 4) sitemap
-const staticRoutes = ['/', '/blog', '/portfolio', '/research']
-const urls = [...staticRoutes, ...posts.map((p) => `/blog/${p.slug}`)]
+// 4) sitemap - walk the shipped dist/ tree instead of hand-listing routes, so
+// the sitemap always matches what actually got prerendered. Every directory
+// containing an index.html becomes a URL (the dist root itself maps to '/'),
+// excluding the /posts/* redirect stubs (added above, not real pages) and /404.
+function findPageDirs(dir, base = '') {
+  const routes = []
+  if (existsSync(join(dir, 'index.html'))) routes.push(base === '' ? '/' : base)
+  for (const entry of readdirSync(dir)) {
+    const full = join(dir, entry)
+    if (statSync(full).isDirectory()) routes.push(...findPageDirs(full, `${base}/${entry}`))
+  }
+  return routes
+}
+const shippedRoutes = findPageDirs(dist)
+  .filter((r) => !r.startsWith('/posts/') && r !== '/404')
+  .sort()
+const urls = shippedRoutes
   .map((u) => `  <url><loc>${ORIGIN}${u}</loc></url>`)
   .join('\n')
 writeFileSync(
