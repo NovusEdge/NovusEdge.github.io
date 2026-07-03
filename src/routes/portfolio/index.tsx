@@ -16,6 +16,9 @@ export default function PortfolioIndex() {
   useGSAP(
     () => {
       if (prefersReducedMotion()) return
+      // below md the container doesn't scroll (window does); pointing scroller at it
+      // there means triggers never fire and content stays at opacity 0
+      const snapContainerScrolls = matchMedia('(min-width: 768px)').matches
       gsap.utils.toArray<HTMLElement>('[data-project]', container.current).forEach((section) => {
         gsap.from(section.querySelectorAll('[data-item]'), {
           opacity: 0,
@@ -23,7 +26,11 @@ export default function PortfolioIndex() {
           duration: 0.7,
           ease: 'power3.out',
           stagger: 0.1,
-          scrollTrigger: { trigger: section, scroller: container.current, start: 'top 55%' },
+          scrollTrigger: {
+            trigger: section,
+            scroller: snapContainerScrolls ? container.current : undefined,
+            start: 'top 55%',
+          },
         })
       })
     },
