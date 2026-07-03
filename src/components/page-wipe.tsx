@@ -9,18 +9,21 @@ import { prefersReducedMotion } from '../lib/motion'
 export function PageWipe() {
   const ref = useRef<HTMLDivElement>(null)
   const { pathname } = useLocation()
-  const first = useRef(true)
+  // previous-pathname ref instead of a one-shot boolean: StrictMode re-runs the
+  // effect on mount, and a boolean guard would fire a wipe on first load in dev
+  const prev = useRef<string | null>(null)
 
   useGSAP(() => {
-    if (first.current) {
-      first.current = false
+    if (prev.current === null || prev.current === pathname) {
+      prev.current = pathname
       return
     }
+    prev.current = pathname
     if (prefersReducedMotion()) return
     gsap.fromTo(
       ref.current,
       { scaleX: 1 },
-      { scaleX: 0, duration: 0.7, ease: 'power3.out', transformOrigin: 'left center' },
+      { scaleX: 0, duration: 0.7, ease: 'power3.out', transformOrigin: 'left center', overwrite: true },
     )
   }, [pathname])
 
