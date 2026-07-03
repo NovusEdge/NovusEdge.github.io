@@ -30,5 +30,18 @@ export default defineConfig({
         ...blogSlugs.map((s) => `/blog/${s}`),
       ],
     }),
+    {
+      // the prerender pass leaves a handle open and the process sometimes never
+      // exits, which stalls the `vite build && postbuild` chain (and CI). All
+      // output is flushed by closeBundle; only the gzip size report is skipped.
+      name: 'force-exit-after-build',
+      apply: 'build' as const,
+      closeBundle: {
+        order: 'post' as const,
+        handler() {
+          setTimeout(() => process.exit(0), 200)
+        },
+      },
+    },
   ],
 })
