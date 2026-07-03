@@ -25,7 +25,9 @@ export default function ResearchIndex() {
             {(['grid', 'list'] as const).map((v) => (
               <button
                 key={v}
+                type="button"
                 onClick={() => setView(v)}
+                aria-pressed={view === v}
                 className={`cursor-pointer font-mono text-[11px] uppercase tracking-[0.2em] transition-colors ${
                   view === v ? 'text-gold' : 'text-charcoal/50 hover:text-charcoal dark:text-bone/50 dark:hover:text-bone'
                 }`}
