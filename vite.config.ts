@@ -39,6 +39,7 @@ export default defineConfig({
       closeBundle: {
         order: 'post' as const,
         handler() {
+          console.log('force-exit-after-build: bundle closed, exiting in 200ms')
           setTimeout(() => process.exit(0), 200)
         },
       },
