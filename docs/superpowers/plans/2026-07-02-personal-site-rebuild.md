@@ -12,6 +12,9 @@
 
 ## Global Constraints
 
+- Package manager is **pnpm** (switched from npm mid-build, commit f745c3e). Wherever this plan says `npm run X` / `npm install Y`, read `pnpm X` / `pnpm add Y` (`-D` for dev deps). Lockfile is `pnpm-lock.yaml`; never create or commit `package-lock.json`.
+- Router package is **`react-router`** (v7 canonical), NOT `react-router-dom`. The shim caused duplicate module instances under pnpm and broke prerendering. Wherever this plan's code imports from `'react-router-dom'`, import from `'react-router'` instead (all symbols exist there: BrowserRouter, Routes, Route, Link, NavLink, useLocation, useParams, StaticRouter).
+
 - Colors, verbatim from spec: bone white `#f5f2eb`, charcoal black `#1a1a1a`, paper blue `#4a7095` (light) / `#6b8cae` (dark), gold `#d4a03c`, section tints `#e8e4da` (light) / `#242424` (dark).
 - Color discipline: 90% bone/charcoal. Gold only for rare accents (active nav, selection, terminus dots, hero detail). Paper blue only for links/interactive.
 - Typography: display = "Zen Kaku Gothic New", body = "Inter", mono = "JetBrains Mono" (small, uppercase, tracked-out for dates/tags/nav). Japanese text only as small structural labels (ブログ, 研究, 作品).
@@ -1869,13 +1872,14 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
       - uses: actions/setup-node@v4
         with:
           node-version: 24
-          cache: npm
-      - run: npm ci
-      - run: npm test
-      - run: npm run build
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm test
+      - run: pnpm build
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
