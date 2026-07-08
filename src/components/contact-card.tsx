@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react'
-import { animate } from 'animejs'
+import { animate, stagger } from 'animejs'
 import UseAnimations from 'react-useanimations'
 import mail from 'react-useanimations/lib/mail'
 import twitter from 'react-useanimations/lib/twitter'
@@ -54,7 +54,7 @@ function ContactOrbit({ onClose }: { onClose: () => void }) {
       scale: [0, 1],
       opacity: [0, 1],
       duration: 500,
-      delay: (_el: Element, i: number) => i * 80,
+      delay: stagger(80),
       ease: 'outBack',
     })
   }, [])
