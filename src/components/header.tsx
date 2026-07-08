@@ -92,7 +92,7 @@ export function Header() {
 
       {/* Mobile nav */}
       <div className="md:hidden">
-        <div className="flex items-center gap-3 rounded-full border border-charcoal/10 bg-bone/75 px-4 py-2 shadow-[0_8px_30px_rgb(0,0,0,0.04)] backdrop-blur-lg dark:border-bone/10 dark:bg-charcoal/75 dark:shadow-[0_8px_30px_rgb(0,0,0,0.3)]">
+        <div className="flex items-center gap-3 rounded-full border border-charcoal/10 bg-bone/95 px-4 py-2 shadow-[0_8px_30px_rgb(0,0,0,0.04)] dark:border-bone/10 dark:bg-charcoal/95 dark:shadow-[0_8px_30px_rgb(0,0,0,0.3)]">
           <TNavLink
             to="/"
             className="font-display text-sm font-black uppercase tracking-wider text-charcoal transition-colors hover:text-gold dark:text-bone"
@@ -104,7 +104,7 @@ export function Header() {
         </div>
 
         {menuOpen && (
-          <nav className="mt-2 flex flex-col gap-1 rounded-2xl border border-charcoal/10 bg-bone/95 p-3 shadow-lg backdrop-blur-lg dark:border-bone/10 dark:bg-charcoal/95">
+          <nav className="mt-2 flex flex-col gap-1 rounded-2xl border border-charcoal/10 bg-bone/95 p-3 shadow-lg dark:border-bone/10 dark:bg-charcoal/95">
             {links.map((l) => (
               <TNavLink
                 key={l.to}

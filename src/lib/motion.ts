@@ -7,6 +7,11 @@ gsap.registerPlugin(useGSAP)
 export const prefersReducedMotion = () =>
   typeof matchMedia !== 'undefined' && matchMedia('(prefers-reduced-motion: reduce)').matches
 
+// coarse pointer or small viewport: back off expensive per-frame effects on phones.
+export const isMobile = () =>
+  typeof matchMedia !== 'undefined' &&
+  (matchMedia('(max-width: 768px)').matches || matchMedia('(pointer: coarse)').matches)
+
 export function useReveal(scope: RefObject<HTMLElement | null>) {
   useGSAP(
     () => {

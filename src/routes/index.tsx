@@ -1,10 +1,10 @@
-import { useRef } from 'react'
+import { useEffect, useRef } from 'react'
 import { TLink } from '../components/page-transition'
 import gsap from 'gsap'
 import { useGSAP } from '@gsap/react'
 import { Dithering } from '@paper-design/shaders-react'
 import { Meta } from '../lib/meta'
-import { prefersReducedMotion } from '../lib/motion'
+import { isMobile, prefersReducedMotion } from '../lib/motion'
 import { ArrowDown } from '../components/icons'
 
 const NAME = 'Aliasgar Khimani'
@@ -38,6 +38,9 @@ function DitherMorphBg() {
   const wrap = useRef<HTMLDivElement>(null)
   const swirl = useRef<HTMLDivElement>(null)
   const warp = useRef<HTMLDivElement>(null)
+  const tl = useRef<gsap.core.Timeline | null>(null)
+  // one shader on phones halves the landing's GPU cost; the morph just has nothing to cross-fade to.
+  const mobile = useRef(isMobile()).current
 
   useGSAP(
     () => {
@@ -50,20 +53,38 @@ function DitherMorphBg() {
         setScale(swirl.current, st.s)
         setScale(warp.current, st.s)
       }
-      if (prefersReducedMotion()) {
+      if (prefersReducedMotion() || mobile) {
         push()
         return
       }
-      const tl = gsap.timeline({ repeat: -1 })
-      tl.to(st, { v: 0.4, duration: 5, ease: 'power2.in', onUpdate: push })
+      tl.current = gsap.timeline({ repeat: -1 })
+      tl.current
+        .to(st, { v: 0.4, duration: 5, ease: 'power2.in', onUpdate: push })
         .to(warp.current, { opacity: 1, duration: 2.4, ease: 'power1.inOut' }, 3.2)
         .to(st, { s: 1.28, duration: 2.4, ease: 'power2.inOut', onUpdate: zoom }, 3.2)
         .to(warp.current, { opacity: 0, duration: 2.4, ease: 'power1.inOut' }, 7)
         .to(st, { s: 1, duration: 2.4, ease: 'power2.inOut', onUpdate: zoom }, 7)
         .to(st, { v: 0.08, duration: 5, ease: 'power2.out', onUpdate: push }, 7)
     },
-    { scope: wrap },
+    { scope: wrap, dependencies: [mobile] },
   )
+
+  // stop the WebGL loops (and the morph) whenever the hero scrolls out of view.
+  useEffect(() => {
+    const el = wrap.current
+    if (!el) return
+    const io = new IntersectionObserver(
+      ([e]) => {
+        const on = e.isIntersecting
+        setSpeed(swirl.current, on ? 0.08 : 0)
+        setSpeed(warp.current, on ? 0.08 : 0)
+        if (tl.current) (on ? tl.current.play() : tl.current.pause())
+      },
+      { threshold: 0 },
+    )
+    io.observe(el)
+    return () => io.disconnect()
+  }, [])
 
   return (
     <div ref={wrap} className="absolute inset-0">
@@ -80,19 +101,21 @@ function DitherMorphBg() {
         size={2}
         speed={0.08}
       />
-      <Dithering
-        ref={warp as never}
-        className="absolute inset-0 opacity-0"
-        width="100%"
-        height="100%"
-        {...PERF}
-        colorBack="#141414"
-        colorFront="#d4a03c"
-        shape="warp"
-        type="4x4"
-        size={2}
-        speed={0.08}
-      />
+      {!mobile && (
+        <Dithering
+          ref={warp as never}
+          className="absolute inset-0 opacity-0"
+          width="100%"
+          height="100%"
+          {...PERF}
+          colorBack="#141414"
+          colorFront="#d4a03c"
+          shape="warp"
+          type="4x4"
+          size={2}
+          speed={0.08}
+        />
+      )}
       <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-charcoal/20 via-transparent to-charcoal" />
     </div>
   )

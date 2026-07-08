@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react'
+import { isMobile, prefersReducedMotion } from '../../lib/motion'
 
 export default function GrainShader() {
   const canvasRef = useRef<HTMLCanvasElement>(null)
@@ -37,24 +38,40 @@ export default function GrainShader() {
     const resize = () => {
       canvas.width = window.innerWidth
       canvas.height = window.innerHeight
+      // pattern references patternCanvas which updates in place, so cache it across frames.
+      pattern = ctx.createPattern(patternCanvas, 'repeat')
+    }
+
+    let pattern: CanvasPattern | null = null
+
+    const paint = () => {
+      ctx.clearRect(0, 0, canvas.width, canvas.height)
+      updatePattern()
+      if (pattern) {
+        ctx.fillStyle = pattern
+        ctx.fillRect(0, 0, canvas.width, canvas.height)
+      }
     }
 
     resize()
     window.addEventListener('resize', resize)
 
-    const draw = () => {
-      ctx.clearRect(0, 0, canvas.width, canvas.height)
-      updatePattern()
-
-      const pattern = ctx.createPattern(patternCanvas, 'repeat')
-      if (pattern) {
-        ctx.fillStyle = pattern
-        ctx.fillRect(0, 0, canvas.width, canvas.height)
-      }
-      animationId = requestAnimationFrame(draw)
+    // static grain looks identical at rest; skip the loop entirely for reduced-motion + phones.
+    if (prefersReducedMotion() || isMobile()) {
+      paint()
+      return () => window.removeEventListener('resize', resize)
     }
 
-    draw()
+    // ponytail: cap to ~12fps — animated grain at 0.07 opacity reads the same, ~5x less CPU.
+    const FRAME_MS = 80
+    let last = 0
+    const draw = (t: number) => {
+      animationId = requestAnimationFrame(draw)
+      if (document.hidden || t - last < FRAME_MS) return
+      last = t
+      paint()
+    }
+    animationId = requestAnimationFrame(draw)
 
     return () => {
       cancelAnimationFrame(animationId)

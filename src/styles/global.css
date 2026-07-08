@@ -76,3 +76,7 @@
 @utility animate-neon {
   animation: neon 2s ease-in-out infinite;
 }
+/* infinite drop-shadow filter repaints continuously; freeze it where cost/comfort matters */
+@media (prefers-reduced-motion: reduce), (max-width: 768px) {
+  .animate-neon { animation: none; filter: drop-shadow(0 0 3px currentColor); }
+}

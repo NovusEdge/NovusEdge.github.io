@@ -1,5 +1,6 @@
-import { lazy, Suspense, useState, type CSSProperties } from 'react'
+import { lazy, Suspense, useEffect, useRef, useState, type CSSProperties } from 'react'
 import { ImageDithering } from '@paper-design/shaders-react'
+import { isMobile } from '../lib/motion'
 
 // reusable site footer: Creation-of-Adam hands reaching toward a contact spark,
 // with a giant, dimmed, cut-off word behind. Drop it at the bottom of any page.
@@ -11,7 +12,9 @@ const HAND_PERF = { minPixelRatio: 1, maxPixelCount: 400_000 }
 
 // a hand, dithered, clipped to its own alpha so the background stays transparent.
 // box aspect matches the source so mask 100% fills it and the arm reaches the edge.
-function DitherHand({ src, className = '' }: { src: string; className?: string }) {
+// active=false renders a cheap flat-gold silhouette (mask does the shape); the WebGL
+// dither only mounts when the footer is near the viewport, and never on phones.
+function DitherHand({ src, className = '', active }: { src: string; className?: string; active: boolean }) {
   const mask: CSSProperties = {
     WebkitMaskImage: `url(${src})`,
     maskImage: `url(${src})`,
@@ -21,27 +24,47 @@ function DitherHand({ src, className = '' }: { src: string; className?: string }
     maskRepeat: 'no-repeat',
   }
   return (
-    <div className={className} style={mask} aria-hidden>
-      <ImageDithering
-        className="h-full w-full"
-        width="100%"
-        height="100%"
-        {...HAND_PERF}
-        image={src}
-        colorBack="#141414"
-        colorFront="#d4a03c"
-      />
+    <div className={className} style={active ? mask : { ...mask, background: '#d4a03c' }} aria-hidden>
+      {active && (
+        <ImageDithering
+          className="h-full w-full"
+          width="100%"
+          height="100%"
+          {...HAND_PERF}
+          image={src}
+          colorBack="#141414"
+          colorFront="#d4a03c"
+        />
+      )}
     </div>
   )
 }
 
 export function SiteFooter({ word = 'Creation' }: { word?: string }) {
   const [open, setOpen] = useState(false)
+  const [near, setNear] = useState(false)
+  const ref = useRef<HTMLElement>(null)
+  const mobile = useRef(isMobile()).current
+
+  useEffect(() => {
+    if (mobile) return // phones stick with the flat-gold fallback
+    const el = ref.current
+    if (!el) return
+    const io = new IntersectionObserver(([e]) => e.isIntersecting && setNear(true), { rootMargin: '200px' })
+    io.observe(el)
+    return () => io.disconnect()
+  }, [mobile])
+
+  const active = near && !mobile
   return (
-    <footer className="relative flex min-h-[70vh] flex-col items-center justify-center overflow-hidden bg-charcoal text-bone">
+    <footer
+      ref={ref}
+      className="relative flex min-h-[70vh] flex-col items-center justify-center overflow-hidden bg-charcoal text-bone"
+    >
       {/* hands: stacked vertically on mobile, side-by-side on md+ */}
       <div className="relative z-10 flex h-auto w-full flex-col items-center gap-4 px-6 py-8 md:h-[28vw] md:flex-row md:gap-0 md:p-0">
         <DitherHand
+          active={active}
           src="/assets/hand-left.png"
           className="w-[70vw] aspect-[422/257] md:absolute md:left-0 md:top-1/2 md:w-[47vw] md:-translate-y-1/2"
         />
@@ -58,6 +81,7 @@ export function SiteFooter({ word = 'Creation' }: { word?: string }) {
           </span>
         </button>
         <DitherHand
+          active={active}
           src="/assets/hand-right.png"
           className="w-[70vw] aspect-[436/237] md:absolute md:right-0 md:top-1/2 md:w-[47vw] md:-translate-y-1/2"
         />
