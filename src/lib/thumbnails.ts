@@ -11,8 +11,11 @@ export function getPostThumbnail(slug: string): string | null {
   if (slug.includes('bootsplash')) return '/assets/img/LJ-TWM-04.png'
   // AI / founder-log posts -> art assets
   if (slug === 'on-building-something-engrammic') return '/assets/cosmos_948956014.jpeg'
+  if (slug === 'hardware-journeys-starting-from-zero') return '/assets/patent.jpeg'
+  if (slug === 'i-build-cool-shit-and-also-spreadsheets') return '/assets/moth.jpeg'
   // personal / blog-update posts -> art assets
-  if (slug === 'im-back-part-1-the-rise') return '/assets/fallen_angel.webp'
+  if (slug === 'im-back-pt-1') return '/assets/cosmos_1829710684.jpeg'
+  if (slug === 'im-back-pt-2') return '/assets/fallen_angel.webp'
   if (slug === 'hello-world') return '/assets/bg-3.jpg'
   if (slug === 'university') return '/assets/spore.jpg'
   if (slug === 'what-do-i-want') return '/assets/anim2.gif'

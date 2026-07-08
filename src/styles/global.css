@@ -49,3 +49,16 @@
 .hljs-keyword, .hljs-built_in, .hljs-type { @apply text-paper-deep dark:text-paper; }
 .hljs-string, .hljs-title, .hljs-attr { @apply text-gold; }
 .hljs-comment, .hljs-meta { @apply text-charcoal/50 dark:text-bone/50; }
+
+/* page transition: content fades and rises in on each route change. Default state is
+   visible, so if the animation never runs (reduced motion, no CSS) the page still shows. */
+@keyframes page-enter {
+  from { opacity: 0; transform: translateY(14px); }
+  to { opacity: 1; transform: none; }
+}
+.page-enter {
+  animation: page-enter 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+@media (prefers-reduced-motion: reduce) {
+  .page-enter { animation: none; }
+}

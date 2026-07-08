@@ -1,8 +1,9 @@
 import ReactMarkdown, { type Components } from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import rehypeHighlight from 'rehype-highlight'
+import { Redacted } from './redacted'
 
-// hast -> plain text, just enough to sniff a leading marker
+// hast -> plain text, just enough to sniff a marker
 function nodeText(node: unknown): string {
   const n = node as { value?: string; children?: unknown[] } | null
   if (!n) return ''
@@ -10,9 +11,8 @@ function nodeText(node: unknown): string {
   return (n.children ?? []).map(nodeText).join('')
 }
 
-// ponytail: one callout style (amber) keyed off a leading ⚠️ so it doesn't touch normal `>` quotes.
-// Add more markers/colors when a post actually needs them.
 const components: Components = {
+  // ponytail: amber callout keyed off a leading ⚠️ so normal `>` quotes are untouched.
   blockquote({ node, children, ...props }) {
     if (!nodeText(node).trimStart().startsWith('⚠️')) {
       return <blockquote {...props}>{children}</blockquote>
@@ -24,6 +24,15 @@ const components: Components = {
       >
         {children}
       </blockquote>
+    )
+  },
+  // `[ REDACTED ]` inline code becomes the scramble-on-rest, reveal-on-hover redaction.
+  code({ node, className, children, ...props }) {
+    if (nodeText(node).trim() === '[ REDACTED ]') return <Redacted />
+    return (
+      <code className={className} {...props}>
+        {children}
+      </code>
     )
   },
 }
