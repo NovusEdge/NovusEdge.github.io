@@ -5,7 +5,6 @@ import { Rule, SectionNumber, JPLabel } from '../../components/motifs'
 import { Github, Globe, FileText } from '../../components/icons'
 import { revealCards } from '../../lib/reveals'
 import DecryptedText from '../../components/react-bits/DecryptedText'
-import Magnetic from '../../components/react-bits/Magnetic'
 
 function iconFor(href: string) {
   if (href.includes('github.com')) return Github
@@ -27,36 +26,63 @@ function LinkChip({ l }: { l: { label: string; href: string } }) {
   )
 }
 
+// two-letter monogram from the title, for the generated cover when there's no image
+function initials(title: string) {
+  return title
+    .split(/\s+/)
+    .filter((w) => w.length > 2)
+    .slice(0, 2)
+    .map((w) => w[0].toUpperCase())
+    .join('')
+}
+
+function Thumb({ paper }: { paper: Paper }) {
+  const cls = 'h-48 w-full object-cover transition-transform duration-500 group-hover:scale-[1.03] sm:h-full sm:w-56'
+  if (paper.thumb?.endsWith('.mp4')) {
+    return <video src={paper.thumb} className={cls} autoPlay loop muted playsInline />
+  }
+  if (paper.thumb) {
+    return <img src={paper.thumb} alt="" loading="lazy" className={cls} />
+  }
+  return (
+    <div className="flex h-48 w-full items-center justify-center bg-gradient-to-br from-bone-tint/40 to-charcoal/[0.03] sm:h-full sm:w-56 dark:from-charcoal-tint/40 dark:to-bone/[0.03]">
+      <span className="font-display text-5xl font-black text-gold/70">{initials(paper.title)}</span>
+    </div>
+  )
+}
+
 function PaperCard({ paper }: { paper: Paper }) {
-  const primary = paper.links[0]
   const forthcoming = paper.venue.toLowerCase().includes('forthcoming')
   return (
     <div
       data-card
-      className="rounded border border-charcoal/10 bg-bone-tint/10 p-8 transition-colors hover:border-gold/30 dark:border-bone/10 dark:bg-charcoal-tint/10"
+      className="group flex flex-col overflow-hidden rounded border border-charcoal/10 bg-bone-tint/10 transition-colors hover:border-gold/30 sm:flex-row dark:border-bone/10 dark:bg-charcoal-tint/10"
     >
-      <div className="flex flex-wrap items-center gap-x-3 gap-y-1 font-mono text-[11px] uppercase tracking-[0.25em] text-charcoal/50 dark:text-bone/50">
-        <span>{paper.date}</span>
-        <span className="text-charcoal/25 dark:text-bone/25">·</span>
-        <span className={forthcoming ? 'text-gold' : ''}>{paper.venue}</span>
-      </div>
-      <Magnetic range={20}>
+      <a href={paper.url} target="_blank" rel="noopener noreferrer" className="block shrink-0 overflow-hidden sm:w-56" aria-hidden tabIndex={-1}>
+        <Thumb paper={paper} />
+      </a>
+      <div className="min-w-0 p-6 sm:p-7">
+        <div className="flex flex-wrap items-center gap-x-3 gap-y-1 font-mono text-[11px] uppercase tracking-[0.25em] text-charcoal/50 dark:text-bone/50">
+          <span>{paper.date}</span>
+          <span className="text-charcoal/25 dark:text-bone/25">·</span>
+          <span className={forthcoming ? 'text-gold' : ''}>{paper.venue}</span>
+        </div>
         <a
-          href={primary.href}
+          href={paper.url}
           target="_blank"
           rel="noopener noreferrer"
-          className="mt-3 block font-display text-2xl font-black leading-snug text-charcoal transition-colors hover:text-paper-deep dark:text-bone dark:hover:text-paper md:text-3xl"
+          className="mt-3 block font-display text-2xl font-black leading-snug text-charcoal transition-colors hover:text-gold dark:text-bone md:text-3xl"
         >
           {paper.title}
         </a>
-      </Magnetic>
-      <p className="mt-4 max-w-2xl text-sm leading-relaxed text-charcoal/70 dark:text-bone/70 md:text-base">
-        {paper.abstract}
-      </p>
-      <div className="mt-6 flex flex-wrap gap-2">
-        {paper.links.map((l) => (
-          <LinkChip key={l.href} l={l} />
-        ))}
+        <p className="mt-4 text-sm leading-relaxed text-charcoal/70 dark:text-bone/70 md:text-base">
+          {paper.abstract}
+        </p>
+        <div className="mt-6 flex flex-wrap gap-2">
+          {paper.links.map((l) => (
+            <LinkChip key={l.href} l={l} />
+          ))}
+        </div>
       </div>
     </div>
   )
@@ -70,7 +96,7 @@ export default function ResearchIndex() {
     <>
       <Meta
         title="Research"
-        description="Papers from Engrammic on externalized epistemics and Epistemic Augmented Generation."
+        description="Papers I've published on agent memory, epistemics, and cognitive infrastructure."
       />
       <section ref={scope} className="relative mx-auto max-w-4xl px-6 pb-24 pt-36">
         <div data-card className="relative">
