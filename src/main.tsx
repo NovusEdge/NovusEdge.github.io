@@ -1,10 +1,12 @@
 import { StrictMode } from 'react'
+import { hydrateRoot, createRoot } from 'react-dom/client'
 import { BrowserRouter } from 'react-router'
 import App from './App'
 import './styles/global.css'
 
+// mount synchronously: a top-level `await import(...)` here made the entry an async
+// module and the mount side-effect silently never ran in the prerendered build.
 if (typeof window !== 'undefined') {
-  const { hydrateRoot, createRoot } = await import('react-dom/client')
   const root = document.getElementById('root')!
   const app = (
     <StrictMode>
