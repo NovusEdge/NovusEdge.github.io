@@ -1,52 +1,147 @@
 import { useRef } from 'react'
 import { Link } from 'react-router'
+import gsap from 'gsap'
+import { useGSAP } from '@gsap/react'
+import { Dithering } from '@paper-design/shaders-react'
 import { Meta } from '../lib/meta'
-import { Rule, RegMarks, JPLabel, MonoTag } from '../components/motifs'
-import { useReveal } from '../lib/motion'
+import { prefersReducedMotion } from '../lib/motion'
+import { ArrowDown } from '../components/icons'
+import { SiteFooter } from '../components/site-footer'
+
+const NAME = 'Aliasgar Khimani'
+const HANDLE = 'NovusEdge'
+// placeholder — your real bio line; swap when you land on the final tagline
+const TAGLINE = 'tech doohikery, semantic clusterfucks, and god knows what.'
+
+const NAV = [
+  { to: '/blog', label: 'Blog' },
+  { to: '/portfolio', label: 'Portfolio' },
+  { to: '/research', label: 'Research' },
+  { to: '/stack', label: 'Stack' },
+]
+
+// keep the shaders off the retina-res treadmill; two layers run at once during the morph
+const PERF = { minPixelRatio: 1, maxPixelCount: 620_000 }
+
+type Mount = { setSpeed?: (n?: number) => void; setUniforms?: (u: Record<string, number>) => void }
+const mountOf = (el: unknown) => (el as { paperShaderMount?: Mount } | null)?.paperShaderMount
+const setSpeed = (el: unknown, v: number) => mountOf(el)?.setSpeed?.(v)
+const setScale = (el: unknown, v: number) => mountOf(el)?.setUniforms?.({ u_scale: v })
+
+// swirl → speeds up → morphs into warp (crossfade + shared zoom) → back into swirl that slows → loops
+function DitherMorphBg() {
+  const wrap = useRef<HTMLDivElement>(null)
+  const swirl = useRef<HTMLDivElement>(null)
+  const warp = useRef<HTMLDivElement>(null)
+
+  useGSAP(
+    () => {
+      const st = { v: 0.08, s: 1 }
+      const push = () => {
+        setSpeed(swirl.current, st.v)
+        setSpeed(warp.current, st.v)
+      }
+      const zoom = () => {
+        setScale(swirl.current, st.s)
+        setScale(warp.current, st.s)
+      }
+      if (prefersReducedMotion()) {
+        push()
+        return
+      }
+      const tl = gsap.timeline({ repeat: -1 })
+      tl.to(st, { v: 0.4, duration: 5, ease: 'power2.in', onUpdate: push })
+        .to(warp.current, { opacity: 1, duration: 2.4, ease: 'power1.inOut' }, 3.2)
+        .to(st, { s: 1.28, duration: 2.4, ease: 'power2.inOut', onUpdate: zoom }, 3.2)
+        .to(warp.current, { opacity: 0, duration: 2.4, ease: 'power1.inOut' }, 7)
+        .to(st, { s: 1, duration: 2.4, ease: 'power2.inOut', onUpdate: zoom }, 7)
+        .to(st, { v: 0.08, duration: 5, ease: 'power2.out', onUpdate: push }, 7)
+    },
+    { scope: wrap },
+  )
+
+  return (
+    <div ref={wrap} className="absolute inset-0">
+      <Dithering
+        ref={swirl as never}
+        className="absolute inset-0"
+        width="100%"
+        height="100%"
+        {...PERF}
+        colorBack="#141414"
+        colorFront="#d4a03c"
+        shape="swirl"
+        type="4x4"
+        size={2}
+        speed={0.08}
+      />
+      <Dithering
+        ref={warp as never}
+        className="absolute inset-0 opacity-0"
+        width="100%"
+        height="100%"
+        {...PERF}
+        colorBack="#141414"
+        colorFront="#d4a03c"
+        shape="warp"
+        type="4x4"
+        size={2}
+        speed={0.08}
+      />
+      <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-charcoal/20 via-transparent to-charcoal" />
+    </div>
+  )
+}
+
+function StatusStrip() {
+  return (
+    <div className="flex flex-wrap items-center justify-center gap-x-5 gap-y-2 font-mono text-[10px] font-medium uppercase tracking-[0.25em] text-bone/65">
+      <span>LOC: FINLAND</span>
+      <span className="font-semibold text-gold">STATUS: [REDACTED]</span>
+      <span>OUTPUT: 51 REPOS</span>
+    </div>
+  )
+}
 
 export default function Landing() {
-  const scope = useRef<HTMLElement>(null)
-  useReveal(scope)
   return (
     <>
-      <Meta description="Security, systems, and writeups — personal site of NovusEdge." />
-      <section ref={scope} className="relative flex min-h-screen flex-col justify-center px-6 md:px-20">
-        <RegMarks />
-        <JPLabel className="absolute right-8 top-1/2 hidden -translate-y-1/2 md:block">ようこそ</JPLabel>
+      <Meta description="Aliasgar Khimani (NovusEdge): security, systems, and whatever I'm building next." />
+      <div className="bg-charcoal text-bone">
+        {/* hero */}
+        <section className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden px-6 text-center">
+          <DitherMorphBg />
+          {/* soft radial scrim so hero text reads against the pattern */}
+          <div
+            className="pointer-events-none absolute inset-0 z-[5]"
+            style={{
+              background:
+                'radial-gradient(ellipse 55% 48% at 50% 42%, rgba(15,15,15,0.72) 0%, rgba(15,15,15,0.4) 45%, transparent 72%)',
+            }}
+          />
+          <div className="relative z-10 flex flex-col items-center gap-8 [text-shadow:0_2px_24px_rgba(0,0,0,0.55)]">
+            <div className="flex flex-col items-center">
+              <h1 className="font-display text-6xl font-black tracking-tight text-bone md:text-8xl">{NAME}</h1>
+              <span className="mt-2 font-mono text-xs font-medium uppercase tracking-[0.4em] text-bone/55">@{HANDLE}</span>
+            </div>
+            <p className="max-w-md font-mono text-sm font-medium text-bone/75">{TAGLINE}</p>
+            <StatusStrip />
+            <nav className="flex flex-wrap items-center justify-center gap-6 font-display text-sm font-bold uppercase tracking-[0.2em] sm:gap-8">
+              {NAV.map((l) => (
+                <Link key={l.to} to={l.to} className="link-draw text-bone/80 transition-colors hover:text-gold">
+                  {l.label}
+                </Link>
+              ))}
+            </nav>
+          </div>
+          <div className="absolute bottom-8 left-1/2 flex -translate-x-1/2 flex-col items-center gap-1.5 font-mono text-[10px] font-medium uppercase tracking-[0.3em] text-bone/55">
+            scroll
+            <ArrowDown className="h-4 w-4 animate-bounce text-gold" />
+          </div>
+        </section>
 
-        <div data-reveal>
-          <MonoTag>novusedge — security · systems · writing</MonoTag>
-        </div>
-
-        <h1 data-reveal className="mt-6 font-display text-6xl font-black leading-[1.05] md:text-8xl">
-          Novus<span className="text-gold">Edge</span>
-        </h1>
-
-        <div data-reveal>
-          <Rule className="mt-10 max-w-md" />
-        </div>
-
-        <p data-reveal className="mt-8 max-w-xl text-lg leading-relaxed text-charcoal/70 dark:text-bone/70">
-          Weekly notes on security and Linux, CTF writeups, projects, and the occasional research paper.
-        </p>
-
-        <nav data-reveal className="mt-10 flex gap-8">
-          {[
-            ['/blog', 'Read the blog'],
-            ['/portfolio', 'See the work'],
-            ['/research', 'Papers'],
-          ].map(([to, label]) => (
-            <Link key={to} to={to} className="link-draw font-mono text-xs uppercase tracking-[0.25em] text-paper-deep dark:text-paper">
-              {label} →
-            </Link>
-          ))}
-        </nav>
-
-        {/* animated strip: /assets/cosmos.webp has loop-count 3 baked in — plays 3x, freezes on last frame, no JS */}
-        <div data-reveal className="mt-12 max-w-3xl">
-          <img src="/assets/cosmos.webp" alt="" className="w-full border border-charcoal/15 dark:border-bone/15" />
-        </div>
-      </section>
+        <SiteFooter />
+      </div>
     </>
   )
 }

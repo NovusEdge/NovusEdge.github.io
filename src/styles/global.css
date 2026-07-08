@@ -12,21 +12,22 @@
   --color-paper-deep: #4a7095;
   --color-gold: #d4a03c;
 
-  --font-display: 'Zen Kaku Gothic New', sans-serif;
-  --font-body: 'Inter', sans-serif;
+  --font-display: 'Amulya', 'Zen Kaku Gothic New', sans-serif;
+  --font-body: 'Satoshi', sans-serif;
   --font-mono: 'JetBrains Mono', monospace;
 }
 
 @layer base {
-  html {
+  html, body {
     @apply bg-bone text-charcoal font-body antialiased dark:bg-charcoal dark:text-bone;
+    transition: background-color 0.4s cubic-bezier(0.25, 1, 0.5, 1), color 0.4s cubic-bezier(0.25, 1, 0.5, 1);
   }
   ::selection {
     @apply bg-gold/30;
   }
 }
 
-/* Hover underline that draws left-to-right (spec: 150ms) */
+/* Hover underline that draws left to right (spec: 150ms) */
 @utility link-draw {
   background-image: linear-gradient(currentColor, currentColor);
   background-repeat: no-repeat;
