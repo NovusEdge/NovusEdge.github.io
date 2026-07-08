@@ -18,8 +18,9 @@ const NAV = [
   { to: '/stack', label: 'Stack' },
 ]
 
-// keep the shaders off the retina-res treadmill; two layers run at once during the morph
-const PERF = { minPixelRatio: 1, maxPixelCount: 620_000 }
+// keep the shaders off the retina-res treadmill; two layers run at once during the morph,
+// so cap the pixel budget hard, dithering is blocky and barely shows the lower resolution
+const PERF = { minPixelRatio: 1, maxPixelCount: 380_000 }
 
 type Mount = { setSpeed?: (n?: number) => void; setUniforms?: (u: Record<string, number>) => void }
 const mountOf = (el: unknown) => (el as { paperShaderMount?: Mount } | null)?.paperShaderMount
@@ -102,21 +103,6 @@ function StatusStrip() {
 }
 
 export default function Landing() {
-  const navRef = useRef<HTMLElement>(null)
-  useGSAP(
-    () => {
-      if (prefersReducedMotion()) return
-      gsap.from(navRef.current!.children, {
-        y: 16,
-        opacity: 0,
-        duration: 0.5,
-        stagger: 0.08,
-        ease: 'power3.out',
-        delay: 0.15,
-      })
-    },
-    { scope: navRef },
-  )
   return (
     <>
       <Meta description="Aliasgar Khimani (NovusEdge): epistemic memory, cognitive infrastructure for AI agents, and whatever I'm building next." />
@@ -139,12 +125,13 @@ export default function Landing() {
             </div>
             <p className="max-w-md font-mono text-sm font-medium text-bone/75">{TAGLINE}</p>
             <StatusStrip />
-            <nav ref={navRef} className="flex flex-wrap items-center justify-center gap-3 sm:gap-4">
-              {NAV.map((l) => (
+            <nav className="flex flex-wrap items-center justify-center gap-3 sm:gap-4">
+              {NAV.map((l, i) => (
                 <Link
                   key={l.to}
                   to={l.to}
-                  className="rounded-full border border-bone/25 px-5 py-2 font-display text-sm font-bold uppercase tracking-[0.2em] text-bone/85 transition-all duration-300 hover:-translate-y-0.5 hover:border-gold hover:bg-gold hover:text-charcoal hover:shadow-[0_8px_24px_rgba(212,160,60,0.25)]"
+                  style={{ animationDelay: `${0.15 + i * 0.08}s` }}
+                  className="nav-pill rounded-full border border-bone/25 px-5 py-2 font-display text-sm font-bold uppercase tracking-[0.2em] text-bone/85 transition-[transform,background-color,border-color,box-shadow] duration-300 hover:-translate-y-0.5 hover:border-gold hover:bg-gold hover:text-charcoal hover:shadow-[0_8px_24px_rgba(212,160,60,0.25)]"
                 >
                   {l.label}
                 </Link>
@@ -157,6 +144,12 @@ export default function Landing() {
           </div>
         </section>
       </div>
+      {/* pill entrance runs on the compositor so shader load on the main thread can't stall it; `backwards` fill leaves hover transforms free */}
+      <style>{`
+        @keyframes navpill { from { opacity: 0; transform: translateY(16px) } to { opacity: 1; transform: none } }
+        .nav-pill { animation: navpill 0.5s ease-out backwards }
+        @media (prefers-reduced-motion: reduce) { .nav-pill { animation: none } }
+      `}</style>
     </>
   )
 }
