@@ -1,304 +1,171 @@
-import { useEffect, useRef, useState } from 'react'
-import { animate, stagger, utils } from 'animejs'
+import { useEffect, useRef } from 'react'
+import { useLocation, useNavigate } from 'react-router'
+import { AnimatePresence, motion } from 'framer-motion'
 import { Meta } from '../../lib/meta'
-import { Rule, SectionNumber, JPLabel, RegMarks } from '../../components/motifs'
-import { revealCards } from '../../lib/reveals'
 import { prefersReducedMotion } from '../../lib/motion'
-import DecryptedText from '../../components/react-bits/DecryptedText'
-import { DOMAINS, STACK, LANGS, LANG_TOTAL, siClaude, type Tech } from './data'
+import StackEditorial from './editorial'
+import StackGraph from './graph'
 
-// ambient constellation behind the page
-function Constellation() {
-  const ref = useRef<HTMLCanvasElement>(null)
+// two views of the same stack; click the page edge to slide between them
+const VIEWS = ['editorial', 'graph'] as const
+type View = (typeof VIEWS)[number]
+
+// a firefly field at the page edge; drifts toward the exit direction, swarms brighter on hover
+function EdgeZone({ side, label, onClick }: { side: 'left' | 'right'; label: string; onClick: () => void }) {
+  const left = side === 'left'
+  const canvasRef = useRef<HTMLCanvasElement>(null)
+  const hovering = useRef(false)
+
   useEffect(() => {
-    const canvas = ref.current
-    if (!canvas || prefersReducedMotion()) return
+    const canvas = canvasRef.current
+    if (!canvas) return
     const ctx = canvas.getContext('2d')
     if (!ctx) return
+    const reduced = prefersReducedMotion()
     const dpr = Math.min(window.devicePixelRatio || 1, 2)
-    const N = 46
-    const pts = Array.from({ length: N }, () => ({
-      x: Math.random(),
-      y: Math.random(),
-      vx: (Math.random() - 0.5) * 0.0004,
-      vy: (Math.random() - 0.5) * 0.0004,
-    }))
-    let w = 0
-    let h = 0
+    const N = 20
+    let W = 0
+    let H = 0
+    type P = { x: number; y: number; vx: number; vy: number; ph: number; r: number }
+    let ps: P[] = []
+    const init = () => {
+      ps = Array.from({ length: N }, () => ({
+        x: Math.random() * W,
+        y: Math.random() * H,
+        vx: (left ? -1 : 1) * (0.06 + Math.random() * 0.14),
+        vy: (Math.random() - 0.5) * 0.14,
+        ph: Math.random() * Math.PI * 2,
+        r: 0.8 + Math.random() * 1.7,
+      }))
+    }
     const resize = () => {
-      w = canvas.width = window.innerWidth * dpr
-      h = canvas.height = window.innerHeight * dpr
-      canvas.style.width = window.innerWidth + 'px'
-      canvas.style.height = window.innerHeight + 'px'
+      W = canvas.clientWidth
+      H = canvas.clientHeight
+      canvas.width = W * dpr
+      canvas.height = H * dpr
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0)
+      init()
     }
     resize()
     window.addEventListener('resize', resize)
-    let raf = 0
-    const max = 150 * dpr
-    const draw = () => {
-      ctx.clearRect(0, 0, w, h)
-      for (const p of pts) {
-        p.x += p.vx
-        p.y += p.vy
-        if (p.x < 0 || p.x > 1) p.vx *= -1
-        if (p.y < 0 || p.y > 1) p.vy *= -1
-      }
-      for (let i = 0; i < N; i++) {
-        for (let j = i + 1; j < N; j++) {
-          const a = pts[i]
-          const b = pts[j]
-          const d = Math.hypot((a.x - b.x) * w, (a.y - b.y) * h)
-          if (d < max) {
-            ctx.strokeStyle = `rgba(212,160,60,${0.14 * (1 - d / max)})`
-            ctx.lineWidth = dpr
-            ctx.beginPath()
-            ctx.moveTo(a.x * w, a.y * h)
-            ctx.lineTo(b.x * w, b.y * h)
-            ctx.stroke()
-          }
-        }
-      }
-      ctx.fillStyle = 'rgba(212,160,60,0.4)'
-      for (const p of pts) {
+
+    const drawStatic = () => {
+      for (const p of ps) {
         ctx.beginPath()
-        ctx.arc(p.x * w, p.y * h, 1.5 * dpr, 0, Math.PI * 2)
+        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2)
+        ctx.fillStyle = 'rgba(212,160,60,0.4)'
         ctx.fill()
       }
+    }
+    let raf = 0
+    const draw = () => {
+      ctx.clearRect(0, 0, W, H)
+      const hot = hovering.current
+      for (const p of ps) {
+        p.ph += 0.03
+        const spd = hot ? 2.6 : 1
+        p.x += p.vx * spd
+        p.y += p.vy * spd + Math.sin(p.ph) * 0.15
+        if (p.x < -6) p.x = W + 6
+        if (p.x > W + 6) p.x = -6
+        if (p.y < -6) p.y = H + 6
+        if (p.y > H + 6) p.y = -6
+        const flick = 0.4 + 0.6 * (0.5 + 0.5 * Math.sin(p.ph))
+        ctx.beginPath()
+        ctx.arc(p.x, p.y, p.r * (hot ? 1.6 : 1), 0, Math.PI * 2)
+        ctx.fillStyle = `rgba(212,160,60,${(hot ? 0.95 : 0.5) * flick})`
+        ctx.shadowColor = 'rgba(212,160,60,0.9)'
+        ctx.shadowBlur = hot ? 14 : 7
+        ctx.fill()
+      }
+      ctx.shadowBlur = 0
       raf = requestAnimationFrame(draw)
     }
-    draw()
+    if (reduced) drawStatic()
+    else draw()
     return () => {
       cancelAnimationFrame(raf)
       window.removeEventListener('resize', resize)
     }
-  }, [])
-  return <canvas ref={ref} aria-hidden className="pointer-events-none fixed inset-0 z-0 opacity-70" />
-}
-
-// language distribution bar that fills in on scroll
-function TelemetryBar() {
-  const ref = useRef<HTMLDivElement>(null)
-  const [seen, setSeen] = useState(false)
-  useEffect(() => {
-    const el = ref.current
-    if (!el || prefersReducedMotion()) return
-    utils.set(el.querySelectorAll('[data-seg]'), { scaleX: 0 })
-    const io = new IntersectionObserver(
-      ([e]) => {
-        if (e.isIntersecting) {
-          setSeen(true)
-          io.disconnect()
-        }
-      },
-      { threshold: 0.3 },
-    )
-    io.observe(el)
-    return () => io.disconnect()
-  }, [])
-  useEffect(() => {
-    if (!seen || prefersReducedMotion()) return
-    animate(ref.current!.querySelectorAll('[data-seg]'), {
-      scaleX: [0, 1],
-      delay: stagger(60),
-      duration: 700,
-      ease: 'out(3)',
-    })
-  }, [seen])
-  return (
-    <div ref={ref} data-card className="mt-12">
-      <div className="mb-3 flex items-center gap-4">
-        <span className="font-mono text-[11px] font-semibold uppercase tracking-[0.3em] text-gold">telemetry</span>
-        <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-charcoal/40 dark:text-bone/40">
-          repos by language
-        </span>
-      </div>
-      <div className="flex h-3 w-full gap-px overflow-hidden rounded-full">
-        {LANGS.map((l) => (
-          <div
-            key={l.name}
-            data-seg
-            className="h-full origin-left"
-            style={{ width: `${(l.n / LANG_TOTAL) * 100}%`, background: l.color }}
-          />
-        ))}
-      </div>
-      <div className="mt-3 flex flex-wrap gap-x-5 gap-y-1.5">
-        {LANGS.map((l) => (
-          <span
-            key={l.name}
-            className="inline-flex items-center gap-1.5 font-mono text-[10px] uppercase tracking-wider text-charcoal/60 dark:text-bone/60"
-          >
-            <span className="h-2 w-2 rounded-full" style={{ background: l.color }} />
-            {l.name} <span className="text-charcoal/35 dark:text-bone/35">{l.n}</span>
-          </span>
-        ))}
-      </div>
-    </div>
-  )
-}
-
-// logo tile that tilts toward the cursor in 3D
-function TechTile({ t }: { t: Tech }) {
-  const inner = useRef<HTMLDivElement>(null)
-  const tilt = (e: React.PointerEvent<HTMLDivElement>) => {
-    if (!inner.current) return
-    const r = e.currentTarget.getBoundingClientRect()
-    const px = (e.clientX - r.left) / r.width - 0.5
-    const py = (e.clientY - r.top) / r.height - 0.5
-    inner.current.style.transform = `rotateY(${px * 18}deg) rotateX(${-py * 18}deg)`
-  }
-  const reset = () => {
-    if (inner.current) inner.current.style.transform = ''
-  }
-  return (
-    <div data-tile className="[perspective:600px]" onPointerMove={tilt} onPointerLeave={reset}>
-      <div
-        ref={inner}
-        className="group flex flex-col items-center gap-3 rounded-lg border border-charcoal/10 bg-bone-tint/10 p-5 transition-[transform,border-color,box-shadow] duration-150 ease-out will-change-transform hover:border-gold/50 hover:shadow-[0_8px_24px_rgb(0,0,0,0.1)] dark:border-bone/10 dark:bg-charcoal-tint/10"
-      >
-        <svg
-          viewBox="0 0 24 24"
-          aria-hidden
-          className={`h-10 w-10 transition-transform duration-300 group-hover:scale-110 ${
-            t.mono ? 'fill-charcoal/80 dark:fill-bone/80' : ''
-          }`}
-          style={t.mono ? undefined : { fill: `#${t.icon.hex}` }}
-        >
-          <path d={t.icon.path} />
-        </svg>
-        <span className="font-mono text-xs font-medium uppercase tracking-wider text-charcoal/70 transition-colors group-hover:text-gold dark:text-bone/70">
-          {t.name}
-        </span>
-      </div>
-    </div>
-  )
-}
-
-// tiles pop in with a staggered outBack when the group scrolls into view
-function TechGrid({ items }: { items: Tech[] }) {
-  const ref = useRef<HTMLDivElement>(null)
-  const [seen, setSeen] = useState(false)
-
-  useEffect(() => {
-    const el = ref.current
-    if (!el || prefersReducedMotion()) return
-    utils.set(el.querySelectorAll('[data-tile]'), { opacity: 0 })
-    const io = new IntersectionObserver(
-      ([e]) => {
-        if (e.isIntersecting) {
-          setSeen(true)
-          io.disconnect()
-        }
-      },
-      { threshold: 0.15 },
-    )
-    io.observe(el)
-    return () => io.disconnect()
-  }, [])
-
-  useEffect(() => {
-    if (!seen || prefersReducedMotion()) return
-    animate(ref.current!.querySelectorAll('[data-tile]'), {
-      opacity: [0, 1],
-      scale: [0.85, 1],
-      translateY: [18, 0],
-      delay: stagger(35),
-      duration: 550,
-      ease: 'outBack',
-    })
-  }, [seen])
+  }, [left])
 
   return (
-    <div ref={ref} className="grid grid-cols-3 gap-4 sm:grid-cols-4 md:grid-cols-6">
-      {items.map((t) => (
-        <TechTile key={t.name} t={t} />
-      ))}
-    </div>
+    <button
+      onClick={onClick}
+      onMouseEnter={() => (hovering.current = true)}
+      onMouseLeave={() => (hovering.current = false)}
+      aria-label={`Switch to ${label} view`}
+      className={`group fixed inset-y-0 z-40 hidden w-24 md:block ${left ? 'left-0' : 'right-0'}`}
+    >
+      <span
+        aria-hidden
+        className={`pointer-events-none absolute inset-0 ${
+          left ? 'bg-gradient-to-r' : 'bg-gradient-to-l'
+        } from-gold/[0.10] to-transparent opacity-40 transition-opacity duration-500 group-hover:opacity-100`}
+      />
+      <canvas ref={canvasRef} className="pointer-events-none relative h-full w-full" />
+    </button>
   )
 }
 
 export default function StackPage() {
-  const scope = useRef<HTMLElement>(null)
-  useEffect(() => revealCards(scope.current), [])
+  const { pathname } = useLocation()
+  const navigate = useNavigate()
+  const reduced = prefersReducedMotion()
+
+  const view: View = pathname.endsWith('/graph') ? 'graph' : 'editorial'
+  const idx = VIEWS.indexOf(view)
+
+  // track travel direction so the slide matches the edge you clicked
+  const last = useRef(idx)
+  const dir = idx === last.current ? 0 : idx > last.current ? 1 : -1
+  last.current = idx
+
+  const goTo = (i: number) => navigate(`/stack/${VIEWS[i]}`)
 
   return (
     <>
-      <Meta title="Stack" description="Intelligence architect building cognitive infrastructure for agents: specializations and the stack behind them." />
-      <Constellation />
-      <section ref={scope} className="relative z-10 mx-auto max-w-5xl px-6 pb-24 pt-36">
-        {/* identity hero */}
-        <div data-card className="relative">
-          <SectionNumber n="04" label="stack" />
-          <div className="relative mt-3 w-fit">
-            <div className="absolute -left-10 top-1/2 hidden -translate-y-1/2 flex-col items-center gap-2 lg:flex">
-              <JPLabel>技</JPLabel>
-              <span aria-hidden className="h-4 w-px bg-gold/50" />
-            </div>
-            <h1 className="font-display text-5xl font-black text-charcoal dark:text-bone md:text-6xl">
-              <DecryptedText text="Stack" speed={50} delay={100} />
-            </h1>
-          </div>
-          <p
-            data-card
-            className="mt-6 max-w-2xl font-display text-2xl font-bold leading-snug text-charcoal dark:text-bone md:text-3xl"
-          >
-            Intelligence architect, building cognitive infrastructure for agents.
-          </p>
-          <p data-card className="mt-3 font-mono text-xs font-semibold uppercase tracking-[0.35em] text-gold">
-            structuring the unstructured
-          </p>
-        </div>
+      <Meta
+        title={view === 'graph' ? 'Stack · Graph' : 'Stack'}
+        description="What i build with: the tools, and the map of how they connect."
+      />
+      {idx > 0 && <EdgeZone side="left" label={VIEWS[idx - 1]} onClick={() => goTo(idx - 1)} />}
+      {idx < VIEWS.length - 1 && <EdgeZone side="right" label={VIEWS[idx + 1]} onClick={() => goTo(idx + 1)} />}
 
-        <div data-card>
-          <Rule className="mt-8" />
-        </div>
-
-        <TelemetryBar />
-
-        {/* specializations */}
-        <div className="mt-20 grid gap-6 md:grid-cols-2">
-          {DOMAINS.map((d) => (
-            <div
-              key={d.title}
-              data-card
-              className="group relative overflow-hidden rounded border border-charcoal/10 bg-bone-tint/10 p-7 transition-colors hover:border-gold/40 dark:border-bone/10 dark:bg-charcoal-tint/10"
+      {/* mobile: the edge zones are desktop-only, so surface a segmented switch */}
+      <div className="fixed bottom-4 left-1/2 z-40 -translate-x-1/2 md:hidden">
+        <div className="flex gap-1 rounded-full border border-gold/25 bg-charcoal/85 p-1 font-mono text-[11px] shadow-xl backdrop-blur">
+          {VIEWS.map((v, i) => (
+            <button
+              key={v}
+              onClick={() => goTo(i)}
+              className={`rounded-full px-4 py-1.5 uppercase tracking-[0.2em] transition-colors ${
+                view === v ? 'bg-gold/15 text-gold' : 'text-bone/55'
+              }`}
             >
-              <RegMarks />
-              <span
-                aria-hidden
-                className="pointer-events-none absolute -right-2 -top-3 font-display text-7xl text-charcoal/[0.05] transition-colors group-hover:text-gold/10 dark:text-bone/[0.05]"
-              >
-                {d.jp}
-              </span>
-              <h2 className="font-display text-xl font-black text-charcoal dark:text-bone">{d.title}</h2>
-              <p className="mt-2 text-sm leading-relaxed text-charcoal/70 dark:text-bone/70">{d.blurb}</p>
-            </div>
+              {v}
+            </button>
           ))}
         </div>
+      </div>
 
-        {/* the stack */}
-        {STACK.map((g) => (
-          <div key={g.label}>
-            <div data-card className="mb-8 mt-20 flex items-center gap-4">
-              <span className="font-mono text-sm font-semibold uppercase tracking-[0.3em] text-gold">{g.label}</span>
-              <span className="font-display text-sm text-charcoal/30 dark:text-bone/30">{g.jp}</span>
-              <div className="h-px flex-1 bg-charcoal/10 dark:bg-bone/10" />
-            </div>
-            {g.label === 'ai' && (
-              <div
-                data-card
-                className="mb-6 inline-flex items-center gap-2 rounded-full border border-gold/40 bg-gold/[0.06] px-3.5 py-1.5 font-mono text-[10px] font-semibold uppercase tracking-[0.2em] text-gold"
-              >
-                <svg viewBox="0 0 24 24" aria-hidden className="h-3.5 w-3.5 fill-gold">
-                  <path d={siClaude.path} />
-                </svg>
-                member · Claude Partner Network
-              </div>
-            )}
-            <TechGrid items={g.items} />
-          </div>
-        ))}
-      </section>
+      <AnimatePresence mode="wait" custom={dir}>
+        <motion.div
+          key={view}
+          custom={dir}
+          initial={reduced ? false : 'enter'}
+          animate="center"
+          exit={reduced ? undefined : 'exit'}
+          variants={{
+            enter: (d: number) => ({ opacity: 0, x: d === 0 ? 0 : d > 0 ? 56 : -56 }),
+            center: { opacity: 1, x: 0 },
+            exit: (d: number) => ({ opacity: 0, x: d > 0 ? -56 : 56 }),
+          }}
+          transition={{ duration: 0.4, ease: 'easeInOut' }}
+        >
+          {view === 'graph' ? <StackGraph /> : <StackEditorial />}
+        </motion.div>
+      </AnimatePresence>
     </>
   )
 }

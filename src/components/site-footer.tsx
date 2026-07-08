@@ -1,75 +1,14 @@
-import { useEffect, useRef, useState, type CSSProperties } from 'react'
-import { animate } from 'animejs'
+import { lazy, Suspense, useState, type CSSProperties } from 'react'
 import { ImageDithering } from '@paper-design/shaders-react'
-import { ArrowRight, Mail, X } from './icons'
+import { Mail } from './icons'
 
 // reusable site footer: Creation-of-Adam hands reaching toward a contact spark,
 // with a giant, dimmed, cut-off word behind. Drop it at the bottom of any page.
 
-const CONTACT = [
-  { label: 'engrammic.ai', href: 'https://engrammic.ai' },
-  { label: 'linkedin', href: 'https://www.linkedin.com/in/aliasgarkhimani/' },
-  { label: 'github', href: 'https://github.com/NovusEdge' },
-  { label: 'aliasgar.khimani@engrammic.ai', href: 'mailto:aliasgar.khimani@engrammic.ai' },
-]
+// the contact card pulls in lottie-backed animated icons; load it only when opened.
+const ContactCard = lazy(() => import('./contact-card'))
 
 const HAND_PERF = { minPixelRatio: 1, maxPixelCount: 400_000 }
-
-function ContactCard({ onClose }: { onClose: () => void }) {
-  const backdrop = useRef<HTMLDivElement>(null)
-  const card = useRef<HTMLDivElement>(null)
-  useEffect(() => {
-    animate(backdrop.current!, { opacity: [0, 1], duration: 250, ease: 'out(2)' })
-    animate(card.current!, { opacity: [0, 1], scale: [0.9, 1], translateY: [16, 0], duration: 420, ease: 'outBack' })
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose()
-    }
-    document.addEventListener('keydown', onKey)
-    return () => document.removeEventListener('keydown', onKey)
-  }, [onClose])
-
-  return (
-    <div className="fixed inset-0 z-[80] flex items-center justify-center p-6">
-      <div ref={backdrop} className="absolute inset-0 bg-charcoal/70 backdrop-blur-sm" onClick={onClose} />
-      <div
-        ref={card}
-        role="dialog"
-        aria-modal="true"
-        className="relative w-full max-w-sm rounded-2xl border border-bone/15 bg-charcoal/95 p-8 shadow-[0_30px_80px_rgb(0,0,0,0.5)]"
-      >
-        <div className="flex items-start justify-between">
-          <div>
-            <h2 className="font-display text-2xl font-black text-bone">let's talk.</h2>
-            <p className="mt-1 font-mono text-[10px] uppercase tracking-[0.25em] text-bone/50">
-              aliasgar khimani · finland
-            </p>
-          </div>
-          <button
-            onClick={onClose}
-            aria-label="Close"
-            className="rounded-full p-1 text-bone/50 transition-colors hover:text-gold"
-          >
-            <X className="h-5 w-5" />
-          </button>
-        </div>
-        <div className="mt-6 flex flex-col gap-2.5">
-          {CONTACT.map((c) => (
-            <a
-              key={c.href}
-              href={c.href}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="group flex items-center justify-between gap-3 rounded-lg border border-bone/10 bg-bone/[0.02] px-4 py-3 font-mono text-xs uppercase tracking-wider text-bone/70 transition-colors hover:border-gold hover:text-gold"
-            >
-              <span className="truncate">{c.label}</span>
-              <ArrowRight className="h-4 w-4 shrink-0 transition-transform group-hover:translate-x-1" />
-            </a>
-          ))}
-        </div>
-      </div>
-    </div>
-  )
-}
 
 // a hand, dithered, clipped to its own alpha so the background stays transparent.
 // box aspect matches the source so mask 100% fills it and the arm reaches the edge.
@@ -129,7 +68,11 @@ export function SiteFooter({ word = 'Creation' }: { word?: string }) {
         {word}
       </span>
 
-      {open && <ContactCard onClose={() => setOpen(false)} />}
+      {open && (
+        <Suspense fallback={null}>
+          <ContactCard onClose={() => setOpen(false)} />
+        </Suspense>
+      )}
     </footer>
   )
 }

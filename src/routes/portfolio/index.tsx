@@ -89,7 +89,7 @@ function FeaturedCarousel({ items }: { items: Project[] }) {
   const [anim, setAnim] = useState(true)
   const [paused, setPaused] = useState(false)
   const [dragX, setDragX] = useState(0)
-  const drag = useRef<{ x: number; w: number; moved: boolean } | null>(null)
+  const drag = useRef<{ x: number; w: number; moved: boolean; id: number } | null>(null)
   const swallow = useRef(false)
 
   useEffect(() => {
@@ -117,15 +117,18 @@ function FeaturedCarousel({ items }: { items: Project[] }) {
   }
 
   const onDown = (e: React.PointerEvent<HTMLDivElement>) => {
-    drag.current = { x: e.clientX, w: e.currentTarget.offsetWidth, moved: false }
+    drag.current = { x: e.clientX, w: e.currentTarget.offsetWidth, moved: false, id: e.pointerId }
     setPaused(true)
     setAnim(false)
-    e.currentTarget.setPointerCapture?.(e.pointerId)
   }
   const onMove = (e: React.PointerEvent<HTMLDivElement>) => {
     if (!drag.current) return
     const dx = e.clientX - drag.current.x
-    if (Math.abs(dx) > 5) drag.current.moved = true
+    // only capture the pointer once a real drag starts, so plain link clicks aren't swallowed
+    if (!drag.current.moved && Math.abs(dx) > 5) {
+      drag.current.moved = true
+      e.currentTarget.setPointerCapture?.(drag.current.id)
+    }
     setDragX(dx)
   }
   const onUp = () => {

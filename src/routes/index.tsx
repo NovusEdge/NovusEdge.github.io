@@ -6,12 +6,10 @@ import { Dithering } from '@paper-design/shaders-react'
 import { Meta } from '../lib/meta'
 import { prefersReducedMotion } from '../lib/motion'
 import { ArrowDown } from '../components/icons'
-import { SiteFooter } from '../components/site-footer'
 
 const NAME = 'Aliasgar Khimani'
 const HANDLE = 'NovusEdge'
-// placeholder — your real bio line; swap when you land on the final tagline
-const TAGLINE = 'tech doohikery, semantic clusterfucks, and god knows what.'
+const TAGLINE = 'making computers have opinions.'
 
 const NAV = [
   { to: '/blog', label: 'Blog' },
@@ -104,9 +102,24 @@ function StatusStrip() {
 }
 
 export default function Landing() {
+  const navRef = useRef<HTMLElement>(null)
+  useGSAP(
+    () => {
+      if (prefersReducedMotion()) return
+      gsap.from(navRef.current!.children, {
+        y: 16,
+        opacity: 0,
+        duration: 0.5,
+        stagger: 0.08,
+        ease: 'power3.out',
+        delay: 0.15,
+      })
+    },
+    { scope: navRef },
+  )
   return (
     <>
-      <Meta description="Aliasgar Khimani (NovusEdge): security, systems, and whatever I'm building next." />
+      <Meta description="Aliasgar Khimani (NovusEdge): epistemic memory, cognitive infrastructure for AI agents, and whatever I'm building next." />
       <div className="bg-charcoal text-bone">
         {/* hero */}
         <section className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden px-6 text-center">
@@ -126,9 +139,13 @@ export default function Landing() {
             </div>
             <p className="max-w-md font-mono text-sm font-medium text-bone/75">{TAGLINE}</p>
             <StatusStrip />
-            <nav className="flex flex-wrap items-center justify-center gap-6 font-display text-sm font-bold uppercase tracking-[0.2em] sm:gap-8">
+            <nav ref={navRef} className="flex flex-wrap items-center justify-center gap-3 sm:gap-4">
               {NAV.map((l) => (
-                <Link key={l.to} to={l.to} className="link-draw text-bone/80 transition-colors hover:text-gold">
+                <Link
+                  key={l.to}
+                  to={l.to}
+                  className="rounded-full border border-bone/25 px-5 py-2 font-display text-sm font-bold uppercase tracking-[0.2em] text-bone/85 transition-all duration-300 hover:-translate-y-0.5 hover:border-gold hover:bg-gold hover:text-charcoal hover:shadow-[0_8px_24px_rgba(212,160,60,0.25)]"
+                >
                   {l.label}
                 </Link>
               ))}
@@ -139,8 +156,6 @@ export default function Landing() {
             <ArrowDown className="h-4 w-4 animate-bounce text-gold" />
           </div>
         </section>
-
-        <SiteFooter />
       </div>
     </>
   )

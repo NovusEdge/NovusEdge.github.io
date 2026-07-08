@@ -9,8 +9,8 @@ import BlogPost from './routes/blog/post'
 import PortfolioIndex from './routes/portfolio/index'
 import ResearchIndex from './routes/research/index'
 import StackPage from './routes/stack/index'
-import LabPage from './routes/lab/index'
 import NotFound from './routes/not-found'
+import { SiteFooter } from './components/site-footer'
 
 export default function App() {
   const { pathname } = useLocation()
@@ -29,9 +29,12 @@ export default function App() {
         <Route path="/portfolio" element={<PortfolioIndex />} />
         <Route path="/research" element={<ResearchIndex />} />
         <Route path="/stack" element={<StackPage />} />
-        <Route path="/lab" element={<LabPage />} />
+        <Route path="/stack/editorial" element={<StackPage />} />
+        <Route path="/stack/graph" element={<StackPage />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
+      {/* universal footer; /stack carries its own colophon (editorial) or runs immersive (graph) */}
+      {!pathname.startsWith('/stack') && <SiteFooter />}
     </>
   )
 }

@@ -39,24 +39,24 @@ export { siClaude }
 
 export const DOMAINS = [
   {
-    jp: '攻',
-    title: 'Offensive security & systems',
-    blurb: 'CTFs, malware dev, forkbombs, and low-level tooling. Breaking things to understand how they actually work.',
+    jp: '知',
+    title: 'AI & agent cognition',
+    blurb: 'Engrammic, Veil, agent memory. Teaching machines what they know versus what they merely generated. The day job.',
   },
   {
-    jp: '記',
-    title: 'AI memory & epistemics',
-    blurb: 'Engrammic, Veil, agent cognition. Teaching machines what they know versus what they merely generated.',
+    jp: '営',
+    title: 'Founder & CTO',
+    blurb: 'Raising, hiring, strategy, and actually shipping. Turning a research idea into something with a runway.',
   },
   {
-    jp: '隠',
-    title: 'Privacy, hardware & RF',
-    blurb: 'ØCLOAK and neuro-llm. At-cost anti-surveillance devices, and reading intent straight off the body.',
+    jp: '機',
+    title: 'Hardware & RF',
+    blurb: 'ØCLOAK and neuro-llm. At-cost anti-surveillance devices, and reading intent off the body. Still leveling up.',
   },
   {
     jp: '遊',
-    title: 'Weird things for fun',
-    blurb: 'Games, Linux ricing, and joke repos that somehow pull a hundred stars.',
+    title: 'Systems & chaos',
+    blurb: 'Low-level tooling, Linux ricing, and joke repos that somehow pull a hundred stars. Breaking things to see how they work.',
   },
 ]
 
@@ -136,3 +136,33 @@ export const LANGS = [
   { name: 'Other', n: 7, color: '#8A8A8A' },
 ]
 export const LANG_TOTAL = LANGS.reduce((s, l) => s + l.n, 0)
+
+// what i'm actively deep in right now (keep this current)
+export const LATELY = 'deep in agent memory and fundraising. hardware on weekends. everything else is muscle memory.'
+
+// one line per stack group: how i use it and why  (keyed by STACK label)
+export const GROUP_NOTES: Record<string, string> = {
+  languages: 'the alphabet. Rust when it must not break, Python when it must ship today.',
+  'systems & data': 'where things run and remember. Linux, containers, and a graph or two.',
+  'web & motion': 'how ideas get a face. this site included.',
+  ai: 'the day job. agent memory, inference, epistemics.',
+  hardware: 'new territory. still burning myself on the soldering iron.',
+}
+
+// honest depth, not a rating. daily driver / comfortable / just dabbling  (keyed by tool name)
+export type Depth = 'daily' | 'comfortable' | 'dabbling'
+export const DEPTH: Record<string, Depth> = {
+  Rust: 'daily', Python: 'daily', TypeScript: 'daily', Claude: 'daily', Linux: 'daily', Neovim: 'daily', Git: 'daily', Docker: 'daily',
+  Go: 'comfortable', C: 'comfortable', 'C#': 'comfortable', JavaScript: 'comfortable', PyTorch: 'comfortable', LangChain: 'comfortable',
+  Postgres: 'comfortable', Neo4j: 'comfortable', Qdrant: 'comfortable', Redis: 'comfortable', React: 'comfortable', Tailwind: 'comfortable',
+  Vite: 'comfortable', Ollama: 'comfortable', HuggingFace: 'comfortable', Gemini: 'comfortable', GSAP: 'comfortable',
+  Lua: 'dabbling', WebGL: 'dabbling', WASM: 'dabbling', ESP32: 'dabbling', 'Raspberry Pi': 'dabbling', Arduino: 'dabbling',
+}
+
+// the stack doing real work. tool lists are best-guess, confirm/correct these
+export const PROJECTS = [
+  { name: 'Engrammic', tools: 'Rust · Neo4j · Qdrant', blurb: 'epistemic memory for AI agents.' },
+  { name: 'ØCLOAK', tools: 'ESP32 · RF · C', blurb: 'at-cost anti-surveillance hardware.' },
+  { name: 'Veil', tools: 'Python · PyTorch', blurb: 'the guardrail layer for agent memory.' },
+  { name: 'palpatine', tools: 'Python', blurb: 'the joke repo that pulled 101 stars.' },
+]

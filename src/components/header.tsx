@@ -40,7 +40,7 @@ export function Header() {
             aria-label="Home"
             className="font-display text-sm font-black uppercase tracking-wider text-charcoal transition-colors hover:text-gold dark:text-bone"
           >
-            NovusEdge
+            Home
           </NavLink>
         </Magnetic>
         <span aria-hidden className="h-4 w-px bg-charcoal/15 dark:bg-bone/15" />
