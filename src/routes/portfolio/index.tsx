@@ -16,6 +16,37 @@ const GROUPS = [
 
 const metaLine = (p: Project) => [p.year, p.lang].filter(Boolean).join(' · ')
 
+const PHASE_STYLE: Record<Project['phase'], { label: string; class: string }> = {
+  building: { label: 'building', class: 'border-gold/50 text-gold' },
+  shipped: { label: 'shipped', class: 'border-emerald-500/50 text-emerald-600 dark:text-emerald-400' },
+  'on-ice': { label: 'on ice', class: 'border-sky-400/50 text-sky-500' },
+  'chaos-era': { label: 'chaos era', class: 'border-charcoal/20 text-charcoal/50 dark:border-bone/20 dark:text-bone/50' },
+}
+
+function PhaseTag({ phase }: { phase: Project['phase'] }) {
+  const s = PHASE_STYLE[phase]
+  return (
+    <span className={`rounded border px-1.5 py-0.5 font-mono text-[9px] uppercase tracking-wider ${s.class}`}>
+      {s.label}
+    </span>
+  )
+}
+
+// generated cover: gradient bg + kanji or monogram
+function Cover({ p }: { p: Project }) {
+  const char = p.jp || p.title[0].toUpperCase()
+  // hash slug to pick gradient angle
+  const angle = (p.slug.charCodeAt(0) * 37 + p.slug.charCodeAt(1) * 17) % 360
+  return (
+    <div
+      className="absolute inset-0 flex items-center justify-center opacity-[0.07] dark:opacity-[0.05]"
+      style={{ background: `linear-gradient(${angle}deg, var(--gold) 0%, transparent 70%)` }}
+    >
+      <span className="select-none font-display text-[8rem] font-black">{char}</span>
+    </div>
+  )
+}
+
 function iconFor(href: string) {
   if (href.includes('github.com')) return Github
   if (href.includes('npmjs.com') || href.includes('pypi.org')) return Package
@@ -49,10 +80,12 @@ function matches(p: Project, query: string) {
 function BigCard({ p }: { p: Project }) {
   return (
     <div className="relative flex h-[20rem] flex-col justify-between overflow-hidden rounded border border-charcoal/10 bg-bone-tint/20 p-8 md:h-[22rem] md:p-10 dark:border-bone/10 dark:bg-charcoal-tint/20">
+      <Cover p={p} />
       <RegMarks />
-      <div>
-        <div className="flex flex-wrap items-center gap-x-4 gap-y-1 font-mono text-[11px] font-semibold uppercase tracking-[0.25em]">
+      <div className="relative">
+        <div className="flex flex-wrap items-center gap-x-3 gap-y-1 font-mono text-[11px] font-semibold uppercase tracking-[0.25em]">
           <span className="text-gold">featured</span>
+          <PhaseTag phase={p.phase} />
           <span className="text-charcoal/45 dark:text-bone/45">{metaLine(p)}</span>
           {p.stars ? <span className="text-charcoal/45 dark:text-bone/45">★ {p.stars}</span> : null}
         </div>
@@ -209,19 +242,21 @@ function FlipCard({ p }: { p: Project }) {
         }`}
       >
         <div onClick={toggle} className={`${face} ${flipped ? 'pointer-events-none' : ''}`}>
+          <Cover p={p} />
           {hint}
-          <div className="flex items-center gap-3 font-mono text-[10px] font-medium uppercase tracking-[0.2em] text-charcoal/50 dark:text-bone/50">
+          <div className="relative flex flex-wrap items-center gap-2 font-mono text-[10px] font-medium uppercase tracking-[0.2em] text-charcoal/50 dark:text-bone/50">
+            <PhaseTag phase={p.phase} />
             <span>{metaLine(p)}</span>
             {p.stars ? <span className="text-gold">★ {p.stars}</span> : null}
           </div>
-          <h3 className="mt-3 flex items-baseline gap-2 font-display text-2xl font-black text-charcoal dark:text-bone">
+          <h3 className="relative mt-3 flex items-baseline gap-2 font-display text-2xl font-black text-charcoal dark:text-bone">
             {p.title}
             {p.jp && <span className="font-display text-sm font-normal text-charcoal/30 dark:text-bone/30">{p.jp}</span>}
           </h3>
-          <p className="mt-3 flex-1 overflow-y-auto pr-1 text-sm leading-relaxed text-charcoal/70 dark:text-bone/70">
+          <p className="relative mt-3 flex-1 overflow-y-auto pr-1 text-sm leading-relaxed text-charcoal/70 dark:text-bone/70">
             {p.description}
           </p>
-          <div className="mt-4 flex flex-wrap gap-2">
+          <div className="relative mt-4 flex flex-wrap gap-2">
             {p.tech.map((t) => (
               <span
                 key={t}

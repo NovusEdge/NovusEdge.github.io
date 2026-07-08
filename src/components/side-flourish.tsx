@@ -1,4 +1,5 @@
 import { useEffect, useRef, type ReactNode } from 'react'
+import { createPortal } from 'react-dom'
 import { animate, stagger, utils } from 'animejs'
 import { prefersReducedMotion } from '../lib/motion'
 
@@ -6,11 +7,14 @@ import { prefersReducedMotion } from '../lib/motion'
 // anime.js variants to pick from; dev switcher lives on the page.
 export const SIDE_VARIANTS = ['Waveform', 'Scanline', 'Kana', 'Particles'] as const
 
+// ponytail: portal to body so page-enter transform doesn't break fixed positioning
 function Rail({ children }: { children: ReactNode }) {
-  return (
+  if (typeof document === 'undefined') return null // prerender has no portal target; mounts on the client
+  return createPortal(
     <div className="fixed left-6 top-1/2 z-40 hidden -translate-y-1/2 lg:block xl:left-10" aria-hidden>
       {children}
-    </div>
+    </div>,
+    document.body,
   )
 }
 
@@ -75,9 +79,9 @@ function Scanline() {
 }
 
 /* 3 — vertical lines of a quote, drifting in (ties to the JP motifs) */
-// "Art is not for 'fixing' oneself. It's to show others that you're just as
-//  broken, so they might feel less lonely."
-const POEM = ['芸術は自分を「直す」ためではない', '同じように壊れていると誰かに示し', 'その孤独が少しでも和らぐように']
+const POEM_JP = ['芸術は自分を「直す」ためではない', '同じように壊れていると誰かに示し', 'その孤独が少しでも和らぐように']
+const POEM_EN = "Art is not for 'fixing' oneself. It's to show others that you're just as broken, so they might feel less lonely."
+
 function Kana() {
   const ref = useRef<HTMLDivElement>(null)
   useEffect(() => {
@@ -94,13 +98,16 @@ function Kana() {
     <Rail>
       <div
         ref={ref}
-        className="flex flex-row-reverse gap-3.5 font-display text-sm leading-relaxed tracking-[0.15em] text-gold"
+        className="group relative flex cursor-default flex-row-reverse gap-4 font-display text-base leading-relaxed tracking-[0.15em] text-gold"
       >
-        {POEM.map((line, i) => (
+        {POEM_JP.map((line, i) => (
           <span key={i} data-line className="[writing-mode:vertical-rl]">
             {line}
           </span>
         ))}
+        <span className="pointer-events-none absolute left-full top-1/2 ml-4 w-max max-w-[220px] -translate-y-1/2 rounded border border-gold/30 bg-charcoal/95 px-3 py-2.5 font-body text-sm italic leading-relaxed tracking-normal text-bone/80 opacity-0 shadow-lg transition-opacity group-hover:opacity-100">
+          "{POEM_EN}"
+        </span>
       </div>
     </Rail>
   )
@@ -162,5 +169,61 @@ export function SideFlourish({ variant, heroGate }: { variant: number; heroGate?
     <div ref={gate} style={{ opacity: 0 }}>
       <Flourish key={variant} />
     </div>
+  )
+}
+
+// A short quote set vertically down a page margin (default right side), fading/drifting in.
+// Right-side companion to the Kana flourish; used on /research.
+export function MarginQuote({
+  lines,
+  translation,
+  cite,
+  side = 'right',
+}: {
+  lines: string[]
+  translation: string
+  cite?: string
+  side?: 'left' | 'right'
+}) {
+  const ref = useRef<HTMLDivElement>(null)
+  useEffect(() => {
+    if (prefersReducedMotion()) return
+    animate(ref.current!.querySelectorAll('[data-line]'), {
+      opacity: [0, 0.72],
+      translateX: [side === 'right' ? 14 : -14, 0],
+      duration: 1500,
+      delay: stagger(320),
+      ease: 'out(2)',
+    })
+  }, [])
+  if (typeof document === 'undefined') return null // prerender has no portal target; mounts on the client
+  return createPortal(
+    <div
+      aria-hidden
+      className={`fixed top-1/2 z-40 hidden -translate-y-1/2 lg:block ${
+        side === 'right' ? 'right-6 xl:right-10' : 'left-6 xl:left-10'
+      }`}
+    >
+      <div ref={ref} className="group relative flex cursor-default flex-row-reverse gap-4 font-display text-base leading-relaxed tracking-[0.15em] text-gold/90">
+        {lines.map((line, i) => (
+          <span key={i} data-line className="[writing-mode:vertical-rl]">
+            {line}
+          </span>
+        ))}
+        {cite && (
+          <span data-line className="self-end text-[10px] tracking-[0.25em] text-gold/60 [writing-mode:vertical-rl]">
+            {cite}
+          </span>
+        )}
+        <span
+          className={`pointer-events-none absolute top-1/2 w-max max-w-[220px] -translate-y-1/2 rounded border border-gold/30 bg-charcoal/95 px-3 py-2.5 font-body text-sm italic leading-relaxed tracking-normal text-bone/80 opacity-0 shadow-lg transition-opacity group-hover:opacity-100 ${
+            side === 'right' ? 'right-full mr-4' : 'left-full ml-4'
+          }`}
+        >
+          "{translation}"
+        </span>
+      </div>
+    </div>,
+    document.body,
   )
 }

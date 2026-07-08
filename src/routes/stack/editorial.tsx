@@ -153,19 +153,22 @@ export default function StackEditorial() {
                   const t = TECH_BY_NAME.get(name)
                   if (!t) return null
                   return (
-                    <svg
-                      key={name}
-                      viewBox="0 0 24 24"
-                      role="img"
-                      aria-label={name}
-                      className={`h-6 w-6 shrink-0 transition-transform hover:scale-110 ${
-                        t.mono ? 'fill-charcoal/70 dark:fill-bone/70' : ''
-                      }`}
-                      style={t.mono ? undefined : { fill: `#${t.icon.hex}` }}
-                    >
-                      <title>{name}</title>
-                      <path d={t.icon.path} />
-                    </svg>
+                    <span key={name} className="group relative">
+                      <svg
+                        viewBox="0 0 24 24"
+                        role="img"
+                        aria-label={name}
+                        className={`h-6 w-6 shrink-0 transition-transform group-hover:scale-110 ${
+                          t.mono ? 'fill-charcoal/70 dark:fill-bone/70' : ''
+                        }`}
+                        style={t.mono ? undefined : { fill: `#${t.icon.hex}` }}
+                      >
+                        <path d={t.icon.path} />
+                      </svg>
+                      <span className="pointer-events-none absolute -bottom-7 left-1/2 -translate-x-1/2 whitespace-nowrap rounded bg-charcoal px-1.5 py-0.5 font-mono text-[9px] uppercase tracking-wider text-bone opacity-0 transition-opacity group-hover:opacity-100 dark:bg-bone dark:text-charcoal">
+                        {name}
+                      </span>
+                    </span>
                   )
                 })}
               </div>

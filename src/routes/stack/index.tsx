@@ -99,9 +99,12 @@ function EdgeZone({ side, label, onClick }: { side: 'left' | 'right'; label: str
     >
       <span
         aria-hidden
-        className={`pointer-events-none absolute inset-0 ${
-          left ? 'bg-gradient-to-r' : 'bg-gradient-to-l'
-        } from-gold/[0.10] to-transparent opacity-40 transition-opacity duration-500 group-hover:opacity-100`}
+        className="pointer-events-none absolute inset-0 opacity-40 transition-opacity duration-500 group-hover:opacity-100"
+        style={{
+          background: left
+            ? 'radial-gradient(ellipse 200% 50% at 0% 50%, rgba(212,160,60,0.15) 0%, transparent 70%)'
+            : 'radial-gradient(ellipse 200% 50% at 100% 50%, rgba(212,160,60,0.15) 0%, transparent 70%)',
+        }}
       />
       <canvas ref={canvasRef} className="pointer-events-none relative h-full w-full" />
     </button>

@@ -5,6 +5,11 @@ import { Rule, SectionNumber, JPLabel } from '../../components/motifs'
 import { Github, Globe, FileText } from '../../components/icons'
 import { revealCards } from '../../lib/reveals'
 import DecryptedText from '../../components/react-bits/DecryptedText'
+import { MarginQuote } from '../../components/side-flourish'
+
+// right-margin quote for the research page, from Dune (Frank Herbert):
+const RESEARCH_QUOTE = ['人生の神秘は', '解くべき問題ではなく', '経験すべき現実だ']
+const RESEARCH_QUOTE_EN = "The mystery of life isn't a problem to solve, but a reality to experience."
 
 function iconFor(href: string) {
   if (href.includes('github.com')) return Github
@@ -98,6 +103,9 @@ export default function ResearchIndex() {
         title="Research"
         description="Papers I've published on agent memory, epistemics, and cognitive infrastructure."
       />
+
+      <MarginQuote lines={RESEARCH_QUOTE} translation={RESEARCH_QUOTE_EN} cite="『デューン』" />
+
       <section ref={scope} className="relative mx-auto max-w-4xl px-6 pb-24 pt-36">
         <div data-card className="relative">
           <SectionNumber n="03" label="research" />

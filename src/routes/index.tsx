@@ -22,10 +22,16 @@ const NAV = [
 // so cap the pixel budget hard, dithering is blocky and barely shows the lower resolution
 const PERF = { minPixelRatio: 1, maxPixelCount: 380_000 }
 
-type Mount = { setSpeed?: (n?: number) => void; setUniforms?: (u: Record<string, number>) => void }
+type Mount = {
+  setSpeed?: (n?: number) => void
+  setUniforms?: (u: Record<string, number>) => void
+  // setUniformValues sets the GL uniform WITHOUT forcing an extra render (setUniforms does);
+  // the shader's running rAF loop picks it up next frame, so per-frame scale tweens don't double-draw.
+  setUniformValues?: (u: Record<string, number>) => void
+}
 const mountOf = (el: unknown) => (el as { paperShaderMount?: Mount } | null)?.paperShaderMount
 const setSpeed = (el: unknown, v: number) => mountOf(el)?.setSpeed?.(v)
-const setScale = (el: unknown, v: number) => mountOf(el)?.setUniforms?.({ u_scale: v })
+const setScale = (el: unknown, v: number) => mountOf(el)?.setUniformValues?.({ u_scale: v })
 
 // swirl → speeds up → morphs into warp (crossfade + shared zoom) → back into swirl that slows → loops
 function DitherMorphBg() {

@@ -30,10 +30,20 @@ import {
   siEspressif,
   siRaspberrypi,
   siArduino,
+  siNpm,
+  siWebrtc,
 } from 'simple-icons'
 
 export type Icon = { path: string; hex: string; title: string }
 export type Tech = { name: string; icon: Icon; mono?: boolean }
+
+// ponytail: custom icons for tech without simple-icons entries
+const customIcons: Record<string, Icon> = {
+  memgraph: { title: 'Memgraph', hex: '6236FF', path: 'M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5zm-5 9a2 2 0 1 1 0-4 2 2 0 0 1 0 4zm10 0a2 2 0 1 1 0-4 2 2 0 0 1 0 4zm-5 5a2.5 2.5 0 1 1 0-5 2.5 2.5 0 0 1 0 5z' },
+  mcp: { title: 'MCP', hex: 'D4A03C', path: 'M12 2L2 7v10l10 5 10-5V7L12 2zm0 2.18l6.9 3.45L12 11.08 5.1 7.63 12 4.18zM4 8.82l7 3.5v7.36l-7-3.5V8.82zm9 10.86v-7.36l7-3.5v7.36l-7 3.5z' },
+  pixi: { title: 'Pixi', hex: 'FFC131', path: 'M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm.5 4h2v3h-2V6zm-5 2.5h2v7h-2v-7zm8 0h2v7h-2v-7zm-4 1.5h2v5h-2V10z' },
+  rf: { title: 'RF', hex: '00B4D8', path: 'M12 2c-.55 0-1 .45-1 1v3.07A7.003 7.003 0 0 0 5 13c0 3.87 3.13 7 7 7s7-3.13 7-7a7.003 7.003 0 0 0-6-6.93V3c0-.55-.45-1-1-1zm0 6a4 4 0 1 1 0 8 4 4 0 0 1 0-8zm0 2a2 2 0 1 0 0 4 2 2 0 0 0 0-4z' },
+}
 
 export { siClaude }
 
@@ -85,8 +95,11 @@ export const STACK: { label: string; jp: string; items: Tech[] }[] = [
       { name: 'Git', icon: siGit },
       { name: 'Postgres', icon: siPostgresql },
       { name: 'Neo4j', icon: siNeo4j },
+      { name: 'Memgraph', icon: customIcons.memgraph },
       { name: 'Qdrant', icon: siQdrant },
       { name: 'Redis', icon: siRedis },
+      { name: 'npm', icon: siNpm },
+      { name: 'Pixi', icon: customIcons.pixi },
     ],
   },
   {
@@ -111,6 +124,7 @@ export const STACK: { label: string; jp: string; items: Tech[] }[] = [
       { name: 'Ollama', icon: siOllama, mono: true },
       { name: 'LangChain', icon: siLangchain },
       { name: 'PyTorch', icon: siPytorch },
+      { name: 'MCP', icon: customIcons.mcp },
     ],
   },
   {
@@ -120,6 +134,8 @@ export const STACK: { label: string; jp: string; items: Tech[] }[] = [
       { name: 'ESP32', icon: siEspressif },
       { name: 'Raspberry Pi', icon: siRaspberrypi },
       { name: 'Arduino', icon: siArduino },
+      { name: 'RF', icon: customIcons.rf },
+      { name: 'P2P', icon: siWebrtc },
     ],
   },
 ]
@@ -153,16 +169,18 @@ export const GROUP_NOTES: Record<string, string> = {
 export type Depth = 'daily' | 'comfortable' | 'dabbling'
 export const DEPTH: Record<string, Depth> = {
   Rust: 'daily', Python: 'daily', TypeScript: 'daily', Claude: 'daily', Linux: 'daily', Neovim: 'daily', Git: 'daily', Docker: 'daily',
+  MCP: 'daily', Memgraph: 'comfortable', Pixi: 'comfortable', npm: 'daily',
   Go: 'comfortable', C: 'comfortable', 'C#': 'comfortable', JavaScript: 'comfortable', PyTorch: 'comfortable', LangChain: 'comfortable',
   Postgres: 'comfortable', Neo4j: 'comfortable', Qdrant: 'comfortable', Redis: 'comfortable', React: 'comfortable', Tailwind: 'comfortable',
   Vite: 'comfortable', Ollama: 'comfortable', HuggingFace: 'comfortable', Gemini: 'comfortable', GSAP: 'comfortable',
   Lua: 'dabbling', WebGL: 'dabbling', WASM: 'dabbling', ESP32: 'dabbling', 'Raspberry Pi': 'dabbling', Arduino: 'dabbling',
+  P2P: 'dabbling', RF: 'dabbling',
 }
 
 // the stack doing real work. `tech` names must match STACK item names (they render as icons)
 export const PROJECTS: { name: string; tech: string[]; blurb: string }[] = [
-  { name: 'Engrammic', tech: ['Rust', 'Neo4j', 'Qdrant'], blurb: 'epistemic memory for AI agents.' },
-  { name: 'ØCLOAK', tech: ['ESP32', 'C'], blurb: 'at-cost anti-surveillance hardware.' },
-  { name: 'Veil', tech: ['Python', 'PyTorch'], blurb: 'the guardrail layer for agent memory.' },
-  { name: 'palpatine', tech: ['Python'], blurb: 'the joke repo that pulled 101 stars.' },
+  { name: 'Engrammic', tech: ['TypeScript', 'Python', 'MCP', 'Memgraph', 'Docker', 'Redis', 'Qdrant', 'Ollama', 'HuggingFace'], blurb: 'epistemic memory for AI agents.' },
+  { name: 'Veil', tech: ['TypeScript', 'Go', 'Pixi', 'npm', 'Docker'], blurb: 'persistent, sourced memory for AI agents.' },
+  { name: 'ØCLOAK', tech: ['ESP32', 'C', 'Rust', 'P2P', 'RF'], blurb: 'at-cost anti-surveillance hardware.' },
+  { name: 'palpatine', tech: ['Claude', 'TypeScript', 'JavaScript'], blurb: 'the joke repo that pulled 101 stars.' },
 ]

@@ -27,6 +27,20 @@ const CLUSTERS: { hub: string; tools: string[]; text: string[] }[] = [
   { hub: 'chaos', tools: [], text: ['palpatine', 'ricing', 'joke repos'] },
 ]
 
+// concept icons (filled 24x24) for the founder/cto nodes, each with a distinct color
+const CONCEPT_TECH = new Map<string, Tech>(
+  Object.entries({
+    fundraising: { path: 'M11.5 2v2.05A6.5 6.5 0 0 0 6 10.5h2a4.5 4.5 0 0 1 3.5-4.4V12c-3.1.5-5 2.2-5 4.5 0 2.6 2.2 4.5 5 4.95V22h2v-2.05A6.5 6.5 0 0 0 19 13.5h-2a4.5 4.5 0 0 1-3.5 4.4V12c3.1-.5 5-2.2 5-4.5 0-2.6-2.2-4.5-5-4.95V2h-2z', hex: '22C55E' },
+    strategy: { path: 'M5 3h1.6v18H5z M7 4h11l-3 3.5 3 3.5H7z', hex: '3B82F6' },
+    hiring: { path: 'M12 4.8a3.2 3.2 0 1 0 0 6.4 3.2 3.2 0 0 0 0-6.4z M12 12.5c-3.3 0-6 1.9-6 4.7V19h12v-1.8c0-2.8-2.7-4.7-6-4.7z M18.25 3h1.5v5h-1.5z M17 4.75h4v1.5h-4z', hex: 'A855F7' },
+    roadmap: { path: 'M3 5h4v4H3z M3 11h4v4H3z M3 17h4v4H3z M9 6h11v2H9z M9 12h11v2H9z M9 18h11v2H9z', hex: '06B6D4' },
+    investors: { path: 'M12 3L2 8h20z M4 10h2.5v8H4z M8.5 10h2.5v8H8.5z M13 10h2.5v8H13z M17.5 10h2.5v8h-2.5z M2 19h20v2.5H2z', hex: 'F59E0B' },
+  }).map(([name, { path, hex }]): [string, Tech] => [
+    name,
+    { name, mono: false, icon: { title: name, hex, path } },
+  ]),
+)
+
 // force constants: bumped for a wider, airier layout
 const REPULSION = 3200
 const REST_HUB = 300
@@ -45,7 +59,7 @@ function build(w: number, h: number) {
     nodes.push({ id: c.hub, label: c.hub, group: c.hub, hub: true, x: hx, y: hy, vx: 0, vy: 0 })
     const sats = [
       ...c.tools.map((n) => ({ name: n, tech: NAME2TECH.get(n) })),
-      ...c.text.map((n) => ({ name: n, tech: undefined })),
+      ...c.text.map((n) => ({ name: n, tech: CONCEPT_TECH.get(n) })),
     ]
     sats.forEach((s, ti) => {
       const b = a + (ti - sats.length / 2) * 0.3
@@ -77,6 +91,7 @@ export default function StackGraph() {
     const ctx = canvas.getContext('2d')
     if (!ctx) return
     const dpr = Math.min(window.devicePixelRatio || 1, 2)
+    const reduce = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches ?? false
     let W = 0
     let H = 0
     let g = build(1, 1)
@@ -225,8 +240,48 @@ export default function StackGraph() {
       ctx.restore()
     }
 
-    const draw = () => {
+    const draw = (t: number) => {
       ctx.clearRect(0, 0, W, H)
+
+      const cx = W / 2
+      const cy = H / 2
+
+      // rings emanating outward from the knowledge core (frozen if reduced-motion)
+      const maxR = Math.hypot(W, H) / 2
+      const spacing = 96
+      const born = reduce ? spacing / 2 : (t * 0.02) % spacing
+      ctx.lineWidth = 1
+      for (let r = born; r < maxR; r += spacing) {
+        if (r < 6) continue
+        const a = 0.16 * (1 - r / maxR)
+        if (a <= 0.003) continue
+        ctx.strokeStyle = `rgba(212,160,60,${a})`
+        ctx.beginPath()
+        ctx.arc(cx, cy, r, 0, Math.PI * 2)
+        ctx.stroke()
+      }
+
+      // 知 ("knowledge") floating at the center, tethered to each hub by dotted lines.
+      // Purely decorative: not in g.nodes, so no hover/drag/physics.
+      ctx.save()
+      ctx.setLineDash([2, 7])
+      ctx.strokeStyle = 'rgba(212,160,60,0.16)'
+      ctx.lineWidth = 1
+      for (const n of g.nodes) {
+        if (!n.hub) continue
+        ctx.beginPath()
+        ctx.moveTo(cx, cy)
+        ctx.lineTo(n.x, n.y)
+        ctx.stroke()
+      }
+      ctx.setLineDash([])
+      ctx.textAlign = 'center'
+      ctx.textBaseline = 'middle'
+      ctx.font = `700 ${Math.min(W, H) * 0.26}px "Noto Serif JP", "Hiragino Mincho ProN", serif`
+      ctx.fillStyle = 'rgba(212,160,60,0.12)'
+      ctx.fillText('知', cx, cy)
+      ctx.restore()
+
       const act = hover?.group ?? locked // focused cluster, if any
       for (const [ai, bi] of g.edges) {
         const a = index.get(ai)!
@@ -265,7 +320,7 @@ export default function StackGraph() {
             off = size / 2 + 14
           }
           if (n.text || isHover || focusHere) {
-            ctx.font = '600 11px ui-monospace, monospace'
+            ctx.font = '700 11px ui-monospace, monospace'
             ctx.textAlign = 'center'
             ctx.fillStyle = n.text
               ? isHover
@@ -294,7 +349,7 @@ export default function StackGraph() {
         ctx.beginPath()
         ctx.arc(n.x, n.y, isFocus ? 19 : 16, 0, Math.PI * 2)
         ctx.stroke()
-        ctx.font = '600 13px ui-monospace, monospace'
+        ctx.font = '700 13px ui-monospace, monospace'
         ctx.fillStyle = on ? 'rgba(212,160,60,0.9)' : 'rgba(150,150,150,0.35)'
         ctx.textAlign = 'center'
         ctx.fillText(n.label + (isFocus && locked === n.group ? ' ·' : ''), n.x, n.y - 24)
@@ -302,12 +357,12 @@ export default function StackGraph() {
     }
 
     let raf = 0
-    const loop = () => {
+    const loop = (t: number) => {
       step()
-      draw()
+      draw(t)
       raf = requestAnimationFrame(loop)
     }
-    loop()
+    raf = requestAnimationFrame(loop)
     return () => {
       cancelAnimationFrame(raf)
       window.removeEventListener('resize', resize)
@@ -326,7 +381,15 @@ export default function StackGraph() {
       />
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-0 bg-[radial-gradient(55%_55%_at_50%_45%,rgba(212,160,60,0.12),transparent_70%)]"
+        className="pointer-events-none absolute inset-0"
+        style={{
+          background: [
+            // soft core glow behind the 知 (the rings themselves are drawn on the canvas)
+            'radial-gradient(circle at 50% 50%, rgba(212,160,60,0.10), transparent 58%)',
+            // gentle vignette so the edges settle back
+            'radial-gradient(circle at 50% 50%, transparent 60%, rgba(20,18,15,0.18) 100%)',
+          ].join(', '),
+        }}
       />
       <canvas ref={ref} className="relative h-full w-full" />
       <div className="pointer-events-none absolute bottom-6 left-6">

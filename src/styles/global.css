@@ -62,3 +62,17 @@
 @media (prefers-reduced-motion: reduce) {
   .page-enter { animation: none; }
 }
+
+/* neon flicker effect */
+@keyframes neon {
+  0%, 100% { opacity: 1; filter: drop-shadow(0 0 3px currentColor); }
+  10% { opacity: 0.85; filter: drop-shadow(0 0 1px currentColor); }
+  20% { opacity: 1; filter: drop-shadow(0 0 5px currentColor); }
+  30% { opacity: 0.9; filter: drop-shadow(0 0 2px currentColor); }
+  50% { opacity: 1; filter: drop-shadow(0 0 4px currentColor); }
+  70% { opacity: 0.88; filter: drop-shadow(0 0 2px currentColor); }
+  90% { opacity: 1; filter: drop-shadow(0 0 6px currentColor); }
+}
+@utility animate-neon {
+  animation: neon 2s ease-in-out infinite;
+}

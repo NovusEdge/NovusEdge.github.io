@@ -6,6 +6,7 @@ export type Project = {
   lang?: string
   stars?: number
   group: 'now' | 'chaos'
+  phase: 'building' | 'shipped' | 'on-ice' | 'chaos-era'
   featured?: boolean
   description: string
   tech: string[]
@@ -25,10 +26,11 @@ export const projects: Project[] = [
     lang: 'JavaScript',
     stars: 101,
     group: 'chaos',
+    phase: 'shipped',
     featured: true,
     description:
       'A "strategic" advisor to "help you achieve your goals." Half a joke, and somehow my most-starred repo by a mile.',
-    tech: ['JavaScript'],
+    tech: ['Claude', 'TypeScript', 'JavaScript'],
     links: [{ label: 'github', href: 'https://github.com/NovusEdge/palpatine' }],
     body: 'A tongue-in-cheek "strategic advisor" that dispenses gloriously unhinged guidance. It was never meant to be serious, which is exactly why it became my most-starred project. The internet rewards the right kind of nonsense.',
   },
@@ -39,12 +41,13 @@ export const projects: Project[] = [
     title: 'Engrammic',
     jp: '記',
     year: '2026',
-    lang: 'TypeScript',
+    lang: 'Python',
     group: 'now',
+    phase: 'building',
     featured: true,
     description:
       'Epistemic memory for AI agents: claims, evidence, and provenance as a first-class graph. Before intelligence can be trusted, it has to learn to doubt.',
-    tech: ['TypeScript', 'Python', 'MCP', 'Graph'],
+    tech: ['TypeScript', 'Python', 'MCP', 'Memgraph', 'Docker', 'Redis', 'Qdrant', 'Ollama', 'HuggingFace'],
     links: [
       { label: 'engrammic.ai', href: 'https://engrammic.ai' },
       { label: 'research', href: 'https://engrammic.ai/research' },
@@ -59,9 +62,10 @@ export const projects: Project[] = [
     year: '2026',
     lang: 'TypeScript',
     group: 'now',
+    phase: 'building',
     featured: true,
     description: "Your agent forgets. This one doesn't. Persistent, sourced memory for AI agents, shipped as a drop-in npm package.",
-    tech: ['TypeScript', 'npm'],
+    tech: ['TypeScript', 'Go', 'Pixi', 'npm', 'Docker'],
     links: [
       { label: 'github', href: 'https://github.com/engrammic-ai/veil' },
       { label: 'npm', href: 'https://www.npmjs.com/package/@engrammic/veil' },
@@ -75,6 +79,7 @@ export const projects: Project[] = [
     year: '2026',
     lang: 'Python',
     group: 'now',
+    phase: 'shipped',
     description:
       "The schema library behind Engrammic: the types and rules that turn an agent's observations into claims, facts, and beliefs.",
     tech: ['Python', 'pip'],
@@ -91,10 +96,11 @@ export const projects: Project[] = [
     year: '2026',
     lang: 'Hardware',
     group: 'now',
+    phase: 'building',
     featured: true,
     description:
       'Crowdsourced privacy infrastructure against mass surveillance: at-cost RF / WiFi-sensing hardware plus a P2P threat-intel network. Offense is shipping; defense is empty.',
-    tech: ['Hardware', 'P2P', 'RF'],
+    tech: ['ESP32', 'C', 'Rust', 'P2P', 'RF'],
     links: [{ label: 'github', href: 'https://github.com/NovusEdge/ocloak' }],
     body: 'WiFi sensing ships in routers and sees through walls. A $9 ESP32 does through-wall presence detection. Surveillance is commoditizing fast and defense is basically empty, so ØCLOAK fills the gap: at-cost devices you own outright and an anonymous, location-based threat-intel network. No subscriptions, no VC, open firmware.',
   },
@@ -105,6 +111,7 @@ export const projects: Project[] = [
     year: '2026',
     lang: 'Python',
     group: 'now',
+    phase: 'building',
     description:
       'Silent tongue-articulation to text: a quiet neural interface for driving LLM agents without saying a word. Early, and mostly [redacted].',
     tech: ['Python', 'firmware', 'signals'],
@@ -120,6 +127,7 @@ export const projects: Project[] = [
     year: '2021',
     lang: 'Go',
     group: 'chaos',
+    phase: 'chaos-era',
     description: 'A Go package implementing a simple logic-bomb: payload that waits quietly, then goes off on a trigger.',
     tech: ['Go'],
     links: [{ label: 'github', href: 'https://github.com/NovusEdge/puffgo' }],
@@ -132,6 +140,7 @@ export const projects: Project[] = [
     year: '2021',
     lang: 'Go',
     group: 'chaos',
+    phase: 'chaos-era',
     description: 'A forkbomb as a Go package, via cgo. A tiny lesson in how fast you can bring a machine to its knees.',
     tech: ['Go', 'cgo'],
     links: [{ label: 'github', href: 'https://github.com/NovusEdge/gfb' }],
@@ -144,6 +153,7 @@ export const projects: Project[] = [
     year: '2022',
     lang: 'C',
     group: 'chaos',
+    phase: 'chaos-era',
     description: 'A command-line tool to corrupt files, byte by byte: controlled destruction for testing (and mischief).',
     tech: ['C'],
     links: [{ label: 'github', href: 'https://github.com/NovusEdge/loxoten' }],
@@ -155,6 +165,7 @@ export const projects: Project[] = [
     jp: '毒',
     year: '2023',
     group: 'chaos',
+    phase: 'chaos-era',
     description: 'A community malware-development guide (with @AraChn3): the offensive-security notes I wish I had when starting out.',
     tech: ['guide', 'offsec'],
     links: [{ label: 'github', href: 'https://github.com/NovusEdge/malware-development-guide' }],
@@ -166,6 +177,7 @@ export const projects: Project[] = [
     jp: '攻',
     year: '2022',
     group: 'chaos',
+    phase: 'chaos-era',
     description: 'A pile of TryHackMe CTF writeups: the room-by-room grind that taught me to break things. Several live on the blog too.',
     tech: ['CTF', 'writeups'],
     links: [{ label: 'github', href: 'https://github.com/NovusEdge/thm-writeups' }],

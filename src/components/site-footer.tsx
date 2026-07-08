@@ -1,6 +1,5 @@
 import { lazy, Suspense, useState, type CSSProperties } from 'react'
 import { ImageDithering } from '@paper-design/shaders-react'
-import { Mail } from './icons'
 
 // reusable site footer: Creation-of-Adam hands reaching toward a contact spark,
 // with a giant, dimmed, cut-off word behind. Drop it at the bottom of any page.
@@ -40,24 +39,28 @@ export function SiteFooter({ word = 'Creation' }: { word?: string }) {
   const [open, setOpen] = useState(false)
   return (
     <footer className="relative flex min-h-[70vh] flex-col items-center justify-center overflow-hidden bg-charcoal text-bone">
-      {/* hands pinned to the screen edges, reaching toward the contact spark */}
-      <div className="relative z-10 h-[28vw] w-full">
+      {/* hands: stacked vertically on mobile, side-by-side on md+ */}
+      <div className="relative z-10 flex h-auto w-full flex-col items-center gap-4 px-6 py-8 md:h-[28vw] md:flex-row md:gap-0 md:p-0">
         <DitherHand
           src="/assets/hand-left.png"
-          className="absolute left-0 top-1/2 w-[47vw] -translate-y-1/2 aspect-[422/257]"
-        />
-        <DitherHand
-          src="/assets/hand-right.png"
-          className="absolute right-0 top-1/2 w-[47vw] -translate-y-1/2 aspect-[436/237]"
+          className="w-[70vw] aspect-[422/257] md:absolute md:left-0 md:top-1/2 md:w-[47vw] md:-translate-y-1/2"
         />
         <button
           onClick={() => setOpen(true)}
           aria-label="Get in touch"
-          className="group absolute left-1/2 top-1/2 z-10 flex h-14 w-14 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border border-gold/50 bg-gold/10 text-gold transition-all duration-300 hover:scale-110 hover:bg-gold/20 hover:shadow-[0_0_40px_-6px_rgba(212,160,60,0.7)]"
+          className="group relative z-10 shrink-0 font-body text-6xl font-bold md:absolute md:left-1/2 md:top-1/2 md:-translate-x-1/2 md:-translate-y-1/2"
         >
-          <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-gold/20" />
-          <Mail className="relative h-5 w-5" />
+          <span className="animate-neon text-rose-400 group-hover:animate-none group-hover:drop-shadow-[0_0_8px_rgba(251,113,133,0.6)]">
+            @
+          </span>
+          <span className="pointer-events-none absolute left-1/2 top-full mt-2 -translate-x-1/2 whitespace-nowrap rounded-full border border-rose-400/30 bg-charcoal-deep px-3 py-1 font-mono text-xs tracking-wider text-rose-400 opacity-0 transition-opacity group-hover:opacity-100">
+            get in touch
+          </span>
         </button>
+        <DitherHand
+          src="/assets/hand-right.png"
+          className="w-[70vw] aspect-[436/237] md:absolute md:right-0 md:top-1/2 md:w-[47vw] md:-translate-y-1/2"
+        />
       </div>
 
       {/* giant cut-off italic word */}
