@@ -1,8 +1,12 @@
 import { useEffect, useRef } from 'react'
-import { Link } from 'react-router'
+import { TLink } from '../../components/page-transition'
 import { revealCards } from '../../lib/reveals'
 import { prefersReducedMotion } from '../../lib/motion'
+import { ArrowRight } from '../../components/icons'
 import { DOMAINS, STACK, LANGS, LANG_TOTAL, LATELY, GROUP_NOTES, DEPTH, PROJECTS, type Tech, type Depth } from './data'
+
+// look up a tech's icon by name, for the project rows
+const TECH_BY_NAME = new Map(STACK.flatMap((g) => g.items.map((t) => [t.name, t] as const)))
 
 // editorial x hud: a magazine spread that is quietly instrumented.
 // print bones (huge type, kanji, hairlines, whitespace), live blood
@@ -128,23 +132,42 @@ export default function StackEditorial() {
                 the stack, doing real work
               </span>
             </div>
-            <Link
+            <TLink
               to="/portfolio"
               className="group inline-flex items-center gap-2 rounded-full border border-gold/40 bg-gold/[0.06] px-4 py-1.5 font-mono text-[11px] uppercase tracking-[0.2em] text-gold transition-colors hover:bg-gold/15"
             >
-              full portfolio <span className="inline-block transition-transform group-hover:translate-x-0.5">→</span>
-            </Link>
+              full portfolio
+              <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-1" />
+            </TLink>
           </div>
           {PROJECTS.map((p) => (
             <div
               key={p.name}
               data-card
-              className="grid grid-cols-1 gap-2 border-t border-charcoal/10 py-6 md:grid-cols-[14rem_1fr] dark:border-bone/10"
+              className="grid grid-cols-1 gap-3 border-t border-charcoal/10 py-6 md:grid-cols-[13rem_1fr_auto] md:items-center md:gap-8 dark:border-bone/10"
             >
               <span className="font-display text-2xl font-black text-charcoal dark:text-bone">{p.name}</span>
-              <div>
-                <div className="font-mono text-[11px] uppercase tracking-[0.15em] text-gold">{p.tools}</div>
-                <p className="mt-1.5 text-sm leading-relaxed text-charcoal/65 dark:text-bone/65">{p.blurb}</p>
+              <p className="text-sm leading-relaxed text-charcoal/65 dark:text-bone/65">{p.blurb}</p>
+              <div className="flex items-center gap-4 md:justify-end">
+                {p.tech.map((name) => {
+                  const t = TECH_BY_NAME.get(name)
+                  if (!t) return null
+                  return (
+                    <svg
+                      key={name}
+                      viewBox="0 0 24 24"
+                      role="img"
+                      aria-label={name}
+                      className={`h-6 w-6 shrink-0 transition-transform hover:scale-110 ${
+                        t.mono ? 'fill-charcoal/70 dark:fill-bone/70' : ''
+                      }`}
+                      style={t.mono ? undefined : { fill: `#${t.icon.hex}` }}
+                    >
+                      <title>{name}</title>
+                      <path d={t.icon.path} />
+                    </svg>
+                  )
+                })}
               </div>
             </div>
           ))}

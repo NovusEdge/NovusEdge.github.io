@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 import { Routes, Route, useLocation } from 'react-router'
 import { Header } from './components/header'
-import { PageWipe } from './components/page-wipe'
+import { GoldCurtain } from './components/page-transition'
 import GrainShader from './components/react-bits/GrainShader'
 import Landing from './routes/index'
 import BlogIndex from './routes/blog/index'
@@ -20,7 +20,7 @@ export default function App() {
     <>
       {/* landing is a self-contained dark cover with its own nav; header rides every other page */}
       {pathname !== '/' && <Header />}
-      <PageWipe />
+      <GoldCurtain />
       <GrainShader />
       <Routes>
         <Route path="/" element={<Landing />} />

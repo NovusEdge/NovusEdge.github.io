@@ -9,7 +9,10 @@ export function getPostThumbnail(slug: string): string | null {
   if (slug.includes('red')) return '/assets/img/writeup_assets/red/port-80.png'
   if (slug.includes('toolsrus')) return '/assets/img/writeup_assets/toolsrus/protected_page_moved.png'
   if (slug.includes('bootsplash')) return '/assets/img/LJ-TWM-04.png'
+  // AI / founder-log posts -> art assets
+  if (slug === 'on-building-something-engrammic') return '/assets/cosmos_948956014.jpeg'
   // personal / blog-update posts -> art assets
+  if (slug === 'im-back-part-1-the-rise') return '/assets/fallen_angel.webp'
   if (slug === 'hello-world') return '/assets/bg-3.jpg'
   if (slug === 'university') return '/assets/spore.jpg'
   if (slug === 'what-do-i-want') return '/assets/anim2.gif'

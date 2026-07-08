@@ -1,5 +1,5 @@
 import { useRef } from 'react'
-import { Link } from 'react-router'
+import { TLink } from '../components/page-transition'
 import gsap from 'gsap'
 import { useGSAP } from '@gsap/react'
 import { Dithering } from '@paper-design/shaders-react'
@@ -127,14 +127,14 @@ export default function Landing() {
             <StatusStrip />
             <nav className="flex flex-wrap items-center justify-center gap-3 sm:gap-4">
               {NAV.map((l, i) => (
-                <Link
+                <TLink
                   key={l.to}
                   to={l.to}
                   style={{ animationDelay: `${0.15 + i * 0.08}s` }}
                   className="nav-pill rounded-full border border-bone/25 px-5 py-2 font-display text-sm font-bold uppercase tracking-[0.2em] text-bone/85 transition-[transform,background-color,border-color,box-shadow] duration-300 hover:-translate-y-0.5 hover:border-gold hover:bg-gold hover:text-charcoal hover:shadow-[0_8px_24px_rgba(212,160,60,0.25)]"
                 >
                   {l.label}
-                </Link>
+                </TLink>
               ))}
             </nav>
           </div>

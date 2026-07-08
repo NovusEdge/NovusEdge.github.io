@@ -159,10 +159,10 @@ export const DEPTH: Record<string, Depth> = {
   Lua: 'dabbling', WebGL: 'dabbling', WASM: 'dabbling', ESP32: 'dabbling', 'Raspberry Pi': 'dabbling', Arduino: 'dabbling',
 }
 
-// the stack doing real work. tool lists are best-guess, confirm/correct these
-export const PROJECTS = [
-  { name: 'Engrammic', tools: 'Rust · Neo4j · Qdrant', blurb: 'epistemic memory for AI agents.' },
-  { name: 'ØCLOAK', tools: 'ESP32 · RF · C', blurb: 'at-cost anti-surveillance hardware.' },
-  { name: 'Veil', tools: 'Python · PyTorch', blurb: 'the guardrail layer for agent memory.' },
-  { name: 'palpatine', tools: 'Python', blurb: 'the joke repo that pulled 101 stars.' },
+// the stack doing real work. `tech` names must match STACK item names (they render as icons)
+export const PROJECTS: { name: string; tech: string[]; blurb: string }[] = [
+  { name: 'Engrammic', tech: ['Rust', 'Neo4j', 'Qdrant'], blurb: 'epistemic memory for AI agents.' },
+  { name: 'ØCLOAK', tech: ['ESP32', 'C'], blurb: 'at-cost anti-surveillance hardware.' },
+  { name: 'Veil', tech: ['Python', 'PyTorch'], blurb: 'the guardrail layer for agent memory.' },
+  { name: 'palpatine', tech: ['Python'], blurb: 'the joke repo that pulled 101 stars.' },
 ]

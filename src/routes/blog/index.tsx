@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import { Link } from 'react-router'
+import { TLink } from '../../components/page-transition'
 import { Meta } from '../../lib/meta'
 import { posts } from '../../lib/posts'
 import { filterPosts, groupByYear } from '../../lib/blog-list'
@@ -118,12 +118,12 @@ export default function BlogIndex() {
                     {/* Metadata and Title column */}
                     <div data-col className="md:col-span-7 flex flex-col">
                       <Magnetic range={20}>
-                        <Link
+                        <TLink
                           to={`/blog/${post.slug}`}
                           className="font-display text-xl font-bold leading-snug text-charcoal transition-all duration-200 group-hover:translate-x-1 group-hover:text-paper-deep dark:text-bone dark:group-hover:text-paper md:text-2xl"
                         >
                           {post.title}
-                        </Link>
+                        </TLink>
                       </Magnetic>
                       {post.description && (
                         <p className="mt-2 text-sm font-medium leading-relaxed text-charcoal/75 dark:text-bone/75">

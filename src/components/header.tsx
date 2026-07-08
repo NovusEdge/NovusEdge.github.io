@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
-import { NavLink } from 'react-router'
 import Magnetic from './react-bits/Magnetic'
+import { TNavLink } from './page-transition'
 
 const links = [
   { to: '/blog', label: 'Blog', jp: 'ブログ' },
@@ -35,18 +35,18 @@ export function Header() {
     <header className="fixed left-1/2 top-5 z-50 -translate-x-1/2">
       <nav className="flex items-center gap-6 rounded-full border border-charcoal/10 bg-bone/75 px-6 py-2.5 shadow-[0_8px_30px_rgb(0,0,0,0.04)] backdrop-blur-lg dark:border-bone/10 dark:bg-charcoal/75 dark:shadow-[0_8px_30px_rgb(0,0,0,0.3)]">
         <Magnetic range={40}>
-          <NavLink
+          <TNavLink
             to="/"
             aria-label="Home"
             className="font-display text-sm font-black uppercase tracking-wider text-charcoal transition-colors hover:text-gold dark:text-bone"
           >
             Home
-          </NavLink>
+          </TNavLink>
         </Magnetic>
         <span aria-hidden className="h-4 w-px bg-charcoal/15 dark:bg-bone/15" />
         {links.map((l) => (
           <Magnetic key={l.to} range={40}>
-            <NavLink
+            <TNavLink
               to={l.to}
               className={({ isActive }) =>
                 `link-draw font-display text-sm font-semibold uppercase tracking-wider transition-colors ${
@@ -55,7 +55,7 @@ export function Header() {
               }
             >
               {l.label}
-            </NavLink>
+            </TNavLink>
           </Magnetic>
         ))}
         <ThemeToggle />

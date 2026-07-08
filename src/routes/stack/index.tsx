@@ -121,6 +121,7 @@ export default function StackPage() {
   const dir = idx === last.current ? 0 : idx > last.current ? 1 : -1
   last.current = idx
 
+  // stack sub-views have their own framer-motion slide, so no view transition here (would double up)
   const goTo = (i: number) => navigate(`/stack/${VIEWS[i]}`)
 
   return (

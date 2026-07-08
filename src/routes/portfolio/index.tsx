@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import { Link } from 'react-router'
+import { TLink } from '../../components/page-transition'
 import { Meta } from '../../lib/meta'
 import { projects, type Project } from '../../content/projects'
 import { fuzzyMatch } from '../../lib/blog-list'
@@ -296,13 +296,13 @@ export default function PortfolioIndex() {
             </div>
           </div>
           <div className="flex w-full flex-col items-start gap-3 sm:w-auto sm:flex-row sm:items-center sm:gap-5">
-            <Link
+            <TLink
               to="/stack"
               className="group inline-flex shrink-0 items-center gap-1.5 font-mono text-xs font-medium uppercase tracking-[0.2em] text-paper-deep transition-colors hover:text-gold dark:text-paper"
             >
               <span className="link-draw">the stack</span>
               <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-1" />
-            </Link>
+            </TLink>
             <input
               type="search"
               value={q}

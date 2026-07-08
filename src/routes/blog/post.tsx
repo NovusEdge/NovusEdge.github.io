@@ -1,5 +1,6 @@
 import { useRef } from 'react'
-import { Link, useParams } from 'react-router'
+import { useParams } from 'react-router'
+import { TLink } from '../../components/page-transition'
 import { useGSAP } from '@gsap/react'
 import { Meta } from '../../lib/meta'
 import { getPost } from '../../lib/posts'
@@ -47,12 +48,12 @@ export default function BlogPost() {
       <article className="mx-auto max-w-2xl px-6 pb-24 pt-12">
         <div className="mb-10">
           <Magnetic range={25}>
-            <Link
+            <TLink
               to="/blog"
               className="group inline-block rounded border border-charcoal/10 bg-bone-tint/10 px-3.5 py-1.5 font-mono text-xs uppercase tracking-[0.2em] text-paper-deep transition-colors hover:border-gold dark:border-bone/10 dark:bg-charcoal-tint/10 dark:text-paper dark:hover:border-gold"
             >
               [ back to blog ]
-            </Link>
+            </TLink>
           </Magnetic>
         </div>
 
