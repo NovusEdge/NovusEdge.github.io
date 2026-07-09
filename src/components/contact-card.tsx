@@ -5,7 +5,7 @@ import mail from 'react-useanimations/lib/mail'
 import twitter from 'react-useanimations/lib/twitter'
 import github from 'react-useanimations/lib/github'
 import linkedin from 'react-useanimations/lib/linkedin'
-import { siHuggingface } from 'simple-icons'
+import { siHuggingface, siKofi } from 'simple-icons'
 import { X } from './icons'
 
 // animated contact orbit. lazy-loaded from the footer so lottie-web only ships
@@ -14,8 +14,8 @@ import { X } from './icons'
 const EMAIL = 'khimanialiasgar@gmail.com'
 const ICON = '#e8e4da' // bone-tint, resting
 
-// hugging face icon (no lottie glyph available)
-function HuggingIcon({ size = 32 }: { size?: number }) {
+// static icons (no lottie glyph available)
+function StaticIcon({ path, size = 32 }: { path: string; size?: number }) {
   const ref = useRef<SVGSVGElement>(null)
   const play = () => {
     if (ref.current)
@@ -32,7 +32,7 @@ function HuggingIcon({ size = 32 }: { size?: number }) {
       className="block origin-center"
       onMouseEnter={play}
     >
-      <path d={siHuggingface.path} />
+      <path d={path} />
     </svg>
   )
 }
@@ -42,7 +42,8 @@ const ALL_SOCIALS = [
   { name: 'Twitter', href: 'https://twitter.com/0kaliasgar', anim: twitter },
   { name: 'GitHub', href: 'https://github.com/NovusEdge', anim: github },
   { name: 'LinkedIn', href: 'https://www.linkedin.com/in/aliasgarkhimani/', anim: linkedin },
-  { name: 'Hugging Face', href: 'https://huggingface.co/NovusEdge', anim: null },
+  { name: 'Hugging Face', href: 'https://huggingface.co/NovusEdge', icon: siHuggingface.path },
+  { name: 'Ko-fi', href: 'https://ko-fi.com/aliasgarkhimani', icon: siKofi.path },
 ]
 
 function ContactOrbit({ onClose }: { onClose: () => void }) {
@@ -91,9 +92,9 @@ function ContactOrbit({ onClose }: { onClose: () => void }) {
           >
             {s.anim ? (
               <UseAnimations animation={s.anim as never} size={28} strokeColor={ICON} />
-            ) : (
-              <HuggingIcon size={28} />
-            )}
+            ) : s.icon ? (
+              <StaticIcon path={s.icon} size={28} />
+            ) : null}
           </a>
         )
       })}
