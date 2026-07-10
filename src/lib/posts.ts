@@ -15,6 +15,9 @@ const files = import.meta.glob('../content/blog/*.md', {
   eager: true,
 }) as Record<string, string>
 
+// ponytail: hidden slugs — uncomment when ready to publish
+const HIDDEN = ['im-back-pt-1', 'im-back-pt-2']
+
 export const posts: Post[] = Object.entries(files)
   .map(([path, raw]) => {
     const slug = path.split('/').pop()!.replace(/\.md$/, '')
@@ -28,6 +31,7 @@ export const posts: Post[] = Object.entries(files)
       content,
     }
   })
+  .filter((p) => !HIDDEN.includes(p.slug))
   .sort((a, b) => b.date.localeCompare(a.date))
 
 export const getPost = (slug: string) => posts.find((p) => p.slug === slug)
