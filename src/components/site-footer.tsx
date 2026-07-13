@@ -14,7 +14,7 @@ const HAND_PERF = { minPixelRatio: 1, maxPixelCount: 400_000 }
 // box aspect matches the source so mask 100% fills it and the arm reaches the edge.
 // active=false renders a cheap flat-gold silhouette (mask does the shape); the WebGL
 // dither only mounts when the footer is near the viewport, and never on phones.
-function DitherHand({ src, className = '', active }: { src: string; className?: string; active: boolean }) {
+function DitherHand({ src, className = '', active, style = {} }: { src: string; className?: string; active: boolean; style?: CSSProperties }) {
   const mask: CSSProperties = {
     WebkitMaskImage: `url(${src})`,
     maskImage: `url(${src})`,
@@ -24,7 +24,7 @@ function DitherHand({ src, className = '', active }: { src: string; className?: 
     maskRepeat: 'no-repeat',
   }
   return (
-    <div className={className} style={active ? mask : { ...mask, background: '#d4a03c' }} aria-hidden>
+    <div className={className} style={active ? { ...mask, ...style } : { ...mask, background: '#d4a03c', ...style }} aria-hidden>
       {active && (
         <ImageDithering
           className="h-full w-full"
@@ -46,6 +46,8 @@ export function SiteFooter({ word = 'Creation' }: { word?: string }) {
   const ref = useRef<HTMLElement>(null)
   const mobile = useRef(isMobile()).current
 
+  const [handOffset, setHandOffset] = useState(0)
+
   useEffect(() => {
     if (mobile) return // phones stick with the flat-gold fallback
     const el = ref.current
@@ -53,6 +55,26 @@ export function SiteFooter({ word = 'Creation' }: { word?: string }) {
     const io = new IntersectionObserver(([e]) => e.isIntersecting && setNear(true), { rootMargin: '200px' })
     io.observe(el)
     return () => io.disconnect()
+  }, [mobile])
+
+  // scroll-driven hand pointing animation
+  useEffect(() => {
+    if (mobile) return
+    const onScroll = () => {
+      const el = ref.current
+      if (!el) return
+      const rect = el.getBoundingClientRect()
+      const viewH = window.innerHeight
+      // only animate when footer is in view
+      if (rect.top < viewH && rect.bottom > 0) {
+        const progress = 1 - rect.top / viewH // 0 at top of viewport, 1+ when scrolled past
+        const wave = Math.sin(progress * Math.PI * 2) * 12 // oscillate +/- 12px
+        setHandOffset(wave)
+      }
+    }
+    window.addEventListener('scroll', onScroll, { passive: true })
+    onScroll()
+    return () => window.removeEventListener('scroll', onScroll)
   }, [mobile])
 
   const active = near && !mobile
@@ -66,7 +88,8 @@ export function SiteFooter({ word = 'Creation' }: { word?: string }) {
         <DitherHand
           active={active}
           src="/assets/hand-left.png"
-          className="w-[70vw] aspect-[422/257] md:absolute md:left-0 md:top-1/2 md:w-[47vw] md:-translate-y-1/2"
+          className="w-[70vw] aspect-[422/257] transition-transform duration-150 md:absolute md:left-0 md:top-1/2 md:w-[47vw] md:-translate-y-1/2"
+          style={{ transform: `translateX(${handOffset}px)` }}
         />
         <button
           onClick={() => setOpen(true)}
@@ -83,7 +106,8 @@ export function SiteFooter({ word = 'Creation' }: { word?: string }) {
         <DitherHand
           active={active}
           src="/assets/hand-right.png"
-          className="w-[70vw] aspect-[436/237] md:absolute md:right-0 md:top-1/2 md:w-[47vw] md:-translate-y-1/2"
+          className="w-[70vw] aspect-[436/237] transition-transform duration-150 md:absolute md:right-0 md:top-1/2 md:w-[47vw] md:-translate-y-1/2"
+          style={{ transform: `translateX(${-handOffset}px)` }}
         />
       </div>
 

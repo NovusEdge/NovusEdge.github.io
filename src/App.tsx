@@ -3,6 +3,7 @@ import { Routes, Route, useLocation } from 'react-router'
 import { Header } from './components/header'
 import GrainShader from './components/react-bits/GrainShader'
 import Landing from './routes/index'
+import AboutPage from './routes/about/index'
 import BlogIndex from './routes/blog/index'
 import BlogPost from './routes/blog/post'
 import PortfolioIndex from './routes/portfolio/index'
@@ -25,6 +26,7 @@ export default function App() {
       <div key={key} className="page-enter">
         <Routes>
           <Route path="/" element={<Landing />} />
+          <Route path="/about" element={<AboutPage />} />
           <Route path="/blog" element={<BlogIndex />} />
           <Route path="/blog/:slug" element={<BlogPost />} />
           <Route path="/portfolio" element={<PortfolioIndex />} />

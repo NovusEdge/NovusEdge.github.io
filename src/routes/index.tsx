@@ -1,10 +1,7 @@
 import { useEffect, useRef } from 'react'
 import { TLink } from '../components/page-transition'
-import gsap from 'gsap'
-import { useGSAP } from '@gsap/react'
 import { Dithering } from '@paper-design/shaders-react'
 import { Meta } from '../lib/meta'
-import { isMobile, prefersReducedMotion } from '../lib/motion'
 import { ArrowDown } from '../components/icons'
 
 const NAME = 'Aliasgar Khimani'
@@ -12,74 +9,30 @@ const HANDLE = 'NovusEdge'
 const TAGLINE = 'making computers have opinions.'
 
 const NAV = [
+  { to: '/about', label: 'About' },
   { to: '/blog', label: 'Blog' },
   { to: '/portfolio', label: 'Portfolio' },
   { to: '/research', label: 'Research' },
   { to: '/stack', label: 'Stack' },
 ]
 
-// keep the shaders off the retina-res treadmill; two layers run at once during the morph,
-// so cap the pixel budget hard, dithering is blocky and barely shows the lower resolution
 const PERF = { minPixelRatio: 1, maxPixelCount: 380_000 }
 
-type Mount = {
-  setSpeed?: (n?: number) => void
-  setUniforms?: (u: Record<string, number>) => void
-  // setUniformValues sets the GL uniform WITHOUT forcing an extra render (setUniforms does);
-  // the shader's running rAF loop picks it up next frame, so per-frame scale tweens don't double-draw.
-  setUniformValues?: (u: Record<string, number>) => void
-}
-const mountOf = (el: unknown) => (el as { paperShaderMount?: Mount } | null)?.paperShaderMount
-const setSpeed = (el: unknown, v: number) => mountOf(el)?.setSpeed?.(v)
-const setScale = (el: unknown, v: number) => mountOf(el)?.setUniformValues?.({ u_scale: v })
+type Mount = { setSpeed?: (n?: number) => void }
+const setSpeed = (el: unknown, v: number) =>
+  (el as { paperShaderMount?: Mount } | null)?.paperShaderMount?.setSpeed?.(v)
 
-// swirl → speeds up → morphs into warp (crossfade + shared zoom) → back into swirl that slows → loops
-function DitherMorphBg() {
+// ponytail: just the swirl, no morph — simpler + lighter
+function DitherBg() {
   const wrap = useRef<HTMLDivElement>(null)
   const swirl = useRef<HTMLDivElement>(null)
-  const warp = useRef<HTMLDivElement>(null)
-  const tl = useRef<gsap.core.Timeline | null>(null)
-  // one shader on phones halves the landing's GPU cost; the morph just has nothing to cross-fade to.
-  const mobile = useRef(isMobile()).current
 
-  useGSAP(
-    () => {
-      const st = { v: 0.08, s: 1 }
-      const push = () => {
-        setSpeed(swirl.current, st.v)
-        setSpeed(warp.current, st.v)
-      }
-      const zoom = () => {
-        setScale(swirl.current, st.s)
-        setScale(warp.current, st.s)
-      }
-      if (prefersReducedMotion() || mobile) {
-        push()
-        return
-      }
-      tl.current = gsap.timeline({ repeat: -1 })
-      tl.current
-        .to(st, { v: 0.4, duration: 5, ease: 'power2.in', onUpdate: push })
-        .to(warp.current, { opacity: 1, duration: 2.4, ease: 'power1.inOut' }, 3.2)
-        .to(st, { s: 1.28, duration: 2.4, ease: 'power2.inOut', onUpdate: zoom }, 3.2)
-        .to(warp.current, { opacity: 0, duration: 2.4, ease: 'power1.inOut' }, 7)
-        .to(st, { s: 1, duration: 2.4, ease: 'power2.inOut', onUpdate: zoom }, 7)
-        .to(st, { v: 0.08, duration: 5, ease: 'power2.out', onUpdate: push }, 7)
-    },
-    { scope: wrap, dependencies: [mobile] },
-  )
-
-  // stop the WebGL loops (and the morph) whenever the hero scrolls out of view.
+  // pause WebGL when hero scrolls out of view
   useEffect(() => {
     const el = wrap.current
     if (!el) return
     const io = new IntersectionObserver(
-      ([e]) => {
-        const on = e.isIntersecting
-        setSpeed(swirl.current, on ? 0.08 : 0)
-        setSpeed(warp.current, on ? 0.08 : 0)
-        if (tl.current) (on ? tl.current.play() : tl.current.pause())
-      },
+      ([e]) => setSpeed(swirl.current, e.isIntersecting ? 0.08 : 0),
       { threshold: 0 },
     )
     io.observe(el)
@@ -101,21 +54,6 @@ function DitherMorphBg() {
         size={2}
         speed={0.08}
       />
-      {!mobile && (
-        <Dithering
-          ref={warp as never}
-          className="absolute inset-0 opacity-0"
-          width="100%"
-          height="100%"
-          {...PERF}
-          colorBack="#141414"
-          colorFront="#d4a03c"
-          shape="warp"
-          type="4x4"
-          size={2}
-          speed={0.08}
-        />
-      )}
       <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-charcoal/20 via-transparent to-charcoal" />
     </div>
   )
@@ -138,7 +76,7 @@ export default function Landing() {
       <div className="bg-charcoal text-bone">
         {/* hero */}
         <section className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden px-6 text-center">
-          <DitherMorphBg />
+          <DitherBg />
           {/* soft radial scrim so hero text reads against the pattern */}
           <div
             className="pointer-events-none absolute inset-0 z-[5]"

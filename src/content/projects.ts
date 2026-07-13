@@ -5,8 +5,8 @@ export type Project = {
   year: string
   lang?: string
   stars?: number
-  group: 'now' | 'chaos'
-  phase: 'building' | 'shipped' | 'on-ice' | 'chaos-era'
+  group: 'now' | 'shipped' | 'chaos' | 'oss'
+  phase: 'building' | 'shipped' | 'on-ice' | 'chaos-era' | 'contributor'
   featured?: boolean
   description: string
   tech: string[]
@@ -42,8 +42,8 @@ export const projects: Project[] = [
     jp: '記',
     year: '2026',
     lang: 'Python',
-    group: 'now',
-    phase: 'building',
+    group: 'shipped',
+    phase: 'shipped',
     featured: true,
     description:
       'Epistemic memory for AI agents: claims, evidence, and provenance as a first-class graph. Before intelligence can be trusted, it has to learn to doubt.',
@@ -61,8 +61,8 @@ export const projects: Project[] = [
     jp: '帳',
     year: '2026',
     lang: 'TypeScript',
-    group: 'now',
-    phase: 'building',
+    group: 'shipped',
+    phase: 'shipped',
     featured: true,
     description: "Your agent forgets. This one doesn't. Persistent, sourced memory for AI agents, shipped as a drop-in npm package.",
     tech: ['TypeScript', 'Go', 'Pixi', 'npm', 'Docker'],
@@ -78,7 +78,7 @@ export const projects: Project[] = [
     jp: '型',
     year: '2026',
     lang: 'Python',
-    group: 'now',
+    group: 'shipped',
     phase: 'shipped',
     description:
       "The schema library behind Engrammic: the types and rules that turn an agent's observations into claims, facts, and beliefs.",
@@ -105,18 +105,19 @@ export const projects: Project[] = [
     body: 'WiFi sensing ships in routers and sees through walls. A $9 ESP32 does through-wall presence detection. Surveillance is commoditizing fast and defense is basically empty, so ØCLOAK fills the gap: at-cost devices you own outright and an anonymous, location-based threat-intel network. No subscriptions, no VC, open firmware.',
   },
   {
-    slug: 'neuro-llm',
-    title: 'neuro-llm',
-    jp: '囁',
+    slug: 'goob',
+    title: 'goob',
+    jp: '猫',
     year: '2026',
-    lang: 'Python',
+    lang: 'GDScript',
     group: 'now',
     phase: 'building',
+    featured: true,
     description:
-      'Silent tongue-articulation to text: a quiet neural interface for driving LLM agents without saying a word. Early, and mostly [redacted].',
-    tech: ['Python', 'firmware', 'signals'],
-    links: [{ label: 'github', href: 'https://github.com/NovusEdge/whisperless' }],
-    body: 'Teaching machines to read intent straight off the body: silent articulation captured and turned into text you can feed an agent. Hardware, firmware, and a pile of hypotheses. Early days, and I am keeping most of it under wraps for now.',
+      'A desktop pet cat that lives on your screen - wanders, naps, chases your cursor, and comments on what your machine is doing via LLM. Bring your own spritesheet.',
+    tech: ['Godot', 'Python', 'Go', 'LLM'],
+    links: [{ label: 'github', href: 'https://github.com/NovusEdge/goob' }],
+    body: 'A fullscreen transparent overlay pet built in Godot 4. The cat wanders, naps, follows your cursor, reacts to CPU load and battery, and comments via canned lines or a live LLM daemon. Not hardcoded to a cat - bring your own creature spritesheet.',
   },
 
   // ---- chaos & tools (the CTF-kid era) ----
@@ -182,6 +183,70 @@ export const projects: Project[] = [
     tech: ['CTF', 'writeups'],
     links: [{ label: 'github', href: 'https://github.com/NovusEdge/thm-writeups' }],
     body: 'The archive of TryHackMe rooms I worked through: enumeration, footholds, privesc, repeat. Half the reason this site has a blog. Many of these are written up in full over there.',
+  },
+
+  // ---- open source contributions ----
+  {
+    slug: 'deepspeed',
+    title: 'DeepSpeed',
+    jp: '速',
+    year: '2026',
+    lang: 'Python',
+    group: 'oss',
+    phase: 'contributor',
+    description: 'Microsoft\'s deep learning optimization library. Contributed type hints, changelog tooling, and warning fixes. Multiple merged PRs.',
+    tech: ['Python', 'PyTorch', 'distributed'],
+    links: [
+      { label: 'upstream', href: 'https://github.com/deepspeedai/DeepSpeed' },
+      { label: 'my PRs', href: 'https://github.com/deepspeedai/DeepSpeed/pulls?q=author%3ANovusEdge' },
+    ],
+    body: 'Contributing to Microsoft\'s DeepSpeed: type hints for better DX, changelog automation, and fixing silent failure modes. The kind of unglamorous work that makes a library nicer to use.',
+  },
+  {
+    slug: 'tapestry',
+    title: 'Tapestry',
+    jp: '織',
+    year: '2026',
+    lang: 'Python',
+    group: 'oss',
+    phase: 'contributor',
+    description: 'The AI Alliance\'s distributed training framework. Contributed eval schema, CI fixes, and active on the M1 roadmap.',
+    tech: ['Python', 'distributed', 'federated'],
+    links: [
+      { label: 'upstream', href: 'https://github.com/The-AI-Alliance/tapestry' },
+      { label: 'my PRs', href: 'https://github.com/The-AI-Alliance/tapestry/pulls?q=author%3ANovusEdge' },
+    ],
+    body: 'Active contributor to Tapestry, the AI Alliance\'s distributed training project. Merged PRs on the eval gate schema and CI, and engaged on the M1 heterogeneous-hardware epic.',
+  },
+  {
+    slug: 'lightgbm',
+    title: 'LightGBM',
+    jp: '木',
+    year: '2023',
+    lang: 'C++',
+    group: 'oss',
+    phase: 'contributor',
+    description: 'Microsoft\'s gradient boosting framework. Early contributions to the project.',
+    tech: ['C++', 'Python', 'ML'],
+    links: [
+      { label: 'upstream', href: 'https://github.com/microsoft/LightGBM' },
+    ],
+    body: 'Contributed to Microsoft\'s LightGBM, a fast gradient boosting framework used across industry.',
+  },
+  {
+    slug: 'rosin',
+    title: 'ROSIN',
+    jp: '機',
+    year: '2022',
+    lang: 'C++',
+    group: 'oss',
+    phase: 'contributor',
+    description: 'ROS-Industrial quality-assured robot software components. Contributed to the EU-funded robotics ecosystem.',
+    tech: ['C++', 'ROS', 'robotics'],
+    links: [
+      { label: 'project', href: 'https://rosin-project.eu' },
+    ],
+    body: 'Contributed to the ROSIN (ROS-Industrial) ecosystem, an EU-funded project building quality-assured components for industrial robotics.',
   },
 ]
 

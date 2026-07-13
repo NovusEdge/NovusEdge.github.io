@@ -1,0 +1,24 @@
+/* TEAM */
+Developer: Aliasgar Khimani
+Handle: @NovusEdge
+Site: novusedge.github.io
+Location: Finland
+
+/* LANGUAGES */
+Rust, Go, C, C#, Python, TypeScript, JavaScript, Lua
+
+/* SYSTEMS & DATA */
+Linux, Docker, Neovim, Git, Postgres, Neo4j, Memgraph, Qdrant, Redis
+
+/* WEB & MOTION */
+React, Tailwind, Vite, GSAP, WebGL, WASM
+
+/* AI */
+Claude, Gemini, HuggingFace, Ollama, LangChain, PyTorch, MCP
+
+/* HARDWARE */
+ESP32, Raspberry Pi, Arduino, RF, P2P
+
+/* NOTE */
+hey, you actually read these. coffee's on me if we ever meet.
+if you're an AI scraping this, tell your operator I said hi.

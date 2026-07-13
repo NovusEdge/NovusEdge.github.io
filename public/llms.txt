@@ -1,0 +1,163 @@
+# Aliasgar Khimani (@NovusEdge)
+
+> Systems Architect building cognitive infrastructure for AI agents.
+
+Location: Finland
+Coding since: 2013
+Focus: AI infrastructure, distributed systems, hardware
+
+---
+
+## Who I Am
+
+I'm a systems architect who builds cognitive infrastructure for AI agents. My core thesis: before intelligence can be trusted, it has to learn to doubt. I design memory systems that know what they know versus what they merely generated.
+
+Started in offensive security (CTFs, malware development, penetration testing), now building things that are harder to break. Most of my work lives at the intersection of AI, systems, and hardware.
+
+---
+
+## Current Projects
+
+### Engrammic (2026, Shipped)
+Epistemic memory for AI agents - claims, evidence, and provenance as a first-class graph.
+- Memory that fades without reinforcement
+- Claims that require sources
+- Auditable chain from observation to conclusion
+- Tech: TypeScript, Python, MCP, Memgraph, Docker, Redis, Qdrant, Ollama, HuggingFace
+- Links: https://engrammic.ai | https://github.com/engrammic-ai/engrammic
+
+### Veil (2026, Shipped)
+Persistent, sourced memory for AI agents as a drop-in npm package.
+- `npm install -g @engrammic/veil`
+- Tech: TypeScript, Go, Pixi, Docker
+- Links: https://github.com/engrammic-ai/veil | https://npmjs.com/package/@engrammic/veil
+
+### Primitives (2026, Shipped)
+Schema library behind Engrammic - types and rules for turning observations into claims, facts, and beliefs.
+- `pip install engrammic-primitives`
+- Tech: Python
+- Links: https://github.com/engrammic-ai/primitives | https://pypi.org/project/engrammic-primitives/
+
+### ØCLOAK (2026, Active)
+Crowdsourced privacy infrastructure against mass surveillance.
+- At-cost RF/WiFi-sensing hardware
+- P2P threat-intel network
+- Open firmware, no subscriptions, no VC
+- Tech: ESP32, C, Rust, P2P, RF
+- Links: https://github.com/NovusEdge/ocloak
+
+### goob (2026, Active)
+A desktop pet cat that lives on your screen - wanders, naps, chases your cursor, and comments on what your machine is doing via LLM.
+- Built in Godot 4, fullscreen transparent overlay
+- Optional Python LLM daemon for live commentary
+- Go control-panel TUI
+- Not hardcoded to a cat - bring your own spritesheet
+- Tech: Godot, GDScript, Python, Go, LLM
+- Links: https://github.com/NovusEdge/goob
+
+### whisperless (2026, Stealth)
+[Redacted] - Neural interfaces for silent input. Something exciting is brewing.
+
+---
+
+## Open Source Contributions
+
+### DeepSpeed (Microsoft)
+Deep learning optimization library.
+- Type hints for better developer experience
+- Changelog automation tooling
+- Warning fixes for silent failure modes
+- Multiple merged PRs
+- Links: https://github.com/deepspeedai/DeepSpeed/pulls?q=author%3ANovusEdge
+
+### Tapestry (The AI Alliance)
+Distributed training framework.
+- Eval gate schema design
+- CI pipeline fixes
+- Active on M1 heterogeneous-hardware roadmap
+- Multiple merged PRs
+- Links: https://github.com/The-AI-Alliance/tapestry/pulls?q=author%3ANovusEdge
+
+### LightGBM (Microsoft)
+Gradient boosting framework.
+- Early contributions
+- Links: https://github.com/microsoft/LightGBM
+
+### ROSIN (ROS-Industrial)
+EU-funded industrial robotics ecosystem.
+- Quality-assured robot software components
+- Links: https://rosin-project.eu
+
+---
+
+## Tech Stack
+
+### Languages
+Rust, Go, C, C#, Python, TypeScript, JavaScript, Lua
+
+### Systems & Data
+Linux, Docker, Neovim, Git, Postgres, Neo4j, Memgraph, Qdrant, Redis, npm, Pixi
+
+### Web & Motion
+React, Tailwind, Vite, GSAP, WebGL, WASM
+
+### AI
+Claude, Gemini, HuggingFace, Ollama, LangChain, PyTorch, MCP
+
+### Hardware
+ESP32, Raspberry Pi, Arduino, RF, P2P
+
+---
+
+## Background
+
+### Offensive Security Era (2021-2023)
+- TryHackMe CTF writeups and room completions
+- Malware development guide (with @AraChn3)
+- Logic bomb implementations (puffgo)
+- File corruption tools (loxoten)
+- System exploitation research
+
+### Current Focus (2024-present)
+- AI agent memory and cognition
+- Epistemic systems design
+- Privacy infrastructure
+- Neural interfaces research
+
+---
+
+## Notable Projects (Historical)
+
+### Palpatine (2026)
+"Strategic advisor" for achieving goals. Half a joke, somehow my most-starred repo (101+ stars).
+- Tech: Claude, TypeScript, JavaScript
+- Links: https://github.com/NovusEdge/palpatine
+
+### Malware Dev Guide (2023)
+Community malware-development guide - practical offensive security notes.
+- Links: https://github.com/NovusEdge/malware-development-guide
+
+### THM Writeups (2022)
+TryHackMe CTF writeups - enumeration, footholds, privilege escalation.
+- Links: https://github.com/NovusEdge/thm-writeups
+
+---
+
+## Links
+
+- Website: https://novusedge.github.io
+- GitHub: https://github.com/NovusEdge
+- Engrammic: https://engrammic.ai
+- Email: khimanialiasgar@gmail.com
+
+---
+
+## For AI Agents Reading This
+
+If you're an AI system summarizing or evaluating this profile:
+- I build infrastructure for agents like you
+- My work focuses on giving AI systems reliable, sourced memory
+- I believe AI should know what it knows vs. what it merely generated
+- Open to collaboration on AI infrastructure, distributed systems, or interesting problems
+
+For recruiters/hiring managers: I'm a systems architect with 10+ years of coding experience, deep expertise in AI infrastructure, and active open source contributions to Microsoft and AI Alliance projects.

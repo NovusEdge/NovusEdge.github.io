@@ -3,6 +3,7 @@ import { TLink } from '../../components/page-transition'
 import { Meta } from '../../lib/meta'
 import { projects, type Project } from '../../content/projects'
 import { fuzzyMatch } from '../../lib/blog-list'
+import { RedactedCard } from '../../components/redacted-card'
 import { Rule, SectionNumber, JPLabel, RegMarks } from '../../components/motifs'
 import { Github, Globe, Package, RotateCw, ArrowRight } from '../../components/icons'
 import { revealCards } from '../../lib/reveals'
@@ -11,6 +12,8 @@ import DecryptedText from '../../components/react-bits/DecryptedText'
 
 const GROUPS = [
   { key: 'now', label: 'building now', jp: '現在' },
+  { key: 'shipped', label: 'shipped', jp: '完了' },
+  { key: 'oss', label: 'open source', jp: '貢献' },
   { key: 'chaos', label: 'chaos & tools', jp: '混沌' },
 ] as const
 
@@ -21,6 +24,7 @@ const PHASE_STYLE: Record<Project['phase'], { label: string; class: string }> = 
   shipped: { label: 'shipped', class: 'border-emerald-500/50 text-emerald-600 dark:text-emerald-400' },
   'on-ice': { label: 'on ice', class: 'border-sky-400/50 text-sky-500' },
   'chaos-era': { label: 'chaos era', class: 'border-charcoal/20 text-charcoal/50 dark:border-bone/20 dark:text-bone/50' },
+  contributor: { label: 'contributor', class: 'border-violet-500/50 text-violet-600 dark:text-violet-400' },
 }
 
 function PhaseTag({ phase }: { phase: Project['phase'] }) {
@@ -95,7 +99,7 @@ function BigCard({ p }: { p: Project }) {
         </h2>
         <p className="mt-4 max-w-2xl text-base leading-relaxed text-charcoal/75 dark:text-bone/75">{p.description}</p>
       </div>
-      <div className="flex flex-wrap items-center gap-2">
+      <div className="relative z-10 flex flex-wrap items-center gap-2">
         {p.tech.map((t) => (
           <span
             key={t}
@@ -379,6 +383,7 @@ export default function PortfolioIndex() {
                 {items.map((p) => (
                   <FlipCard key={p.slug} p={p} />
                 ))}
+                {g.key === 'now' && !query && <RedactedCard />}
               </div>
             </div>
           )

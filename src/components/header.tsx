@@ -4,6 +4,7 @@ import Magnetic from './react-bits/Magnetic'
 import { TNavLink } from './page-transition'
 
 const links = [
+  { to: '/about', label: 'About', jp: '私' },
   { to: '/blog', label: 'Blog', jp: 'ブログ' },
   { to: '/portfolio', label: 'Portfolio', jp: '作品' },
   { to: '/research', label: 'Research', jp: '研究' },
