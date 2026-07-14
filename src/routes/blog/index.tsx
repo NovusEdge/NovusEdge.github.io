@@ -5,7 +5,8 @@ import { posts } from '../../lib/posts'
 import { filterPosts, groupByYear } from '../../lib/blog-list'
 import { Rule, SectionNumber, JPLabel } from '../../components/motifs'
 import { ArrowRight } from '../../components/icons'
-import { getPostThumbnail } from '../../lib/thumbnails'
+import { getListThumbnail } from '../../lib/thumbnails'
+import { SurveillanceCard } from '../../components/surveillance-card'
 import { useReveal } from '../../lib/motion'
 import { revealBlogList } from '../../lib/reveals'
 import { SideFlourish } from '../../components/side-flourish'
@@ -81,7 +82,11 @@ export default function BlogIndex() {
             </div>
             <ul className="mt-10 space-y-12">
               {yearPosts.map((post) => {
-                const img = getPostThumbnail(post.slug)
+                const img = getListThumbnail(post.slug)
+                // Special posts get custom card layouts per slug
+                if (post.slug === 'chat-control-eu' && img) {
+                  return <SurveillanceCard key={post.slug} post={post} img={img} dayOf={dayOf} monthOf={monthOf} />
+                }
                 return (
                   <li key={post.slug} data-post className="group grid gap-x-6 gap-y-4 md:grid-cols-12 md:items-start">
                     {/* Date column — big editorial day + mono month */}

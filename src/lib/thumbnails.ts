@@ -1,4 +1,10 @@
-// Post slug -> thumbnail image. Shared by the blog list and the post-page hero.
+// Post slug -> thumbnail for blog list cards
+export function getListThumbnail(slug: string): string | null {
+  if (slug === 'chat-control-eu') return '/assets/blog/chat-control-featured.jpeg'
+  return getPostThumbnail(slug)
+}
+
+// Post slug -> thumbnail image for post-page hero
 export function getPostThumbnail(slug: string): string | null {
   if (slug.includes('tiling-window-managers')) return '/assets/img/LJ-TWM-01.png'
   if (slug.includes('alfred')) return '/assets/img/writeup_assets/alfred/port-8080-login.png'
@@ -9,6 +15,8 @@ export function getPostThumbnail(slug: string): string | null {
   if (slug.includes('red')) return '/assets/img/writeup_assets/red/port-80.png'
   if (slug.includes('toolsrus')) return '/assets/img/writeup_assets/toolsrus/protected_page_moved.png'
   if (slug.includes('bootsplash')) return '/assets/img/LJ-TWM-04.png'
+  // essays - hero uses the red vintage banner, list uses the dithered eye
+  if (slug === 'chat-control-eu') return '/assets/blog/chat-control-hero.jpeg'
   // AI / founder-log posts -> art assets
   if (slug === 'on-building-something-engrammic') return '/assets/cosmos_948956014.jpeg'
   if (slug === 'hardware-journeys-starting-from-zero') return '/assets/patent.jpeg'

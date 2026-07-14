@@ -11,7 +11,38 @@ function nodeText(node: unknown): string {
   return (n.children ?? []).map(nodeText).join('')
 }
 
+function slugify(text: string): string {
+  return text
+    .toLowerCase()
+    .replace(/[^\w\s-]/g, '')
+    .replace(/\s+/g, '-')
+}
+
+// ponytail: extract YouTube video ID from various URL formats
+function getYouTubeId(url: string): string | null {
+  const patterns = [
+    /youtu\.be\/([^?&]+)/,
+    /youtube\.com\/watch\?v=([^&]+)/,
+    /youtube\.com\/embed\/([^?&]+)/,
+  ]
+  for (const p of patterns) {
+    const m = url.match(p)
+    if (m) return m[1]
+  }
+  return null
+}
+
 const components: Components = {
+  h2({ children, ...props }) {
+    const text = String(children)
+    const id = slugify(text)
+    return <h2 id={id} {...props}>{children}</h2>
+  },
+  h3({ children, ...props }) {
+    const text = String(children)
+    const id = slugify(text)
+    return <h3 id={id} {...props}>{children}</h3>
+  },
   // ponytail: amber callout keyed off a leading ⚠️ so normal `>` quotes are untouched.
   blockquote({ node, children, ...props }) {
     if (!nodeText(node).trimStart().startsWith('⚠️')) {
@@ -34,6 +65,24 @@ const components: Components = {
         {children}
       </code>
     )
+  },
+  // ponytail: YouTube embeds via ![alt](youtube-url) syntax
+  img({ src, alt, ...props }) {
+    const ytId = src ? getYouTubeId(src) : null
+    if (ytId) {
+      return (
+        <div className="my-6 aspect-video w-full overflow-hidden rounded-lg border border-charcoal/10 dark:border-bone/10">
+          <iframe
+            src={`https://www.youtube-nocookie.com/embed/${ytId}`}
+            title={alt || 'YouTube video'}
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowFullScreen
+            className="h-full w-full"
+          />
+        </div>
+      )
+    }
+    return <img src={src} alt={alt} {...props} />
   },
 }
 

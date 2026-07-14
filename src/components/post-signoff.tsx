@@ -30,7 +30,7 @@ function useInView(ref: RefObject<HTMLElement | null>) {
 function Terminal() {
   const ref = useRef<HTMLDivElement>(null)
   const seen = useInView(ref)
-  const label = '[ transmission ends ]'
+  const label = '[ transmission end ]'
 
   useEffect(() => {
     if (prefersReducedMotion()) return
@@ -66,7 +66,7 @@ function Terminal() {
             {c}
           </span>
         ))}
-        <span data-cursor className="ml-1 inline-block h-3.5 w-[7px] translate-y-[2px] bg-gold align-middle" />
+        <span data-cursor className="ml-0.5 inline-block h-[1em] w-[0.5em] bg-gold" style={{ verticalAlign: 'text-bottom' }} />
       </div>
       <div className="flex gap-3 text-sm text-gold">
         {Array.from({ length: 5 }).map((_, i) => (

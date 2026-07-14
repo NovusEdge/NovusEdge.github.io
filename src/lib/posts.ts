@@ -7,6 +7,7 @@ export type Post = {
   tags: string[]
   description: string
   content: string
+  toc?: boolean
 }
 
 const files = import.meta.glob('../content/blog/*.md', {
@@ -29,6 +30,7 @@ export const posts: Post[] = Object.entries(files)
       tags: Array.isArray(data.tags) ? data.tags : [],
       description: (data.description as string) || '',
       content,
+      toc: data.toc === true || data.toc === 'true',
     }
   })
   .filter((p) => !HIDDEN.includes(p.slug))

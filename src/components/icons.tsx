@@ -121,3 +121,11 @@ export function X(props: SVGProps<SVGSVGElement>) {
     </Base>
   )
 }
+
+export function ChevronDown(props: SVGProps<SVGSVGElement>) {
+  return (
+    <Base {...props}>
+      <path d="m6 9 6 6 6-6" />
+    </Base>
+  )
+}

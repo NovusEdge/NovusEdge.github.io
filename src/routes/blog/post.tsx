@@ -11,9 +11,30 @@ import { Markdown } from '../../components/markdown'
 import { Rule } from '../../components/motifs'
 import { PostSignoff } from '../../components/post-signoff'
 import { SideFlourish } from '../../components/side-flourish'
+import { TableOfContents } from '../../components/table-of-contents'
+import { BlogDecorations } from '../../components/blog-decorations'
+import { BlogInterstitials } from '../../components/blog-interstitial'
 import NotFound from '../not-found'
 import Magnetic from '../../components/react-bits/Magnetic'
 import { PostHero } from './post-hero'
+
+// ponytail: per-post decorations, add more as needed
+const POST_DECORATIONS: Record<string, { id: string; src: string; side: 'left' | 'right'; triggerId: string; size?: string; offset?: Record<string, string> }[]> = {
+  'chat-control-eu': [
+    { id: 'camera', src: '/assets/blog/camera.webp', side: 'right', triggerId: 'its-not-just-your-dms', size: '140px', offset: { top: '35%', right: '3rem' } },
+    { id: 'mind', src: '/assets/blog/mind-control.jpeg', side: 'left', triggerId: 'what-you-think', size: '160px', offset: { top: '40%', left: '2rem' } },
+  ],
+}
+
+// ponytail: per-post interstitials (mid-page banners)
+const POST_INTERSTITIALS: Record<string, { id: string; src: string; triggerId: string; exitTriggerId?: string }[]> = {
+  'chat-control-eu': [
+    { id: 'watched', src: '/assets/blog/chat-control-banner.jpeg', triggerId: 'willingly', exitTriggerId: 'convenience-always-wins' },
+  ],
+}
+
+// ponytail: posts that disable the japanese side flourish
+const HIDE_SIDE_FLOURISH = ['chat-control-eu']
 
 // locked picks: hero = Dither (1), content scroll = focus (2), sign-off = Terminal (0)
 const HERO = 1
@@ -43,7 +64,12 @@ export default function BlogPost() {
 
       <PostHero variant={HERO} post={post} image={image} />
 
-      <SideFlourish variant={2} heroGate /> {/* Kana, fades in past the hero */}
+      {!HIDE_SIDE_FLOURISH.includes(slug || '') && <SideFlourish variant={2} heroGate />}
+
+      {post.toc && <TableOfContents content={post.content} />}
+
+      {slug && POST_DECORATIONS[slug] && <BlogDecorations decorations={POST_DECORATIONS[slug]} />}
+      {slug && POST_INTERSTITIALS[slug] && <BlogInterstitials interstitials={POST_INTERSTITIALS[slug]} />}
 
       <article className="mx-auto max-w-2xl px-6 pb-24 pt-12">
         <div className="mb-10">
@@ -61,7 +87,7 @@ export default function BlogPost() {
 
         <div
           ref={proseRef}
-          className="prose prose-neutral max-w-none font-body leading-relaxed text-charcoal/80 dark:prose-invert dark:text-bone/85"
+          className="prose prose-neutral prose-lg max-w-none font-body leading-relaxed text-charcoal/80 dark:prose-invert dark:text-bone/85 prose-headings:mt-12 prose-headings:mb-6 prose-p:my-6 prose-h2:text-3xl prose-h3:text-xl"
         >
           <Markdown>{post.content}</Markdown>
         </div>
