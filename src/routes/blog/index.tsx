@@ -7,6 +7,7 @@ import { Rule, SectionNumber, JPLabel } from '../../components/motifs'
 import { ArrowRight } from '../../components/icons'
 import { getListThumbnail } from '../../lib/thumbnails'
 import { SurveillanceCard } from '../../components/surveillance-card'
+import { CRTCard } from '../../components/crt-card'
 import { useReveal } from '../../lib/motion'
 import { revealBlogList } from '../../lib/reveals'
 import { SideFlourish } from '../../components/side-flourish'
@@ -86,6 +87,9 @@ export default function BlogIndex() {
                 // Special posts get custom card layouts per slug
                 if (post.slug === 'chat-control-eu' && img) {
                   return <SurveillanceCard key={post.slug} post={post} img={img} dayOf={dayOf} monthOf={monthOf} />
+                }
+                if (post.slug === 'epistemic-collapse' && img) {
+                  return <CRTCard key={post.slug} post={post} img={img} dayOf={dayOf} monthOf={monthOf} />
                 }
                 return (
                   <li key={post.slug} data-post className="group grid gap-x-6 gap-y-4 md:grid-cols-12 md:items-start">

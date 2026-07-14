@@ -34,12 +34,17 @@ const POST_INTERSTITIALS: Record<string, { id: string; src: string; triggerId: s
 }
 
 // ponytail: posts that disable the japanese side flourish
-const HIDE_SIDE_FLOURISH = ['chat-control-eu']
+const HIDE_SIDE_FLOURISH = ['chat-control-eu', 'epistemic-collapse']
 
 // locked picks: hero = Dither (1), content scroll = focus (2), sign-off = Terminal (0)
-const HERO = 1
+const DEFAULT_HERO = 1
 const CONTENT = 'focus' as const
 const SIGNOFF = 0
+
+// ponytail: per-post hero variants (0=Cinematic, 1=Dither, 2=Framed, 3=Duotone, 4=CRT)
+const POST_HERO: Record<string, number> = {
+  'epistemic-collapse': 4,
+}
 
 export default function BlogPost() {
   const { slug } = useParams()
@@ -62,7 +67,7 @@ export default function BlogPost() {
     <>
       <Meta title={post.title} description={post.description || post.title} />
 
-      <PostHero variant={HERO} post={post} image={image} />
+      <PostHero variant={POST_HERO[post.slug] ?? DEFAULT_HERO} post={post} image={image} />
 
       {!HIDE_SIDE_FLOURISH.includes(slug || '') && <SideFlourish variant={2} heroGate />}
 

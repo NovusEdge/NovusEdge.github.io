@@ -1,6 +1,7 @@
 // Post slug -> thumbnail for blog list cards
 export function getListThumbnail(slug: string): string | null {
   if (slug === 'chat-control-eu') return '/assets/blog/chat-control-featured.jpeg'
+  if (slug === 'epistemic-collapse') return '/assets/blog/truth-power.jpeg'
   return getPostThumbnail(slug)
 }
 
@@ -17,6 +18,7 @@ export function getPostThumbnail(slug: string): string | null {
   if (slug.includes('bootsplash')) return '/assets/img/LJ-TWM-04.png'
   // essays - hero uses the red vintage banner, list uses the dithered eye
   if (slug === 'chat-control-eu') return '/assets/blog/chat-control-hero.jpeg'
+  if (slug === 'epistemic-collapse') return '/assets/blog/epistemic-banner.gif'
   // AI / founder-log posts -> art assets
   if (slug === 'on-building-something-engrammic') return '/assets/cosmos_948956014.jpeg'
   if (slug === 'hardware-journeys-starting-from-zero') return '/assets/patent.jpeg'

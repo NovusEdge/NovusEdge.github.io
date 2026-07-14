@@ -14,7 +14,7 @@ const PERF = { minPixelRatio: 1, maxPixelCount: 900_000 }
 const NOISE =
   "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E\")"
 
-export const HERO_VARIANTS = ['Cinematic', 'Dither', 'Framed', 'Duotone'] as const
+export const HERO_VARIANTS = ['Cinematic', 'Dither', 'Framed', 'Duotone', 'Grain'] as const
 
 type HeroProps = { post: Post; image: string | null }
 
@@ -184,7 +184,34 @@ function HeroDuotone({ post, image }: HeroProps) {
   )
 }
 
-const VARIANTS = [HeroCinematic, HeroDither, HeroFramed, HeroDuotone]
+// 5 — video with grain overlay
+function HeroGrain({ post }: HeroProps) {
+  const scope = useRef<HTMLElement>(null)
+  useHeroMotion(scope, true)
+  return (
+    <header ref={scope} className={BLEED}>
+      <video
+        data-heroimg
+        src="/assets/blog/epistemic-hero.mp4"
+        autoPlay
+        loop
+        muted
+        playsInline
+        className="absolute inset-0 h-[124%] w-full -translate-y-[8%] scale-105 object-cover opacity-80"
+      />
+      {/* grain overlay */}
+      <div
+        className="absolute inset-0 opacity-30 mix-blend-overlay"
+        style={{ backgroundImage: NOISE, backgroundSize: '150px' }}
+      />
+      <div className="absolute inset-0 bg-gradient-to-t from-charcoal via-charcoal/50 to-charcoal/20" />
+      <div className={PAGE_FADE} />
+      <OverTitle post={post} />
+    </header>
+  )
+}
+
+const VARIANTS = [HeroCinematic, HeroDither, HeroFramed, HeroDuotone, HeroGrain]
 
 export function PostHero({ variant, post, image }: { variant: number } & HeroProps) {
   const Hero = VARIANTS[variant] ?? HeroCinematic
