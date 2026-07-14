@@ -50,6 +50,9 @@ importers:
       simple-icons:
         specifier: ^16.25.0
         version: 16.25.0
+      vault66-crt-effect:
+        specifier: ^3.1.1
+        version: 3.1.1(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
     devDependencies:
       '@tailwindcss/typography':
         specifier: ^0.5.20
@@ -1385,6 +1388,20 @@ packages:
 
   util-deprecate@1.0.2:
     resolution: {integrity: sha512-EPD5q1uXyFxJpCrLnCc1nHnq3gOa6DZBocAIiI2TaSCA7VCJ1UJDMagCzIkXNsUYfD1daK//LTEQ8xiIbrHtcw==}
+
+  vault66-crt-effect@3.1.1:
+    resolution: {integrity: sha512-piSVW3wnwO2AGEzwjJ7k8DWF5dxN6edjjtz8jWZxsqkDAHihdE905M150jP9v0U5HdXSgUI0Aa4q83/VJ3/JSg==}
+    peerDependencies:
+      react: '>=18.0.0'
+      react-dom: '>=18.0.0'
+      vue: '>=3.0.0'
+    peerDependenciesMeta:
+      react:
+        optional: true
+      react-dom:
+        optional: true
+      vue:
+        optional: true
 
   vfile-message@4.0.3:
     resolution: {integrity: sha512-QTHzsGd1EhbZs4AsQ20JX1rC3cOlt/IWJruk893DfLRr57lcnOeMaWG4K0JrRta4mIJZKth2Au3mM3u03/JWKw==}
@@ -2895,6 +2912,11 @@ snapshots:
       picocolors: 1.1.1
 
   util-deprecate@1.0.2: {}
+
+  vault66-crt-effect@3.1.1(react-dom@19.2.7(react@19.2.7))(react@19.2.7):
+    optionalDependencies:
+      react: 19.2.7
+      react-dom: 19.2.7(react@19.2.7)
 
   vfile-message@4.0.3:
     dependencies:

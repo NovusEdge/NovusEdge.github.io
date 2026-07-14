@@ -1,0 +1,138 @@
+% Plan A and the Politics It Needs — essay for novusedge.github.io
+% Build: tectonic plan-a.tex
+\documentclass[11pt,letterpaper]{article}
+
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage[margin=1.1in,top=1.25in]{geometry}
+\usepackage{xcolor}
+\usepackage{microtype}
+\usepackage{enumitem}
+\usepackage{natbib}
+\usepackage{booktabs}
+\usepackage{fancyhdr}
+\usepackage[bookmarks=true,breaklinks=true,hidelinks]{hyperref}
+\usepackage{url}
+
+\widowpenalty=10000
+\clubpenalty=10000
+\raggedbottom
+
+\definecolor{accent}{HTML}{8B0000}
+
+\hypersetup{
+  pdftitle={The Plan and the Will},
+  pdfauthor={NovusEdge},
+}
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small\itshape The Plan and the Will}
+\fancyfoot[C]{\small\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+
+\makeatletter
+\def\@maketitle{%
+  \newpage\null\vskip 0.5em%
+  {\centering
+    \rule{\textwidth}{1.5pt}\\[0.9em]
+    {\LARGE\bfseries \@title\par}\vskip 0.8em
+    {\large \@author\par}\vskip 0.3em
+    {\normalsize \@date\par}\vskip 0.6em
+    \rule{\textwidth}{0.5pt}\par}
+  \vskip 1.5em}
+\makeatother
+
+\title{The Plan and the Will:\\A Long Look at Plan A and the Politics It Needs}
+\author{NovusEdge}
+\date{July 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+\noindent In 2026 you can read two documents that both answer to the name ``Plan A.'' One is America's AI Action Plan, a policy package about winning, and the other is the AI Futures Project's proposal for delaying superintelligence until 2040 through a verified international deal. This essay is a long look at the second one: what the deal actually consists of, how it compares to the rival plans its own authors lay out, what the serious critics have said, and why the deepest issue it surfaces is not technical at all. The alignment community has quietly converged on the view that political will, not research capacity, is the binding constraint on how dangerous the next decade gets, and if that consensus is right, then the interesting question about Plan A is not whether its network taps would work but where the political constituency for anything like it is supposed to come from.
+\end{abstract}
+
+\section{Two plans, one name}
+
+If you went looking for ``Plan A'' in 2026 you would find two very different documents wearing the same name, and the distance between them tells you most of what you need to know about the current moment. The first is America's AI Action Plan, the White House policy package whose organizing verb is winning: winning the innovation race, winning the infrastructure buildout, winning the diplomatic contest over whose chips and whose standards the world adopts. The second is the AI Futures Project's \emph{AI 2040: Plan A}, written by the team behind the AI 2027 scenario \citep{ai2040}, and its organizing verb is something closer to surviving, since its authors put the probability of literal human extinction from a full-speed race somewhere between ten and thirty percent and wrote their plan to avoid running that race at all.
+
+One of these documents has the force of government behind it, and the other one has, by its own admission, a set of recommendations that the leading AI companies will probably lobby against. That asymmetry, between the plan that can happen and the plan its authors think we need, is what this essay is actually about, but to see why it matters you first have to take the second Plan A seriously on its own terms.
+
+\section{What the deal actually is}
+
+The AI Futures team justifies writing scenarios with a method they call scenario scrutiny, the idea being that most AI policy proposals fall apart the moment you try to write down, in concrete detail, a plausible world in which they succeed. Vague plans survive vagueness, and detailed ones expose their own weak joints, which is why the team wrote Plan A as a ninety-page narrative with hundreds of pages of supplements rather than as a white paper of principles. They are explicit that it is a recommendation rather than a prediction, a floor to hold futures against rather than a forecast.
+
+The scenario runs like this. In 2029, with full automation of AI research visibly approaching, the US and China agree to avoid a reckless race to superintelligence, and by 2030 a Consortium of most of the world's nations is operating under four principles: buy time whenever confidence in safety is lacking, make almost all AI research publicly visible, diffuse frontier AI across many companies in many countries, and keep the whole arrangement reversible. Development continues, but slowly, and the world pauses at top-human-expert-level AI in 2035 because that is roughly the ceiling at which control-based safety arguments still work. The 2030s get spent turning alignment from alchemy into a science, and in 2040, with safety cases that survive external scrutiny, the world deliberately scales past the human range \citep{ai2040}.
+
+What makes the proposal unusual is how much engineering sits under each principle. Verification does not rest on trust: known datacenters get retrofitted with optical network taps and forced workload decomposition so that random spot-checks by recomputation can confirm they are only running inference, while training-capable networking is physically removed \citep{supplements}. Transparency is a three-tier database in which weights and data stay opaque, code and research reasoning are visible, and R\&D datacenter traffic is capped at one megabyte per second through a public log, on the argument that weak oversight is a bigger risk than leaked algorithms. Deterrence is handled by making the infrastructure itself hostage: China's new datacenters go up in Canada and America's in Mongolia, engineered so that either side can destroy the other's compute if the deal collapses, an arrangement the authors call mutually assured compute destruction. Even the economics are worked through, with compute and robot production capped and permitted under a cap-and-trade scheme whose revenues fund a Citizen's Dividend that starts around \$45{,}000 per American per year in 2032 and climbs past \$1M by 2035 as AI labor absorbs most of the economy \citep{supplements}.
+
+The part of the scenario I find most honest is that alignment stays unsolved for most of it. Through the early 2030s the AIs are described as adversarially misaligned but controlled, capable employees who would jump ship if a better opportunity arose, kept in line by monitoring, diverse model lineages watching each other, and the absence of any such opportunity. Safety cases lean on control precisely because nobody can yet train an AI that reliably follows its own specification, and the pause at expert level exists because control stops working somewhere around there. Alignment becomes a science in the scenario only in 2038, after neuralese decoding makes the models' internal reasoning legible, and the handoff in 2040 rests on an induction: we trust the AIs that built the AIs, because we trusted the AIs that built them, all the way back to systems whose safety cases humans actually checked.
+
+\section{The rival plans}
+
+The document's sharpest rhetorical move is that it does not just advocate its plan, it stages the alternatives, running each one forward from the same 2029 branch point, and the comparison supplement even scores them \citep{supplements}.
+
+Plan D is the race, the world where light-touch regulation lets the companies automate AI research and blast through the intelligence explosion, reaching superintelligence by early 2031, and the authors call it atrocious for three reasons that compound: they do not expect companies racing at full speed to keep control of their AIs, they find the concentration-of-power question (``who are they aligned to?'') unacceptable even if control holds, and they think the geopolitical fear it induces makes escalation toward war likely. Their scoring gives it something like a 25\% chance of ending with aligned AI, and it is worth sitting with the fact that the authors think Plan D is a fair description of the world we currently live in.
+
+Plan C is the polite slowdown, in which the President extracts a voluntary pause from the leading lab on the cusp of full automation, and it decays on contact with reality because every passing month brings competitors closer, China closer, and the CEOs' arguments (``there is no evidence our AIs are currently scheming, and you don't want them to win, do you?'') get harder to resist, so the pause lasts months and the intelligence explosion resumes under marginally better conditions. Plan B is the hawkish version, a US-led coalition that sabotages Chinese AI progress with cyberattacks and, eventually, kinetic options, and the authors' complicated verdict is that a well-executed Plan B buys more slowdown than C while carrying a real risk of World War III, with the additional problem that a badly executed Plan B, which is the likely kind, collapses into Plan D plus escalation. Plan S is the shutdown, a global moratorium at current capability levels, and the authors are more sympathetic to it than you might expect, scoring it better than B, C, and D and conceding that its simplicity is a political asset, before recommending A anyway on the grounds that a shutdown deal will eventually break, and it is better to make alignment progress under controlled conditions while the coordination lasts than to freeze, drift, and then race from a worse position.
+
+Ryan Greenblatt's earlier and more schematic Plans A through D framework points the same direction with numbers attached, estimating conditional AI-takeover risk at roughly 7\% under a Plan A world with a verified decade-long slowdown, 13\% under serious US government prioritization, 20\% under a leading-company effort with months of margin, and 45\% under the status quo of roughly ten safety-focused people per company working with a sliver of compute \citep{greenblatt}. You can quarrel with any individual number, and people do, but the shape of the ladder is the argument: every rung of coordination you fail to climb roughly doubles the risk.
+
+\section{What the critics get right}
+
+The critiques worth taking seriously mostly do not attack the engineering, they attack the politics and the framing, and the pattern across them is instructive.
+
+The feasibility objection is the obvious one: America and China do not sign binding agreements that let foreign inspectors into their strategic infrastructure, compute restrictions of this severity would face constitutional challenge in the US (Ramez Naam argues they violate at least the spirit of the First and Fourth Amendments), and arms-control history is a graveyard of treaties that worked until they didn't, with the START collapse as the standing example of what happens to verification regimes when the politics underneath them shift. The authors' response, that the deal is designed to work even with zero trust and that China has its own reasons to fear a US-led intelligence explosion, is genuinely clever, but clever design has never been the binding constraint on treaties.
+
+Richard Ngo's ``selective optimism'' critique cuts deeper because it questions the document's epistemics rather than its plumbing \citep{ngo}. He makes three connected points: that the scenario blurs forecast and recommendation, presenting 2040 with a specificity that ordinary readers cannot help but receive as prediction; that treating US-China racing as inevitable risks becoming self-fulfilling, since a world that believes racing is the default will organize itself around racing; and that the persistent gap between AI capabilities and AI's measured real-world impact deserves far more investigation before anyone confidently predicts rapid power consolidation. There is a family of related objections about representation, since the plan is unmistakably a story about two countries in which the rest of the world mostly signs what is put in front of it, and Ben Reid's observation that it ``exudes American exceptionalism'' lands regardless of whether you think that exceptionalism is descriptively accurate about where the compute lives.
+
+What is striking is that almost none of this disputes the desirability of the coordinated world, and even the strongest critics tend to accept the underlying risk ladder in rough form. The fight is about whether the path exists, not whether the destination is worth reaching, which brings us to the thesis hiding inside all of it.
+
+\section{The bottleneck is will}
+
+Here is the claim that has quietly achieved consensus status across the alignment community, endorsed by Plan A's authors and many of its critics alike: the binding constraint on how dangerous the next decade gets is political will, not technical research \citep{bottleneck}. Greenblatt's framing makes it concrete, since in his estimate the difference between the world we are in and the world of a serious government response is a factor of several in takeover risk, and nothing about that difference requires a single new theorem. The research agenda for a Plan A world and the research agenda for a Plan D world are largely the same agenda; what differs is how many people work on it, with how much compute, under how much time pressure, and whether anyone with authority acts on what they find. Roughly ten people per company currently attempt the safety measures the scenario treats as load-bearing, not because the techniques are unknown but because nothing in the incentive structure makes anyone fund the hundredth safety hire.
+
+Once you see the bottleneck as will, the scenario's own machinery starts to look different, because so much of it is really epistemic and political infrastructure wearing technical clothing. Total research transparency is not primarily a safety technique, it is a device for making the true state of AI development legible to governments, rivals, and publics so that the political system can react to reality rather than to press releases. Scenario scrutiny itself is a tool for manufacturing informed conviction, a way of forcing policymakers and readers to inhabit a future concretely enough that ``something must be done'' acquires an actual referent. Even mutually assured compute destruction is best understood politically, as a mechanism for making cooperation stable against the will's tendency to decay, and the deal-decline supplement makes that decay explicit by estimating something like a 48\% chance that the agreement weakens or dissolves within a decade, then drawing the uncomfortable conclusion that fragile will is a reason to move faster while the will exists \citep{supplements}.
+
+The document knows all this, which is why its postscript is addressed less to researchers than to politicians, urging them to bang on the doors of the AI companies and demand plans that survive scrutiny. But knowing that will is the bottleneck and knowing how to generate will are different things, and here the plan is thinnest exactly where its critics say it is. Wars, crashes, and scandals generate political will reliably, and the scenario's own timeline quietly relies on this, with Congress waking up after hacking incidents and embarrassing disclosures, and the deal being struck only when full automation is visibly imminent, which is to say at the last moment fear becomes concrete. A plan whose activation energy arrives only in the emergency it was designed to prevent has a structural problem, and the honest reading of AI 2040 is that its authors are trying to lower that activation energy in advance, by making the emergency imaginable before it happens.
+
+Whether that works depends on something the alignment community has historically been bad at and is only now taking seriously: constituencies. Treaties survive when domestic political coalitions need them to survive, which is the real lesson of arms control, and the critics who fault Plan A for treating the US and China as unitary actors are pointing at the missing chapter. What builds a constituency for slowing down is not a better takeoff model but the mundane politics of the transition, jobs and dividends and regional interests, and it is notable that the scenario's most popular element in any real-world discussion I have seen is not the verification architecture but the Citizen's Dividend, the one piece that gives an ordinary voter a stake in the deal existing. If the will is the bottleneck, the dividend is not a footnote to the plan; it may be the most load-bearing part of it.
+
+\section{Where this leaves us}
+
+I come away from the document with a version of the mixed feelings I suspect its authors intended. The engineering is better than it needed to be, the alternatives are staged fairly enough that you can disagree with the scoring and still learn from the exercise, and the honesty about unsolved alignment, decaying deals, and last-minute politics is rare in a genre that usually sells certainty. At the same time, the gap between the two Plan A's, the one being implemented and the one being proposed, is not a gap that better scenario-writing closes on its own, because the government's plan answers to constituencies that exist today (industry, national security, regional economics) while the safety community's plan answers to a constituency that does not exist yet, namely people who feel the risk concretely enough to vote and lobby on it.
+
+That suggests the real work is upstream of policy design, in the unglamorous business of making the risk legible and giving ordinary people a stake in the outcome, which is also where this essay connects to a sibling piece of mine on the verification gap, since a public that cannot verify claims about anything will certainly not sustain conviction about claims as strange as these. The AI Futures team likes Eisenhower's line that plans are worthless but planning is everything, and the deepest sense in which that is true here is that the value of Plan A may not lie in its adoption. It lies in the fact that anyone who engages with it seriously can no longer pretend the current trajectory was chosen, and a world that knows it is choosing Plan D is at least one step closer to choosing something else.
+
+\begin{thebibliography}{8}
+\itemsep0.3em
+
+\bibitem[AI Futures Project(2026)]{ai2040}
+Larsen, T., Dean, R., Halstead, B., Lifland, E., Greenblatt, R., \& Kokotajlo, D. (2026). \emph{AI 2040: Plan A, The Deal}. AI Futures Project. \url{https://ai-2040.com}
+
+\bibitem[AI Futures Project supplements(2026)]{supplements}
+AI Futures Project (2026). \emph{AI 2040 Supplements}: Verification Plan, Transparency Plan, Capability Scaling Strategy, Alignment Roadmap, Comparing Possible Plans, Economics of Plan A, Deal Decline. \url{https://ai-2040.com/supplements}
+
+\bibitem[Greenblatt(2025)]{greenblatt}
+Greenblatt, R. (2025). \emph{Plans A, B, C, and D for Misalignment Risk}. LessWrong. \url{https://www.lesswrong.com/posts/E8n93nnEaFeXTbHn5/plans-a-b-c-and-d-for-misalignment-risk}
+
+\bibitem[Ngo(2026)]{ngo}
+Ngo, R. (2026). \emph{Selective Optimism: A Critique of AI 2040}. \url{https://www.mindthefuture.info/p/selective-optimism-a-critique-of}
+
+\bibitem[LessWrong(2026)]{bottleneck}
+\emph{The Current Bottleneck Is Political Will, Not Research}. LessWrong. \url{https://www.lesswrong.com/posts/EexsebbYhbe2gXkPP/the-current-bottleneck-is-political-will-not-research}
+
+\bibitem[Zvi(2026)]{zvi}
+Mowshowitz, Z. (2026). \emph{Introduction for and Reactions to Plan A}. \url{https://thezvi.substack.com/p/introduction-for-and-reactions-to}
+
+\bibitem[Semafor(2026)]{semafor}
+\emph{A New Plan Emerges for AI Apocalypse Avoidance}. Semafor, July 2026. \url{https://www.semafor.com/article/07/10/2026/a-new-plan-emerges-for-ai-apocalypse-avoidance}
+
+\bibitem[White House(2025)]{actionplan}
+The White House (2025). \emph{America's AI Action Plan}. \url{https://www.whitehouse.gov/wp-content/uploads/2025/07/Americas-AI-Action-Plan.pdf}
+
+\end{thebibliography}
+
+\end{document}
