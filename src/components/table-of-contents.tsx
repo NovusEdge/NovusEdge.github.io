@@ -42,7 +42,7 @@ export function TableOfContents({ content }: { content: string }) {
     return () => window.removeEventListener('scroll', onScroll)
   }, [headings])
 
-  if (headings.length < 3) return null
+  if (headings.length < 3 || typeof document === 'undefined') return null
 
   // ponytail: portal to body to escape any parent transforms breaking fixed positioning
   return createPortal(
