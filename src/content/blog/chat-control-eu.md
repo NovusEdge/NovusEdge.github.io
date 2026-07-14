@@ -51,31 +51,33 @@ The ACLU counted [82 Flock contracts terminated](https://mrsc.org/stay-informed/
 ### What You Think
 Meta released [Brain2Qwerty v2](https://www.marktechpost.com/2026/06/30/meta-ai-releases-brain2qwerty-v2-a-non-invasive-meg-brain-to-text-pipeline-decoding-typed-sentences-at-61-word-accuracy/) in June 2026. It decodes typed sentences from brain activity with 61-78% word accuracy using non-invasive MEG scanning. Oh and also [TRIBE v2](https://ai.meta.com/blog/tribe-v2-brain-predictive-foundation-model/) predicts brain responses to video, audio, and language. Gotta love zucc fucking making the most dystopian pieces of tech ever huh?
 
-Neuralink is implanting chips in people's brains. Synchron's Stentrode is already in human trials. The "medical applications" framing is real and valid (helping paralyzed people communicate is genuinely good) but the dual-use implications are... yeah. Once you can read out intent, you can also *detect* intent. Thought crime goes from Orwell to engineering problem.
+Meanwhile Neuralink is implanting chips in people's brains and Synchron's Stentrode is already in human trials. The "medical applications" framing is quite valid (helping paralyzed people communicate is genuinely good) buuuuut the dual-use implications are... yeah, they're something (address me vro 🐘). Once you can read out intent, you can also *detect* intent. Thought crime goes from Orwell to engineering problem, and BOY I will bet almost anything that a big chunk of the defense/security sector is heavily invested in this _somehow_. 
 
-Right now this requires a $2 million MEG scanner bolted inside a magnetically shielded room, but the trajectory is pretty damn clear: every sensing modality starts expensive and becomes cheap. MRI used to require a dedicated building, now there are portable ones. WiFi sensing started in research labs before ending up in your $50 router. Give it 15-20 years and some version of this will be consumer grade, probably marketed as a "wellness" or "focus" device.
+Right now Brain2Qwerty requires like a $2 million MEG scanner bolted inside a magnetically shielded room to actually use, but anyone with half a braincell can clearly see where this is going: every sensing modality starts expensive and becomes cheap and it's only a matter of time before we have wearable brain-scanners. MRI used to require a dedicated building, now there are portable ones. WiFi sensing started in research labs before ending up in your $50 router. Give it 15-20 years and some version of this will be consumer grade, probably marketed as a "wellness" or "focus" device.
 
 The last refuge of a human being - their own mind - is becoming violable. And unlike every other layer of surveillance, you can't just leave your brain at home.
 
-## Willingly
+## Agency and it's loss
 
-Here's what bothers me more than any specific technology: people *give this up willingly*, not all at once but incrementally, convenience by convenience, feature by feature.
+Here's what bothers me more than any specific technology: people *give this up willingly*, not all at once ofc but incrementally, convenience by convenience, feature by feature.
 
-"I have nothing to hide." "It's just metadata." "The algorithm knows me better than I know myself."
+"I have nothing to hide." "It's just metadata." "The algorithm knows me better than I know myself." "Eh, I can't be bothered just lemme watch this one last reel before sleeping"
 
 Each trade seems small - what's one more permission, one more sensor, one more database? But the trades compound, and at some point you look up and realize you've traded away the ability to exist without being observed, catalogued, and predicted.
 
-This isn't new and every civilization does this: Rome traded republican governance for imperial stability, Medieval Europe traded local autonomy for feudal protection, and we're trading privacy for convenience. The pattern repeats because it *works* in the short term for most people most of the time, until it doesn't - and by then the infrastructure of control is already built.
+This isn't even anything new or novel, and every civilization has does this: Rome traded republican governance for imperial stability, Medieval Europe traded local autonomy for feudal protection, and _we_ are trading privacy for convenience. The pattern repeats because it *works* (and really well at that) in the short term for most people most of the time, until it doesn't. And by then the infrastructure of control is already built and then it's too late to turn back. 
 
 ## They Only Need to Win Once
 
-You can fight Chat Control - show up at Parliament, write your MEP, organize campaigns, fund [EFF](https://www.eff.org/deeplinks/2025/12/after-years-controversy-eus-chat-control-nears-its-final-hurdle-what-know), support digital rights groups - and you absolutely should because all of that matters. But here's the uncomfortable truth that nobody wants to hear: political solutions are temporary.
+You can fight Chat Control. You can show up at Parliament, write your MEP, organize campaigns, fund [EFF](https://www.eff.org/deeplinks/2025/12/after-years-controversy-eus-chat-control-nears-its-final-hurdle-what-know), support digital rights groups (and you absolutely should because all of that matters), but like here's the uncomfortable truth that nobody wants to hear: political solutions are pretty temporary (atleast atm).
 
-You win one vote and they schedule another. You kill one regulation and they rename it and try again. The July 9th vote wasn't the first Chat Control vote and it won't be the last - they've been trying variants of this since like 2020. The surveillance side has permanent incentives (governments want to see, corporations want to know) and the pressure is always there looking for the next opening. The privacy side has to win every single time. The surveillance side only has to win once.
+You win one vote and they schedule another. You'll kill one regulation and they rename it and try again. The July 9th vote wasn't really even the first Chat Control vote and it won't be the last. These fucks have been trying variants of this since the early 2000s, this shit is just moving out into the open that's all. The surveillance side has permanent incentives (governments want to see, corporations want to know) and the pressure is always there looking for the next opening. The privacy side has to win every single time but the surveillance side... _they_ only need to win once. 
 
-This fight will remain unfair as long as surveillance is *architecturally possible*. So the only way to win a rigged game is to change the game entirely.
+This fight will remain unfair as long as surveillance is *architecturally possible*. So the only proper and possible way to win a rigged game is to _change the game entirely_.
 
-If mass surveillance is technically possible it will eventually happen - maybe not this Parliament, maybe not this administration, but eventually - because the incentives are too strong and the vigilance required to prevent it forever is unsustainable. Nobody can stay outraged for decades. The fix is to make surveillance *architecturally impossible*, not illegal, not regulated, but *impossible*. Build systems where even if the government shows up with a warrant, there's nothing to hand over because the data doesn't exist in a readable form anywhere.
+If mass surveillance is technically possible it will eventually happen - maybe not this Parliament, maybe not this administration, but eventually. That's because, my dear reader, the incentives are too strong and the vigilance required to prevent it forever is unsustainable. Nobody can stay outraged for decades, heck look at the whole israel/palestine debacle that's been going on, yeah people were outraged for like what, a couple of months? But as time passes, there's always the next outrage-bait, the next concern. And this doesn't even take into account the fact that the wealth gap is forcing people to have their heads down in work so much so that they cant _literally_ afford to think about anything outside of their income. 
+
+The fix, therefore, is to make surveillance *architecturally impossible* not illegal or regulated, but effectively *impossible*. Build systems where even if the government shows up with a warrant, there's nothing to hand over because the data doesn't exist in a readable form anywhere.
 
 This means:
 - **End-to-end encryption** where providers *cannot* read content even if ordered to
@@ -86,15 +88,14 @@ This means:
 We have pieces of this already - Signal exists, Tor exists, [Briar](https://briarproject.org/) and [Session](https://getsession.org/) and [SimpleX](https://simplex.chat/) exist - but none of them have won. And the reason is painfully simple: **convenience**.
 
 ## Convenience Always Wins
+Privacy tech loses because it's harder to use than the surveilled alternative, and this isn't a bug but kinda the core challenge around this kinda tech. Centralized systems are *inherently* more convenient because they can optimize for user experience without constraint, while decentralized systems have to coordinate without a coordinator which adds friction.
 
-Privacy tech loses because it's harder to use than the surveilled alternative, and this isn't a bug but the core challenge. Centralized systems are *inherently* more convenient because they can optimize for user experience without constraint, while decentralized systems have to coordinate without a coordinator which adds friction.
-
-The numbers are brutal:
-- Mastodon's 2022 Twitter exodus (3.5M → 6M signups) collapsed within months. Downloads dropped 99%. Retention was 37%.
+The numbers are also fucking brutal:
+- Mastodon's 2022 Twitter exodus (3.5M → 6M signups) collapsed within months. Downloads dropped 99% and retention was like 37%.
 - Tor averages ~5 Mbps versus ~250 Mbps for VPNs. 50x slower.
 - Web3 dApps see 7% yearly retention. 75% of users abandon before completing their first transaction.
 
-The pattern is clear: when privacy requires effort, people choose convenience.
+The pattern is clear: when privacy (or really anything) requires effort, people choose convenience. Because we have a tendency on picking out cognitively ease over loads, and we're inherently lazy fucks.
 
 But there are exceptions:
 - **Signal** won because it's as easy as iMessage. Zero user action required for encryption.
@@ -104,24 +105,22 @@ But there are exceptions:
 The lesson: **privacy tech wins when users don't have to choose it**. When the private path is also the easiest path.
 
 ## The Other Side: Poisoning the Well
+So defense is one thing but there's _another_ angle I've been thinking about: what if instead of just hiding from surveillance, you make the *output* of surveillance unreliable?
 
-So defense is one thing but there's another angle I've been thinking about: what if instead of just hiding from surveillance, you make the *output* of surveillance unreliable?
+If everyone's data is poisoned (jittered locations or randomized fingerprints or randomized/obfuscated search queries) the datasets on which the surveillance models are trained become useless. Good ol' garbage in -> garbage out type shit. You can't build a profile on someone if their profile is mostly bullshit noise.
 
-If everyone's data is poisoned - location jittered, fingerprints randomized, search queries obfuscated - the datasets become useless not because they're empty but because they're *wrong*. Garbage in, garbage out. You can't build a profile on someone if their profile is mostly noise.
+The problem is that naive pollution is detectable. The WWW'25 paper ["Breaking the Shield"](https://dl.acm.org/doi/10.1145/3696410.3714713) successfully attacked ALL fingerprint randomization mechanisms across 18 extensions and 5 browsers. In this case the randomizer itself becomes a fingerprint because the population running randomizers is small enough to be distinctive. If only 0.1% of users run a fingerprint randomizer, being in that 0.1% is itself identifying information lmao. Ok so this one's outta question on it's own.
 
-The problem is that naive pollution is detectable. The WWW'25 paper ["Breaking the Shield"](https://dl.acm.org/doi/10.1145/3696410.3714713) successfully attacked ALL fingerprint randomization mechanisms across 18 extensions and 5 browsers - every single one. The randomizer itself becomes a fingerprint because the population running randomizers is small enough to be distinctive. If only 0.1% of users run a fingerprint randomizer, being in that 0.1% is itself identifying information lmao.
+TrackMeNot, the search query obfuscator, is basically comatose. [ML classifiers can separate real queries from decoys](https://link.springer.com/chapter/10.1007/978-3-642-14527-8_2) with ~48-52% accuracy at near-zero false positive rates because human search patterns are *weird* and hard to fake convincingly. The naive approach of injecting random noise is also provably insufficient.
 
-TrackMeNot, the search query obfuscator, is basically dead. [ML classifiers can separate real queries from decoys](https://link.springer.com/chapter/10.1007/978-3-642-14527-8_2) with ~48-52% accuracy at near-zero false positive rates because human search patterns are *weird* and hard to fake convincingly. The naive approach of injecting random noise is provably insufficient.
+[HARPO](https://arxiv.org/pdf/2111.05792), the reinforcement learning obfuscator, achieves 16x better privacy per unit of injected traffic which is actually pretty cool, but it requires continuous ML model updates to stay ahead of detection which means that this path's an ongoing arms race, not a solved problem.
 
-[HARPO](https://arxiv.org/pdf/2111.05792), the reinforcement learning obfuscator, achieves 16x better privacy per unit of injected traffic which is actually pretty cool - but it requires continuous ML model updates to stay ahead of detection. It's an ongoing arms race, not a solved problem.
+The Tor approach of making everyone look identical rather than randomizing is stronger because you're hiding in a crowd rather than standing out as "the person trying to hide". But it comes with brutal UX tradeoffs that most people don't fw.
 
-The Tor approach - make everyone look identical rather than randomizing - is stronger because you're hiding in a crowd rather than standing out as "the person trying to hide". But it comes with brutal UX tradeoffs that most people won't accept.
-
-The real answer is probably both: defense (make surveillance impossible) + offense (make surveillance unreliable). Shield + poison. I'm working on something in this space actually and will have more to share later but the basic idea is that sophisticated pollution that's persona-coherent, human-timed, and adaptive could raise the cost of surveillance to the point where it's just not worth it economically.
+So the real answer is probably a mix of defense (make surveillance impossible) + offense (make surveillance unreliable). I'm [working on something in this space](https://github.com/NovusEdge/ocloak) actually and will have more to share later but the basic idea is that sophisticated pollution that's persona-coherent, human-timed, and adaptive could raise the cost of surveillance to the point where it's just not worth it economically.
 
 ## Directions, Not Answers
-
-I don't have a complete answer and honestly nobody does, but the direction is becoming clearer:
+I don't have a complete answer and i honestly doubt anyone does if I'm gonna be honest, but there's a clear direction all this is kinda headed towards so I'll try and shed some light on this: 
 
 **Decentralize trust, not necessarily infrastructure.** This is the Signal model - they use central servers for delivery (fast, reliable, good UX) but decentralize the cryptographic trust (they literally cannot read your messages). This is pragmatic and it works. The purist approach of decentralizing everything often just means decentralizing the problems too.
 
@@ -138,15 +137,13 @@ Mesh networks like [Meshtastic](https://meshtastic.org/) are usable today with ~
 Decentralized identity is getting real momentum - EU eIDAS 2.0 forces acceptance of DID wallets starting January 2026 - but Block/Square killed their Web5 DID initiative over wallet UX friction. The convenience problem kills projects with hundred-million-dollar backing. Nobody is immune.
 
 ## What We're Playing For
+I want to be clear about what's at stake here because this isn't about hiding crimes, and neither is this to fuel retarded illegal/extremist activity that harms us all. No _this_ is about the asymmetry of power between individuals and institutions.
 
-I want to be clear about what's at stake here because this isn't about hiding crimes - it's about the asymmetry of power between individuals and institutions.
-
-A government that can see everything can control everything, not through force (that's expensive and creates resistance) but through prediction and preemption. If you know what someone will do before they do it you can shape their options invisibly. A corporation that knows everything can manipulate everything, not through coercion (that's illegal) but through optimization - if you know what someone wants before they know it you can manufacture the desire and sell the solution.
+A government that can see everything can control everything, not through force (that's expensive and creates resistance) but through prediction and preemption. If you know what someone will do before they do it you can shape their options invisibly. A corporation that knows everything can manipulate everything, not through coercion (that's illegal) but through optimization meaning that if you know what someone wants before they know it you can manufacture the desire and sell the solution.
 
 The endpoint of total surveillance is not a police state but something subtler and harder to resist: a world where deviation from predicted behavior is increasingly costly, where conformity is the path of least resistance, where the space for genuine choice slowly contracts. This is the world we're building, one convenience at a time.
 
 ## Closing Remarks
-
 Look, I'm not telling you to delete Facebook and move to a cabin in the woods or treat every app as a wiretap. That's not the point here and it's not realistic for most of us anyway.
 
 What I am saying is that the infrastructure being built around you right now - the WiFi that sees through walls, the cameras that log every plate, the apps that might soon scan before they encrypt, the BCIs that are learning to read thought itself - none of this is being built with your interests at heart. It's being built because it can be, because someone will pay for it, and because the people building it don't have to live with the consequences the way you will.
@@ -155,7 +152,7 @@ The political fights matter and you should show up for them when you can, but th
 
 **So what can you actually do?** Use Signal - it's free, it works, and every additional user makes the network stronger. Support orgs like EFF, ACLU, Access Now, and noyb who are fighting the political battles even if those battles are ultimately temporary. Pay attention to defaults and when a new service asks for permissions, ask why. And talk about this stuff with people because the biggest advantage surveillance has right now isn't technology, it's apathy. Most people have no idea what's being built around them.
 
-**And if you build things?** Make privacy the default, not a setting. Invest in UX like it's the entire product because it basically is. Think architecturally about whether your system can be compelled or compromised and what happens when (not if) the legal environment changes.
+**And if you build things?** Make privacy the default. Invest in UX like it's the entire product because it basically is. Think architecturally about whether your system can be compelled or compromised and what happens when (not if) the legal environment changes.
 
 We're not there yet, not even close. But I think we can get there if enough people start building in that direction instead of just complaining about the status quo.
 
