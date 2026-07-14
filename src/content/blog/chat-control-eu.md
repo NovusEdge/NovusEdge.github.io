@@ -4,7 +4,6 @@ date: 2026-07-14
 tags: [privacy, surveillance, eu, encryption, p2p, essay]
 description: On Chat Control, the surveillance stack closing in from all sides, and why the only durable fix is making mass surveillance architecturally impossible.
 toc: true
-draft: true
 ---
 
 ## 314 > 276, But Who's Counting

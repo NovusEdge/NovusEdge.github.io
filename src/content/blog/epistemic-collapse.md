@@ -1,10 +1,9 @@
 ---
 title: How Do You Know What's True?
-date: 2026-07-10
+date: 2026-07-11
 tags: [ai, epistemics, misinformation, essay]
 description: Generation is now free. Verification still costs what it always did. That asymmetry breaks everything.
 thumbnail: truth-power.jpeg
-draft: true
 ---
 
 ## The Wrong Apocalypse
