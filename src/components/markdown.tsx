@@ -1,7 +1,13 @@
 import ReactMarkdown, { type Components } from 'react-markdown'
 import remarkGfm from 'remark-gfm'
+import remarkMath from 'remark-math'
 import rehypeHighlight from 'rehype-highlight'
+import rehypeKatex from 'rehype-katex'
+import 'katex/dist/katex.min.css'
 import { Redacted } from './redacted'
+import { ShaderCanvas } from './shader-canvas'
+import { CodeCompare } from './code-compare'
+import { HueDiagram } from './hue-diagram'
 
 // hast -> plain text, just enough to sniff a marker
 function nodeText(node: unknown): string {
@@ -66,6 +72,31 @@ const components: Components = {
       </code>
     )
   },
+  // ponytail: ```glsl-live renders interactive shader, ```compare renders side-by-side
+  pre({ node, children }) {
+    const code = node?.children?.[0] as { properties?: { className?: string[] }; children?: unknown[] } | undefined
+    const classes = code?.properties?.className ?? []
+    const lang = classes.find((c: string) => c.startsWith('language-'))?.replace('language-', '')
+
+    if (lang === 'glsl-live') {
+      return <ShaderCanvas fragmentShader={nodeText(code)} />
+    }
+    if (lang === 'hue-diagram') {
+      return <HueDiagram />
+    }
+    if (lang === 'compare') {
+      const src = nodeText(code)
+      const [leftBlock, rightBlock] = src.split(/\n---\n/)
+      const parseBlock = (block: string) => {
+        const lines = block.trim().split('\n')
+        const label = lines[0].startsWith('//') ? lines[0].replace(/^\/\/\s*/, '') : ''
+        const code = label ? lines.slice(1).join('\n') : block
+        return { label, code }
+      }
+      return <CodeCompare left={parseBlock(leftBlock || '')} right={parseBlock(rightBlock || '')} />
+    }
+    return <pre>{children}</pre>
+  },
   // ponytail: YouTube embeds via ![alt](youtube-url) syntax
   img({ src, alt, ...props }) {
     const ytId = src ? getYouTubeId(src) : null
@@ -88,8 +119,8 @@ const components: Components = {
 
 export function Markdown({ children }: { children: string }) {
   return (
-    <div className="prose prose-neutral max-w-none dark:prose-invert prose-headings:font-display prose-a:text-paper-deep prose-a:no-underline hover:prose-a:underline dark:prose-a:text-paper prose-code:font-mono prose-img:rounded-sm">
-      <ReactMarkdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeHighlight]} components={components}>
+    <div className="prose prose-neutral max-w-none dark:prose-invert prose-headings:font-display prose-a:text-paper-deep prose-a:no-underline hover:prose-a:underline dark:prose-a:text-paper prose-code:font-mono prose-code:before:content-none prose-code:after:content-none prose-code:font-normal prose-img:rounded-sm">
+      <ReactMarkdown remarkPlugins={[remarkGfm, remarkMath]} rehypePlugins={[rehypeHighlight, rehypeKatex]} components={components}>
         {children}
       </ReactMarkdown>
     </div>

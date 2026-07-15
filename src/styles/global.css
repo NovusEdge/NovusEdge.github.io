@@ -44,7 +44,7 @@
   @apply border border-charcoal/10 bg-bone-tint dark:border-bone/10 dark:bg-charcoal-tint;
 }
 .prose :not(pre) > code {
-  @apply rounded-sm bg-bone-tint px-1 py-0.5 dark:bg-charcoal-tint;
+  @apply rounded-sm bg-charcoal/10 px-1.5 py-0.5 text-paper-deep dark:bg-bone/10 dark:text-paper;
 }
 .hljs-keyword, .hljs-built_in, .hljs-type { @apply text-paper-deep dark:text-paper; }
 .hljs-string, .hljs-title, .hljs-attr { @apply text-gold; }

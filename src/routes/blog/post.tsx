@@ -76,7 +76,7 @@ export default function BlogPost() {
       {slug && POST_DECORATIONS[slug] && <BlogDecorations decorations={POST_DECORATIONS[slug]} />}
       {slug && POST_INTERSTITIALS[slug] && <BlogInterstitials interstitials={POST_INTERSTITIALS[slug]} />}
 
-      <article className="mx-auto max-w-2xl px-6 pb-24 pt-12">
+      <article className="mx-auto max-w-4xl px-6 pb-24 pt-12">
         <div className="mb-10">
           <Magnetic range={25}>
             <TLink

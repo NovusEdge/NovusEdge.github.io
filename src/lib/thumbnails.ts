@@ -2,6 +2,7 @@
 export function getListThumbnail(slug: string): string | null {
   if (slug === 'chat-control-eu') return '/assets/blog/chat-control-featured.jpeg'
   if (slug === 'epistemic-collapse') return '/assets/blog/truth-power.jpeg'
+  if (slug === 'shader-journeys-part-1') return '/assets/blog/shader-journeys-thumb.mp4'
   return getPostThumbnail(slug)
 }
 
@@ -30,5 +31,6 @@ export function getPostThumbnail(slug: string): string | null {
   if (slug === 'university') return '/assets/spore.jpg'
   if (slug === 'what-do-i-want') return '/assets/anim2.gif'
   if (slug === 'going-forward') return '/assets/anim1.gif'
+  if (slug === 'shader-journeys-part-1') return '/assets/blog/shader-journeys-thumb.mp4'
   return null
 }
