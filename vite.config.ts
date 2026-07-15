@@ -17,6 +17,8 @@ export default defineConfig({
       // its browser build touches document at import time and crashes prerendering;
       // hoisted via .npmrc so the Node build resolves from the project root
       'decode-named-character-reference': require.resolve('decode-named-character-reference'),
+      // ponytail: rehype-katex uses this; browser build uses DOMParser which crashes SSR
+      'hast-util-from-html-isomorphic': require.resolve('hast-util-from-html-isomorphic'),
     },
   },
   plugins: [
