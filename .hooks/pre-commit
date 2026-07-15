@@ -1,0 +1,3 @@
+#!/bin/sh
+# Type-check before committing (faster than full build)
+pnpm tsc --noEmit
