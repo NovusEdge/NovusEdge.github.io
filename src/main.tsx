@@ -28,11 +28,24 @@ export async function prerender(data: { url: string }) {
       <App />
     </StaticRouter>,
   )
+  const elements: { type: string; props: Record<string, string> }[] = [
+    { type: 'meta', props: { name: 'description', content: headState.description } },
+    { type: 'meta', props: { property: 'og:title', content: headState.title } },
+    { type: 'meta', props: { property: 'og:description', content: headState.description } },
+  ]
+  if (headState.image) {
+    const imageUrl = `https://novusedge.github.io${headState.image}`
+    elements.push(
+      { type: 'meta', props: { property: 'og:image', content: imageUrl } },
+      { type: 'meta', props: { name: 'twitter:card', content: 'summary_large_image' } },
+      { type: 'meta', props: { name: 'twitter:image', content: imageUrl } },
+    )
+  }
   return {
     html,
     head: {
       title: headState.title,
-      elements: new Set([{ type: 'meta', props: { name: 'description', content: headState.description } }]),
+      elements: new Set(elements),
     },
   }
 }

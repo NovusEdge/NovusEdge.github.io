@@ -66,7 +66,7 @@ export default function BlogPost() {
 
   return (
     <>
-      <Meta title={post.title} description={post.description || post.title} />
+      <Meta title={post.title} description={post.description || post.title} image={image} />
 
       <PostHero variant={POST_HERO[post.slug] ?? DEFAULT_HERO} post={post} image={image} />
 
