@@ -44,6 +44,7 @@ const SIGNOFF = 0
 // ponytail: per-post hero variants (0=Cinematic, 1=Dither, 2=Framed, 3=Duotone, 4=CRT)
 const POST_HERO: Record<string, number> = {
   'epistemic-collapse': 4,
+  'shader-journeys-part-1': 0,
 }
 
 export default function BlogPost() {

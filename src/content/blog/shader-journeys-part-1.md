@@ -3,6 +3,7 @@ title: "Shader Journeys: Part 1"
 date: 2026-07-15
 tags: [shader-journeys, shaders, graphics]
 description: Starting a new series on learning shaders from scratch. Fragments, vertices, and a lot of confused staring at math.
+thumbnail: shader-journeys-thumb.gif
 ---
 
 Well, I've dabbled before in shaders with godot before but I kinda fell off after a bit of dabbling. After parking [Engrammic](https://engrammic.ai) for the meantime, I find myself with some more free time, so I've decided to revisit this topic yet again, but this time I've decided to torture myself thru trying to dabble directly in GLSL, and I must say, I don't think it's that bad >.>
