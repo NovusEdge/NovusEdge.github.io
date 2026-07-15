@@ -93,7 +93,7 @@ export default function BlogPost() {
 
         <div
           ref={proseRef}
-          className="prose prose-neutral prose-lg max-w-none font-body leading-relaxed text-charcoal/80 dark:prose-invert dark:text-bone/85 prose-headings:mt-12 prose-headings:mb-6 prose-p:my-6 prose-h2:text-3xl prose-h3:text-xl"
+          className="prose prose-neutral prose-xl max-w-none font-body leading-relaxed text-charcoal/80 dark:prose-invert dark:text-bone/85 prose-headings:mt-12 prose-headings:mb-6 prose-p:my-6 prose-h2:text-3xl prose-h3:text-xl"
         >
           <Markdown>{post.content}</Markdown>
         </div>
