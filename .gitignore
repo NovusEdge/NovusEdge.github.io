@@ -1,3 +1,37 @@
+# deps
 node_modules/
+
+# build
 dist/
+.vite/
+
+# go
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.test
+*.out
+vendor/
+
+# env
+.env
+.env.*
+!.env.example
+
+# editor
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# os
+.DS_Store
+Thumbs.db
+
+# misc
 TONE.md
+*.log
+.superpowers/

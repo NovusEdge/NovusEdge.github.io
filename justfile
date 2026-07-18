@@ -1,3 +1,7 @@
+# show help by default
+default:
+    @just --list
+
 # dev server
 dev:
     pnpm dev
