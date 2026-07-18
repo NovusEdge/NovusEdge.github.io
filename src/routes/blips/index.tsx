@@ -1,9 +1,72 @@
 import { useEffect, useRef, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
+import { Dithering } from '@paper-design/shaders-react'
 import { Meta } from '../../lib/meta'
 import { blips, getBlipMediaUrl, type Blip } from '../../lib/blips'
 import { Rule, SectionNumber, JPLabel } from '../../components/motifs'
 import DecryptedText from '../../components/react-bits/DecryptedText'
+
+// dither noise pattern for card hover
+const DITHER_NOISE = `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")`
+
+// side dither strips
+function DitherStrips() {
+  const ref = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    let current = 0
+    let target = 0
+    let rafId: number
+
+    const onScroll = () => {
+      target = window.scrollY * 0.05
+    }
+
+    const tick = () => {
+      current += (target - current) * 0.08
+      if (ref.current) {
+        ref.current.style.transform = `translateY(${current}px)`
+      }
+      rafId = requestAnimationFrame(tick)
+    }
+
+    window.addEventListener('scroll', onScroll, { passive: true })
+    rafId = requestAnimationFrame(tick)
+    return () => {
+      window.removeEventListener('scroll', onScroll)
+      cancelAnimationFrame(rafId)
+    }
+  }, [])
+
+  return (
+    <div ref={ref} className="pointer-events-none fixed inset-y-0 left-0 right-0 z-0 hidden lg:block" aria-hidden>
+      {/* left strip */}
+      <div className="absolute left-0 top-0 h-full w-16 opacity-[0.07]">
+        <Dithering
+          colorBack="#141414"
+          colorFront="#d4a03c"
+          shape="swirl"
+          type="4x4"
+          size={2}
+          speed={0.02}
+          style={{ width: '100%', height: '100%' }}
+        />
+      </div>
+      {/* right strip */}
+      <div className="absolute right-0 top-0 h-full w-16 opacity-[0.07]">
+        <Dithering
+          colorBack="#141414"
+          colorFront="#d4a03c"
+          shape="swirl"
+          type="4x4"
+          size={2}
+          speed={0.02}
+          style={{ width: '100%', height: '100%' }}
+        />
+      </div>
+    </div>
+  )
+}
 
 function useOutsideClick(
   ref: React.RefObject<HTMLElement | null>,
@@ -132,6 +195,11 @@ function BlipCard({
 
   const cardContent = (
     <>
+      {/* dither hover overlay */}
+      <div
+        className="pointer-events-none absolute inset-0 opacity-0 mix-blend-overlay transition-opacity duration-300 group-hover:opacity-[0.12]"
+        style={{ backgroundImage: DITHER_NOISE }}
+      />
       <div className="p-4">
         {hasMedia && (
           <div className="mb-3 overflow-hidden border border-charcoal/10 dark:border-bone/10">
@@ -214,8 +282,9 @@ export default function BlipsPage() {
   return (
     <>
       <Meta title="Blips" description="Short-form updates: notes, screenshots, and clips as they happen." />
+      <DitherStrips />
 
-      <section className="relative mx-auto max-w-5xl px-6 pb-24 pt-36">
+      <section className="relative z-10 mx-auto max-w-5xl px-6 pb-24 pt-36">
         <div className="relative">
           <SectionNumber n="05" label="blips" />
           <div className="relative mt-3 w-fit">
