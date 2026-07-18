@@ -2,67 +2,85 @@
 
 # July 2026 - between recent posts
 - date: 2026-07-18
-  text: "shader experiment gone right for once lmao"
+  text: "shader experiment gone right for once"
   media: mock-shader.jpg
   tags: [shaders]
 
 - date: 2026-07-17
-  text: "radicle node synced, decentralized git feels good ngl"
+  text: "radicle node synced, decentralized git feels good"
 
 - date: 2026-07-16
-  text: "3am debugging session, the vibes are immaculate istg"
+  text: "3am debugging session, vibes immaculate ngl"
   tags: [vibes]
 
+- date: 2026-07-14
+  text: "found a cafe with actually good oat milk"
+
 - date: 2026-07-13
-  text: "accidental art from a broken frag shader lol"
+  text: "accidental art from a broken frag shader"
   tags: [shaders]
 
 - date: 2026-07-12
-  text: "bubbletea TUI coming along nicely fr"
+  text: "bubbletea TUI coming along nicely"
   tags: [go, tui]
 
+- date: 2026-07-11
+  text: "forgot to eat lunch again lol"
+
 - date: 2026-07-10
-  text: "first PCB design attempt, wish me luck bruh"
+  text: "first PCB design attempt, wish me luck"
   tags: [hardware]
 
 - date: 2026-07-08
-  text: "engrammic paper submitted to zenodo finally omg"
+  text: "engrammic paper submitted to zenodo finally"
+
+- date: 2026-07-06
+  text: "rain all week, kinda vibe tho"
 
 - date: 2026-07-05
-  text: "debugging at 4am hits different ngl"
+  text: "debugging at 4am hits different"
 
 - date: 2026-07-03
-  text: "vulkan spec rabbit hole, send help istg"
+  text: "vulkan spec rabbit hole, send help"
 
 - date: 2026-06-30
-  text: "new keyboard arrived, endgame copium lmao"
+  text: "new keyboard arrived, endgame copium"
   tags: [gear]
 
 - date: 2026-06-28
   text: "makefiles are underrated, fight me"
 
 - date: 2026-06-26
-  text: "first shader that actually compiled on first try wtf"
+  text: "first shader that compiled on first try wtf"
   tags: [shaders]
+
+- date: 2026-06-24
+  text: "sleep schedule nonexistent"
 
 # Dec 2025 - around im-back posts
 - date: 2025-12-05
-  text: "feels weird to be writing again ngl"
+  text: "feels weird to be writing again"
 
 - date: 2025-11-28
-  text: "lahti winter hits different this year fr"
+  text: "lahti winter hits different this year"
+
+- date: 2025-11-20
+  text: "good coffee, warm socks, cant complain"
 
 # 2023 - old era
 - date: 2023-09-20
-  text: "orientation week survived barely lol"
+  text: "orientation week survived"
 
 - date: 2023-09-10
-  text: "jetlag is real bruh"
+  text: "jetlag is real"
 
 - date: 2023-07-15
-  text: "CTF grind never stops istg"
+  text: "CTF grind never stops"
   tags: [ctf]
 
 - date: 2023-07-08
-  text: "linux ricing at 2am again lmao"
+  text: "linux ricing at 2am again"
   tags: [linux]
+
+- date: 2023-06-30
+  text: "summer heat is brutal"
