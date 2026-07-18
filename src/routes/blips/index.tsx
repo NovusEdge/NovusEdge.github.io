@@ -34,7 +34,6 @@ function isVideo(filename: string) {
 
 // ponytail: deterministic rotation from index, no Math.random
 const ROTATIONS = ['-2deg', '1.5deg', '-1deg', '2.5deg', '-1.8deg', '1deg', '-2.2deg', '0.8deg']
-const TAPE_STYLES = ['top', 'corners', 'top', 'corners', 'top', 'corners'] as const
 
 function ExpandedCard({
   blip,
@@ -46,6 +45,10 @@ function ExpandedCard({
   const ref = useRef<HTMLDivElement>(null)
 
   useOutsideClick(ref, onClose)
+
+  useEffect(() => {
+    ref.current?.focus()
+  }, [])
 
   useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => {
@@ -67,15 +70,16 @@ function ExpandedCard({
       <motion.div
         ref={ref}
         layoutId={`blip-${blip.date}-${blip.media}`}
-        className="relative max-h-[85vh] w-full max-w-2xl overflow-auto bg-bone p-6 shadow-2xl dark:bg-charcoal"
+        role="dialog"
+        aria-modal="true"
+        aria-label="Expanded blip"
+        tabIndex={-1}
+        className="relative max-h-[85vh] w-full max-w-2xl overflow-auto bg-bone p-6 shadow-2xl outline-none dark:bg-charcoal"
       >
-        {/* Tape decoration */}
-        <div className="absolute -top-3 left-1/2 h-6 w-24 -translate-x-1/2 -rotate-1 bg-gold/60" />
-
         {mediaSrc && (
           <div className="mb-4 overflow-hidden">
             {isVideo(blip.media!) ? (
-              <video src={mediaSrc} controls autoPlay className="w-full rounded" />
+              <video src={mediaSrc} controls autoPlay muted className="w-full rounded" />
             ) : (
               <img src={mediaSrc} alt="" className="w-full rounded object-contain" />
             )}
@@ -122,24 +126,12 @@ function BlipCard({
   onExpand?: () => void
 }) {
   const rotation = ROTATIONS[index % ROTATIONS.length]
-  const tapeStyle = TAPE_STYLES[index % TAPE_STYLES.length]
   const mediaSrc = blip.media ? getBlipMediaUrl(blip.media) : null
   const hasMedia = !!mediaSrc
   const isClickable = hasMedia
 
   const cardContent = (
     <>
-      {/* Tape decorations */}
-      {tapeStyle === 'top' && (
-        <div className="absolute -top-3 left-1/2 h-6 w-20 -translate-x-1/2 -rotate-2 bg-gold/50" />
-      )}
-      {tapeStyle === 'corners' && (
-        <>
-          <div className="absolute -left-3 -top-2 h-6 w-10 -rotate-[35deg] bg-gold/50" />
-          <div className="absolute -right-3 -top-2 h-6 w-10 rotate-[35deg] bg-gold/50" />
-        </>
-      )}
-
       <div className="p-4">
         {hasMedia && (
           <div className="mb-3 overflow-hidden border border-charcoal/10 dark:border-bone/10">
@@ -191,6 +183,14 @@ function BlipCard({
         style={{ transform: `rotate(${rotation})` }}
         onClick={onExpand}
         whileHover={{ rotate: 0 }}
+        tabIndex={0}
+        role="button"
+        onKeyDown={(e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault()
+            onExpand?.()
+          }
+        }}
       >
         {cardContent}
       </motion.li>
@@ -198,12 +198,13 @@ function BlipCard({
   }
 
   return (
-    <li
+    <motion.li
       className={baseClasses}
       style={{ transform: `rotate(${rotation})` }}
+      whileHover={{ rotate: 0 }}
     >
       {cardContent}
-    </li>
+    </motion.li>
   )
 }
 
