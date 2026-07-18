@@ -3,13 +3,15 @@
 # July 2026 - between recent posts
 - date: 2026-07-17
   text: "radicle node synced, decentralized git feels good"
+  tags: [git, decentralized]
 
 - date: 2026-07-16
   text: "3am debugging session, vibes immaculate ngl"
-  tags: [vibes]
+  tags: [vibes, debugging]
 
 - date: 2026-07-14
   text: "found a cafe with actually good oat milk"
+  tags: [life]
 
 - date: 2026-07-13
   text: "accidental art from a broken frag shader"
@@ -19,24 +21,25 @@
   text: "bubbletea TUI coming along nicely"
   tags: [go, tui]
 
-- date: 2026-07-11
-  text: "forgot to eat lunch again lol"
-
 - date: 2026-07-10
   text: "first PCB design attempt, wish me luck"
   tags: [hardware]
 
 - date: 2026-07-08
   text: "engrammic paper submitted to zenodo finally"
+  tags: [research, engrammic]
 
 - date: 2026-07-06
   text: "rain all week, kinda vibe tho"
+  tags: [life, finland]
 
 - date: 2026-07-05
   text: "debugging at 4am hits different"
+  tags: [debugging, vibes]
 
 - date: 2026-07-03
   text: "vulkan spec rabbit hole, send help"
+  tags: [graphics, vulkan]
 
 - date: 2026-06-30
   text: "new keyboard arrived, endgame copium"
@@ -44,6 +47,7 @@
 
 - date: 2026-06-28
   text: "makefiles are underrated, fight me"
+  tags: [build]
 
 - date: 2026-06-26
   text: "first shader that compiled on first try wtf"
@@ -51,27 +55,33 @@
 
 - date: 2026-06-24
   text: "sleep schedule nonexistent"
+  tags: [life]
 
 # Dec 2025 - around im-back posts
 - date: 2025-12-05
   text: "feels weird to be writing again"
+  tags: [writing]
 
 - date: 2025-11-28
   text: "lahti winter hits different this year"
+  tags: [finland, life]
 
 - date: 2025-11-20
   text: "good coffee, warm socks, cant complain"
+  tags: [life]
 
 # 2023 - old era
 - date: 2023-09-20
   text: "orientation week survived"
+  tags: [uni]
 
 - date: 2023-09-10
   text: "jetlag is real"
+  tags: [travel]
 
 - date: 2023-07-15
   text: "CTF grind never stops"
-  tags: [ctf]
+  tags: [ctf, security]
 
 - date: 2023-07-08
   text: "linux ricing at 2am again"
@@ -79,3 +89,4 @@
 
 - date: 2023-06-30
   text: "summer heat is brutal"
+  tags: [life]
