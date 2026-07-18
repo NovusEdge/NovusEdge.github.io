@@ -1,6 +1,6 @@
 ---
 title: "I'm back! (Part 2)"
-date: 2025-12-02
+date: 2025-12-28
 tags: [blog-update, founder-log]
 description: Part two, and the hard one. Summer 2025 took everything, I nearly didn't make it, and I nearly left to fight a war. This is how I fell all the way down and clawed back up, and the people who wouldn't let me stay down.
 ---

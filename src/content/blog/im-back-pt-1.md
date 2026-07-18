@@ -1,6 +1,6 @@
 ---
 title: "I'm back!"
-date: 2025-12-01
+date: 2025-12-07
 tags: [blog-update, founder-log]
 description: Two years of silence, explained. Part one of how 2025 went: building a community from 5 people to 250+, learning about entrepreneurship, and one startup that taught me exactly what not to be.
 ---

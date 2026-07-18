@@ -1,6 +1,6 @@
 ---
 title: "Hardware Journeys: Starting From Absolute Zero"
-date: 2026-07-02
+date: 2026-06-02
 tags: [hardware-journeys, hardware]
 description: Kicking off a new series. A software person learning hardware from nothing, in public, badly. Why physics is a better teacher than any framework, and the one project I'm not ready to talk about yet.
 ---

@@ -28,7 +28,7 @@ export default defineConfig({
       renderTarget: '#root',
       prerenderScript: new URL('./src/main.tsx', import.meta.url).pathname,
       additionalPrerenderRoutes: [
-        '/blog', '/portfolio', '/research', '/stack', '/404',
+        '/blog', '/portfolio', '/research', '/stack', '/blips', '/404',
         ...blogSlugs.map((s) => `/blog/${s}`),
       ],
     }),

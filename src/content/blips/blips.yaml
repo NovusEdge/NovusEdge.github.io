@@ -1,11 +1,6 @@
 # blips - short-form updates
 
 # July 2026 - between recent posts
-- date: 2026-07-18
-  text: "shader experiment gone right for once"
-  media: mock-shader.jpg
-  tags: [shaders]
-
 - date: 2026-07-17
   text: "radicle node synced, decentralized git feels good"
 

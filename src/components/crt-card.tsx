@@ -18,7 +18,7 @@ export function CRTCard({ post, img, dayOf, monthOf }: Props) {
   return (
     <li
       data-post
-      className="group grid gap-x-6 gap-y-4 md:grid-cols-12 md:items-end"
+      className="group grid gap-x-6 gap-y-4 md:grid-cols-12 md:items-center"
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
     >
@@ -67,7 +67,7 @@ export function CRTCard({ post, img, dayOf, monthOf }: Props) {
       </div>
 
       {/* Title */}
-      <div data-col className="md:col-span-6 flex flex-col justify-end order-3">
+      <div data-col className="md:col-span-6 flex flex-col justify-center order-3">
         <TLink
           to={`/blog/${post.slug}`}
           className="font-display text-2xl font-bold leading-snug text-charcoal transition-all duration-200 group-hover:text-amber-500 dark:text-bone md:text-3xl"

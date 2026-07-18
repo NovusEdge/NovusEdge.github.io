@@ -3,18 +3,24 @@ import { TLink } from './page-transition'
 import { ArrowRight } from './icons'
 import type { Post } from '../lib/posts'
 
-// Redacted text - black bar overlay that fades to reveal text
+// Redacted text - word by word slide reveal
 function RedactedText({ text, revealed }: { text: string; revealed: boolean }) {
+  const words = text.split(' ')
   return (
-    <span className="relative inline-block">
-      {/* Actual text - always rendered for stable layout */}
-      <span>{text}</span>
-      {/* Redaction bar overlay */}
-      <span
-        className="absolute inset-0 bg-charcoal dark:bg-bone pointer-events-none transition-opacity duration-500"
-        style={{ opacity: revealed ? 0 : 1 }}
-        aria-hidden
-      />
+    <span className="inline">
+      {words.map((word, i) => (
+        <span key={i} className="relative inline-block overflow-hidden mr-[0.25em]">
+          <span className="relative z-10">{word}</span>
+          <span
+            className="absolute inset-0 bg-charcoal dark:bg-bone pointer-events-none transition-transform duration-500 ease-out"
+            style={{
+              transform: revealed ? 'translateX(105%)' : 'translateX(0)',
+              transitionDelay: revealed ? `${i * 60}ms` : '0ms',
+            }}
+            aria-hidden
+          />
+        </span>
+      ))}
     </span>
   )
 }
@@ -60,7 +66,7 @@ export function SurveillanceCard({ post, img, dayOf, monthOf }: Props) {
     <li
       ref={cardRef}
       data-post
-      className="group grid gap-x-6 gap-y-4 md:grid-cols-12 md:items-end"
+      className="group grid gap-x-6 gap-y-4 md:grid-cols-12 md:items-center"
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
     >
@@ -107,7 +113,7 @@ export function SurveillanceCard({ post, img, dayOf, monthOf }: Props) {
       </div>
 
       {/* Title with redaction effect */}
-      <div data-col className="md:col-span-6 flex flex-col justify-end order-3">
+      <div data-col className="md:col-span-6 flex flex-col justify-center order-3">
         <TLink
           to={`/blog/${post.slug}`}
           className="font-display text-2xl font-bold leading-snug text-charcoal transition-all duration-200 group-hover:text-emerald-400 dark:text-bone md:text-3xl"
@@ -115,10 +121,13 @@ export function SurveillanceCard({ post, img, dayOf, monthOf }: Props) {
           <RedactedText text={post.title} revealed={hovered} />
         </TLink>
         {post.description && (
-          <p className="mt-3 text-sm font-medium leading-relaxed text-charcoal/75 dark:text-bone/75 transition-opacity duration-300"
-            style={{ opacity: hovered ? 1 : 0.6 }}
-          >
-            {hovered ? post.description : post.description.replace(/\S/g, '█').slice(0, 60) + '...'}
+          <p className="mt-3 text-sm font-medium leading-relaxed text-charcoal/75 dark:text-bone/75 relative overflow-hidden">
+            <span className="relative z-10">{post.description}</span>
+            <span
+              className="absolute inset-0 bg-charcoal dark:bg-bone pointer-events-none transition-transform duration-700 ease-out delay-100"
+              style={{ transform: hovered ? 'translateX(105%)' : 'translateX(0)' }}
+              aria-hidden
+            />
           </p>
         )}
         <div className="mt-4 flex flex-wrap items-center gap-2.5">

@@ -1,6 +1,6 @@
 ---
 title: On Building Something... Engrammic
-date: 2026-06-25
+date: 2026-05-06
 tags: [ai-memory, epistemics, engrammic, agents, founder-log]
 description: First thoughts on the problem that got me here. Why agent memory is treated as a retrieval problem when it's really a question of belief, and what it means to build externalized epistemics.
 ---

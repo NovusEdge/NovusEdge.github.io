@@ -9,6 +9,7 @@ import BlogPost from './routes/blog/post'
 import PortfolioIndex from './routes/portfolio/index'
 import ResearchIndex from './routes/research/index'
 import StackPage from './routes/stack/index'
+import BlipsPage from './routes/blips/index'
 import NotFound from './routes/not-found'
 import { SiteFooter } from './components/site-footer'
 
@@ -34,7 +35,8 @@ export default function App() {
           <Route path="/stack" element={<StackPage />} />
           <Route path="/stack/editorial" element={<StackPage />} />
           <Route path="/stack/graph" element={<StackPage />} />
-          <Route path="*" element={<NotFound />} />
+          <Route path="/blips" element={<BlipsPage />} />
+                    <Route path="*" element={<NotFound />} />
         </Routes>
       </div>
       {/* universal footer; /stack carries its own colophon (editorial) or runs immersive (graph) */}
