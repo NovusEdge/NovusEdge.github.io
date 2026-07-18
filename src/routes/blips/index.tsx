@@ -41,26 +41,26 @@ function DitherStrips() {
   return (
     <div ref={ref} className="pointer-events-none fixed inset-y-0 left-0 right-0 z-0 hidden lg:block" aria-hidden>
       {/* left strip */}
-      <div className="absolute left-0 top-0 h-full w-16 opacity-[0.07]">
+      <div className="absolute left-0 top-0 h-full w-24 opacity-[0.07]">
         <Dithering
           colorBack="#141414"
           colorFront="#d4a03c"
-          shape="swirl"
-          type="4x4"
-          size={2}
-          speed={0.02}
+          shape="warp"
+          type="random"
+          size={1.8}
+          speed={0.01}
           style={{ width: '100%', height: '100%' }}
         />
       </div>
       {/* right strip */}
-      <div className="absolute right-0 top-0 h-full w-16 opacity-[0.07]">
+      <div className="absolute right-0 top-0 h-full w-24 opacity-[0.07]">
         <Dithering
           colorBack="#141414"
           colorFront="#d4a03c"
-          shape="swirl"
-          type="4x4"
-          size={2}
-          speed={0.02}
+          shape="warp"
+          type="random"
+          size={1.8}
+          speed={0.01}
           style={{ width: '100%', height: '100%' }}
         />
       </div>
