@@ -9,61 +9,19 @@ import DecryptedText from '../../components/react-bits/DecryptedText'
 // dither noise pattern for card hover
 const DITHER_NOISE = `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")`
 
-// side dither strips
-function DitherStrips() {
-  const ref = useRef<HTMLDivElement>(null)
-
-  useEffect(() => {
-    let current = 0
-    let target = 0
-    let rafId: number
-
-    const onScroll = () => {
-      target = window.scrollY * 0.05
-    }
-
-    const tick = () => {
-      current += (target - current) * 0.08
-      if (ref.current) {
-        ref.current.style.transform = `translateY(${current}px)`
-      }
-      rafId = requestAnimationFrame(tick)
-    }
-
-    window.addEventListener('scroll', onScroll, { passive: true })
-    rafId = requestAnimationFrame(tick)
-    return () => {
-      window.removeEventListener('scroll', onScroll)
-      cancelAnimationFrame(rafId)
-    }
-  }, [])
-
+// full page dither background
+function DitherBg() {
   return (
-    <div ref={ref} className="pointer-events-none fixed inset-y-0 left-0 right-0 z-0 hidden lg:block" aria-hidden>
-      {/* left strip */}
-      <div className="absolute left-0 top-0 h-full w-24 opacity-[0.07]">
-        <Dithering
-          colorBack="#141414"
-          colorFront="#d4a03c"
-          shape="warp"
-          type="random"
-          size={1.8}
-          speed={0.01}
-          style={{ width: '100%', height: '100%' }}
-        />
-      </div>
-      {/* right strip */}
-      <div className="absolute right-0 top-0 h-full w-24 opacity-[0.07]">
-        <Dithering
-          colorBack="#141414"
-          colorFront="#d4a03c"
-          shape="warp"
-          type="random"
-          size={1.8}
-          speed={0.01}
-          style={{ width: '100%', height: '100%' }}
-        />
-      </div>
+    <div className="pointer-events-none fixed inset-0 z-0 opacity-[0.06]" aria-hidden>
+      <Dithering
+        colorBack="#141414"
+        colorFront="#d4a03c"
+        shape="warp"
+        type="random"
+        size={1.8}
+        speed={0.01}
+        style={{ width: '100%', height: '100%' }}
+      />
     </div>
   )
 }
@@ -282,7 +240,7 @@ export default function BlipsPage() {
   return (
     <>
       <Meta title="Blips" description="Short-form updates: notes, screenshots, and clips as they happen." />
-      <DitherStrips />
+      <DitherBg />
 
       <section className="relative z-10 mx-auto max-w-5xl px-6 pb-24 pt-36">
         <div className="relative">
