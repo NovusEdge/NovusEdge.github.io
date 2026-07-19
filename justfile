@@ -29,3 +29,5 @@ install:
 # clean build artifacts
 clean:
     rm -rf dist .vite
+
+mod cli 'tools/cli'

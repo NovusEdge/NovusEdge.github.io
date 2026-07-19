@@ -14,7 +14,7 @@ const PERF = { minPixelRatio: 1, maxPixelCount: 900_000 }
 const NOISE =
   "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E\")"
 
-export const HERO_VARIANTS = ['Cinematic', 'Dither', 'Framed', 'Duotone', 'Grain'] as const
+export const HERO_VARIANTS = ['Cinematic', 'Dither', 'Framed', 'Duotone', 'Grain', 'WarmthShift', 'Raw'] as const
 
 type HeroProps = { post: Post; image: string | null }
 
@@ -184,21 +184,37 @@ function HeroDuotone({ post, image }: HeroProps) {
   )
 }
 
-// 5 — video with grain overlay
-function HeroGrain({ post }: HeroProps) {
+// 5 — grain overlay (video if available, otherwise image)
+const GRAIN_VIDEOS: Record<string, string> = {
+  'epistemic-collapse': '/assets/blog/epistemic-hero.mp4',
+  'building-vs-creating': '/assets/blog/building-vs-creating.mp4',
+}
+
+function HeroGrain({ post, image }: HeroProps) {
   const scope = useRef<HTMLElement>(null)
   useHeroMotion(scope, true)
+  const video = GRAIN_VIDEOS[post.slug]
   return (
     <header ref={scope} className={BLEED}>
-      <video
-        data-heroimg
-        src="/assets/blog/epistemic-hero.mp4"
-        autoPlay
-        loop
-        muted
-        playsInline
-        className="absolute inset-0 h-[124%] w-full -translate-y-[8%] scale-105 object-cover opacity-80"
-      />
+      {video ? (
+        <video
+          data-heroimg
+          src={video}
+          autoPlay
+          loop
+          muted
+          playsInline
+          className="absolute inset-0 h-[124%] w-full -translate-y-[8%] scale-105 object-cover opacity-80"
+        />
+      ) : image ? (
+        <img
+          data-heroimg
+          src={image}
+          alt=""
+          className="absolute inset-0 h-full w-full object-contain opacity-80"
+          style={{ maskImage: 'radial-gradient(ellipse 70% 80% at center, black 50%, transparent 100%)', WebkitMaskImage: 'radial-gradient(ellipse 70% 80% at center, black 50%, transparent 100%)' }}
+        />
+      ) : null}
       {/* grain overlay */}
       <div
         className="absolute inset-0 opacity-30 mix-blend-overlay"
@@ -211,7 +227,86 @@ function HeroGrain({ post }: HeroProps) {
   )
 }
 
-const VARIANTS = [HeroCinematic, HeroDither, HeroFramed, HeroDuotone, HeroGrain]
+// 6 — warmth shift: warm amber → cool blue as you scroll
+function HeroWarmthShift({ post, image }: HeroProps) {
+  const scope = useRef<HTMLElement>(null)
+  const imgRef = useRef<HTMLImageElement>(null)
+
+  useGSAP(
+    () => {
+      if (prefersReducedMotion()) return
+      gsap.from('[data-herotitle]', { opacity: 0, y: 32, duration: 0.9, ease: 'power3.out', delay: 0.15 })
+      // warm (sepia + saturate) → cool (hue-rotate toward blue, desaturate)
+      gsap.to(imgRef.current, {
+        filter: 'sepia(0) saturate(0.7) hue-rotate(180deg) brightness(0.85)',
+        ease: 'none',
+        scrollTrigger: { trigger: scope.current, start: 'top top', end: 'bottom top', scrub: true },
+      })
+    },
+    { scope },
+  )
+
+  return (
+    <header ref={scope} className={BLEED}>
+      {image && (
+        <img
+          ref={imgRef}
+          data-heroimg
+          src={image}
+          alt=""
+          className="absolute inset-0 h-full w-full object-contain"
+          style={{
+            filter: 'sepia(0.3) saturate(1.3) brightness(1.05)',
+            maskImage: 'radial-gradient(ellipse 70% 80% at center, black 50%, transparent 100%)',
+            WebkitMaskImage: 'radial-gradient(ellipse 70% 80% at center, black 50%, transparent 100%)',
+          }}
+        />
+      )}
+      <div className="absolute inset-0 bg-gradient-to-t from-charcoal via-charcoal/40 to-transparent" />
+      <div className={PAGE_FADE} />
+      <OverTitle post={post} />
+    </header>
+  )
+}
+
+// 7 — raw: contained hero, no grain/color effects, just the media
+const RAW_VIDEOS: Record<string, string> = {
+  'building-vs-creating': '/assets/blog/building-vs-creating.mp4',
+}
+
+function HeroRaw({ post, image }: HeroProps) {
+  const scope = useRef<HTMLElement>(null)
+  const video = RAW_VIDEOS[post.slug]
+  useHeroMotion(scope, false)
+
+  return (
+    <header ref={scope} className={BLEED} style={{ backgroundColor: '#2a1f1a' }}>
+      {video ? (
+        <video
+          src={video}
+          autoPlay
+          loop
+          muted
+          playsInline
+          className="absolute inset-0 h-full w-full object-contain"
+        />
+      ) : image ? (
+        <img src={image} alt="" className="absolute inset-0 h-full w-full object-contain" />
+      ) : null}
+      {/* left/right blur edges */}
+      <div className="pointer-events-none absolute inset-y-0 left-0 w-[15%] backdrop-blur-md" style={{ maskImage: 'linear-gradient(to right, black, transparent)', WebkitMaskImage: 'linear-gradient(to right, black, transparent)' }} />
+      <div className="pointer-events-none absolute inset-y-0 right-0 w-[15%] backdrop-blur-md" style={{ maskImage: 'linear-gradient(to left, black, transparent)', WebkitMaskImage: 'linear-gradient(to left, black, transparent)' }} />
+      {/* color fade over blur */}
+      <div className="pointer-events-none absolute inset-y-0 left-0 w-[15%] bg-gradient-to-r from-[#2a1f1a] to-transparent" />
+      <div className="pointer-events-none absolute inset-y-0 right-0 w-[15%] bg-gradient-to-l from-[#2a1f1a] to-transparent" />
+      <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-[#2a1f1a]/80 to-transparent" />
+      <div className={PAGE_FADE} />
+      <OverTitle post={post} />
+    </header>
+  )
+}
+
+const VARIANTS = [HeroCinematic, HeroDither, HeroFramed, HeroDuotone, HeroGrain, HeroWarmthShift, HeroRaw]
 
 export function PostHero({ variant, post, image }: { variant: number } & HeroProps) {
   const Hero = VARIANTS[variant] ?? HeroCinematic

@@ -32,5 +32,6 @@ export function getPostThumbnail(slug: string): string | null {
   if (slug === 'what-do-i-want') return '/assets/anim2.gif'
   if (slug === 'going-forward') return '/assets/anim1.gif'
   if (slug === 'shader-journeys-part-1') return '/assets/blog/shader-journeys-thumb.gif'
+  if (slug === 'building-vs-creating') return '/assets/blog/building-vs-creating.mp4'
   return null
 }

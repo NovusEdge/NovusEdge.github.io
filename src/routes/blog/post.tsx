@@ -45,6 +45,7 @@ const SIGNOFF = 0
 const POST_HERO: Record<string, number> = {
   'epistemic-collapse': 4,
   'shader-journeys-part-1': 0,
+  'building-vs-creating': 6, // raw - natural aspect, no effects
 }
 
 export default function BlogPost() {

@@ -121,11 +121,22 @@ export default function BlogIndex() {
                             data-thumb
                             className="overflow-hidden rounded border border-charcoal/10 dark:border-bone/10 bg-black aspect-[16/10] w-full shrink-0 shadow-sm transition-all duration-300 group-hover:border-gold/30"
                           >
-                            <img
-                              src={img}
-                              alt=""
-                              className="h-full w-full object-cover grayscale opacity-80 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-500"
-                            />
+                            {img.endsWith('.mp4') ? (
+                              <video
+                                src={img}
+                                autoPlay
+                                loop
+                                muted
+                                playsInline
+                                className="h-full w-full object-cover grayscale opacity-80 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-500"
+                              />
+                            ) : (
+                              <img
+                                src={img}
+                                alt=""
+                                className="h-full w-full object-cover grayscale opacity-80 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-500"
+                              />
+                            )}
                           </div>
                         ) : (
                           <div className="flex aspect-[16/10] w-full items-center justify-center rounded border border-dashed border-charcoal/15 bg-bone-tint/20 dark:border-bone/15 dark:bg-charcoal-tint/10">
