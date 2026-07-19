@@ -19,7 +19,7 @@ function DitherBg() {
         shape="warp"
         type="random"
         size={1.8}
-        speed={0.01}
+        speed={0}
         style={{ width: '100%', height: '100%' }}
       />
     </div>

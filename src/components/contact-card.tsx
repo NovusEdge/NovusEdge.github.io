@@ -91,7 +91,7 @@ function ContactOrbit({ onClose }: { onClose: () => void }) {
             title={s.name}
           >
             {s.anim ? (
-              <UseAnimations animation={s.anim as never} size={28} strokeColor={ICON} />
+              <UseAnimations animation={s.anim as never} size={28} strokeColor={ICON} autoplay={false} />
             ) : s.icon ? (
               <StaticIcon path={s.icon} size={28} />
             ) : null}
