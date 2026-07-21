@@ -12,6 +12,7 @@ import StackPage from './routes/stack/index'
 import BlipsPage from './routes/blips/index'
 import NotFound from './routes/not-found'
 import { SiteFooter } from './components/site-footer'
+import { AccessibilityPanel } from './components/accessibility-panel'
 
 export default function App() {
   const { pathname } = useLocation()
@@ -41,6 +42,7 @@ export default function App() {
       </div>
       {/* universal footer; /stack carries its own colophon (editorial) or runs immersive (graph) */}
       {!pathname.startsWith('/stack') && <SiteFooter />}
+      <AccessibilityPanel />
     </>
   )
 }

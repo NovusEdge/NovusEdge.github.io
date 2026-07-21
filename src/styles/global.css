@@ -3,6 +3,21 @@
 
 @custom-variant dark (&:where(.dark, .dark *));
 
+@font-face {
+  font-family: 'Supreme';
+  src: url('/fonts/Supreme-Variable.woff2') format('woff2');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Supreme';
+  src: url('/fonts/Supreme-VariableItalic.woff2') format('woff2');
+  font-weight: 100 900;
+  font-style: italic;
+  font-display: swap;
+}
+
 @theme {
   --color-bone: #f5f2eb;
   --color-bone-tint: #e8e4da;
@@ -14,6 +29,7 @@
 
   --font-display: 'Amulya', 'Zen Kaku Gothic New', sans-serif;
   --font-body: 'Satoshi', sans-serif;
+  --font-prose: 'Supreme', sans-serif;
   --font-mono: 'JetBrains Mono', monospace;
 }
 
@@ -27,6 +43,36 @@
   }
 }
 
+/* Accessibility overrides */
+.a11y-font-large,
+.a11y-font-large .prose,
+.a11y-font-large .prose p,
+.a11y-font-large .prose li { font-size: 110% !important; }
+.a11y-font-xlarge,
+.a11y-font-xlarge .prose,
+.a11y-font-xlarge .prose p,
+.a11y-font-xlarge .prose li { font-size: 135% !important; }
+.a11y-line-relaxed,
+.a11y-line-relaxed .prose,
+.a11y-line-relaxed .prose p,
+.a11y-line-relaxed .prose li { line-height: 2 !important; }
+.a11y-line-loose,
+.a11y-line-loose .prose,
+.a11y-line-loose .prose p,
+.a11y-line-loose .prose li { line-height: 2.5 !important; }
+.a11y-high-contrast {
+  --color-charcoal: #000;
+  --color-bone: #fff;
+  --color-paper: #0066cc;
+  --color-paper-deep: #004499;
+}
+.a11y-reduced-motion,
+.a11y-reduced-motion * {
+  animation-duration: 0.01ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.01ms !important;
+}
+
 /* Hover underline that draws left to right (spec: 150ms) */
 @utility link-draw {
   background-image: linear-gradient(currentColor, currentColor);
@@ -37,6 +83,18 @@
   &:hover {
     background-size: 100% 1px;
   }
+}
+
+/* blog prose styling */
+.prose-blog {
+  font-family: 'Supreme', sans-serif !important;
+  font-size: 20px !important;
+}
+.prose-blog p,
+.prose-blog li,
+.prose-blog blockquote {
+  font-family: 'Supreme', sans-serif !important;
+  font-size: 20px !important;
 }
 
 /* code highlighting — quiet, in-palette */

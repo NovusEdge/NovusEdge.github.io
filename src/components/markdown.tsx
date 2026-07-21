@@ -8,6 +8,7 @@ import { Redacted } from './redacted'
 import { ShaderCanvas } from './shader-canvas'
 import { CodeCompare } from './code-compare'
 import { HueDiagram } from './hue-diagram'
+import { Spoiler } from './spoiler'
 
 // hast -> plain text, just enough to sniff a marker
 function nodeText(node: unknown): string {
@@ -49,19 +50,20 @@ const components: Components = {
     const id = slugify(text)
     return <h3 id={id} {...props}>{children}</h3>
   },
-  // ponytail: amber callout keyed off a leading ⚠️ so normal `>` quotes are untouched.
+  // ponytail: amber callout keyed off a leading ⚠️, spoiler keyed off "SPOILER:"
   blockquote({ node, children, ...props }) {
-    if (!nodeText(node).trimStart().startsWith('⚠️')) {
-      return <blockquote {...props}>{children}</blockquote>
+    const text = nodeText(node).trimStart()
+    if (text.startsWith('⚠️')) {
+      return (
+        <blockquote
+          {...props}
+          className="not-italic rounded-md border-l-4 border-amber-500/70 bg-amber-500/10 px-4 py-3 text-sm font-medium text-charcoal/80 dark:text-bone/80 [&_p]:my-1 [&_p]:before:content-none [&_p]:after:content-none"
+        >
+          {children}
+        </blockquote>
+      )
     }
-    return (
-      <blockquote
-        {...props}
-        className="not-italic rounded-md border-l-4 border-amber-500/70 bg-amber-500/10 px-4 py-3 text-sm font-medium text-charcoal/80 dark:text-bone/80 [&_p]:my-1 [&_p]:before:content-none [&_p]:after:content-none"
-      >
-        {children}
-      </blockquote>
-    )
+    return <blockquote {...props}>{children}</blockquote>
   },
   // `[ REDACTED ]` inline code becomes the scramble-on-rest, reveal-on-hover redaction.
   code({ node, className, children, ...props }) {
@@ -94,6 +96,15 @@ const components: Components = {
         return { label, code }
       }
       return <CodeCompare left={parseBlock(leftBlock || '')} right={parseBlock(rightBlock || '')} />
+    }
+    if (lang?.startsWith('spoiler')) {
+      const label = lang.replace('spoiler', '').trim() || undefined
+      const content = nodeText(code).trim()
+      return (
+        <Spoiler label={label}>
+          <ReactMarkdown remarkPlugins={[remarkGfm]}>{content}</ReactMarkdown>
+        </Spoiler>
+      )
     }
     return <pre>{children}</pre>
   },
