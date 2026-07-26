@@ -32,6 +32,11 @@ import {
   siArduino,
   siNpm,
   siWebrtc,
+  siSqlite,
+  siUv,
+  siRuff,
+  siPydantic,
+  siStripe,
 } from 'simple-icons'
 
 export type Icon = { path: string; hex: string; title: string }
@@ -43,6 +48,10 @@ const customIcons: Record<string, Icon> = {
   mcp: { title: 'MCP', hex: 'D4A03C', path: 'M12 2L2 7v10l10 5 10-5V7L12 2zm0 2.18l6.9 3.45L12 11.08 5.1 7.63 12 4.18zM4 8.82l7 3.5v7.36l-7-3.5V8.82zm9 10.86v-7.36l7-3.5v7.36l-7 3.5z' },
   pixi: { title: 'Pixi', hex: 'FFC131', path: 'M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm.5 4h2v3h-2V6zm-5 2.5h2v7h-2v-7zm8 0h2v7h-2v-7zm-4 1.5h2v5h-2V10z' },
   rf: { title: 'RF', hex: '00B4D8', path: 'M12 2c-.55 0-1 .45-1 1v3.07A7.003 7.003 0 0 0 5 13c0 3.87 3.13 7 7 7s7-3.13 7-7a7.003 7.003 0 0 0-6-6.93V3c0-.55-.45-1-1-1zm0 6a4 4 0 1 1 0 8 4 4 0 0 1 0-8zm0 2a2 2 0 1 0 0 4 2 2 0 0 0 0-4z' },
+  cedar: { title: 'Cedar', hex: '2E5E4E', path: 'M12 2L4 5.2v6.3c0 4.9 3.4 9.1 8 10.5 4.6-1.4 8-5.6 8-10.5V5.2L12 2z' },
+  litellm: { title: 'LiteLLM', hex: '6C47FF', path: 'M6 4a2 2 0 1 1 0 4 2 2 0 0 1 0-4zm0 12a2 2 0 1 1 0 4 2 2 0 0 1 0-4zm12-6a2 2 0 1 1 0 4 2 2 0 0 1 0-4zM8 5h4v2H8V5zm0 12h4v2H8v-2zm4-12h2v14h-2V5z' },
+  mypy: { title: 'mypy', hex: '1F5082', path: 'M4 5h3l5 7 5-7h3v14h-3v-8l-5 6.5L7 11v8H4V5z' },
+  datasette: { title: 'Datasette', hex: '0074D9', path: 'M12 2C7.58 2 4 3.34 4 5s3.58 3 8 3 8-1.34 8-3-3.58-3-8-3zM4 7.5V12c0 1.66 3.58 3 8 3s8-1.34 8-3V7.5c-1.7 1.2-4.7 1.8-8 1.8S5.7 8.7 4 7.5zm0 6.5V18c0 1.66 3.58 3 8 3s8-1.34 8-3v-4c-1.7 1.2-4.7 1.8-8 1.8S5.7 15.2 4 14z' },
 }
 
 export { siClaude }
@@ -98,8 +107,12 @@ export const STACK: { label: string; jp: string; items: Tech[] }[] = [
       { name: 'Memgraph', icon: customIcons.memgraph },
       { name: 'Qdrant', icon: siQdrant },
       { name: 'Redis', icon: siRedis },
+      { name: 'SQLite', icon: siSqlite },
       { name: 'npm', icon: siNpm },
       { name: 'Pixi', icon: customIcons.pixi },
+      { name: 'uv', icon: siUv, mono: true },
+      { name: 'Ruff', icon: siRuff },
+      { name: 'mypy', icon: customIcons.mypy },
     ],
   },
   {
@@ -125,6 +138,17 @@ export const STACK: { label: string; jp: string; items: Tech[] }[] = [
       { name: 'LangChain', icon: siLangchain },
       { name: 'PyTorch', icon: siPytorch },
       { name: 'MCP', icon: customIcons.mcp },
+      { name: 'LiteLLM', icon: customIcons.litellm },
+      { name: 'Pydantic AI', icon: siPydantic },
+    ],
+  },
+  {
+    label: 'policy & payments',
+    jp: '規範',
+    items: [
+      { name: 'Cedar', icon: customIcons.cedar },
+      { name: 'Stripe', icon: siStripe },
+      { name: 'Datasette', icon: customIcons.datasette },
     ],
   },
   {
@@ -162,6 +186,7 @@ export const GROUP_NOTES: Record<string, string> = {
   'systems & data': 'where things run and remember. Linux, containers, and a graph or two.',
   'web & motion': 'how ideas get a face. this site included.',
   ai: 'the day job. agent memory, inference, epistemics.',
+  'policy & payments': 'the bounds an agent cannot argue its way out of, and the receipts that prove it earned.',
   hardware: 'new territory. still burning myself on the soldering iron.',
 }
 
@@ -170,6 +195,9 @@ export type Depth = 'daily' | 'comfortable' | 'dabbling'
 export const DEPTH: Record<string, Depth> = {
   Rust: 'daily', Python: 'daily', TypeScript: 'daily', Claude: 'daily', Linux: 'daily', Neovim: 'daily', Git: 'daily', Docker: 'daily',
   MCP: 'daily', Memgraph: 'comfortable', Pixi: 'comfortable', npm: 'daily',
+  uv: 'daily', Ruff: 'daily', mypy: 'daily', SQLite: 'comfortable',
+  Cedar: 'comfortable', 'Pydantic AI': 'comfortable', LiteLLM: 'comfortable',
+  Stripe: 'dabbling', Datasette: 'dabbling',
   Go: 'comfortable', C: 'comfortable', 'C#': 'comfortable', JavaScript: 'comfortable', PyTorch: 'comfortable', LangChain: 'comfortable',
   Postgres: 'comfortable', Neo4j: 'comfortable', Qdrant: 'comfortable', Redis: 'comfortable', React: 'comfortable', Tailwind: 'comfortable',
   Vite: 'comfortable', Ollama: 'comfortable', HuggingFace: 'comfortable', Gemini: 'comfortable', GSAP: 'comfortable',
@@ -182,5 +210,6 @@ export const PROJECTS: { name: string; tech: string[]; blurb: string }[] = [
   { name: 'Engrammic', tech: ['TypeScript', 'Python', 'MCP', 'Memgraph', 'Docker', 'Redis', 'Qdrant', 'Ollama', 'HuggingFace'], blurb: 'epistemic memory for AI agents.' },
   { name: 'Veil', tech: ['TypeScript', 'Go', 'Pixi', 'npm', 'Docker'], blurb: 'persistent, sourced memory for AI agents.' },
   { name: 'ØCLOAK', tech: ['ESP32', 'C', 'Rust', 'P2P', 'RF'], blurb: 'at-cost anti-surveillance hardware.' },
+  { name: 'money-mesh', tech: ['Python', 'Cedar', 'LiteLLM', 'Pydantic AI', 'SQLite', 'Stripe', 'uv', 'MCP'], blurb: 'a leaderless mesh of self-replicating earning agents, bounded by an immutable core.' },
   { name: 'palpatine', tech: ['Claude', 'TypeScript', 'JavaScript'], blurb: 'the joke repo that pulled 101 stars.' },
 ]

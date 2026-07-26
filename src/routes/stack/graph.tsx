@@ -19,8 +19,9 @@ const GOLD = '#d4a03c'
 // hubs are focus areas; tools cluster under them, `text` items are logo-less work nodes
 const NAME2TECH = new Map(STACK.flatMap((g) => g.items.map((t) => [t.name, t] as const)))
 const CLUSTERS: { hub: string; tools: string[]; text: string[] }[] = [
-  { hub: 'AI', tools: ['Claude', 'Gemini', 'PyTorch', 'HuggingFace', 'Ollama', 'LangChain', 'Qdrant', 'Neo4j', 'Redis', 'Python'], text: [] },
-  { hub: 'the craft', tools: ['Rust', 'Go', 'TypeScript', 'JavaScript', 'Lua', 'C#', 'Linux', 'Docker', 'Neovim', 'Git', 'Postgres'], text: [] },
+  { hub: 'AI', tools: ['Claude', 'Gemini', 'PyTorch', 'HuggingFace', 'Ollama', 'LangChain', 'Qdrant', 'Neo4j', 'Redis', 'Python', 'LiteLLM', 'Pydantic AI'], text: [] },
+  { hub: 'the craft', tools: ['Rust', 'Go', 'TypeScript', 'JavaScript', 'Lua', 'C#', 'Linux', 'Docker', 'Neovim', 'Git', 'Postgres', 'uv', 'Ruff', 'mypy'], text: [] },
+  { hub: 'governed autonomy', tools: ['Cedar', 'Stripe', 'SQLite', 'Datasette', 'MCP'], text: ['money-mesh'] },
   { hub: 'web & motion', tools: ['React', 'Tailwind', 'Vite', 'GSAP', 'WebGL', 'WASM'], text: [] },
   { hub: 'hardware', tools: ['ESP32', 'Raspberry Pi', 'Arduino', 'C'], text: [] },
   { hub: 'founder / cto', tools: [], text: ['fundraising', 'strategy', 'hiring', 'roadmap', 'investors'] },
