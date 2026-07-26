@@ -370,7 +370,8 @@ export default function PortfolioIndex() {
         {!query && featured.length > 0 && <FeaturedCarousel items={featured} />}
 
         {GROUPS.map((g) => {
-          const items = shown.filter((p) => p.group === g.key && (!!query || !p.featured))
+          // featured projects also list in their own group; the carousel is a highlight, not a home
+          const items = shown.filter((p) => p.group === g.key)
           if (!items.length) return null
           return (
             <div key={g.key}>

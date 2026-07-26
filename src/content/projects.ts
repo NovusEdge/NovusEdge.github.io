@@ -105,6 +105,20 @@ export const projects: Project[] = [
     body: 'WiFi sensing ships in routers and sees through walls. A $9 ESP32 does through-wall presence detection. Surveillance is commoditizing fast and defense is basically empty, so ØCLOAK fills the gap: at-cost devices you own outright and an anonymous, location-based threat-intel network. No subscriptions, no VC, open firmware.',
   },
   {
+    slug: 'money-mesh',
+    title: 'money-mesh',
+    jp: '網',
+    year: '2026',
+    lang: 'Python',
+    group: 'now',
+    phase: 'building',
+    description:
+      'A leaderless mesh of self-replicating earning agents under an immutable core. The spend cap holds by arithmetic, not by good intentions.',
+    tech: ['Python', 'Cedar', 'LiteLLM', 'Pydantic AI', 'SQLite', 'Stripe', 'MCP'],
+    links: [],
+    body: "No supervisor, no orchestrator. Every node carries the same capability-locked immutable core (intent, guardrails, alignment), holds a slice of a conserved budget token, invents its own product, and measures its own revenue from real receipts rather than self-report. A node spawns a peer by handing over part of its budget, so recursive self-replication stays bounded: spawning only ever divides an existing pot. Cedar sits at the enforcement point as a real policy engine, not a paragraph in a system prompt.",
+  },
+  {
     slug: 'goob',
     title: 'goob',
     jp: '猫',
