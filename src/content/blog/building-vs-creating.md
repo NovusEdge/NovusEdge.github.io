@@ -54,7 +54,7 @@ Istg this rant makes feel like some very right winged guy's gonna call me a "sis
 
 There's artists out there, but how many of them are _truly_ creating? It's easy to produce art but it's _very_ difficult to produce **art**. Yes beauty is in the heart of the beholder but like come on, both you and I know that _true_ art, stuff that's monumental has a different _taste_ to it. It's got _**depth**_ to it in some sense.
 
-> [!note] Also like I'm in _no_ way downplaying or shitting on artists out there bruh chill tf out readers
+> Also like I'm in _no_ way downplaying or shitting on artists out there bruh chill tf out readers
 
 I don't think the difference is _talent_, or _effort_, or even taste in the traditional sense, I think it's more of who the thing is _for_. The moment we make something for a metric, or a portfolio, or a launch, or maybe an audience that hasn't shown up yet, we've quietly handed the steering wheel to a 3rd party. The work still gets done and it might even be good, but then it's shaped by the shape of the hole it's meant to fill, and holes are dug by other people.
 
