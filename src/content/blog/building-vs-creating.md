@@ -53,3 +53,11 @@ This constant need to _build_ instead of _creating_ makes societies, countries, 
 Istg this rant makes feel like some very right winged guy's gonna call me a "sissy liberal", but looking beyond the bullshit divisions that politics instills into our society there's an argument to be made here.
 
 There's artists out there, but how many of them are _truly_ creating? It's easy to produce art but it's _very_ difficult to produce **art**. Yes beauty is in the heart of the beholder but like come on, both you and I know that _true_ art, stuff that's monumental has a different _taste_ to it. It's got _**depth**_ to it in some sense.
+
+> [!note] Also like I'm in _no_ way downplaying or shitting on artists out there bruh chill tf out readers
+
+I don't think the difference is _talent_, or _effort_, or even taste in the traditional sense, I think it's more of who the thing is _for_. The moment we make something for a metric, or a portfolio, or a launch, or maybe an audience that hasn't shown up yet, we've quietly handed the steering wheel to a 3rd party. The work still gets done and it might even be good, but then it's shaped by the shape of the hole it's meant to fill, and holes are dug by other people.
+
+Creation doesn't have that problem because it doesn't have that dependency. You make the thing, and if it resonates with someone, wonderful, and if it doesn't, who gives a shit? what matters is that it still came into existence. Patrik didn't write that line for _me_ specifically, I believe it was just him reflecting his thoughts and feelings out loud for whatever reasons he had, could've been just money but it doesn't quite matter now does it? What matters is that it just fell out of somebody being honest on a page and I happened to walk past at the right angle and at the right time.
+
+So. Long ass rant right? Well, I hope it was somewhat enjoyable, but more importantly I hope that this made you _think_ about the nuance between `building` and _`creating`_.
