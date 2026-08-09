@@ -37,6 +37,21 @@ export const projects: Project[] = [
 
   // ---- building now ----
   {
+    slug: 'stoat',
+    title: 'stoat',
+    jp: '貂',
+    year: '2026',
+    lang: 'Go',
+    group: 'now',
+    phase: 'building',
+    featured: true,
+    description:
+      'Local QEMU VMs on Linux from a TUI and a CLI. No libvirt, no daemon, one binary.',
+    tech: ['Go', 'QEMU', 'KVM', 'cloud-init', 'Bubble Tea', 'Nix'],
+    links: [{ label: 'github', href: 'https://github.com/NovusEdge/stoat' }],
+    body: "Running a throwaway VM on Linux means libvirt, a daemon, and XML, or it means a QEMU command line you re-derive every time. stoat is one binary instead. Alpine live VMs come up networked and ssh-reachable with no `setup-alpine` step, because the apkovl overlay is baked into the boot. Ubuntu, Debian, Fedora, and Arch cloud images provision via cloud-init on first boot, and persistent disk VMs cover everything else. VMs are tracked by pidfile rather than supervised, so stoat can exit and the VM keeps running. The TUI is for poking around; the CLI (`ls`, `up`, `ssh`, `provision`, `recipe`, `doctor`) covers the same ground for scripts.",
+  },
+  {
     slug: 'engrammic',
     title: 'Engrammic',
     jp: '記',
@@ -119,6 +134,20 @@ export const projects: Project[] = [
     body: "No supervisor, no orchestrator. Every node carries the same capability-locked immutable core (intent, guardrails, alignment), holds a slice of a conserved budget token, invents its own product, and measures its own revenue from real receipts rather than self-report. A node spawns a peer by handing over part of its budget, so recursive self-replication stays bounded: spawning only ever divides an existing pot. Cedar sits at the enforcement point as a real policy engine, not a paragraph in a system prompt.",
   },
   {
+    slug: 'anti-slop',
+    title: 'anti-slop',
+    jp: '削',
+    year: '2026',
+    lang: 'JavaScript',
+    group: 'shipped',
+    phase: 'shipped',
+    description:
+      'A Claude Code plugin that strips the AI out of AI-written prose. Forty banned words, STE grammar, no LinkedIn cadence.',
+    tech: ['Claude Code', 'JavaScript', 'Python', 'ASD-STE100'],
+    links: [{ label: 'github', href: 'https://github.com/NovusEdge/anti-slop' }],
+    body: "Every model writes the same way: `delve`, `robust`, `crucial`, `it's not X, it's Y`, a one-line paragraph dropped in for punch. anti-slop bans that vocabulary outright, enforces ASD-STE100 grammar (one fact per sentence, active voice, simple tenses, keep the articles), and kills the structural tells. A `SessionStart` hook injects the rules and restores them after a compaction drops them. A `UserPromptSubmit` hook lints the previous turn and restates the rule every tenth prompt, because a rule stated once at turn 1 has stopped steering by turn 40. A standalone Python linter runs the mechanical subset as a pre-commit hook.",
+  },
+  {
     slug: 'goob',
     title: 'goob',
     jp: '猫',
@@ -126,7 +155,6 @@ export const projects: Project[] = [
     lang: 'GDScript',
     group: 'now',
     phase: 'building',
-    featured: true,
     description:
       'A desktop pet cat that lives on your screen - wanders, naps, chases your cursor, and comments on what your machine is doing via LLM. Bring your own spritesheet.',
     tech: ['Godot', 'Python', 'Go', 'LLM'],
