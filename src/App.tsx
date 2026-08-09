@@ -7,6 +7,7 @@ import AboutPage from './routes/about/index'
 import BlogIndex from './routes/blog/index'
 import BlogPost from './routes/blog/post'
 import PortfolioIndex from './routes/portfolio/index'
+import ProjectPage from './routes/portfolio/project'
 import ResearchIndex from './routes/research/index'
 import StackPage from './routes/stack/index'
 import BlipsPage from './routes/blips/index'
@@ -32,6 +33,7 @@ export default function App() {
           <Route path="/blog" element={<BlogIndex />} />
           <Route path="/blog/:slug" element={<BlogPost />} />
           <Route path="/portfolio" element={<PortfolioIndex />} />
+          <Route path="/portfolio/:slug" element={<ProjectPage />} />
           <Route path="/research" element={<ResearchIndex />} />
           <Route path="/stack" element={<StackPage />} />
           <Route path="/stack/editorial" element={<StackPage />} />

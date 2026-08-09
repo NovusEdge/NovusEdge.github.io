@@ -4,8 +4,13 @@ import type { RefObject } from 'react'
 
 gsap.registerPlugin(useGSAP)
 
-export const prefersReducedMotion = () =>
-  typeof matchMedia !== 'undefined' && matchMedia('(prefers-reduced-motion: reduce)').matches
+// The accessibility panel's Reduced setting adds .a11y-reduced-motion to <html>.
+// That class only shortens CSS animations, so GSAP tweens run past it unless
+// every JS entry point checks the class here as well.
+export const prefersReducedMotion = () => {
+  if (typeof document !== 'undefined' && document.documentElement.classList.contains('a11y-reduced-motion')) return true
+  return typeof matchMedia !== 'undefined' && matchMedia('(prefers-reduced-motion: reduce)').matches
+}
 
 // coarse pointer or small viewport: back off expensive per-frame effects on phones.
 export const isMobile = () =>

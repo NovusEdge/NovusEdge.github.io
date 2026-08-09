@@ -6,6 +6,7 @@ import { fuzzyMatch } from '../../lib/blog-list'
 import { RedactedCard } from '../../components/redacted-card'
 import { Rule, SectionNumber, JPLabel, RegMarks } from '../../components/motifs'
 import { Github, Globe, Package, RotateCw, ArrowRight } from '../../components/icons'
+import { hasPage } from './content'
 import { revealCards } from '../../lib/reveals'
 import { prefersReducedMotion } from '../../lib/motion'
 import DecryptedText from '../../components/react-bits/DecryptedText'
@@ -98,6 +99,15 @@ function BigCard({ p }: { p: Project }) {
           {p.jp && <span className="font-display text-xl font-normal text-charcoal/25 dark:text-bone/25">{p.jp}</span>}
         </h2>
         <p className="mt-4 max-w-2xl text-base leading-relaxed text-charcoal/75 dark:text-bone/75">{p.description}</p>
+        {hasPage(p.slug) && (
+          <TLink
+            to={`/portfolio/${p.slug}`}
+            className="group/read relative z-10 mt-6 inline-flex items-center gap-2 rounded border border-gold bg-gold/15 px-4 py-2 font-mono text-[11px] font-semibold uppercase tracking-[0.25em] text-gold transition-colors hover:bg-gold hover:text-charcoal"
+          >
+            read more
+            <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover/read:translate-x-1" />
+          </TLink>
+        )}
       </div>
       <div className="relative z-10 flex flex-wrap items-center gap-2">
         {p.tech.map((t) => (
@@ -227,6 +237,36 @@ function FeaturedCarousel({ items }: { items: Project[] }) {
         ))}
       </div>
     </div>
+  )
+}
+
+/* A project with a written page links straight to it. The flip exists to show
+   the extra detail that a page now holds properly. */
+function PageCard({ p }: { p: Project }) {
+  return (
+    <TLink
+      data-card
+      to={`/portfolio/${p.slug}`}
+      className="group relative flex h-72 flex-col overflow-hidden rounded border border-charcoal/10 bg-bone-tint/10 p-6 transition-colors hover:border-gold/40 dark:border-bone/10 dark:bg-charcoal-tint/10"
+    >
+      <Cover p={p} />
+      <ArrowRight className="pointer-events-none absolute right-4 top-4 h-3.5 w-3.5 text-charcoal/25 transition-transform group-hover:translate-x-1 group-hover:text-gold dark:text-bone/25" />
+      <div className="relative flex flex-wrap items-center gap-2 font-mono text-[10px] font-medium uppercase tracking-[0.2em] text-charcoal/50 dark:text-bone/50">
+        <PhaseTag phase={p.phase} />
+        <span>{metaLine(p)}</span>
+        {p.stars ? <span className="text-gold">★ {p.stars}</span> : null}
+      </div>
+      <h3 className="relative mt-3 flex items-baseline gap-2 font-display text-2xl font-black text-charcoal dark:text-bone">
+        {p.title}
+        {p.jp && <span className="font-display text-sm font-normal text-charcoal/30 dark:text-bone/30">{p.jp}</span>}
+      </h3>
+      <p className="relative mt-3 flex-1 overflow-hidden text-sm leading-relaxed text-charcoal/70 dark:text-bone/70">
+        {p.description}
+      </p>
+      <span className="relative mt-4 font-mono text-[10px] uppercase tracking-[0.25em] text-charcoal/45 transition-colors group-hover:text-gold dark:text-bone/45">
+        read more
+      </span>
+    </TLink>
   )
 }
 
@@ -381,9 +421,9 @@ export default function PortfolioIndex() {
                 <div className="h-px flex-1 bg-charcoal/10 dark:bg-bone/10" />
               </div>
               <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-                {items.map((p) => (
-                  <FlipCard key={p.slug} p={p} />
-                ))}
+                {items.map((p) =>
+                  hasPage(p.slug) ? <PageCard key={p.slug} p={p} /> : <FlipCard key={p.slug} p={p} />,
+                )}
                 {g.key === 'now' && !query && <RedactedCard />}
               </div>
             </div>

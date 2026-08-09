@@ -72,6 +72,33 @@
   animation-iteration-count: 1 !important;
   transition-duration: 0.01ms !important;
 }
+/* GSAP writes inline opacity before a reveal tween. A reader who turns motion
+   off mid-page would otherwise keep the hidden state forever. */
+.a11y-reduced-motion [data-sec],
+.a11y-reduced-motion [data-reveal],
+.a11y-reduced-motion [data-card] {
+  opacity: 1 !important;
+  transform: none !important;
+}
+
+/* Metadata sits at 40-50% opacity by design. High contrast drops the tint so
+   the mono labels stay readable. */
+.a11y-high-contrast .prose,
+.a11y-high-contrast [class*='text-charcoal/'],
+.a11y-high-contrast [class*='text-bone/'] {
+  --tw-text-opacity: 1;
+  opacity: 1;
+}
+.a11y-high-contrast [class*='border-charcoal/'],
+.a11y-high-contrast [class*='border-bone/'] {
+  --tw-border-opacity: 1;
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-gold);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
 
 /* Hover underline that draws left to right (spec: 150ms) */
 @utility link-draw {
@@ -95,6 +122,15 @@
 .prose-blog blockquote {
   font-family: 'Supreme', sans-serif !important;
   font-size: 20px !important;
+}
+
+/* Project pages read shorter than posts, so they take Supreme a size down. */
+.prose-project,
+.prose-project p,
+.prose-project li,
+.prose-project blockquote {
+  font-family: 'Supreme', sans-serif !important;
+  font-size: 17px !important;
 }
 
 /* code highlighting — quiet, in-palette */

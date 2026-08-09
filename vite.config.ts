@@ -11,6 +11,11 @@ const blogSlugs = readdirSync('src/content/blog')
   .filter((f) => f.endsWith('.md'))
   .map((f) => f.replace(/\.md$/, ''))
 
+// One .tsx per project page; types.ts and index.ts are the module's own files.
+const projectSlugs = readdirSync('src/routes/portfolio/content')
+  .filter((f) => f.endsWith('.tsx'))
+  .map((f) => f.replace(/\.tsx$/, ''))
+
 export default defineConfig({
   resolve: {
     alias: {
@@ -30,6 +35,7 @@ export default defineConfig({
       additionalPrerenderRoutes: [
         '/blog', '/portfolio', '/research', '/stack', '/blips', '/404',
         ...blogSlugs.map((s) => `/blog/${s}`),
+        ...projectSlugs.map((s) => `/portfolio/${s}`),
       ],
     }),
     {

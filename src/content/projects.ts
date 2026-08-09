@@ -24,7 +24,7 @@ export const projects: Project[] = [
     jp: '策',
     year: '2026',
     lang: 'JavaScript',
-    stars: 101,
+    stars: 105,
     group: 'chaos',
     phase: 'shipped',
     featured: true,
@@ -68,7 +68,7 @@ export const projects: Project[] = [
       { label: 'research', href: 'https://engrammic.ai/research' },
       { label: 'github', href: 'https://github.com/engrammic-ai/engrammic' },
     ],
-    body: 'Engrammic treats agent memory as epistemology, not retrieval: memory that fades without reinforcement, claims that require sources, and an auditable chain from observation to conclusion. A whole ecosystem sits under it (an engine, an MCP server, a modality-agnostic substrate), but the thesis is simple: an agent should know what it knows versus what it merely generated.',
+    body: 'Engrammic treats agent memory as epistemology: memory that fades without reinforcement, claims that require sources, and an auditable chain from observation to conclusion. A whole ecosystem sits under it (an engine, an MCP server, a modality-agnostic substrate), and the thesis stays simple. An agent should know what it knows versus what it merely generated.',
   },
   {
     slug: 'veil',
@@ -131,7 +131,7 @@ export const projects: Project[] = [
       'A leaderless mesh of self-replicating earning agents under an immutable core. The spend cap holds by arithmetic, not by good intentions.',
     tech: ['Python', 'Cedar', 'LiteLLM', 'Pydantic AI', 'SQLite', 'Stripe', 'MCP'],
     links: [],
-    body: "No supervisor, no orchestrator. Every node carries the same capability-locked immutable core (intent, guardrails, alignment), holds a slice of a conserved budget token, invents its own product, and measures its own revenue from real receipts rather than self-report. A node spawns a peer by handing over part of its budget, so recursive self-replication stays bounded: spawning only ever divides an existing pot. Cedar sits at the enforcement point as a real policy engine, not a paragraph in a system prompt.",
+    body: "No supervisor, no orchestrator. Every node carries the same capability-locked immutable core (intent, guardrails, alignment), holds a slice of a conserved budget token, invents its own product, and measures its own revenue from real receipts rather than self-report. A node spawns a peer by handing over part of its budget, so recursive self-replication stays bounded: spawning only ever divides an existing pot. Cedar sits at the enforcement point as a real policy engine, so the guardrail is code the node cannot talk its way past.",
   },
   {
     slug: 'anti-slop',
