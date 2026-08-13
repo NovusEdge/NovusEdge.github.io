@@ -17,7 +17,12 @@ import { AccessibilityPanel } from './components/accessibility-panel'
 
 export default function App() {
   const { pathname } = useLocation()
-  useEffect(() => window.scrollTo(0, 0), [pathname])
+  // block body, not an implicit-return arrow: a browser that patches scrollTo to
+  // return a Promise (Brave, smooth-scroll extensions) would otherwise feed it to
+  // React as the effect cleanup, and StrictMode's teardown throws "destroy is not a function".
+  useEffect(() => {
+    window.scrollTo(0, 0)
+  }, [pathname])
   // remount + replay the fade-up per route; collapse /stack so its sub-views keep their own slide
   const key = pathname.startsWith('/stack') ? '/stack' : pathname
 
