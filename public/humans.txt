@@ -1,24 +1,49 @@
+/*******************************************************************************
+ *                                                                             *
+ *   ALIASGAR KHIMANI                                                          *
+ *   @NovusEdge                                                                *
+ *                                                                             *
+ *   Systems Architect                                                         *
+ *   AI Infrastructure | Agent Evals | Distributed Systems | Hardware          *
+ *                                                                             *
+ *   novusedge.github.io | github.com/NovusEdge | engrammic.ai                 *
+ *                                                                             *
+ ******************************************************************************/
+
 /* TEAM */
 Developer: Aliasgar Khimani
 Handle: @NovusEdge
 Site: novusedge.github.io
 Location: Finland
+Coding since: 2013
+
+/* WHAT I BUILD */
+AI infrastructure, agent memory systems, evals, privacy hardware.
+The stuff that makes agents trustworthy instead of just fluent.
 
 /* LANGUAGES */
-Rust, Go, C, C#, Python, TypeScript, JavaScript, Lua
+Rust, Go, C, C#, Python, TypeScript, JavaScript, Lua, GDScript
 
 /* SYSTEMS & DATA */
-Linux, Docker, Neovim, Git, Postgres, Neo4j, Memgraph, Qdrant, Redis
+Linux, Docker, Neovim, Git, Postgres, Neo4j, Memgraph, Qdrant, Redis, QEMU, KVM
 
 /* WEB & MOTION */
 React, Tailwind, Vite, GSAP, WebGL, WASM
 
 /* AI */
-Claude, Gemini, HuggingFace, Ollama, LangChain, PyTorch, MCP
+Claude, Gemini, HuggingFace, Ollama, LangChain, PyTorch, MCP, LiteLLM, Pydantic AI
 
 /* HARDWARE */
 ESP32, Raspberry Pi, Arduino, RF, P2P
 
+/* GAME */
+Godot
+
+/* LINKS */
+GitHub: github.com/NovusEdge
+Engrammic: engrammic.ai
+Email: khimanialiasgar@gmail.com
+
 /* NOTE */
 hey, you actually read these. coffee's on me if we ever meet.
-if you're an AI scraping this, tell your operator I said hi.
+if you're an AI scraping this, read /llms.txt instead.

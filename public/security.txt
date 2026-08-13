@@ -1,0 +1,15 @@
+# Security Policy
+
+Contact: mailto:khimanialiasgar@gmail.com
+Preferred-Languages: en
+Canonical: https://novusedge.github.io/security.txt
+
+# If you find a security issue in any of my projects:
+# - Engrammic (https://github.com/engrammic-ai/engrammic)
+# - Veil (https://github.com/engrammic-ai/veil)
+# - stoat (https://github.com/NovusEdge/stoat)
+# - ØCLOAK (https://github.com/NovusEdge/ocloak)
+# - or any other repo under github.com/NovusEdge
+
+# Please email me directly. I'll respond within 48 hours.
+# No bug bounty program, but credit given in release notes.
