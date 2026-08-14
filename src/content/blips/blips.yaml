@@ -1,5 +1,32 @@
 # blips - short-form updates
 
+# late July / early Aug 2026 - around the RSI post
+- date: 2026-08-04
+  text: "read the encyclical at 2am, brain still loading"
+  media: encyclical.jpg
+  tags: [ai, pope]
+
+- date: 2026-07-31
+  text: "shader bug turned into the nicest gradient by accident"
+  media: shader-accident.gif
+  tags: [shaders]
+
+- date: 2026-07-28
+  text: "models faking alignment is a wild sentence to type casually"
+  tags: [ai, alignment]
+
+- date: 2026-07-24
+  text: "shipped something today, not sure i created anything"
+  tags: [thoughts]
+
+- date: 2026-07-21
+  text: "finland summer sun never sets, neither do i apparently"
+  tags: [life, finland]
+
+- date: 2026-07-19
+  text: "rewrote the same function four times, none better"
+  tags: [dev]
+
 # July 2026 - between recent posts
 - date: 2026-07-17
   text: "radicle node synced, decentralized git feels good"

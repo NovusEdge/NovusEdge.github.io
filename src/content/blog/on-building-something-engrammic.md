@@ -11,7 +11,7 @@ Last December I was building an AI SEO pipeline. We had an extensive "LLM Wiki" 
 
 The agent wasn't even necessarily lying, it wasn't even wrong in the way you'd normally think about wrongness. It was doing exactly what we'd built it to do: retrieve relevant context and use it. The problem was that "**relevant context**" included garbage it had made up, and there was no mechanism anywhere in the system to distinguish observed facts from concluded guesses from outright fabrications.
 
-This happens constantly. Every agent system I've seen does some version of this and the more I dug into why, the more I realized we're all building on a fundamental assumption that's quite incomplete. The assumption is that memory is a *retrieval problem*. Find the right chunks, stuff them in the context window, let the model figure it out. RAG, vector stores, semantic search, the whole ecosystem oriented around one question: how do we find relevant information? But that's the wrong question. The right question is: how do we know if the information is *true*? And nobody's really asking that. And it's killing agents.
+This happens constantly. Every agent system I've seen does some version of this and the more I dug into why, the more I realized we're all building on a fundamental assumption that's quite incomplete. The assumption is that memory is a *retrieval problem*. Find the right chunks, stuff them in the context window, let the model figure it out. RAG, vector stores, semantic search, the whole ecosystem oriented around one question: how do we find relevant information? The harder question, the one nobody's really asking, is whether the information is *true*. And it's killing agents.
 
 This is what the industry calls context rot.
 
@@ -33,7 +33,7 @@ There's been some movement in the right direction though. [HippoRAG](https://arx
 
 [Zep](https://arxiv.org/abs/2501.13956) built temporal knowledge graphs with episodic and semantic layers. [Hindsight](https://arxiv.org/abs/2512.12818) goes further with four distinct memory networks and conflict resolution policies, but contradictions are still *preserved* with timestamps rather than *resolved* before storage, and there's [no concrete method](https://hindsight.vectorize.io/blog/2026/05/21/agent-memory-consolidation) for tracing exactly why the agent said what it said.
 
-These are all steps toward the architecture we need but they're still fundamentally retrieval systems. They make retrieval smarter but they don't track belief status, they don't handle contradiction at write time, they don't maintain provenance chains you can audit. The hard part isn't finding the right memory, it's knowing whether what you found is still true and how it relates to everything else you believe. So that's what we're building.
+These are all steps toward the architecture we need but they're still fundamentally retrieval systems. They make retrieval smarter but they don't track belief status, they don't handle contradiction at write time, they don't maintain provenance chains you can audit. The hard part is knowing whether what you found is still true and how it relates to everything else you believe. So that's what we're building.
 
 But wait, what do I even mean by "belief"?
 
@@ -49,7 +49,7 @@ It needs to track *why* it believes things, catch conflicts when they happen, an
 
 Concretely that means when an agent tries to store "she texted back, we're good" and "she's mad at me" already exists, the system doesn't just append another row. It flags a conflict and forces you to sort it out. Either the old belief gets superseded with an explicit link to what replaced it, or the new observation gets rejected, or both get held in suspension pending human input. But what *doesn't* happen is silent accumulation of contradictory facts that will inevitably resurface to confuse everything.
 
-It means every belief has a trace, not "the model generated this" but "this came from observations X, Y, Z, recorded at times A, B, C, with confidence that decayed over time." When an enterprise asks "why did your agent tell our customer this" you can answer by walking the graph, not with a shrug. It means forgetting is a real thing you actually design for. Old observations decay, stale context fades, and the system actively decides what matters enough to keep. The goal here is not to design some kinda "perfect" recall, it's to design good *judgment* about relevance.
+It means every belief has a trace: rather than "the model generated this", it's "this came from observations X, Y, Z, recorded at times A, B, C, with confidence that decayed over time." When an enterprise asks "why did your agent tell our customer this" you can answer by walking the graph, not with a shrug. It means forgetting is a real thing you actually design for. Old observations decay, stale context fades, and the system actively decides what matters enough to keep. Rather than some kinda "perfect" recall, the goal here is good *judgment* about relevance.
 
 This is harder to build than a vector store but it's also the only thing that actually works once your agent runs for more than a week on real tasks with real users with messy data.
 

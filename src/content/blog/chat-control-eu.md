@@ -25,7 +25,7 @@ Chat Control targets the content of your communications. The July vote carved ou
 
 But Chat Control 2.0 contains language for **client-side scanning** which means your phone inspects the message *before* it's encrypted. The encryption is irrelevant if the fucking device itself is the snitch. Apple tried this in 2021 with their CSAM scanning thing and backed off after massive backlash, but the EU is just... doing it anyway? Cool cool cool.
 
-And here's the kicker: decentralization doesn't really fix this. You can route through onion networks, bounce off a thousand nodes, encrypt with quantum-resistant algorithms - none of it matters if the app on your phone is legally required to scan before send. The attack isn't on the network anymore, it's on the endpoints. Your phone. Your laptop. The thing you trust most.
+And here's the kicker: decentralization doesn't really fix this. You can route through onion networks, bounce off a thousand nodes, encrypt with quantum-resistant algorithms - none of it matters if the app on your phone is legally required to scan before send. The attack has moved off the network and onto the endpoints. Your phone. Your laptop. The thing you trust most.
 
 ### Where You Sleep
 [`802.11bf`](https://www.ieee802.org/11/Reports/tgbf_update.htm) was ratified in September 2025. It's a WiFi sensing standard which means that starting next year (and for new models that follow the new standard) **your** router can now detect human presence, motion, breathing patterns, and body poses. Through walls. Your walls.
@@ -129,7 +129,7 @@ I don't have a complete answer and i honestly doubt anyone does if I'm gonna be 
 
 **Invest in UX like it's the whole product.** Because it is. Nobody cares about your threat model if the app is annoying to use. The crypto/privacy community has historically been terrible at this - "just use PGP" energy when PGP is a UX nightmare that even security researchers fuck up.
 
-The P2P messaging landscape has options - Session, SimpleX, Briar, Matrix - but they all have tradeoffs. Session moved to Switzerland after an Australian police data request (good) but still has slower delivery than centralized push (bad). SimpleX has no persistent identifiers (good) but only two core engineers (concerning for long-term maintenance). Briar works over Tor and Bluetooth mesh (good) but is Android-only and text-only (limiting). [Veilid](https://veilid.com/) looks promising but is still early.
+P2P messaging has options - Session, SimpleX, Briar, Matrix - but they all have tradeoffs. Session moved to Switzerland after an Australian police data request (good) but still has slower delivery than centralized push (bad). SimpleX has no persistent identifiers (good) but only two core engineers (concerning for long-term maintenance). Briar works over Tor and Bluetooth mesh (good) but is Android-only and text-only (limiting). [Veilid](https://veilid.com/) looks promising but is still early.
 
 Mesh networks like [Meshtastic](https://meshtastic.org/) are usable today with ~\$30 hardware which is pretty cool for off-grid coordination and disaster scenarios, but not a replacement for cellular-scale communication obviously.
 
@@ -149,7 +149,7 @@ What I am saying is that the infrastructure being built around you right now - t
 
 The political fights matter and you should show up for them when you can, but they're rearguard actions at best. The only way out of this loop is to make surveillance itself technically impossible - not regulated, not illegal, but *impossible* - and to make the private path so frictionless that choosing it doesn't feel like a sacrifice.
 
-**So what can you actually do?** Use Signal - it's free, it works, and every additional user makes the network stronger. Support orgs like EFF, ACLU, Access Now, and noyb who are fighting the political battles even if those battles are ultimately temporary. Pay attention to defaults and when a new service asks for permissions, ask why. And talk about this stuff with people because the biggest advantage surveillance has right now isn't technology, it's apathy. Most people have no idea what's being built around them.
+**So what can you actually do?** Use Signal - it's free, it works, and every additional user makes the network stronger. Support orgs like EFF, ACLU, Access Now, and noyb who are fighting the political battles even if those battles are ultimately temporary. Pay attention to defaults and when a new service asks for permissions, ask why. And talk about this stuff with people because the biggest advantage surveillance has right now is apathy. Most people have no idea what's being built around them.
 
 **And if you build things?** Make privacy the default. Invest in UX like it's the entire product because it basically is. Think architecturally about whether your system can be compelled or compromised and what happens when (not if) the legal environment changes.
 
