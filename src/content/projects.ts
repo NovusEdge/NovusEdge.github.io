@@ -153,8 +153,8 @@ export const projects: Project[] = [
     jp: '猫',
     year: '2026',
     lang: 'GDScript',
-    group: 'now',
-    phase: 'building',
+    group: 'shipped',
+    phase: 'shipped',
     description:
       'A desktop pet cat that lives on your screen - wanders, naps, chases your cursor, and comments on what your machine is doing via LLM. Bring your own spritesheet.',
     tech: ['Godot', 'Python', 'Go', 'LLM'],
@@ -175,7 +175,10 @@ export const projects: Project[] = [
     description:
       'Fullscreen takeover tool for pranking your friends. Locks their screen, displays your image/GIF, blocks input until they hit the secret exit combo.',
     tech: ['Rust', 'TUI', 'Docker', 'Rubber Ducky'],
-    links: [{ label: 'github', href: 'https://github.com/ARaChn3/screenjack' }],
+    links: [
+      { label: 'github', href: 'https://github.com/ARaChn3/screenjack' },
+      { label: 'writeup', href: 'https://arachn3.gitbook.io/malware-development-guide/intermediate-malware/screenjackers' },
+    ],
     body: 'Takes over the entire screen with an image or looping GIF. Blocks keyboard and mouse input on Linux (X11) and Windows. Exit requires holding Ctrl+Shift+Escape for 2 seconds. Comes with a TUI orchestrator for managing assets, building cross-platform payloads in Docker, and generating Rubber Ducky deployment scripts.',
   },
   {

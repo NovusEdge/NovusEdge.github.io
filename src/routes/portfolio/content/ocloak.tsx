@@ -1,4 +1,5 @@
 import type { ProjectContent } from './types'
+import { Figures, Pull } from '../kit'
 
 export const ocloak: ProjectContent = {
   lede: 'WiFi routers can see through walls now, off commodity hardware, and nobody consented to it. ØCLOAK builds an at-cost detector for that and the trackers around it, plus an anonymous network that turns scattered sightings into a map.',
@@ -6,7 +7,7 @@ export const ocloak: ProjectContent = {
   sections: [
     {
       id: 'through-a-wall',
-      title: 'A $9 chip sees through your wall',
+      title: 'How cheap the hardware got',
       body: (
         <>
           <p>
@@ -19,21 +20,28 @@ export const ocloak: ProjectContent = {
             decode its own traffic; sensing just reads that data instead of discarding it. RuView, an open-source
             implementation, has 76,000 GitHub stars and runs through-wall presence detection on a $9 ESP32.
           </p>
+          <Figures
+            items={[
+              { value: '$9', label: 'esp32 board', note: 'runs through-wall presence detection' },
+              { value: '76k', label: 'stars on ruview', note: 'the open-source implementation' },
+              { value: '$2,000', label: 'cheapest tscm sweep', note: 'sold to corporate clients' },
+            ]}
+          />
           <p>
             BLE trackers run on the same asymmetry: cheap hardware, the entire iPhone install base acting as unpaid
             relays, and a protocol nobody has to authenticate against to use. Facial recognition is a commodity API
             now too.
           </p>
           <p>
-            Defense against any of this tops out at a handful of $2,000 TSCM sweeps built for corporate clients.
-            Almost nothing exists for a renter who wants to know what's reading their apartment.
+            Defense against any of this tops out at a handful of TSCM sweeps priced for corporate clients. Almost
+            nothing exists for a renter who wants to know what's reading their apartment.
           </p>
         </>
       ),
     },
     {
       id: 'one-device',
-      title: 'From four products down to one',
+      title: 'Down to one device',
       body: (
         <>
           <p>
@@ -51,16 +59,19 @@ export const ocloak: ProjectContent = {
           <p>
             Target price is $20 to $25. Manufacturing follows the Pine64 playbook: turnkey builds through Seeed
             Fusion, 3D-printed enclosures for the first few hundred units, injection molding once around a thousand
-            are committed. The blocking pouches and anti-facial-recognition glasses from the original lineup are
-            deprioritized for now: commodity market for one, a different supply chain for the other.
+            are committed. ØCLOAK deprioritized the blocking pouches and anti-facial-recognition glasses from the
+            original lineup for now: commodity market for one, a different supply chain for the other.
           </p>
-          <p>One legal line runs through all of it: detection and passive shielding are legal everywhere, active jamming is not, in the US or the EU. Guard only listens.</p>
+          <Pull>
+            Detection and passive shielding are legal everywhere. Active jamming is legal nowhere, in the US or the
+            EU. Guard only listens.
+          </Pull>
         </>
       ),
     },
     {
       id: 'the-map',
-      title: 'A heat map nobody can subpoena',
+      title: 'Mapping the sightings',
       body: (
         <>
           <p>
@@ -84,7 +95,7 @@ export const ocloak: ProjectContent = {
     },
     {
       id: 'grant-list',
-      title: 'Funded off the grant list',
+      title: 'Funding without VC',
       body: (
         <>
           <p>
@@ -92,25 +103,31 @@ export const ocloak: ProjectContent = {
             toward monetizing the exact data the product promises to protect. ØCLOAK runs on grants, crowdfunding,
             and donations instead.
           </p>
+          <Figures
+            items={[
+              { value: '€5k–50k', label: 'nlnet ngi zero', note: 'deadline the 1st of every even month' },
+              { value: '$50k–200k', label: 'open technology fund', note: 'paid out of USAGM money' },
+              { value: '58%', label: 'crowd supply success', note: 'kickstarter runs 30%' },
+            ]}
+          />
           <p>
-            NLnet's NGI Zero fund is the first target: €5,000 to €50,000, low bureaucracy, EU-based, deadline the
-            first of every even month. The Open Technology Fund pays more, $50,000 to $200,000, but it runs on
-            USAGM money, US government funding for an anti-surveillance tool, the same awkward optics Tor has
-            fielded questions about for years. That tradeoff is still open.
+            NLnet's NGI Zero fund is the first target: low bureaucracy, EU-based, and small enough to apply for
+            without a lawyer. The Open Technology Fund pays four times more. It also means US government money
+            behind an anti-surveillance tool, the same awkward optics Tor has fielded questions about for years.
+            That tradeoff is still open.
           </p>
           <p>
-            Hardware launches go through Crowd Supply over Kickstarter: a 58% success rate against Kickstarter's
-            30%, and a 100% delivery rate on funded campaigns. Even a project running purely on donations and grants
-            at scale runs a deficit. Signal spends about $36 million a year and outspends its own revenue. ØCLOAK's
-            projections assume the same blend every project in this space ends up needing: grants plus donations
-            plus corporate sponsors, not one clean source.
+            Hardware launches go through Crowd Supply for the success rate above, plus a 100% delivery rate on
+            funded campaigns. Grants and donations alone still run a deficit at scale. Signal spends about $36
+            million a year and outspends its own revenue. ØCLOAK's projections assume the blend every project in
+            this space ends up needing: grants, donations, and corporate sponsors together.
           </p>
         </>
       ),
     },
     {
       id: 'pointed-outward',
-      title: 'The same radios, pointed outward',
+      title: 'A path into defense work',
       body: (
         <>
           <p>
@@ -120,8 +137,8 @@ export const ocloak: ProjectContent = {
             control link and a video downlink, plus an acoustic and optical signature. Detect, track, classify.
           </p>
           <p>
-            That direction is under active consideration and it brings real tension with everything above. Defense
-            work ends the open-source and community model through export control and secrecy. Dual-use founders
+            I'm still weighing that direction. It also fights everything above. Defense work ends the
+            open-source and community model through export control and secrecy. Dual-use founders
             usually get absorbed by the paying customer, and the privacy track goes vestigial unless something
             structural protects it.
           </p>
@@ -137,12 +154,12 @@ export const ocloak: ProjectContent = {
     },
     {
       id: 'status',
-      title: 'Five ESP32 boards, ordered',
+      title: 'Status: nothing shipped yet',
       body: (
         <>
           <p>
-            Research and planning. The threat modeling, the hardware bill of materials, and the network
-            architecture are written down. No board has shipped to anyone yet.
+            Research and planning. I've written down the threat model, the hardware bill of materials, and the
+            network architecture. No board has shipped to anyone yet.
           </p>
           <p>
             The roadmap's first concrete steps: order five ESP32-C3 dev boards, get BLE scanning to detect a real

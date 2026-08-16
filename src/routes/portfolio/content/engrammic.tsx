@@ -1,12 +1,5 @@
 import type { ProjectContent } from './types'
-
-function Term({ children }: { children: string }) {
-  return (
-    <pre className="my-6 overflow-x-auto rounded border border-charcoal/10 bg-bone-tint/30 p-5 font-mono text-[10px] leading-relaxed text-charcoal/75 dark:border-bone/10 dark:bg-charcoal-tint/40 dark:text-bone/75 sm:text-xs">
-      {children}
-    </pre>
-  )
-}
+import { Figures, Pull, Term } from '../kit'
 
 export const engrammic: ProjectContent = {
   lede: "Ask most agent memory systems what they believe and they can't answer. They can tell you what sits nearby in vector space. Engrammic tracks the difference: every claim carries a source, and a claim has to earn fact status before an agent is allowed to act on it as true.",
@@ -14,7 +7,7 @@ export const engrammic: ProjectContent = {
   sections: [
     {
       id: 'no-referee',
-      title: 'Two agents, one contradiction, no referee',
+      title: 'Why agents need a referee',
       body: (
         <>
           <p>
@@ -33,7 +26,7 @@ export const engrammic: ProjectContent = {
     },
     {
       id: 'claim-to-fact',
-      title: 'A claim has to earn fact status',
+      title: 'From claim to fact',
       body: (
         <>
           <p>
@@ -43,9 +36,10 @@ export const engrammic: ProjectContent = {
             <strong>fact</strong>.
           </p>
           <p>
-            A stronger claim supersedes a fact rather than overwriting it. A typed edge links the old fact to the
-            one that replaced it, and the old fact stays in the graph, marked as no longer current. Every write also carries two timestamps, one for when the thing happened and one for
-            when the system learned it, so a query for what an agent believed last Tuesday gets a real answer.
+            Rather than overwriting a fact, a stronger claim supersedes it. A typed edge links the old fact to the
+            one that replaced it. The old fact stays in the graph, marked as no longer current. Every write also
+            carries two timestamps: one for when the thing happened, one for when the system learned it. A query
+            for what an agent believed last Tuesday gets a real answer.
           </p>
           <Term>{`$ engrammic write --claim "the API uses API keys" --source session:4f21
 ✗ rejected: contradiction
@@ -60,60 +54,77 @@ export const engrammic: ProjectContent = {
       body: (
         <>
           <p>
-            Model weights are a bad place to keep a belief. They hold roughly 3.6 bits per parameter, shared between
-            generalizing and memorizing, which caps a 70-billion-parameter model at about 31GB of memorization
-            capacity before any of it goes toward reasoning. Correcting a belief stored there means retraining.
+            Model weights are a bad place to keep a belief. They hold roughly 3.6 bits per parameter, split between
+            generalizing and memorizing. That caps a 70-billion-parameter model at about 31GB of memorization
+            capacity, before any of it goes toward reasoning. Correcting a belief stored there means retraining.
           </p>
+          <Figures
+            items={[
+              { value: '3.6', label: 'bits per parameter', note: 'split between generalizing and memorizing' },
+              { value: '31 GB', label: 'memorization ceiling', note: 'a 70B model, before it reasons at all' },
+            ]}
+          />
+
           <p>
-            Forgetting there follows from the geometry. Gradient descent pushes new-task updates in
-            the directions that damage the old task most, so learning something new degrades what the model already
-            knew as a direct consequence of how it learns anything at all.
+            Forgetting there follows from the geometry. Gradient descent pushes new-task updates toward the
+            directions that damage the old task most. Learning something new degrades what the model already knew,
+            as a direct result of how it learns anything at all.
           </p>
           <p>
             Auditing fares no better. Superposition means a single neuron encodes pieces of many unrelated features
-            at once, so asking what a model believes about anything is asking about a mixture, not a fact. Agents
-            writing beliefs into their own separate weights diverge from each other for the same reason distributed
-            systems partition: no shared substrate, no consensus. Brains reached this conclusion first. The
-            hippocampus does fast, sparse encoding of what just happened, and the neocortex does slow consolidation
-            of what usually holds, because one substrate cannot do both jobs at once.
+            at once. Asking what a model believes about anything means asking about a mixture of those features.
+            Agents that write beliefs into their own separate weights diverge from each other for
+            the same reason distributed systems partition: they share no substrate, so they reach no consensus.
+            Brains solved this before anyone built a model. The hippocampus does fast, sparse encoding of what just
+            happened. The neocortex does slow consolidation of what usually holds. One substrate cannot do both jobs
+            at once.
           </p>
         </>
       ),
     },
     {
       id: 'primitives-engine-mcp',
-      title: 'Primitives, engine, MCP',
+      title: 'Packages and benchmarks',
       body: (
         <>
           <p>
-            The schema lives in <code>engrammic-primitives</code>, Apache 2.0, defining the four cognitive layers,
-            the edge types, and the scoring functions that decide when a claim earns promotion. The engine sits over
-            a graph store and exposes an MCP server, so any agent that already speaks MCP reads and writes against
-            it without a bespoke SDK.
+            The schema lives in <code>engrammic-primitives</code>, licensed Apache 2.0. It defines the four
+            cognitive layers, the edge types, and the scoring functions that decide when a claim earns promotion.
+            The engine sits over a graph store and exposes an MCP server. Any agent that already speaks MCP reads and
+            writes against it without a bespoke SDK.
           </p>
           <p>
             Manifold, a version of the same engine for latent embeddings instead of text, exists as a design
             document and nothing else. It waits on a customer who needs multimodal memory.
           </p>
           <p>
-            On 500 annotated coding-agent sessions, the write-gate approach catches contradictions an
-            embedding-only baseline misses: 95% detection against 66%. It propagates a correction through dependent
-            beliefs at 87% against 12% for an append-only store, and blocks 73% of contamination that an
-            append-only store lets straight through. The gate costs latency, about 165ms added at the median, and
-            only runs on the writes that are worth the wait.
+            The numbers below come from 500 annotated coding-agent sessions. Each one compares the write gate
+            against an embedding-only, append-only baseline.
           </p>
+          <Figures
+            items={[
+              { value: '95%', label: 'contradictions caught', note: 'baseline catches 66%' },
+              { value: '87%', label: 'corrections propagated', note: 'baseline reaches 12%' },
+              { value: '73%', label: 'contamination blocked', note: 'baseline lets it through' },
+              { value: '165ms', label: 'median gate latency', note: 'the price of all three' },
+            ]}
+          />
+          <p>The gate runs only on the writes that need the extra latency.</p>
         </>
       ),
     },
     {
       id: 'the-wager',
-      title: 'The wager',
+      title: 'What you get for the overhead',
       body: (
-        <p>
-          An agent that cannot separate what it observed from what it generated does not have beliefs. It has
-          output with confidence attached. Engrammic gives it a way to answer three questions on demand: what does
-          it know, what did it only generate, and which one does a given conclusion rest on.
-        </p>
+        <>
+          <Pull>A belief needs a source. Everything else is output with confidence attached.</Pull>
+          <p>
+            Engrammic bets that the separation is worth its cost at write time. An agent running on it answers, on
+            demand, what it knows, what it only generated, and which of the two a given conclusion rests on. An
+            agent without that split answers none of them, and still sounds equally sure.
+          </p>
+        </>
       ),
     },
   ],

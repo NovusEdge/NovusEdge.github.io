@@ -1,3 +1,4 @@
+import { Term } from '../kit'
 import type { ProjectContent } from './types'
 
 export const palpatine: ProjectContent = {
@@ -6,7 +7,7 @@ export const palpatine: ProjectContent = {
   sections: [
     {
       id: 'fifty-words',
-      title: 'Fifty words',
+      title: 'What it does',
       body: (
         <>
           <p>
@@ -14,8 +15,7 @@ export const palpatine: ProjectContent = {
             left out of your own description, then gives numbered actions with owners and deadlines. Fifty words,
             no preamble, no disclaimer, no suggestion that you talk it through with them first.
           </p>
-          <pre className="my-6 overflow-x-auto rounded border border-charcoal/10 bg-bone-tint/30 p-5 font-mono text-xs leading-relaxed text-charcoal/75 dark:border-bone/10 dark:bg-charcoal-tint/40 dark:text-bone/75">
-            {`/palpatine my boss keeps taking credit for my work in meetings
+          <Term>{`/palpatine my boss keeps taking credit for my work in meetings
 
 Problem: You're a production asset, not visible. Boss has
 no incentive to change.
@@ -23,14 +23,13 @@ no incentive to change.
 1. CC stakeholders on status updates
 2. Volunteer for work where boss isn't the only audience
 3. Own a deliverable nobody else can run
-4. If they escalate: paper trail, or exit`}
-          </pre>
+4. If they escalate: paper trail, or exit`}</Term>
         </>
       ),
     },
     {
       id: 'five-triggers',
-      title: 'Five triggers, no menu',
+      title: 'How it decides what to answer',
       body: (
         <>
           <p>
@@ -59,52 +58,51 @@ no incentive to change.
     },
     {
       id: 'keyword-scoring',
-      title: '48 laws, matched by keyword count',
+      title: 'The scoring underneath',
       body: (
         <>
           <p>
             The 48 Laws of Power, the 33 Strategies of War, and the Art of Seduction sit underneath as JSON
             indexes: id, name, essence, a <code>when</code> list, a <code>keywords</code> list. A hook reads your
             message off stdin and scores every law by counting hits, two points per keyword match, three per{' '}
-            <code>when</code> phrase match. No embedding model, no LLM call. The highest scorers feed the answer;
-            the answer never cites a law number back at you. Nobody wants Law 15 quoted at them mid-crisis.
+            <code>when</code> phrase match. No embedding model runs. No LLM call happens. The highest scorers feed
+            the answer. The answer never cites a law number back at you, because nobody wants Law 15 quoted at them
+            mid-crisis.
           </p>
         </>
       ),
     },
     {
       id: 'file-on-disk',
-      title: 'A file on disk is the personality switch',
+      title: 'Always-on mode',
       body: (
         <>
           <p>
             <code>/palpatine on</code> touches <code>~/.claude/palpatine-enabled</code>. <code>/palpatine off</code>{' '}
-            deletes it. That file's existence is the entire state machine for always-on mode, checked once per
-            session by a <code>SessionStart</code> hook.
+            deletes it. That file's existence is the entire state machine for always-on mode. A{' '}
+            <code>SessionStart</code> hook checks it once per session.
           </p>
-          <pre className="my-6 overflow-x-auto rounded border border-charcoal/10 bg-bone-tint/30 p-5 font-mono text-xs leading-relaxed text-charcoal/75 dark:border-bone/10 dark:bg-charcoal-tint/40 dark:text-bone/75">
-            {`THE DARK SIDE CLOUDS EVERYTHING
+          <Term>{`THE DARK SIDE CLOUDS EVERYTHING
 
 "I can see you. Your mind is mine to control."
 
 Strategic lens ACTIVE. Flag power dynamics in interpersonal situations.
 Append **Power dynamics:** with leverage points and applicable laws.
 
-/palpatine off to disable.`}
-          </pre>
+/palpatine off to disable.`}</Term>
           <p>With the file present, every interpersonal exchange gets a power-dynamics note appended. Purely technical tasks skip it.</p>
         </>
       ),
     },
     {
       id: 'the-stars',
-      title: '105 stars',
+      title: 'Reception',
       body: (
         <p>
           It ships under the Sith Public License, which grants permission to do whatever you want with it and
           disclaims responsibility for burned bridges, enemies made, and HR meetings attended. I built it in a
           weekend expecting nobody to notice. It has 105 stars, more than every other project on this site
-          combined. That is the actual data point on what travels.
+          combined. I write earnest tools for months and a joke license beats all of them.
         </p>
       ),
     },
