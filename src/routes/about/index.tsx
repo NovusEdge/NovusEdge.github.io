@@ -8,14 +8,13 @@ import { projects, type Project } from '../../content/projects'
 import { revealCards } from '../../lib/reveals'
 import { RedactedCard } from '../../components/redacted-card'
 
-const featured = projects.filter((p) => p.featured)
+const building = projects.filter((p) => p.phase === 'building')
 
 const PHOTOS = ['/photos/profile1.JPG', '/photos/profile2.JPG', '/photos/profile3.JPG', '/photos/profile4.JPG', '/photos/profile5.JPG']
 
 const DOSSIER = [
-  { key: 'location', val: 'Finland' },
   { key: 'coding since', val: '2013' },
-  { key: 'focus', val: 'AI infrastructure' },
+  { key: 'focus', val: 'AI alignment / RSI' },
   { key: 'cats', val: 'yes' },
   { key: 'status', val: '[REDACTED]' },
 ]
@@ -29,8 +28,8 @@ const PRINCIPLES = [
 ]
 
 const NOW = {
-  text: 'goob, ØCLOAK, hardware on weekends',
-  updated: '2026-07',
+  text: 'RSI research, stoat, ØCLOAK',
+  updated: '2026-08',
 }
 
 const OSS = [
@@ -55,7 +54,7 @@ function PhotoCarousel() {
   }, [n])
 
   return (
-    <div data-card className="relative h-64 w-64 shrink-0 self-start overflow-hidden rounded border border-charcoal/10 dark:border-bone/10">
+    <div data-card className="relative h-80 w-80 shrink-0 self-start overflow-hidden rounded border border-charcoal/10 dark:border-bone/10">
       <RegMarks />
       {PHOTOS.map((src, i) => (
         <img
@@ -130,13 +129,27 @@ function FeaturedCard({ p }: { p: Project }) {
   )
 }
 
+const PROJECTS_PER_PAGE = 4
+
+// The redacted teaser leads, ØCLOAK follows it; the rest keep source order.
+const ocloak = building.find((p) => p.slug === 'ocloak')
+const CARDS = [
+  { slug: 'redacted' },
+  ...(ocloak ? [ocloak] : []),
+  ...building.filter((p) => p.slug !== 'ocloak'),
+]
+const TOTAL_PAGES = Math.ceil(CARDS.length / PROJECTS_PER_PAGE)
+
 export default function AboutPage() {
   const scope = useRef<HTMLElement>(null)
+  const [projectPage, setProjectPage] = useState(0)
+  const pageItems = CARDS.slice(projectPage * PROJECTS_PER_PAGE, (projectPage + 1) * PROJECTS_PER_PAGE)
+
   useEffect(() => revealCards(scope.current), [])
 
   return (
     <>
-      <Meta title="About" description="Aliasgar Khimani - systems architect building cognitive infrastructure for AI agents." />
+      <Meta title="About" description="Aliasgar Khimani - AI alignment researcher, RSI, and the things that happen when systems start building themselves." />
       <section ref={scope} className="relative mx-auto max-w-4xl px-6 pb-24 pt-36">
 
         {/* 00 - Header */}
@@ -158,14 +171,17 @@ export default function AboutPage() {
 
         {/* 01 - Bio + Photo + Dossier */}
         <div className="mt-12 grid gap-8 md:grid-cols-[1fr_auto]">
-          <div data-card className="space-y-6 text-lg leading-relaxed text-charcoal/80 dark:text-bone/80">
+          <div data-card className="space-y-4 text-lg leading-relaxed text-charcoal/80 dark:text-bone/80">
+            <p>I'm <strong className="text-charcoal dark:text-bone">Aliasgar Khimani</strong>.</p>
             <p>
-              I'm <strong className="text-charcoal dark:text-bone">Aliasgar Khimani</strong>, a systems architect based in Finland.
-              I build cognitive infrastructure for AI agents - memory systems that know what they know versus what they merely generated.
+              I research <a href="https://en.wikipedia.org/wiki/AI_alignment" target="_blank" rel="noopener noreferrer" className="italic text-charcoal hover:text-gold dark:text-bone">AI alignment</a>, <a href="https://en.wikipedia.org/wiki/Recursive_self-improvement" target="_blank" rel="noopener noreferrer" className="italic text-charcoal hover:text-gold dark:text-bone">recursive self-improvement</a>, and <a href="https://en.wikipedia.org/wiki/Emergence" target="_blank" rel="noopener noreferrer" className="italic text-charcoal hover:text-gold dark:text-bone">emergence</a>: the stuff that happens when systems start building themselves.
             </p>
             <p>
-              Started in offensive security (CTFs, malware dev, breaking things), now building things that are harder to break.
-              Most of my work lives at the intersection of AI, systems, and hardware.
+              Also interested in <a href="https://en.wikipedia.org/wiki/Epistemology" target="_blank" rel="noopener noreferrer" className="italic text-charcoal hover:text-gold dark:text-bone">epistemics</a>: how we know what's true when generation is free and verification still costs what it always did.
+            </p>
+            <p>
+              Started in offensive security (CTFs, malware dev, the chaos era), now trying to understand things before they get too hard to understand.
+              Hardware tinkering on weekends, mostly because I'm tired of everything being software.
             </p>
           </div>
 
@@ -222,11 +238,26 @@ export default function AboutPage() {
             </TLink>
           </div>
           <div className="grid gap-4 sm:grid-cols-2">
-            {featured.map((p) => (
-              <FeaturedCard key={p.slug} p={p} />
-            ))}
-            <RedactedCard />
+            {pageItems.map((item) =>
+              item.slug === 'redacted' ? (
+                <RedactedCard key="redacted" />
+              ) : (
+                <FeaturedCard key={item.slug} p={item as Project} />
+              )
+            )}
           </div>
+          {TOTAL_PAGES > 1 && (
+            <div className="mt-6 flex justify-center gap-2">
+              {Array.from({ length: TOTAL_PAGES }, (_, i) => (
+                <button
+                  key={i}
+                  onClick={() => setProjectPage(i)}
+                  aria-label={`Page ${i + 1}`}
+                  className={`h-2 rounded-full transition-all ${i === projectPage ? 'w-6 bg-gold' : 'w-2 bg-charcoal/20 hover:bg-charcoal/40 dark:bg-bone/20 dark:hover:bg-bone/40'}`}
+                />
+              ))}
+            </div>
+          )}
         </div>
 
         {/* 04 - OSS */}

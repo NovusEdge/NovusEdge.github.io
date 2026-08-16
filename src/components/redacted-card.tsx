@@ -41,7 +41,7 @@ export function RedactedCard() {
           {hover ? 'whisperless' : '██████████'}
         </h3>
         <p className="mt-2 text-base leading-relaxed text-charcoal/70 dark:text-bone/70">
-          {hover ? 'neural interfaces for silent input. think without speaking.' : '████████ ████████ ██████'}
+          {hover ? 'neural interfaces for silent input. subvocal comms.' : '████████ ████████ ██████'}
         </p>
       </div>
 
