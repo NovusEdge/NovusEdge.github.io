@@ -7,6 +7,7 @@ export type Project = {
   stars?: number
   group: 'now' | 'shipped' | 'chaos' | 'oss'
   phase: 'building' | 'shipped' | 'on-ice' | 'chaos-era' | 'contributor'
+  kind: 'systems' | 'ai' | 'offsec' | 'contrib' | 'toys'
   featured?: boolean
   description: string
   tech: string[]
@@ -27,6 +28,7 @@ export const projects: Project[] = [
     stars: 105,
     group: 'chaos',
     phase: 'shipped',
+    kind: 'toys',
     featured: true,
     description:
       'A "strategic" advisor to "help you achieve your goals." Half a joke, and somehow my most-starred repo by a mile.',
@@ -44,6 +46,7 @@ export const projects: Project[] = [
     lang: 'Go',
     group: 'now',
     phase: 'building',
+    kind: 'systems',
     featured: true,
     description:
       'Local QEMU VMs on Linux from a TUI and a CLI. No libvirt, no daemon, one binary.',
@@ -59,6 +62,7 @@ export const projects: Project[] = [
     lang: 'Python',
     group: 'shipped',
     phase: 'shipped',
+    kind: 'ai',
     featured: true,
     description:
       'Epistemic memory for AI agents: claims, evidence, and provenance as a first-class graph. Before intelligence can be trusted, it has to learn to doubt.',
@@ -78,6 +82,7 @@ export const projects: Project[] = [
     lang: 'TypeScript',
     group: 'shipped',
     phase: 'shipped',
+    kind: 'ai',
     featured: true,
     description: "Your agent forgets. This one doesn't. Persistent, sourced memory for AI agents, shipped as a drop-in npm package.",
     tech: ['TypeScript', 'Go', 'Pixi', 'npm', 'Docker'],
@@ -95,6 +100,7 @@ export const projects: Project[] = [
     lang: 'Python',
     group: 'shipped',
     phase: 'shipped',
+    kind: 'ai',
     description:
       "The schema library behind Engrammic: the types and rules that turn an agent's observations into claims, facts, and beliefs.",
     tech: ['Python', 'pip'],
@@ -112,6 +118,7 @@ export const projects: Project[] = [
     lang: 'Hardware',
     group: 'now',
     phase: 'building',
+    kind: 'systems',
     featured: true,
     description:
       'Crowdsourced privacy infrastructure against mass surveillance: at-cost RF / WiFi-sensing hardware plus a P2P threat-intel network. Offense is shipping; defense is empty.',
@@ -127,6 +134,7 @@ export const projects: Project[] = [
     lang: 'Python',
     group: 'now',
     phase: 'building',
+    kind: 'ai',
     description:
       'A leaderless mesh of self-replicating earning agents under an immutable core. The spend cap holds by arithmetic, not by good intentions.',
     tech: ['Python', 'Cedar', 'LiteLLM', 'Pydantic AI', 'SQLite', 'Stripe', 'MCP'],
@@ -141,6 +149,7 @@ export const projects: Project[] = [
     lang: 'JavaScript',
     group: 'shipped',
     phase: 'shipped',
+    kind: 'ai',
     description:
       'A Claude Code plugin that strips the AI out of AI-written prose. Forty banned words, STE grammar, no LinkedIn cadence.',
     tech: ['Claude Code', 'JavaScript', 'Python', 'ASD-STE100'],
@@ -155,6 +164,7 @@ export const projects: Project[] = [
     lang: 'GDScript',
     group: 'shipped',
     phase: 'shipped',
+    kind: 'ai',
     description:
       'A desktop pet cat that lives on your screen - wanders, naps, chases your cursor, and comments on what your machine is doing via LLM. Bring your own spritesheet.',
     tech: ['Godot', 'Python', 'Go', 'LLM'],
@@ -171,6 +181,7 @@ export const projects: Project[] = [
     lang: 'Rust',
     group: 'chaos',
     phase: 'chaos-era',
+    kind: 'toys',
     featured: true,
     description:
       'Fullscreen takeover tool for pranking your friends. Locks their screen, displays your image/GIF, blocks input until they hit the secret exit combo.',
@@ -189,6 +200,7 @@ export const projects: Project[] = [
     lang: 'Go',
     group: 'chaos',
     phase: 'chaos-era',
+    kind: 'offsec',
     description:
       'ATS security auditor: 84 payloads across SQLi, XXE, DoS, ML poisoning, and LLM prompt injection. Weaponized resumes for testing how hiring systems break.',
     tech: ['Go', 'Node.js', 'PDF'],
@@ -203,6 +215,7 @@ export const projects: Project[] = [
     lang: 'Rust',
     group: 'chaos',
     phase: 'chaos-era',
+    kind: 'offsec',
     description:
       'Binary infector that creates prepender/postpender executables. The infected binary runs both payload and host, in whichever order you choose.',
     tech: ['Rust', 'ELF'],
@@ -217,6 +230,7 @@ export const projects: Project[] = [
     lang: 'Go',
     group: 'chaos',
     phase: 'chaos-era',
+    kind: 'offsec',
     description:
       'A network worm that lights up your network. Self-propagates via SSH and SMB, cross-platform.',
     tech: ['Go', 'SSH', 'SMB'],
@@ -231,6 +245,7 @@ export const projects: Project[] = [
     lang: 'Rust',
     group: 'chaos',
     phase: 'chaos-era',
+    kind: 'offsec',
     description:
       'A simple remote access trojan in Rust. HTTP-based C2, file ops, screenshots, cross-platform.',
     tech: ['Rust', 'HTTP', 'C2'],
@@ -245,6 +260,7 @@ export const projects: Project[] = [
     lang: 'Go',
     group: 'chaos',
     phase: 'chaos-era',
+    kind: 'offsec',
     description: 'A Go package implementing a simple logic-bomb: payload that waits quietly, then goes off on a trigger.',
     tech: ['Go'],
     links: [{ label: 'github', href: 'https://github.com/NovusEdge/puffgo' }],
@@ -258,6 +274,7 @@ export const projects: Project[] = [
     lang: 'Go',
     group: 'chaos',
     phase: 'chaos-era',
+    kind: 'offsec',
     description: 'A forkbomb as a Go package, via cgo. A tiny lesson in how fast you can bring a machine to its knees.',
     tech: ['Go', 'cgo'],
     links: [{ label: 'github', href: 'https://github.com/NovusEdge/gfb' }],
@@ -271,6 +288,7 @@ export const projects: Project[] = [
     lang: 'C',
     group: 'chaos',
     phase: 'chaos-era',
+    kind: 'offsec',
     description: 'A command-line tool to corrupt files, byte by byte: controlled destruction for testing (and mischief).',
     tech: ['C'],
     links: [{ label: 'github', href: 'https://github.com/NovusEdge/loxoten' }],
@@ -283,6 +301,7 @@ export const projects: Project[] = [
     year: '2023',
     group: 'chaos',
     phase: 'chaos-era',
+    kind: 'offsec',
     description: 'A community malware-development guide (with @AraChn3): the offensive-security notes I wish I had when starting out.',
     tech: ['guide', 'offsec'],
     links: [{ label: 'github', href: 'https://github.com/NovusEdge/malware-development-guide' }],
@@ -295,6 +314,7 @@ export const projects: Project[] = [
     year: '2022',
     group: 'chaos',
     phase: 'chaos-era',
+    kind: 'offsec',
     description: 'A pile of TryHackMe CTF writeups: the room-by-room grind that taught me to break things. Several live on the blog too.',
     tech: ['CTF', 'writeups'],
     links: [{ label: 'github', href: 'https://github.com/NovusEdge/thm-writeups' }],
@@ -310,6 +330,7 @@ export const projects: Project[] = [
     lang: 'Python',
     group: 'oss',
     phase: 'contributor',
+    kind: 'contrib',
     description: 'Microsoft\'s deep learning optimization library. Contributed type hints, changelog tooling, and warning fixes. Multiple merged PRs.',
     tech: ['Python', 'PyTorch', 'distributed'],
     links: [
@@ -326,6 +347,7 @@ export const projects: Project[] = [
     lang: 'Python',
     group: 'oss',
     phase: 'contributor',
+    kind: 'contrib',
     description: 'The AI Alliance\'s distributed training framework. Contributed eval schema, CI fixes, and active on the M1 roadmap.',
     tech: ['Python', 'distributed', 'federated'],
     links: [
@@ -342,6 +364,7 @@ export const projects: Project[] = [
     lang: 'C++',
     group: 'oss',
     phase: 'contributor',
+    kind: 'contrib',
     description: 'Microsoft\'s gradient boosting framework. Early contributions to the project.',
     tech: ['C++', 'Python', 'ML'],
     links: [
@@ -357,6 +380,7 @@ export const projects: Project[] = [
     lang: 'C++',
     group: 'oss',
     phase: 'contributor',
+    kind: 'contrib',
     description: 'ROS-Industrial quality-assured robot software components. Contributed to the EU-funded robotics ecosystem.',
     tech: ['C++', 'ROS', 'robotics'],
     links: [
