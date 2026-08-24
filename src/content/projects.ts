@@ -69,7 +69,22 @@ export const projects: Project[] = [
     featured: true,
     description:
       'Epistemic memory for AI agents: claims, evidence, and provenance as a first-class graph. Before intelligence can be trusted, it has to learn to doubt.',
-    tech: ['TypeScript', 'Python', 'MCP', 'Memgraph', 'Docker', 'Redis', 'Qdrant', 'Ollama', 'HuggingFace'],
+    tech: [
+      'TypeScript',
+      'Python',
+      'Pydantic',
+      'MCP',
+      'Memgraph',
+      'Docker',
+      'GCP',
+      'Redis',
+      'Qdrant',
+      'Ollama',
+      'HuggingFace',
+      'Claude',
+      'Gemini',
+      'Stripe',
+    ],
     links: [
       { label: 'engrammic.ai', href: 'https://engrammic.ai' },
       { label: 'research', href: 'https://engrammic.ai/research' },

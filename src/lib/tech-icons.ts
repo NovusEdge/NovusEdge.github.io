@@ -9,6 +9,10 @@ import {
   siAlpinelinux,
   siGnubash,
   siPypi,
+  siPydantic,
+  siGooglecloud,
+  siStripe,
+  siGooglegemini,
 } from 'simple-icons'
 import { STACK, type Icon } from '../routes/stack/data'
 
@@ -35,6 +39,11 @@ const extraIcons: Record<string, Icon> = {
   'bubble tea': siGnubash,
   'cloud-init': siLinux,
   distributed: siLinux,
+  pydantic: siPydantic,
+  gcp: siGooglecloud,
+  stripe: siStripe,
+  gemini: siGooglegemini,
+  claude: siClaude,
 }
 
 // A tag with no entry here renders as plain text. Add one when the target
@@ -74,6 +83,9 @@ const urls: Record<string, string> = {
   'claude code': 'https://claude.com/claude-code',
   'asd-ste100': 'https://asd-ste100.org',
   claude: 'https://claude.ai',
+  pydantic: 'https://docs.pydantic.dev',
+  gcp: 'https://cloud.google.com',
+  gemini: 'https://deepmind.google/technologies/gemini',
 }
 
 export function techRef(name: string): TechRef {
