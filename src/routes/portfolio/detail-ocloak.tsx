@@ -11,6 +11,7 @@ import type { LayoutProps } from './layouts'
 gsap.registerPlugin(ScrollTrigger)
 
 const EvilEye = lazy(() => import('../../components/react-bits/bg/EvilEye.jsx'))
+const Dither = lazy(() => import('../../components/react-bits/bg/Dither.jsx'))
 
 const iconFor = (href: string) =>
   href.includes('github.com') ? Github : href.includes('npmjs.com') || href.includes('pypi.org') ? Package : Globe
@@ -22,9 +23,11 @@ const GOLD = '#d4a03c'
 const AMBER = '#FF6F37'
 const EYE = { eyeColor: AMBER, backgroundColor: '#1a1a1a', pupilFollow: 2.5 } as const
 
-// eyes that fade into the margins as you read — surveillance accumulating from
-// the top down, both sides, varied sizes; wide screens only.
+// eyes fixed in the margins — surveillance watching from the first frame, more
+// of them accumulating as you read; both sides, varied sizes; wide screens only.
+// EYES_AT_START are shown on load; scroll ramps up to the full set.
 type Slot = { left?: string; right?: string; top: string; size: number }
+const EYES_AT_START = 6
 const SLOTS: Slot[] = [
   { left: '4%', top: '11%', size: 58 },
   { right: '5%', top: '8%', size: 76 },
@@ -38,6 +41,7 @@ const SLOTS: Slot[] = [
   { left: '8%', top: '72%', size: 92 },
   { left: '3%', top: '86%', size: 70 },
   { right: '7%', top: '82%', size: 118 },
+  { right: '4%', top: '94%', size: 66 },
 ]
 
 function PopEye({ slot, scrambled }: { slot: Slot; scrambled: boolean }) {
@@ -117,7 +121,7 @@ function TechBadge({ name }: { name: string }) {
 
 export default function Ocloak({ p, c }: LayoutProps) {
   const scope = useRef<HTMLDivElement>(null)
-  const [revealed, setRevealed] = useState(0)
+  const [revealed, setRevealed] = useState(EYES_AT_START)
   const [scrambled, setScrambled] = useState(false)
   const [dispersed, setDispersed] = useState(false)
   const eyesOn = !prefersReducedMotion()
@@ -158,7 +162,8 @@ export default function Ocloak({ p, c }: LayoutProps) {
       start: 'top top',
       end: 'bottom bottom',
       onUpdate: (self) => {
-        const n = Math.min(SLOTS.length, Math.floor(self.progress * (SLOTS.length + 0.5)))
+        const ramp = SLOTS.length - EYES_AT_START
+        const n = Math.min(SLOTS.length, EYES_AT_START + Math.floor(self.progress * (ramp + 0.5)))
         setRevealed((v) => (v === n ? v : n))
       },
     })
@@ -180,18 +185,34 @@ export default function Ocloak({ p, c }: LayoutProps) {
         )}
 
       {/* hero: stoat-style card — identity beside a monitor panel */}
-      <section className="relative overflow-hidden border-b border-bone/10">
-        <div
-          aria-hidden
-          className="pointer-events-none absolute inset-0 opacity-[0.5]"
-          style={{
-            backgroundImage: 'radial-gradient(rgba(255,111,55,0.10) 1px, transparent 1.4px)',
-            backgroundSize: '24px 24px',
-            maskImage: 'radial-gradient(120% 80% at 70% 0%, black 20%, transparent 70%)',
-            WebkitMaskImage: 'radial-gradient(120% 80% at 70% 0%, black 20%, transparent 70%)',
-          }}
-        />
-        <div className="relative mx-auto max-w-3xl px-6 pb-16 pt-32 lg:pt-36">
+      <section className="relative overflow-hidden">
+        {eyesOn && (
+          <div
+            aria-hidden
+            className="pointer-events-none absolute inset-0 opacity-80"
+            style={{
+              maskImage:
+                'radial-gradient(150% 135% at 80% 4%, black 40%, transparent 96%), linear-gradient(to bottom, black 68%, transparent 100%)',
+              maskComposite: 'intersect',
+              WebkitMaskImage:
+                'radial-gradient(150% 135% at 80% 4%, black 40%, transparent 96%), linear-gradient(to bottom, black 68%, transparent 100%)',
+              WebkitMaskComposite: 'source-in',
+            }}
+          >
+            <Suspense fallback={null}>
+              <Dither
+                waveColor={[1, 0.435, 0.216]}
+                waveFrequency={6.3}
+                waveAmplitude={0.23}
+                waveSpeed={0.03}
+                colorNum={7.2}
+                enableMouseInteraction={false}
+                disableAnimation={false}
+              />
+            </Suspense>
+          </div>
+        )}
+        <div className="relative mx-auto max-w-3xl px-6 pb-40 pt-36 lg:pb-52 lg:pt-44">
           <div>
             <TLink
               to="/portfolio"

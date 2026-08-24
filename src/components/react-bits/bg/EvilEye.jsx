@@ -148,9 +148,11 @@ void main() {
   outerBgGlow *= 0.15;
 
   vec3 color = uEyeColor * uIntensity * clamp(max(innerRing + innerEye, outerEyeGlow + outerBgGlow) - pupil, 0.0, 3.0);
-  color += uBgColor;
-
-  gl_FragColor = vec4(color, 1.0);
+  // transparent background: the eye floats over whatever sits behind it (the
+  // charcoal page, or the hero's dither field) instead of an opaque box.
+  // alpha tracks the eye's own brightness.
+  float alpha = clamp(max(max(color.r, color.g), color.b), 0.0, 1.0);
+  gl_FragColor = vec4(color, alpha);
 }
 `;
 
