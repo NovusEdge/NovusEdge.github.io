@@ -1,56 +1,20 @@
 import { useEffect, useRef, useState } from 'react'
 import { TLink } from '../../components/page-transition'
-import { Meta } from '../../lib/meta'
-import { projects, type Project } from '../../content/projects'
-import { fuzzyMatch } from '../../lib/blog-list'
-import { RedactedCard } from '../../components/redacted-card'
-import { Rule, SectionNumber, JPLabel, RegMarks } from '../../components/motifs'
-import { Github, Globe, Package, RotateCw, ArrowRight } from '../../components/icons'
 import { hasPage } from './content'
-import { revealCards } from '../../lib/reveals'
+import { projects, type Project } from '../../content/projects'
+import { Github, Globe, Package, ArrowRight } from '../../components/icons'
 import { prefersReducedMotion } from '../../lib/motion'
-import DecryptedText from '../../components/react-bits/DecryptedText'
+import { fuzzyMatch } from '../../lib/blog-list'
+import { revealCards } from '../../lib/reveals'
+import { MarginQuote } from '../../components/side-flourish'
+import { Meta } from '../../lib/meta'
+import { HeroBackground } from './hero-bg'
 
-const GROUPS = [
-  { key: 'now', label: 'building now', jp: '現在' },
-  { key: 'shipped', label: 'shipped', jp: '完了' },
-  { key: 'oss', label: 'open source', jp: '貢献' },
-  { key: 'chaos', label: 'chaos & tools', jp: '混沌' },
-] as const
+const primaryLink = (p: Project) => p.links[0]?.href ?? '#'
 
-const metaLine = (p: Project) => [p.year, p.lang].filter(Boolean).join(' · ')
-
-const PHASE_STYLE: Record<Project['phase'], { label: string; class: string }> = {
-  building: { label: 'building', class: 'border-gold/50 text-gold' },
-  shipped: { label: 'shipped', class: 'border-emerald-500/50 text-emerald-600 dark:text-emerald-400' },
-  'on-ice': { label: 'on ice', class: 'border-sky-400/50 text-sky-500' },
-  'chaos-era': { label: 'chaos era', class: 'border-charcoal/20 text-charcoal/50 dark:border-bone/20 dark:text-bone/50' },
-  contributor: { label: 'contributor', class: 'border-violet-500/50 text-violet-600 dark:text-violet-400' },
-}
-
-function PhaseTag({ phase }: { phase: Project['phase'] }) {
-  const s = PHASE_STYLE[phase]
-  return (
-    <span className={`rounded border px-1.5 py-0.5 font-mono text-[9px] uppercase tracking-wider ${s.class}`}>
-      {s.label}
-    </span>
-  )
-}
-
-// generated cover: gradient bg + kanji or monogram
-function Cover({ p }: { p: Project }) {
-  const char = p.jp || p.title[0].toUpperCase()
-  // hash slug to pick gradient angle
-  const angle = (p.slug.charCodeAt(0) * 37 + p.slug.charCodeAt(1) * 17) % 360
-  return (
-    <div
-      className="absolute inset-0 flex items-center justify-center opacity-[0.07] dark:opacity-[0.05]"
-      style={{ background: `linear-gradient(${angle}deg, var(--gold) 0%, transparent 70%)` }}
-    >
-      <span className="select-none font-display text-[8rem] font-black">{char}</span>
-    </div>
-  )
-}
+// creation from void: the first mark that makes a world
+const POEM_LINES = ['無の淵に', '筆を落とせば', '世界立つ']
+const POEM_EN = 'At the edge of nothing, let the brush fall: a world stands up.'
 
 function iconFor(href: string) {
   if (href.includes('github.com')) return Github
@@ -65,74 +29,106 @@ function LinkChip({ l }: { l: { label: string; href: string } }) {
       href={l.href}
       target="_blank"
       rel="noopener noreferrer"
-      className="inline-flex items-center gap-1.5 rounded border border-charcoal/15 px-2.5 py-1 font-mono text-[10px] uppercase tracking-wider text-charcoal/70 transition-colors hover:border-gold hover:text-gold dark:border-bone/15 dark:text-bone/70"
+      onClick={(e) => e.stopPropagation()}
+      className="inline-flex items-center gap-1.5 rounded border border-bone/25 px-2.5 py-1 font-mono text-[12px] font-medium uppercase tracking-wider text-bone/80 transition-colors hover:border-gold hover:text-gold"
     >
       <Icon className="h-3.5 w-3.5" /> {l.label}
     </a>
   )
 }
 
-function matches(p: Project, query: string) {
+// crop corners on a proof sheet: the four registration ticks framing a plate
+function Crops({ inset = 'inset-0' }: { inset?: string }) {
+  const c = 'pointer-events-none absolute h-3 w-3 border-gold/60'
   return (
-    fuzzyMatch(p.title.toLowerCase(), query) ||
-    fuzzyMatch(p.description.toLowerCase(), query) ||
-    (p.lang ? fuzzyMatch(p.lang.toLowerCase(), query) : false) ||
-    p.tech.some((t) => fuzzyMatch(t.toLowerCase(), query))
+    <div className={`pointer-events-none absolute ${inset}`}>
+      <span aria-hidden className={`${c} left-0 top-0 border-l border-t`} />
+      <span aria-hidden className={`${c} right-0 top-0 border-r border-t`} />
+      <span aria-hidden className={`${c} bottom-0 left-0 border-b border-l`} />
+      <span aria-hidden className={`${c} bottom-0 right-0 border-b border-r`} />
+    </div>
   )
 }
 
-/* large rectangular featured card (shows everything, no flip) */
-function BigCard({ p }: { p: Project }) {
+// data row in the mono column: label left, value right, hairline under
+function DataRow({ k, v }: { k: string; v: string }) {
   return (
-    <div className="relative flex h-[20rem] flex-col justify-between overflow-hidden rounded border border-charcoal/10 bg-bone-tint/20 p-8 md:h-[22rem] md:p-10 dark:border-bone/10 dark:bg-charcoal-tint/20">
-      <Cover p={p} />
-      <RegMarks />
-      <div className="relative">
-        <div className="flex flex-wrap items-center gap-x-3 gap-y-1 font-mono text-[11px] font-semibold uppercase tracking-[0.25em]">
-          <span className="text-gold">featured</span>
-          <PhaseTag phase={p.phase} />
-          <span className="text-charcoal/45 dark:text-bone/45">{metaLine(p)}</span>
-          {p.stars ? <span className="text-charcoal/45 dark:text-bone/45">★ {p.stars}</span> : null}
-        </div>
-        <h2 className="mt-4 flex items-baseline gap-3 font-display text-5xl font-black text-charcoal dark:text-bone md:text-6xl">
-          {p.title}
-          {p.jp && <span className="font-display text-xl font-normal text-charcoal/25 dark:text-bone/25">{p.jp}</span>}
-        </h2>
-        <p className="mt-4 max-w-2xl text-base leading-relaxed text-charcoal/75 dark:text-bone/75">{p.description}</p>
-        {hasPage(p.slug) && (
-          <TLink
-            to={`/portfolio/${p.slug}`}
-            className="group/read relative z-10 mt-6 inline-flex items-center gap-2 rounded border border-gold bg-gold/15 px-4 py-2 font-mono text-[11px] font-semibold uppercase tracking-[0.25em] text-gold transition-colors hover:bg-gold hover:text-charcoal"
-          >
-            read more
-            <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover/read:translate-x-1" />
-          </TLink>
-        )}
-      </div>
-      <div className="relative z-10 flex flex-wrap items-center gap-2">
-        {p.tech.map((t) => (
-          <span
-            key={t}
-            className="rounded border border-charcoal/10 px-1.5 py-0.5 font-mono text-[9px] uppercase tracking-wider text-charcoal/50 dark:border-bone/10 dark:text-bone/50"
-          >
-            {t}
+    <div className="flex items-baseline justify-between border-b border-bone/10 py-2">
+      <dt className="font-mono text-[12px] font-medium uppercase tracking-[0.15em] text-bone/60">{k}</dt>
+      <dd className="font-mono text-[13px] font-semibold text-bone">{v}</dd>
+    </div>
+  )
+}
+
+// framed print plate: shader inside crop corners, mono data column beside it
+function Slide({ p }: { p: Project }) {
+  return (
+    <div className="relative border border-bone/12 bg-charcoal-tint/85 p-4 backdrop-blur-sm md:p-6">
+      <div className="relative grid gap-5 md:grid-cols-[40%_1fr] md:items-center md:gap-8">
+        <div className="group/plate relative aspect-square overflow-hidden bg-charcoal">
+          {p.image ? (
+            <img src={p.image} alt={`${p.title} preview`} loading="lazy" decoding="async" draggable={false} className="h-full w-full select-none object-cover [-webkit-user-drag:none]" />
+          ) : (
+            p.jp && <span aria-hidden className="absolute inset-0 flex select-none items-center justify-center font-display text-7xl font-black text-bone/15">{p.jp}</span>
+          )}
+          <Crops />
+          <span className="absolute left-3 top-3 font-mono text-[10px] uppercase tracking-[0.25em] text-gold">
+            {p.slug}
           </span>
-        ))}
-        <div className="ml-auto flex flex-wrap gap-2">
-          {p.links.map((l) => (
-            <LinkChip key={l.href} l={l} />
-          ))}
+        </div>
+
+        <div className="flex flex-col">
+          <div className="flex items-baseline justify-between">
+            <span className="font-mono text-[11px] uppercase tracking-[0.3em] text-gold">{p.phase.replace('-', ' ')}</span>
+            {p.stars ? <span className="font-mono text-[11px] text-bone/45">★ {p.stars}</span> : null}
+          </div>
+          <h2 className="mt-2 font-display text-5xl font-black leading-none text-bone md:text-6xl">{p.title}</h2>
+          <div className="my-4 h-px bg-bone/15">
+            <span className="block h-px w-16 bg-gold" />
+          </div>
+          <p className="max-w-xl text-[15px] leading-relaxed text-bone/70">{p.description}</p>
+
+          <dl className="mt-5 max-w-xs">
+            <DataRow k="year" v={p.year} />
+            {p.lang && <DataRow k="written in" v={p.lang} />}
+            <DataRow k="stack" v={`${p.tech.length} tools`} />
+          </dl>
+
+          <div className="mt-auto pt-6">
+            <div className="flex flex-wrap gap-1.5">
+              {p.tech.map((t) => (
+                <span key={t} className="border border-bone/20 px-2 py-0.5 font-mono text-[11px] font-medium uppercase tracking-wider text-bone/75">
+                  {t}
+                </span>
+              ))}
+            </div>
+            <div className="mt-5 flex flex-wrap items-center gap-2">
+              {hasPage(p.slug) && (
+                <TLink
+                  to={`/portfolio/${p.slug}`}
+                  onClick={(e) => e.stopPropagation()}
+                  className="group/read inline-flex items-center gap-2 border border-gold bg-gold/15 px-4 py-2 font-mono text-[11px] font-semibold uppercase tracking-[0.25em] text-gold transition-colors hover:bg-gold hover:text-charcoal"
+                >
+                  read more <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover/read:translate-x-1" />
+                </TLink>
+              )}
+              <div className="ml-auto flex flex-wrap gap-2">
+                {p.links.map((l) => (
+                  <LinkChip key={l.href} l={l} />
+                ))}
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
   )
 }
 
-/* one-card-at-a-time carousel: auto-advances, swipe/drag to change, seamless both ways */
-function FeaturedCarousel({ items }: { items: Project[] }) {
+function Carousel({ items }: { items: Project[] }) {
   const n = items.length
-  const slides = [items[n - 1], ...items, items[0]] // clones on both ends
-  const [pos, setPos] = useState(1) // 1..n are the real slides
+  const slides = [items[n - 1], ...items, items[0]]
+  const [pos, setPos] = useState(1)
   const [anim, setAnim] = useState(true)
   const [paused, setPaused] = useState(false)
   const [dragX, setDragX] = useState(0)
@@ -141,11 +137,10 @@ function FeaturedCarousel({ items }: { items: Project[] }) {
 
   useEffect(() => {
     if (prefersReducedMotion() || paused || n < 2) return
-    const id = setInterval(() => setPos((p) => p + 1), 4000)
+    const id = setInterval(() => setPos((p) => p + 1), 5000)
     return () => clearInterval(id)
   }, [paused, n])
 
-  // re-enable the transition on the frame after a seamless jump
   useEffect(() => {
     if (anim) return
     const id = requestAnimationFrame(() => setAnim(true))
@@ -171,7 +166,6 @@ function FeaturedCarousel({ items }: { items: Project[] }) {
   const onMove = (e: React.PointerEvent<HTMLDivElement>) => {
     if (!drag.current) return
     const dx = e.clientX - drag.current.x
-    // only capture the pointer once a real drag starts, so plain link clicks aren't swallowed
     if (!drag.current.moved && Math.abs(dx) > 5) {
       drag.current.moved = true
       e.currentTarget.setPointerCapture?.(drag.current.id)
@@ -199,15 +193,36 @@ function FeaturedCarousel({ items }: { items: Project[] }) {
 
   const active = (((pos - 1) % n) + n) % n
 
+  const go = (d: number) => {
+    setAnim(true)
+    setPos((p) => p + d)
+  }
+
   return (
-    <div className="relative mt-12" onMouseEnter={() => setPaused(true)} onMouseLeave={() => setPaused(false)}>
+    <div className="relative" onMouseEnter={() => setPaused(true)} onMouseLeave={() => setPaused(false)}>
+      <div className="mb-3 flex items-baseline justify-between border-b border-bone/12 pb-2">
+        <div className="flex items-baseline gap-3 font-mono text-[11px] uppercase tracking-[0.25em]">
+          <span className="text-gold">{String(active + 1).padStart(2, '0')}</span>
+          <span className="text-bone/30">/ {String(n).padStart(2, '0')}</span>
+          <span className="text-bone/70">{items[active]?.title}</span>
+        </div>
+        <div className="flex items-center gap-2">
+          <button onClick={() => go(-1)} aria-label="Previous" className="flex h-7 w-7 items-center justify-center border border-bone/15 text-bone/60 transition-colors hover:border-gold hover:text-gold">
+            <ArrowRight className="h-3.5 w-3.5 rotate-180" />
+          </button>
+          <button onClick={() => go(1)} aria-label="Next" className="flex h-7 w-7 items-center justify-center border border-bone/15 text-bone/60 transition-colors hover:border-gold hover:text-gold">
+            <ArrowRight className="h-3.5 w-3.5" />
+          </button>
+        </div>
+      </div>
       <div
-        className="cursor-grab touch-pan-y select-none overflow-hidden active:cursor-grabbing"
+        className="cursor-grab touch-pan-y select-none overflow-hidden active:cursor-grabbing [&_*]:[-webkit-user-drag:none]"
         onPointerDown={onDown}
         onPointerMove={onMove}
         onPointerUp={onUp}
         onPointerCancel={onUp}
         onClickCapture={onClickCapture}
+        onDragStart={(e) => e.preventDefault()}
       >
         <div
           className={`flex ${anim ? 'transition-transform duration-700 ease-[cubic-bezier(0.65,0,0.35,1)]' : ''}`}
@@ -215,13 +230,13 @@ function FeaturedCarousel({ items }: { items: Project[] }) {
           onTransitionEnd={onEnd}
         >
           {slides.map((p, idx) => (
-            <div key={idx} className="w-full shrink-0">
-              <BigCard p={p} />
+            <div key={idx} className="w-full shrink-0 px-1">
+              <Slide p={p} />
             </div>
           ))}
         </div>
       </div>
-      <div className="mt-6 flex justify-center gap-2">
+      <div className="mt-6 flex items-center justify-center gap-2">
         {items.map((p, d) => (
           <button
             key={p.slug}
@@ -230,9 +245,7 @@ function FeaturedCarousel({ items }: { items: Project[] }) {
               setAnim(true)
               setPos(d + 1)
             }}
-            className={`h-1.5 rounded-full transition-all ${
-              active === d ? 'w-6 bg-gold' : 'w-1.5 bg-charcoal/25 hover:bg-charcoal/50 dark:bg-bone/25 dark:hover:bg-bone/50'
-            }`}
+            className={`h-1.5 rounded-full transition-all ${active === d ? 'w-7 bg-gold' : 'w-1.5 bg-bone/25 hover:bg-bone/50'}`}
           />
         ))}
       </div>
@@ -240,111 +253,66 @@ function FeaturedCarousel({ items }: { items: Project[] }) {
   )
 }
 
-/* A project with a written page links straight to it. The flip exists to show
-   the extra detail that a page now holds properly. */
-function PageCard({ p }: { p: Project }) {
-  return (
-    <TLink
-      data-card
-      to={`/portfolio/${p.slug}`}
-      className="group relative flex h-72 flex-col overflow-hidden rounded border border-charcoal/10 bg-bone-tint/10 p-6 transition-colors hover:border-gold/40 dark:border-bone/10 dark:bg-charcoal-tint/10"
-    >
-      <Cover p={p} />
-      <ArrowRight className="pointer-events-none absolute right-4 top-4 h-3.5 w-3.5 text-charcoal/25 transition-transform group-hover:translate-x-1 group-hover:text-gold dark:text-bone/25" />
-      <div className="relative flex flex-wrap items-center gap-2 font-mono text-[10px] font-medium uppercase tracking-[0.2em] text-charcoal/50 dark:text-bone/50">
-        <PhaseTag phase={p.phase} />
-        <span>{metaLine(p)}</span>
-        {p.stars ? <span className="text-gold">★ {p.stars}</span> : null}
+// same proof-sheet language, shrunk: crop corners, mono foot, gold tick rule
+function InfoCard({ p }: { p: Project }) {
+  const outbound = !hasPage(p.slug)
+  const inner = (
+    <>
+      <Crops inset="inset-2" />
+      <div className="relative flex items-baseline gap-2">
+        <h3 className="font-display text-xl font-black text-bone transition-colors group-hover:text-gold">{p.title}</h3>
+        {p.jp && <span className="font-display text-sm text-bone/25">{p.jp}</span>}
+        <span className="ml-auto font-mono text-[12px] font-medium tabular-nums text-bone/50">
+          {p.year} {outbound ? '↗' : '→'}
+        </span>
       </div>
-      <h3 className="relative mt-3 flex items-baseline gap-2 font-display text-2xl font-black text-charcoal dark:text-bone">
-        {p.title}
-        {p.jp && <span className="font-display text-sm font-normal text-charcoal/30 dark:text-bone/30">{p.jp}</span>}
-      </h3>
-      <p className="relative mt-3 flex-1 overflow-hidden text-sm leading-relaxed text-charcoal/70 dark:text-bone/70">
-        {p.description}
-      </p>
-      <span className="relative mt-4 font-mono text-[10px] uppercase tracking-[0.25em] text-charcoal/45 transition-colors group-hover:text-gold dark:text-bone/45">
-        read more
-      </span>
+      <div className="relative my-3 h-px bg-bone/12">
+        <span className="block h-px w-8 bg-gold/70" />
+      </div>
+      <p className="relative flex-1 text-sm leading-relaxed text-bone/60">{p.description}</p>
+      <div className="relative mt-4 flex items-end justify-between gap-3">
+        <div className="flex flex-wrap gap-1.5">
+          {p.tech.slice(0, 3).map((t) => (
+            <span key={t} className="border border-bone/20 px-2 py-0.5 font-mono text-[11px] font-medium uppercase tracking-wider text-bone/70">
+              {t}
+            </span>
+          ))}
+        </div>
+        <span className="shrink-0 font-mono text-[11px] font-medium uppercase tracking-[0.2em] text-gold/90">
+          {p.phase.replace('-', ' ')}
+        </span>
+      </div>
+    </>
+  )
+  const cls =
+    'group relative flex h-full flex-col border border-bone/12 bg-charcoal-tint/20 p-5 transition-colors hover:border-gold/40'
+  return outbound ? (
+    <a href={primaryLink(p)} target="_blank" rel="noopener noreferrer" className={cls}>
+      {inner}
+    </a>
+  ) : (
+    <TLink to={`/portfolio/${p.slug}`} className={cls}>
+      {inner}
     </TLink>
   )
 }
 
-/* small flip card for the group grids */
-function FlipCard({ p }: { p: Project }) {
-  const [flipped, setFlipped] = useState(false)
-  const toggle = () => setFlipped((f) => !f)
-  const face =
-    'absolute inset-0 flex cursor-pointer flex-col overflow-hidden rounded border border-charcoal/10 bg-bone-tint/10 p-6 transition-colors hover:border-gold/40 [backface-visibility:hidden] dark:border-bone/10 dark:bg-charcoal-tint/10'
-  const hint = <RotateCw className="pointer-events-none absolute right-4 top-4 h-3.5 w-3.5 text-charcoal/25 dark:text-bone/25" />
+const GROUPS = [
+  { key: 'now', label: 'building now', jp: '現在' },
+  { key: 'shipped', label: 'shipped', jp: '完了' },
+  { key: 'oss', label: 'open source', jp: '貢献' },
+  { key: 'chaos', label: 'chaos & tools', jp: '混沌' },
+] as const
 
+// carousel curation + order: strongest work first
+const CAROUSEL = ['engrammic', 'ocloak', 'stoat', 'palpatine', 'veil', 'money-mesh']
+
+function matches(p: Project, q: string) {
   return (
-    <div data-card className="h-72 [perspective:1400px]">
-      <div
-        className={`relative h-full w-full transition-transform duration-500 [transform-style:preserve-3d] ${
-          flipped ? '[transform:rotateY(180deg)]' : ''
-        }`}
-      >
-        <div onClick={toggle} className={`${face} ${flipped ? 'pointer-events-none' : ''}`}>
-          <Cover p={p} />
-          {hint}
-          <div className="relative flex flex-wrap items-center gap-2 font-mono text-[10px] font-medium uppercase tracking-[0.2em] text-charcoal/50 dark:text-bone/50">
-            <PhaseTag phase={p.phase} />
-            <span>{metaLine(p)}</span>
-            {p.stars ? <span className="text-gold">★ {p.stars}</span> : null}
-          </div>
-          <h3 className="relative mt-3 flex items-baseline gap-2 font-display text-2xl font-black text-charcoal dark:text-bone">
-            {p.title}
-            {p.jp && <span className="font-display text-sm font-normal text-charcoal/30 dark:text-bone/30">{p.jp}</span>}
-          </h3>
-          <p className="relative mt-3 flex-1 overflow-y-auto pr-1 text-sm leading-relaxed text-charcoal/70 dark:text-bone/70">
-            {p.description}
-          </p>
-          <div className="relative mt-4 flex flex-wrap gap-2">
-            {p.tech.map((t) => (
-              <span
-                key={t}
-                className="rounded border border-charcoal/10 px-1.5 py-0.5 font-mono text-[9px] uppercase tracking-wider text-charcoal/50 dark:border-bone/10 dark:text-bone/50"
-              >
-                {t}
-              </span>
-            ))}
-          </div>
-        </div>
-
-        <div
-          onClick={toggle}
-          aria-hidden={!flipped}
-          className={`${face} [transform:rotateY(180deg)] ${flipped ? '' : 'pointer-events-none'}`}
-        >
-          {hint}
-          <span className="font-display text-lg font-bold text-charcoal dark:text-bone">{p.title}</span>
-          <div className="mt-2 flex flex-wrap gap-x-5 gap-y-1 font-mono text-[10px] uppercase tracking-[0.2em] text-charcoal/55 dark:text-bone/55">
-            <span>
-              year <span className="text-gold">{p.year}</span>
-            </span>
-            {p.lang && (
-              <span>
-                lang <span className="text-gold">{p.lang}</span>
-              </span>
-            )}
-            {p.stars ? (
-              <span>
-                stars <span className="text-gold">{p.stars}</span>
-              </span>
-            ) : null}
-          </div>
-          <p className="mt-3 flex-1 overflow-y-auto pr-1 text-sm leading-relaxed text-charcoal/70 dark:text-bone/70">
-            {p.body}
-          </p>
-          <div className="mt-3 flex flex-wrap gap-2" onClick={(e) => e.stopPropagation()}>
-            {p.links.map((l) => (
-              <LinkChip key={l.href} l={l} />
-            ))}
-          </div>
-        </div>
-      </div>
-    </div>
+    fuzzyMatch(p.title.toLowerCase(), q) ||
+    fuzzyMatch(p.description.toLowerCase(), q) ||
+    (p.lang ? fuzzyMatch(p.lang.toLowerCase(), q) : false) ||
+    p.tech.some((t) => fuzzyMatch(t.toLowerCase(), q))
   )
 }
 
@@ -354,82 +322,68 @@ export default function PortfolioIndex() {
   useEffect(() => revealCards(scope.current), [q])
 
   const query = q.trim().toLowerCase()
+  const featured = CAROUSEL.map((s) => projects.find((p) => p.slug === s)).filter(Boolean) as Project[]
   const shown = query ? projects.filter((p) => matches(p, query)) : projects
-  const featured = projects.filter((p) => p.featured)
 
   return (
-    <>
+    <main ref={scope} className="relative bg-charcoal text-bone">
       <Meta title="Portfolio" description="Projects and builds, from AI memory to forkbombs." />
-      <section ref={scope} className="relative mx-auto max-w-5xl px-6 pb-24 pt-36">
-        <div data-card className="flex flex-col gap-6 md:flex-row md:items-baseline md:justify-between">
-          <div className="relative">
-            <SectionNumber n="01" label="portfolio" />
-            <div className="relative mt-3 w-fit">
-              <div className="absolute -left-10 top-1/2 hidden -translate-y-1/2 flex-col items-center gap-2 lg:flex">
-                <JPLabel>作品</JPLabel>
-                <span aria-hidden className="h-4 w-px bg-gold/50" />
-              </div>
-              <h1 className="font-display text-5xl font-black text-charcoal dark:text-bone">
-                <DecryptedText text="Portfolio" speed={50} delay={100} />
-              </h1>
-            </div>
+      <HeroBackground />
+      <MarginQuote lines={POEM_LINES} translation={POEM_EN} side="right" />
+
+      <div className="relative z-10 mx-auto max-w-6xl px-6 pb-40 pt-40 md:px-10 md:pt-44">
+        <header data-card className="mb-10">
+          <div className="flex items-baseline justify-between font-mono text-[11px] uppercase tracking-[0.3em] text-bone/40">
+            <span>01 / portfolio</span>
+            <span>作品 · sakuhin</span>
           </div>
-          <div className="flex w-full flex-col items-start gap-3 sm:w-auto sm:flex-row sm:items-center sm:gap-5">
-            <TLink
-              to="/stack"
-              className="group inline-flex shrink-0 items-center gap-1.5 font-mono text-xs font-medium uppercase tracking-[0.2em] text-paper-deep transition-colors hover:text-gold dark:text-paper"
-            >
-              <span className="link-draw">the stack</span>
-              <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-1" />
-            </TLink>
+          <div className="mt-4 flex flex-col gap-5 md:flex-row md:items-end md:justify-between">
+            <h1 className="font-display text-6xl font-black leading-none md:text-8xl">Portfolio</h1>
             <input
               type="search"
               value={q}
               onChange={(e) => setQ(e.target.value)}
               placeholder="search projects..."
               aria-label="Search projects"
-              className="w-full border-b border-charcoal/25 bg-transparent pb-1 font-mono text-xs font-medium tracking-wider outline-none transition-colors placeholder:text-charcoal/55 focus:border-gold dark:border-bone/25 dark:placeholder:text-bone/55 sm:max-w-xs"
+              className="w-full border-b border-bone/25 bg-transparent pb-1 font-mono text-xs tracking-wider outline-none transition-colors placeholder:text-bone/45 focus:border-gold sm:max-w-xs"
             />
           </div>
-        </div>
+        </header>
 
-        <div data-card>
-          <Rule className="mt-8" />
-        </div>
+        {!query && (
+          <div data-card>
+            <Carousel items={featured} />
+          </div>
+        )}
 
-        {shown.length === 0 && (
-          <p
-            data-card
-            className="mt-16 font-mono text-xs font-medium uppercase tracking-[0.25em] text-charcoal/65 dark:text-bone/65"
-          >
+        {query && shown.length === 0 && (
+          <p data-card className="mt-10 font-mono text-xs uppercase tracking-[0.25em] text-bone/60">
             no projects match [ {q} ]
           </p>
         )}
 
-        {/* featured carousel (only when not searching) */}
-        {!query && featured.length > 0 && <FeaturedCarousel items={featured} />}
-
         {GROUPS.map((g) => {
-          // featured projects also list in their own group; the carousel is a highlight, not a home
           const items = shown.filter((p) => p.group === g.key)
           if (!items.length) return null
           return (
-            <div key={g.key}>
-              <div data-card className="mb-8 mt-20 flex items-center gap-4">
+            <section key={g.key} className="mt-20">
+              <div data-card className="mb-6 flex items-center gap-4">
                 <span className="font-mono text-sm font-semibold uppercase tracking-[0.3em] text-gold">{g.label}</span>
-                <span className="font-display text-sm text-charcoal/30 dark:text-bone/30">{g.jp}</span>
-                <div className="h-px flex-1 bg-charcoal/10 dark:bg-bone/10" />
+                <span className="font-display text-sm text-bone/30">{g.jp}</span>
+                <div className="h-px flex-1 bg-bone/10" />
+                <span className="font-mono text-[11px] tabular-nums text-bone/30">{String(items.length).padStart(2, '0')}</span>
               </div>
-              <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-                {items.map((p) =>
-                  hasPage(p.slug) ? <PageCard key={p.slug} p={p} /> : <FlipCard key={p.slug} p={p} />,
-                )}
-                {g.key === 'now' && !query && <RedactedCard />}
+              <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                {items.map((p) => (
+                  <div data-card key={p.slug} className="h-full">
+                    <InfoCard p={p} />
+                  </div>
+                ))}
               </div>
-            </div>
+            </section>
           )
         })}
-      </section>
-    </>
+      </div>
+    </main>
   )
 }

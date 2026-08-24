@@ -21,6 +21,7 @@ export type Project = {
 export const projects: Project[] = [
   {
     slug: 'palpatine',
+    image: '/assets/portfolio/palpatine.webp',
     title: 'Palpatine',
     jp: '策',
     year: '2026',
@@ -40,6 +41,7 @@ export const projects: Project[] = [
   // ---- building now ----
   {
     slug: 'stoat',
+    image: '/assets/portfolio/stoat.webp',
     title: 'stoat',
     jp: '貂',
     year: '2026',
@@ -56,6 +58,7 @@ export const projects: Project[] = [
   },
   {
     slug: 'engrammic',
+    image: '/assets/portfolio/engrammic.webp',
     title: 'Engrammic',
     jp: '記',
     year: '2026',
@@ -76,6 +79,7 @@ export const projects: Project[] = [
   },
   {
     slug: 'veil',
+    image: '/assets/portfolio/veil.webp',
     title: 'Veil',
     jp: '帳',
     year: '2026',
@@ -112,6 +116,7 @@ export const projects: Project[] = [
   },
   {
     slug: 'ocloak',
+    image: '/assets/portfolio/ocloak.webp',
     title: 'ØCLOAK',
     jp: '隠',
     year: '2026',
@@ -128,6 +133,7 @@ export const projects: Project[] = [
   },
   {
     slug: 'money-mesh',
+    image: '/assets/portfolio/moneymesh.webp',
     title: 'money-mesh',
     jp: '網',
     year: '2026',

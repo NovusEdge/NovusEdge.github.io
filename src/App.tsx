@@ -14,6 +14,7 @@ import BlipsPage from './routes/blips/index'
 import NotFound from './routes/not-found'
 import { SiteFooter } from './components/site-footer'
 import { AccessibilityPanel } from './components/accessibility-panel'
+import ClickSpark from './components/react-bits/ClickSpark'
 
 export default function App() {
   const { pathname } = useLocation()
@@ -27,7 +28,7 @@ export default function App() {
   const key = pathname.startsWith('/stack') ? '/stack' : pathname
 
   return (
-    <>
+    <ClickSpark sparkColor="#d4a03c" sparkCount={12} sparkSize={12} sparkRadius={20} extraScale={1.2}>
       {/* landing is a self-contained dark cover with its own nav; header rides every other page */}
       {pathname !== '/' && <Header />}
       <GrainShader />
@@ -44,12 +45,12 @@ export default function App() {
           <Route path="/stack/editorial" element={<StackPage />} />
           <Route path="/stack/graph" element={<StackPage />} />
           <Route path="/blips" element={<BlipsPage />} />
-                    <Route path="*" element={<NotFound />} />
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </div>
       {/* universal footer; /stack carries its own colophon (editorial) or runs immersive (graph) */}
       {!pathname.startsWith('/stack') && <SiteFooter />}
       <AccessibilityPanel />
-    </>
+    </ClickSpark>
   )
 }
