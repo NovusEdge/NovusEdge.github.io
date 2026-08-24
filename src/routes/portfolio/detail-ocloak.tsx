@@ -124,6 +124,10 @@ export default function Ocloak({ p, c }: LayoutProps) {
   const [revealed, setRevealed] = useState(EYES_AT_START)
   const [scrambled, setScrambled] = useState(false)
   const [dispersed, setDispersed] = useState(false)
+  // the eyes portal to document.body, which does not exist during the Node
+  // prerender; gate it on a client mount so the build never touches it.
+  const [mounted, setMounted] = useState(false)
+  useEffect(() => setMounted(true), [])
   const eyesOn = !prefersReducedMotion()
 
   const scramble = () => {
@@ -173,7 +177,8 @@ export default function Ocloak({ p, c }: LayoutProps) {
   return (
     <main className="bg-charcoal text-bone" ref={scope}>
 
-      {eyesOn &&
+      {mounted &&
+        eyesOn &&
         !dispersed &&
         createPortal(
           <>
