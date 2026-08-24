@@ -6,6 +6,7 @@ import { TLink } from '../../components/page-transition'
 import { Github, Globe, Package, FileText, ArrowRight } from '../../components/icons'
 import { prefersReducedMotion } from '../../lib/motion'
 import { techRef } from '../../lib/tech-icons'
+import TrustCollapse from '../../components/ocloak/TrustCollapse'
 import type { LayoutProps } from './layouts'
 
 gsap.registerPlugin(ScrollTrigger)
@@ -46,8 +47,14 @@ const SLOTS: Slot[] = [
 
 function PopEye({ slot, scrambled }: { slot: Slot; scrambled: boolean }) {
   const ref = useRef<HTMLDivElement>(null)
+  const prev = useRef(scrambled)
   useEffect(() => {
     if (!ref.current) return
+    // an eye that first appears while already scrambled stays hidden
+    if (scrambled) {
+      gsap.set(ref.current, { opacity: 0 })
+      return
+    }
     const tw = gsap.fromTo(
       ref.current,
       { opacity: 0, scale: 0.55 },
@@ -57,18 +64,25 @@ function PopEye({ slot, scrambled }: { slot: Slot; scrambled: boolean }) {
       tw.kill()
     }
   }, [])
-  // scramble: the eye judders like corrupted signal, then breaks up
+  // scramble toggles both ways: judder and break up, or settle back in
   useEffect(() => {
-    if (!scrambled || !ref.current) return
-    const tl = gsap.timeline()
-    tl.to(ref.current, {
-      x: '+=6',
-      duration: 0.03,
-      repeat: 9,
-      yoyo: true,
-      ease: 'none',
-      modifiers: { x: (v) => `${(Math.sin(parseFloat(v) * 99) * 7).toFixed(2)}px` },
-    }).to(ref.current, { opacity: 0, scaleY: 0.04, filter: 'blur(3px)', duration: 0.22, ease: 'power2.in' }, '>-0.02')
+    if (!ref.current || scrambled === prev.current) return
+    prev.current = scrambled
+    if (scrambled) {
+      gsap
+        .timeline()
+        .to(ref.current, {
+          x: '+=6',
+          duration: 0.03,
+          repeat: 9,
+          yoyo: true,
+          ease: 'none',
+          modifiers: { x: (v) => `${(Math.sin(parseFloat(v) * 99) * 7).toFixed(2)}px` },
+        })
+        .to(ref.current, { opacity: 0, scaleY: 0.04, filter: 'blur(3px)', duration: 0.22, ease: 'power2.in' }, '>-0.02')
+    } else {
+      gsap.to(ref.current, { opacity: 1, scaleY: 1, x: 0, filter: 'blur(0px)', duration: 0.5, ease: 'power2.out' })
+    }
   }, [scrambled])
   // no clip: the shader already draws an eye, and its charcoal background blends
   // into the page, so a landscape box lets the real eye shape float free
@@ -123,18 +137,13 @@ export default function Ocloak({ p, c }: LayoutProps) {
   const scope = useRef<HTMLDivElement>(null)
   const [revealed, setRevealed] = useState(EYES_AT_START)
   const [scrambled, setScrambled] = useState(false)
-  const [dispersed, setDispersed] = useState(false)
+  const [scenario, setScenario] = useState('building')
+  const [muted, setMuted] = useState(false)
   // the eyes portal to document.body, which does not exist during the Node
   // prerender; gate it on a client mount so the build never touches it.
   const [mounted, setMounted] = useState(false)
   useEffect(() => setMounted(true), [])
   const eyesOn = !prefersReducedMotion()
-
-  const scramble = () => {
-    if (scrambled) return
-    setScrambled(true)
-    gsap.delayedCall(0.7, () => setDispersed(true))
-  }
 
   // reveal-on-scroll for body blocks
   useEffect(() => {
@@ -179,7 +188,6 @@ export default function Ocloak({ p, c }: LayoutProps) {
 
       {mounted &&
         eyesOn &&
-        !dispersed &&
         createPortal(
           <>
             {SLOTS.slice(0, revealed).map((slot, i) => (
@@ -281,29 +289,24 @@ export default function Ocloak({ p, c }: LayoutProps) {
         ))}
       </div>
 
-      <div className="relative z-10 mx-auto max-w-3xl px-6 pb-24">
-        {eyesOn && (
-          <div data-sec className="mt-24 overflow-hidden rounded-lg border border-gold/25 bg-gold/[0.04] px-8 py-12 text-center md:px-14 md:py-14">
-            <p className="mx-auto max-w-lg font-display text-2xl font-black leading-tight text-bone md:text-3xl">
-              {scrambled ? 'Now they just see noise.' : "By now you've been watched the whole way down."}
-            </p>
-            <p className="mx-auto mt-3 max-w-sm text-[15px] leading-relaxed text-bone/55">
-              {scrambled
-                ? 'The detections still happen. The data going out is garbage.'
-                : "ØCLOAK doesn't hide you. It floods the read with noise."}
-            </p>
-            <button
-              type="button"
-              onClick={scramble}
-              disabled={scrambled}
-              className="group mt-8 inline-flex items-center gap-2.5 rounded border border-gold bg-gold/10 px-6 py-3 font-mono text-[12px] uppercase tracking-[0.25em] text-gold transition-colors hover:bg-gold hover:text-charcoal disabled:cursor-default disabled:opacity-40"
-            >
-              {scrambled ? 'scrambled' : 'scramble the signal'}
-              {!scrambled && <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />}
-            </button>
-          </div>
-        )}
+      {/* interactive: the unprotected/scrambled toggle also disperses the eyes */}
+      <div data-sec className="relative z-10 mx-auto mt-20 max-w-4xl px-6">
+        <TrustCollapse
+          mode={scrambled ? 'scrambled' : 'passive'}
+          onMode={(m) => setScrambled(m === 'scrambled')}
+          scenario={scenario}
+          onScenario={setScenario}
+          muted={muted}
+          onMuted={setMuted}
+        />
+        <p className="mt-6 text-center text-[15px] leading-relaxed text-bone/55">
+          {scrambled
+            ? 'The detections still happen. The data leaving the room is garbage, and the eyes above lost the thread.'
+            : 'Flip it to scrambled. ØCLOAK does not hide you; it floods the read with noise.'}
+        </p>
+      </div>
 
+      <div className="relative z-10 mx-auto max-w-3xl px-6 pb-24">
         <footer data-sec className="mt-16 flex items-center justify-between border-t border-bone/10 pt-10">
           <span aria-hidden className="select-none font-display text-3xl text-bone/10">
             {p.jp}
