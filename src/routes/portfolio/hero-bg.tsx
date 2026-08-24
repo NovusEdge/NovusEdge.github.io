@@ -4,7 +4,7 @@ const PixelBlast = lazy(() => import('../../components/react-bits/bg/PixelBlast.
 
 // viewport-tall band; a mask fades the effect's alpha to transparent toward the
 // foot so the page shows through with no color seam or hard edge
-const MASK = 'linear-gradient(to bottom, #000 0%, #000 30%, rgba(0,0,0,0.5) 62%, transparent 92%)'
+const MASK = 'linear-gradient(to bottom, #000 0%, #000 48%, rgba(0,0,0,0.65) 76%, transparent 100%)'
 const bandStyle = { WebkitMaskImage: MASK, maskImage: MASK } as const
 const BAND = 'pointer-events-none absolute inset-x-0 top-0 z-0 hidden h-[min(96vh,1040px)] overflow-hidden md:block'
 

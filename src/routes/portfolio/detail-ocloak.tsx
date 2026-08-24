@@ -236,7 +236,13 @@ export default function Ocloak({ p, c }: LayoutProps) {
               <ArrowRight className="h-4 w-4 rotate-180 transition-transform group-hover:-translate-x-0.5" />
             </TLink>
 
-            <h1 className="mt-10 flex items-baseline gap-4 font-display text-6xl font-black md:text-8xl">
+            <div className="mt-10">
+              <span className="inline-flex items-center gap-2 rounded-full border border-gold/40 bg-gold/10 px-3 py-1 font-mono text-[10px] uppercase tracking-[0.25em] text-gold">
+                <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-gold" />
+                wip
+              </span>
+            </div>
+            <h1 className="mt-4 flex items-baseline gap-4 font-display text-6xl font-black md:text-8xl">
               <span style={{ color: GOLD }}>ØCLOAK</span>
               {p.jp && <span className="font-display text-3xl font-normal text-bone/20">{p.jp}</span>}
             </h1>
@@ -282,9 +288,8 @@ export default function Ocloak({ p, c }: LayoutProps) {
       {/* the writeup */}
       <div className="relative z-10 mx-auto max-w-3xl px-6 pt-20">
         {c.sections.map((s) => (
-          <section key={s.id} id={s.id} data-sec className="scroll-mt-32 [&+&]:mt-20">
-            <h2 className="font-display text-3xl font-black leading-tight text-bone md:text-4xl">{s.title}</h2>
-            <div className={`mt-8 ${PROSE}`}>{s.body}</div>
+          <section key={s.id} id={s.id} data-sec className="scroll-mt-32 [&+&]:mt-6">
+            <div className={PROSE}>{s.body}</div>
           </section>
         ))}
       </div>
