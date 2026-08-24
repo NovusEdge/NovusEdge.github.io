@@ -41,7 +41,7 @@ export const ocloak: ProjectContent = {
           <p>
             ØCLOAK Guard is a single device on an <code>ESP32-C3</code>. BLE mode watches for AirTag, SmartTag, and Tile beacons,
             including the off-brand clones that skip anti-stalking rotation. WiFi mode watches for the <code>NDP</code> and{' '}
-            <code>NDPA</code> sounding frames that start an 802.11bf session—control-plane traffic with no payload encryption
+            <code>NDPA</code> sounding frames that start an 802.11bf session. Control-plane traffic, no payload encryption
             to hide behind.
           </p>
           <p>
@@ -70,7 +70,7 @@ export const ocloak: ProjectContent = {
             Hardware detections outweigh manual ones until other users confirm them.
           </p>
           <p>
-            The first version is centralized—one API, one map. Decentralization is its own infrastructure project and
+            The first version is centralized: one API, one map. Decentralization is its own infrastructure project and
             waits until the traffic justifies community-run nodes.
           </p>
         </>
@@ -94,7 +94,7 @@ export const ocloak: ProjectContent = {
           />
           <p>
             NLnet's NGI Zero is the first target: low paperwork, EU-based, small enough to apply without counsel.
-            Hardware launches go through Crowd Supply—58% success rate and a 100% delivery record on funded campaigns.
+            Hardware launches go through Crowd Supply, which has a 58% success rate and a 100% delivery record on funded campaigns.
           </p>
         </>
       ),
@@ -106,7 +106,7 @@ export const ocloak: ProjectContent = {
         <>
           <p>
             The underlying skill is RF detection: channel-state analysis, SDR spectrum work, emitter fingerprinting,
-            sensor fusion. Consumer privacy hardware is one application. Counter-drone detection is another—a drone
+            sensor fusion. Consumer privacy hardware is one application. Counter-drone detection is another; a drone
             is just an RF emitter with a control link and video downlink, and the detection work is the same.
           </p>
           <p>
@@ -120,7 +120,7 @@ export const ocloak: ProjectContent = {
             flywheel.
           </p>
           <p>
-            If you work in this space—defense or privacy—I'd like to hear how you'd draw the line.
+            If you work in this space, defense or privacy, I'd like to hear how you'd draw the line.
           </p>
         </>
       ),
