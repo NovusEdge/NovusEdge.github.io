@@ -81,7 +81,7 @@ export function SiteFooter({ word = 'Creation' }: { word?: string }) {
   return (
     <footer
       ref={ref}
-      className="relative flex min-h-[70vh] flex-col items-center justify-center overflow-hidden bg-charcoal text-bone"
+      className="site-footer relative flex min-h-[70vh] flex-col items-center justify-center overflow-hidden bg-charcoal text-bone"
     >
       {/* hands: stacked vertically on mobile, side-by-side on md+ */}
       <div className="relative z-10 flex h-auto w-full flex-col items-center gap-4 px-6 py-8 md:h-[28vw] md:flex-row md:gap-0 md:p-0">
@@ -114,7 +114,7 @@ export function SiteFooter({ word = 'Creation' }: { word?: string }) {
       {/* giant cut-off italic word */}
       <span
         aria-hidden
-        className="pointer-events-none absolute inset-x-0 -bottom-[5vw] select-none whitespace-nowrap text-center font-display text-[17vw] font-black italic leading-none tracking-[0.06em] text-bone/[0.07]"
+        className="footer-word pointer-events-none absolute inset-x-0 -bottom-[5vw] select-none whitespace-nowrap text-center font-display text-[17vw] font-black italic leading-none tracking-[0.06em] text-bone/[0.07]"
       >
         {word}
       </span>

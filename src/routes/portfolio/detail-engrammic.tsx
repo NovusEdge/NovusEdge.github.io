@@ -91,6 +91,12 @@ function LogoBadge({ name }: { name: string }) {
 export default function Engrammic({ p }: LayoutProps) {
   const scope = useRef<HTMLElement>(null)
 
+  // paint the shared site footer in this page's cream ground while it is mounted
+  useEffect(() => {
+    document.documentElement.classList.add('eg-sepia')
+    return () => document.documentElement.classList.remove('eg-sepia')
+  }, [])
+
   useEffect(() => {
     if (prefersReducedMotion() || !scope.current) return
     const ctx = gsap.context(() => {

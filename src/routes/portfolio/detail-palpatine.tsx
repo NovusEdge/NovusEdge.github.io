@@ -56,6 +56,12 @@ export default function Palpatine({ p, c }: LayoutProps) {
   const crawl = useRef<HTMLDivElement>(null)
   const intro = useRef<HTMLParagraphElement>(null)
 
+  // paint the shared site footer in this page's space black while it is mounted
+  useEffect(() => {
+    document.documentElement.classList.add('pal-space')
+    return () => document.documentElement.classList.remove('pal-space')
+  }, [])
+
   useEffect(() => {
     if (prefersReducedMotion() || !scope.current) return
     const ctx = gsap.context(() => {
