@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState, type ReactNode } from 'react'
 import gsap from 'gsap'
 import { prefersReducedMotion } from '../../lib/motion'
 
@@ -300,50 +300,239 @@ export function AimdTrack() {
   )
 }
 
-type Stage = { n: string; guard: string; what: string }
-const STAGES: Stage[] = [
-  { n: '1', guard: 'age > 2h and read once', what: 'hard evict' },
-  { n: '2', guard: 'over budget or context above 70%', what: 'soft evict, drain to 60%' },
-  { n: '3', guard: 'still over budget', what: 'force evict lowest rank' },
+/* One mark per step of the cascade, drawn on a 24 grid so they sit together.
+   Filled square = in the prompt, ruled box = on disk, dashed = behind a
+   pointer; the three gates are the marks that remove something. */
+const MARKS: Record<string, ReactNode> = {
+  hot: (
+    <>
+      <rect x="3" y="4" width="18" height="16" rx="1" />
+      <path d="M6.5 9h11M6.5 12.5h11M6.5 16h6" />
+    </>
+  ),
+  s1: (
+    <>
+      <path d="M4 7h16" />
+      <path d="M9 7V4.5h6V7" />
+      <path d="M6.5 7l1 12.5h9L17.5 7" />
+    </>
+  ),
+  s2: (
+    <>
+      <path d="M12 3.5c3.6 4.4 5.4 7.4 5.4 9.6a5.4 5.4 0 0 1-10.8 0c0-2.2 1.8-5.2 5.4-9.6z" />
+      <path d="M9.4 13.6a2.6 2.6 0 0 0 2.6 2.6" />
+    </>
+  ),
+  s3: (
+    <>
+      <path d="M4 12h16" />
+      <path d="M8 8l4-4 4 4" />
+      <path d="M8 16l4 4 4-4" />
+    </>
+  ),
+  warm: (
+    <>
+      <ellipse cx="12" cy="6.5" rx="7.5" ry="3" />
+      <path d="M4.5 6.5v11c0 1.7 3.4 3 7.5 3s7.5-1.3 7.5-3v-11" />
+      <path d="M4.5 12c0 1.7 3.4 3 7.5 3s7.5-1.3 7.5-3" />
+    </>
+  ),
+  cold: (
+    <>
+      <path d="M3.5 7.5h17v12h-17z" strokeDasharray="3 2.5" />
+      <path d="M3.5 7.5l2-3.5h13l2 3.5" />
+      <path d="M9.5 12h5" />
+    </>
+  ),
+}
+
+function Mark({ k, className = 'h-[18px] w-[18px]' }: { k: string; className?: string }) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      aria-hidden
+      className={className}
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={1.4}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      {MARKS[k]}
+    </svg>
+  )
+}
+
+/* The path out of the hot window, as tabs. Each step names the predicate that
+   actually guards it in manager.ts; the strip stays visible so the order is
+   readable while one step is open. */
+type Step = {
+  key: string
+  label: string
+  stage?: string
+  when: string
+  what: string
+  ref: string
+}
+
+const FLOW: Step[] = [
+  {
+    key: 'hot',
+    label: 'hot',
+    when: 'loaded map, in the prompt',
+    what: 'What the model can see this turn. A manifest of it is appended to the system prompt at the start of every agent run, so the model knows what it is holding.',
+    ref: 'manager.ts',
+  },
+  {
+    key: 's1',
+    stage: '1',
+    label: 'hard evict',
+    when: 'age > 2h && accessCount === 1',
+    what: 'Anything captured two hours ago and read exactly once leaves first, whatever the budget looks like. This stage runs before any pressure check.',
+    ref: 'manager.ts:314',
+  },
+  {
+    key: 's2',
+    stage: '2',
+    label: 'soft evict',
+    when: 'usedTokens > available * threshold || usage > 0.7',
+    what: 'Under pressure it drains to 60% of budget, otherwise to the threshold minus 0.1. Pinned items, intent, and anything inside its recall cooldown are skipped.',
+    ref: 'manager.ts:342',
+  },
+  {
+    key: 's3',
+    stage: '3',
+    label: 'force evict',
+    when: 'still over budget',
+    what: 'Lowest-ranked items go until the window fits. The rank is the same weighted score used everywhere else, so nothing here needs a second policy.',
+    ref: 'manager.ts:370',
+  },
+  {
+    key: 'warm',
+    label: 'warm',
+    when: '.veil/context.db, 1000 items',
+    what: 'SQLite on disk beside the project. Still local and still searchable, just not spending tokens. Retrieval at the start of a turn packs from here.',
+    ref: 'types.ts:234',
+  },
+  {
+    key: 'cold',
+    label: 'cold',
+    when: 'demote() returns a kgPointer',
+    what: 'A pluggable store behind a circuit breaker: three failures and the agent degrades to warm-only instead of stalling. Fetching back out counts as a miss and raises the eviction threshold by 0.05.',
+    ref: 'cold/interface.ts',
+  },
 ]
 
-/* Three gates on the way out of the hot window, an immortal lane around them,
-   and the return path that tells the controller it evicted too eagerly. */
 export function Cascade() {
+  const [open, setOpen] = useState('hot')
+  const step = FLOW.find((s) => s.key === open) ?? FLOW[0]
   return (
     <figure className="not-prose border border-bone/12">
       <figcaption className="flex flex-wrap items-center justify-between gap-3 border-b border-bone/12 px-5 py-3 font-mono text-[11px] uppercase tracking-[0.22em] text-bone/45">
-        <span>eviction cascade · hot → warm → cold</span>
+        <span>eviction cascade</span>
         <span className="text-bone/30">manager.ts</span>
       </figcaption>
 
-      <div className="grid gap-px bg-bone/[0.08] md:grid-cols-3">
-        {STAGES.map((s) => (
-          <div key={s.n} className="bg-charcoal px-5 py-5">
-            <div className="flex items-baseline gap-3">
-              <span className="font-display text-2xl font-black text-gold">{s.n}</span>
-              <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-bone/50">{s.what}</span>
-            </div>
-            <p className="mt-3 font-mono text-[12.5px] leading-relaxed text-bone/65">{s.guard}</p>
-          </div>
+      <div className="flex flex-wrap items-center gap-x-1 gap-y-2 border-b border-bone/12 px-5 py-4">
+        {FLOW.map((s, i) => (
+          <span key={s.key} className="flex items-center gap-1">
+            {i > 0 && (
+              <span aria-hidden className="px-1 font-mono text-[13px] text-bone/25">
+                &rarr;
+              </span>
+            )}
+            <button
+              type="button"
+              onClick={() => setOpen(s.key)}
+              aria-pressed={s.key === open}
+              className={`flex items-center gap-2 border px-3 py-1.5 font-mono text-[12.5px] transition-colors ${
+                s.key === open
+                  ? 'border-gold bg-gold/10 text-gold'
+                  : 'border-bone/15 text-bone/55 hover:border-bone/40 hover:text-bone'
+              }`}
+            >
+              <Mark k={s.key} />
+              {s.stage && <span className="text-[11px] opacity-70">{s.stage}</span>}
+              {s.label}
+            </button>
+          </span>
         ))}
       </div>
 
-      <div className="border-t border-bone/12 px-5 py-5">
-        <div className="flex flex-wrap items-center gap-x-3 gap-y-2 font-mono text-[12px] text-bone/60">
-          <span className="border border-bone/25 px-2.5 py-1 text-bone/85">hot · in the prompt</span>
-          <span className="text-bone/35">unload →</span>
-          <span className="border border-bone/25 px-2.5 py-1 text-bone/85">warm · .veil/context.db</span>
-          <span className="text-bone/35">demote →</span>
-          <span className="border border-bone/25 px-2.5 py-1 text-bone/85">cold · graph, returns a pointer</span>
-        </div>
-        <p className="mt-4 text-[14px] leading-relaxed text-bone/60">
-          Nothing gets deleted on the way down. A fetch back out of cold counts as a miss and pushes the threshold up,
-          so the run that evicts too eagerly corrects itself. Pinned items and anything typed{' '}
-          <code className="rounded bg-bone/10 px-1.5 py-0.5 font-mono text-[0.85em] text-bone">intent</code> skip all
-          three stages.
+      <div className="relative px-5 py-6">
+        <Mark k={step.key} className="pointer-events-none absolute right-5 top-5 h-16 w-16 text-bone/[0.07]" />
+        <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-bone/40">
+          {step.stage ? `stage ${step.stage} · guard` : 'tier'}
+        </p>
+        {/* ligatures turn === into a single glyph; the predicate must read as code */}
+        <p className="mt-2 font-mono text-[14px] text-gold [font-variant-ligatures:none]">{step.when}</p>
+        <p className="mt-4 max-w-[62ch] text-[15px] leading-relaxed text-bone/70">{step.what}</p>
+        <p className="mt-4 font-mono text-[11px] text-bone/30">{step.ref}</p>
+      </div>
+
+      <div className="space-y-2 border-t border-bone/12 px-5 py-4">
+        <p className="border-l-2 border-dashed border-bone/25 pl-3 font-mono text-[11.5px] leading-snug text-bone/45">
+          pinned items, and anything typed intent, skip all three stages
+        </p>
+        <p className="border-l-2 border-gold/60 pl-3 font-mono text-[11.5px] leading-snug text-gold/90">
+          cold &rarr; hot raises the threshold 0.05, so a run that evicted too eagerly tightens itself
         </p>
       </div>
+    </figure>
+  )
+}
+
+/* A drawn session view, not a capture: it stands in for the TUI until real
+   screenshots land, so the numbers are shaped like a session rather than taken
+   from one. The caption says so. */
+const TRANSCRIPT: [string, string, boolean][] = [
+  ['✓', 'read  src/server.ts', false],
+  ['✓', 'grep  "tenantResolver"', false],
+  ['⌁', 'read  src/auth/middleware.ts', true],
+  ['⌁', 'read  migrations/0004_tenants.sql', true],
+  ['✓', 'edit  src/server.ts', false],
+]
+
+export function SessionFrame() {
+  return (
+    <figure className="not-prose border border-bone/12">
+      <div className="flex items-center justify-between gap-4 border-b border-bone/12 bg-bone/[0.03] px-4 py-2.5 font-mono text-[11.5px] text-bone/50">
+        <span className="flex items-center gap-2">
+          <span className="h-2 w-2 rounded-full bg-gold/70" />
+          veil · ~/projects/api
+        </span>
+        <span>ctx 41% · threshold 0.70</span>
+      </div>
+      <div className="overflow-x-auto px-4 py-5 font-mono text-[12.5px] leading-[1.9]">
+        <p className="text-bone/70">
+          <span className="text-gold">&gt;</span> /context
+        </p>
+        <div className="mt-3 min-w-[26rem] text-bone/60">
+          <p>
+            <span className="inline-block w-24 text-bone/40">hot</span>18 items · 12,480 tok
+          </p>
+          <p>
+            <span className="inline-block w-24 text-bone/40">warm</span>143 items · .veil/context.db
+          </p>
+          <p>
+            <span className="inline-block w-24 text-bone/40">cold</span>behind pointers
+          </p>
+          <p>
+            <span className="inline-block w-24 text-bone/40">last evict</span>2 turns ago · 3 items
+          </p>
+        </div>
+        <div className="mt-5 min-w-[26rem] space-y-0.5">
+          {TRANSCRIPT.map(([glyph, line, dim]) => (
+            <p key={line} className={dim ? 'text-bone/25' : 'text-bone/65'}>
+              <span className={`mr-3 ${dim ? 'text-bone/25' : 'text-gold/70'}`}>{glyph}</span>
+              {line}
+            </p>
+          ))}
+        </div>
+      </div>
+      <figcaption className="border-t border-bone/12 px-4 py-3 font-mono text-[11px] uppercase tracking-[0.18em] text-bone/35">
+        the two dimmed calls lost their context · drawing, not a capture
+      </figcaption>
     </figure>
   )
 }
@@ -373,46 +562,3 @@ export function Wiring() {
   )
 }
 
-// CatWidget moods, from the status bar the TUI actually renders
-const MOODS: [string, string, string][] = [
-  ['z', 'sleeping', 'nothing to do'],
-  ['.', 'watching', 'reading the turn'],
-  ['~', 'remembering', 'writing an event'],
-  ['+', 'learned', 'a new belief landed'],
-  ['*', 'recalled', 'something came back'],
-  ['!', 'conflict', 'two beliefs disagree'],
-]
-
-export function Cat() {
-  const [i, setI] = useState(0)
-  const [glyph, name, note] = MOODS[i]
-  return (
-    <div className="not-prose border border-bone/12">
-      <div className="border-b border-bone/12 px-5 py-3 font-mono text-[11px] uppercase tracking-[0.22em] text-bone/45">
-        status bar · one character of state
-      </div>
-      <div className="flex flex-wrap items-center gap-6 px-5 py-6">
-        <span className="w-14 text-center font-mono text-4xl text-gold">{glyph}</span>
-        <div className="min-w-[10rem]">
-          <p className="font-mono text-[13px] uppercase tracking-[0.16em] text-bone/80">{name}</p>
-          <p className="mt-1 text-[14px] text-bone/55">{note}</p>
-        </div>
-        <div className="ml-auto flex flex-wrap gap-1.5">
-          {MOODS.map(([g], n) => (
-            <button
-              key={g}
-              type="button"
-              onClick={() => setI(n)}
-              aria-label={MOODS[n][1]}
-              className={`h-8 w-8 border font-mono text-[13px] transition-colors ${
-                n === i ? 'border-gold text-gold' : 'border-bone/15 text-bone/45 hover:border-bone/40 hover:text-bone'
-              }`}
-            >
-              {g}
-            </button>
-          ))}
-        </div>
-      </div>
-    </div>
-  )
-}

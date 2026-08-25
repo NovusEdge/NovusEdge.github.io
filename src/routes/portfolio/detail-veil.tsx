@@ -4,7 +4,7 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { TLink } from '../../components/page-transition'
 import { Github, Package, Globe, ArrowRight } from '../../components/icons'
 import { prefersReducedMotion } from '../../lib/motion'
-import { AimdTrack, Cascade, Cat, ForgettingCurves, Wiring } from '../../components/veil/diagrams'
+import { AimdTrack, Cascade, ForgettingCurves, SessionFrame, Wiring } from '../../components/veil/diagrams'
 import type { LayoutProps } from './layouts'
 
 gsap.registerPlugin(ScrollTrigger)
@@ -302,21 +302,6 @@ function Ledger() {
   )
 }
 
-/* The page's closing line strikes out the thing it says stops happening. */
-function Verdict() {
-  return (
-    <div className="not-prose border-l-2 border-gold py-1 pl-6">
-      <p className="font-display text-xl font-medium leading-snug text-bone sm:text-2xl">
-        With the failure record in place, an agent stops{' '}
-        <span className="text-bone/40 line-through decoration-gold/60 decoration-2">
-          retrying a fix that already failed
-        </span>
-        .
-      </p>
-    </div>
-  )
-}
-
 // Real escalation levels and thresholds from the convergence monitor.
 const ESCALATION: [string, string, string][] = [
   ['level 1', '3× repeat', 'the same error pattern three times; a warning goes into the context'],
@@ -340,26 +325,22 @@ const TOOLS: [string, string][] = [
   ['veil_resolve_conflict', 'pick which belief wins; the loser gets retracted'],
 ]
 
-function ToolChips() {
-  const [open, setOpen] = useState(0)
+function ToolTable() {
   return (
-    <div className="not-prose my-8">
-      <ul className="flex flex-wrap gap-2">
-        {TOOLS.map(([name], i) => (
-          <li key={name}>
-            <button
-              type="button"
-              onClick={() => setOpen(i)}
-              className={`rounded px-2 py-1 font-mono text-[12.5px] transition-colors ${
-                i === open ? 'bg-gold text-charcoal' : 'bg-bone/10 text-bone/75 hover:bg-bone/20 hover:text-bone'
-              }`}
-            >
-              {TOOLS[i][0]}
-            </button>
-          </li>
-        ))}
-      </ul>
-      <p className="mt-4 border-l-2 border-gold/50 pl-4 text-[15px] leading-relaxed text-bone/65">{TOOLS[open][1]}</p>
+    <div className="not-prose my-8 overflow-x-auto border border-bone/12">
+      <div className="border-b border-bone/12 px-5 py-3 font-mono text-[11px] uppercase tracking-[0.22em] text-bone/45">
+        tools.ts · exposed to the model
+      </div>
+      <table className="w-full min-w-[32rem]">
+        <tbody className="divide-y divide-bone/[0.08]">
+          {TOOLS.map(([name, what]) => (
+            <tr key={name}>
+              <td className="whitespace-nowrap px-5 py-3 align-top font-mono text-[12.5px] text-gold">{name}</td>
+              <td className="px-5 py-3 text-[14.5px] leading-snug text-bone/65">{what}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </div>
   )
 }
@@ -380,11 +361,11 @@ const STORE: [string, string, string][] = [
   ['memory_fts', 'fts5 mirror', 'kept in sync by insert and delete triggers'],
 ]
 
-const STATS: [string, string][] = [
-  ['30k', 'lines in the context engine'],
-  ['358', 'test files'],
-  ['12', 'tools the model can call'],
-  ['0', 'model calls in the memory path'],
+const STATS: [string, string, string][] = [
+  ['package', '@engrammic/veil', 'v0.2.0, MIT, node ≥ 22.19, nine workspaces'],
+  ['context engine', '30,476 loc', 'typescript; the scorer, the tiers, the monitors'],
+  ['tests', '358 files', '55 of them cover the context engine alone'],
+  ['upstream', 'pi-mono', 'four workspaces keep their upstream names for merges'],
 ]
 
 const SECTIONS: { id: string; title: string; body: ReactNode }[] = [
@@ -416,13 +397,16 @@ const SECTIONS: { id: string; title: string; body: ReactNode }[] = [
     title: 'install',
     body: (
       <>
-        <p>It ships as a global npm package and takes over the session you run it in.</p>
+        <p>
+          The published package is <code>@engrammic/veil</code>. It installs globally and replaces the agent binary
+          inside a project directory.
+        </p>
         <Code>{`npm install -g @engrammic/veil
 cd your-project
 veil`}</Code>
         <p>
-          It runs local-first on <code>sqlite-vec</code> embeddings, with the embedder in-process and Ollama as a
-          fallback. Nothing about the codebase leaves the machine, and it works with the network off.
+          Embeddings run through <code>sqlite-vec</code>, with the embedder in-process and Ollama as a fallback, so
+          the store works with the network off.
         </p>
       </>
     ),
@@ -450,11 +434,8 @@ const config: AgentLoopConfig = {
   ...baseConfig,
   ...harness.getHooks(),
 }`}</Code>
-        <p>
-          The model gets twelve tools of its own, so recall and forgetting are things it can ask for rather than
-          things that only happen to it.
-        </p>
-        <ToolChips />
+        <p>The model can also call the memory layer directly. Twelve tools are registered for it.</p>
+        <ToolTable />
       </>
     ),
   },
@@ -472,10 +453,9 @@ const config: AgentLoopConfig = {
           <ForgettingCurves />
         </div>
         <p>
-          Recall pushes stability up, and the push is largest for an item recalled when its retrievability had
-          already fallen. A memory the agent nearly lost but still needed gets promoted hardest. The same curve runs
-          twice with different horizons: stability caps at seven days in the live context window and at a year in the
-          durable store.
+          Recall raises stability, and the increment grows as retrievability falls, so an item recalled late gains
+          more than one recalled constantly. The same curve runs twice at different horizons: stability caps at seven
+          days in the live context window and at a year in the durable store.
         </p>
       </>
     ),
@@ -498,9 +478,7 @@ const config: AgentLoopConfig = {
           graph. Cognitive weight tracks whether the item was in context when things went well or badly. Procedural
           items then get a 1.2 multiplier, anything you loaded by hand gets 1.5, and pinned items take a flat boost.
         </p>
-        <p>
-          The score comes out the same twice in a row given the same inputs, which a model call cannot promise.
-        </p>
+        <p>The same inputs produce the same score on every turn.</p>
       </>
     ),
   },
@@ -539,10 +517,7 @@ const config: AgentLoopConfig = {
         <div className="my-12">
           <Spec title="turn weights · higher goes first" rows={TURN_TYPES} />
         </div>
-        <p>
-          Corrections and intent sit at zero. The codebase treats being told it was wrong as something you never say
-          twice.
-        </p>
+        <p>Corrections and intent carry a weight of zero, so they never become eviction candidates.</p>
       </>
     ),
   },
@@ -565,9 +540,6 @@ const config: AgentLoopConfig = {
         </p>
         <div className="my-12">
           <Spec title="convergence monitor" rows={ESCALATION} />
-        </div>
-        <div className="my-12">
-          <Verdict />
         </div>
       </>
     ),
@@ -594,21 +566,17 @@ const config: AgentLoopConfig = {
     ),
   },
   {
-    id: 'the-cat',
-    title: 'and there is a cat',
+    id: 'visible-forgetting',
+    title: 'forgetting is visible',
     body: (
       <>
         <p>
-          The status bar carries one character of memory state. It is the smallest possible UI for a system whose
-          whole job is invisible, and it is the part people notice first.
+          Eviction is not silent in the interface. When context leaves the window, the tool calls it came from are
+          dimmed in the transcript, so the record of what the agent no longer knows stays on screen.
         </p>
         <div className="my-12">
-          <Cat />
+          <SessionFrame />
         </div>
-        <p>
-          Evicted context does not vanish silently either. The tool calls it came from go dim in the transcript, so
-          you watch the agent forget instead of finding out later.
-        </p>
       </>
     ),
   },
@@ -617,20 +585,9 @@ const config: AgentLoopConfig = {
     title: 'what it is made of',
     body: (
       <>
-        <p>What that adds up to, at the version currently published:</p>
-        <dl className="not-prose my-8 grid grid-cols-2 gap-px bg-bone/[0.08] sm:grid-cols-4">
-          {STATS.map(([v, k]) => (
-            <div key={k} className="bg-charcoal px-4 py-5">
-              <dd className="font-display text-3xl font-black tabular-nums leading-none text-bone">{v}</dd>
-              <dt className="mt-2.5 font-mono text-[11px] uppercase leading-snug tracking-[0.16em] text-bone/55">
-                {k}
-              </dt>
-            </div>
-          ))}
-        </dl>
-        <p className="font-mono text-[12px] uppercase tracking-[0.18em] text-bone/40">
-          v0.2.0 · mit · node ≥ 22.19 · typescript · sqlite-vec · forked from pi-mono
-        </p>
+        <div className="my-8">
+          <Spec title="repository" rows={STATS} />
+        </div>
       </>
     ),
   },
