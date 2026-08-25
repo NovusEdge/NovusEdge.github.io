@@ -1,5 +1,5 @@
 import type { ProjectContent } from './types'
-import { Figures, Pull, Term } from '../kit'
+import { Figures, Term } from '../kit'
 
 export const veil: ProjectContent = {
   lede: 'Every coding agent session starts blank: the codebase gets rediscovered, the fix that failed yesterday gets retried, and compaction throws out whatever the summarizer guessed was unimportant. Veil is an installable memory layer that keeps an LLM out of the memory path entirely, running on FSRS decay, AIMD eviction, and a record of every approach that already failed.',
@@ -74,11 +74,8 @@ veil`}</Term>
         <>
           <p>
             The retrievability threshold that decides what is low enough to evict changes as the session runs. It
-            borrows the AIMD shape from TCP congestion control. Three evictions inside sixty seconds count as
-            thrashing, and the threshold backs off, keeping more in context until things settle. Five idle minutes
-            with no eviction let it creep back up. If an evicted item gets asked for again, that counts as a miss,
-            and the threshold rises right away without waiting out the idle window. Nobody sets an eviction budget
-            by hand; the threshold finds its own level from how the session is going.
+            borrows the AIMD shape from TCP congestion control. Nobody sets an eviction budget by hand; the
+            threshold finds its own level from how the session is going.
           </p>
         </>
       ),
@@ -90,11 +87,7 @@ veil`}</Term>
         <>
           <p>
             Deciding what a piece of context is worth does not call the LLM. Every item gets a weighted score from
-            five metadata signals: FSRS retrievability for recency, a log-scaled access count for frequency, tag
-            overlap with the current task, whether the item has a pointer into the structural graph, and a cognitive
-            weight that tracks whether the item was present during past successes or failures. The weights are
-            fixed: 0.30 for relevance, 0.25 for recency, 0.15 each for frequency, structure, and cognitive weight.
-            The whole score runs as arithmetic.
+            five metadata signals, and the weights are fixed. The whole score runs as arithmetic.
           </p>
           <p>
             That keeps scoring under ten milliseconds on every turn. An eviction pass never becomes the thing the
@@ -110,17 +103,13 @@ veil`}</Term>
       body: (
         <>
           <p>
-            Veil keeps a record of every attempt against a goal: what the agent did, the target, the outcome (pass,
-            fail, partial, or uncertain), and a normalized fingerprint of the error. That fingerprint lets the same
-            failure get recognized as the same failure even when the message text drifts. A convergence monitor
-            watches the record. Five consecutive failures on the same goal, or ten turns with no measurable
-            progress, and it escalates: a warning first, then a callback the harness can act on, then a hard stop if
-            the agent keeps repeating an approach that already failed three times.
+            Veil keeps a record of every attempt against a goal: what the agent did, the target, the outcome, and a
+            normalized fingerprint of the error. That fingerprint lets the same failure get recognized as the same
+            failure even when the message text drifts.
           </p>
           <p>
             Veil packages the same memory engine as an installable CLI; Engrammic runs it as infrastructure.
           </p>
-          <Pull>With the failure record in place, an agent stops retrying a fix that already failed.</Pull>
         </>
       ),
     },
