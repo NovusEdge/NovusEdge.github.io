@@ -144,7 +144,7 @@ export default function MoneyMesh({ p, c }: LayoutProps) {
                     className="border-2 border-[#2a6b46] px-3 py-1.5 font-mono text-[11px] uppercase tracking-[0.24em] text-[#2a6b46]"
                     style={{ transform: 'rotate(-3deg)' }}
                   >
-                    stage three · first earning loop
+                    in arithmetic we trust
                   </span>
                 </div>
               </div>
