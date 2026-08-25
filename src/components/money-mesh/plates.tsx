@@ -50,9 +50,8 @@ export function Spread() {
       ref_="north-star · method space"
       foot={
         <>
-          The bandit is the filter. No arm is blessed in advance, and the one that survives is the one real receipts
-          keep alive. Today the sheet holds a single issued note and no receipts, so nothing has been selected for
-          yet.
+          No arm is blessed in advance. The one that survives is the one receipts keep alive. Today the sheet has one
+          issued note and no receipts, so nothing has been selected for yet.
         </>
       }
     >
@@ -105,13 +104,13 @@ export function Spread() {
 
 // the fixed pipeline a tick runs before any tool is reachable
 const TICK = [
-  ['settle_due', 'collect what the receipts say landed'],
-  ['redecide_closed', 'keep or kill the arms that closed'],
-  ['prune', 'drop what is not worth carrying'],
-  ['launch_new', 'open an experiment, idempotency keyed to the launch'],
-  ['execute', 'generate code and run it in the jail'],
-  ['publish', 'put the thing somewhere a person could find it'],
-  ['heartbeat', 'write the file the kill switch watches'],
+  ['settle_due', 'take in what actually landed'],
+  ['redecide_closed', 'keep the winners, kill the rest'],
+  ['prune', 'drop the dead weight'],
+  ['launch_new', 'open a new bet, keyed so it cannot double-fire'],
+  ['execute', 'write the code, run it in the jail'],
+  ['publish', 'put the product where a buyer can find it'],
+  ['heartbeat', 'tell the kill switch it is still alive'],
 ]
 
 export function Tick() {
@@ -121,8 +120,8 @@ export function Tick() {
       ref_="node/loop/agent.py · turn.py"
       foot={
         <>
-          Settlement runs in Python before the agent gets a turn, and no tool reaches it. A model that can see its own
-          scoring function games it, so the scoring happens where the model is not.
+          Settlement runs before the agent gets a turn, and no tool reaches it. A model that can see its own scoring
+          function games it.
         </>
       }
     >
@@ -140,9 +139,9 @@ export function Tick() {
 }
 
 const PROCS: [string, string, string][] = [
-  ['supervisor.py', 'the kill switch', 'spawns the node in its own process group and kills the group, so nothing survives the stop'],
-  ['node', 'the agent loop', 'holds the ledger read-only, so a stray write fails in sqlite rather than at a policy check'],
-  ['gateway', 'the enforcement point', 'owns the ledger, the policy engine, the harm judge and the vault; the node reaches it over a socket'],
+  ['supervisor.py', 'the plug', 'owns the node and kills the whole process group. Nothing walks away from the stop.'],
+  ['node', 'the earner', 'picks the method, writes the code, spends the money. Reads the books, never writes them.'],
+  ['gateway', 'the bank', 'holds the ledger, the policy engine, the judge and the keys. The node knocks on a socket.'],
 ]
 
 export function Processes() {
@@ -150,7 +149,7 @@ export function Processes() {
     <Frame
       title="three processes"
       ref_="supervisor.py · gateway/server.py"
-      foot={<>Every path into enforcement crosses a process boundary. Sealing that boundary is a later stage.</>}
+      foot={<>Every path into enforcement crosses a process boundary. Sealing it is a later stage.</>}
     >
       <div className="grid gap-px bg-[#1f4536]/15 md:grid-cols-3">
         {PROCS.map(([name, role, what]) => (
@@ -166,9 +165,9 @@ export function Processes() {
 }
 
 const OUTCOMES: [string, string, string, boolean][] = [
-  ['allow', 'a permit matched, no forbid did', 'the action runs', false],
-  ['deny', 'a forbid matched', 'refused, and the audit row is written', false],
-  ['escalate', 'deny with an empty determining set', 'queued for the operator, 24 hour ttl', true],
+  ['allow', 'a permit matched and nothing forbade it', 'it runs', false],
+  ['deny', 'a forbid matched', 'refused, and the audit row gets signed', false],
+  ['escalate', 'nothing in the ruleset had an opinion', 'your call, 24 hours to make it', true],
 ]
 
 export function Trichotomy() {
@@ -178,8 +177,8 @@ export function Trichotomy() {
       ref_="policies.cedar · gate.py"
       foot={
         <>
-          Forbid overrides permit, so the keystones sit above every grant. The third outcome is the useful one: a
-          request no policy has an opinion about goes to a person.
+          Forbid overrides permit. The third outcome is the useful one: a request no policy has an opinion about goes
+          to a person.
         </>
       }
     >
@@ -243,11 +242,7 @@ export function TrustMap() {
     <Frame
       title="who wrote this number"
       ref_="gate.py · build_context"
-      foot={
-        <>
-          Sixteen fields reach the policy engine. Five come from the node, and not one of those five is ever a limit.
-        </>
-      }
+      foot={<>Sixteen fields reach the policy engine. Five come from the node, and none of those five is ever a limit.</>}
     >
       <dl className={`divide-y ${HAIR}`}>
         {ORIGINS.map((o) => (
@@ -280,11 +275,11 @@ export function TrustMap() {
 }
 
 const GAUNTLET: [string, string][] = [
-  ['a charge lands in stripe', 'polled with no cursor, because a refund does not change a charge timestamp'],
-  ['metadata carries an experiment_id', 'without it the charge is worth nothing, and it is never attributed to the only open experiment'],
-  ['the recipient is a seeded owned rail', 'a rail nobody seeded drops out of the join'],
-  ['status is succeeded', 'a later refund flips it back and the revenue leaves again'],
-  ['fees come off', 'break-even is measured on net, never on gross'],
+  ['a charge lands in stripe', 'polled without a cursor, since a refund never moves the timestamp a cursor would key on'],
+  ['it carries an experiment id', 'no id, no revenue, and it never gets handed to whichever bet happens to be open'],
+  ['it paid a rail you seeded', 'anything else falls out of the join'],
+  ['it stuck', 'a refund flips the row back and the money leaves again'],
+  ['fees come off the top', 'break-even is net. Gross is a story you tell yourself'],
 ]
 
 export function Gauntlet() {
@@ -292,7 +287,7 @@ export function Gauntlet() {
     <Frame
       title="what counts as revenue"
       ref_="gateway/receipts_stripe.py"
-      foot={<>Every branch that fails lands on zero. Nothing in the loop can report its own earnings.</>}
+      foot={<>Every branch that fails lands on zero.</>}
     >
       <ol className={`divide-y ${HAIR}`}>
         {GAUNTLET.map(([step, why], i) => (
@@ -324,8 +319,8 @@ export function Escape() {
       ref_="gateway/sandbox.py"
       foot={
         <>
-          A test asserted that no tool reaches the settlement spine. The filesystem walked around the test rather than
-          through it, and the turn spent its whole request budget reading source and earned nothing.
+          A test asserted that no tool reaches the settlement spine. The filesystem walked around it. The turn spent
+          its whole request budget reading source and earned nothing.
         </>
       }
     >
@@ -356,56 +351,38 @@ export function Escape() {
 /* Product-page furniture: the capability triad, the how-it-works steps, the
    spec block, and the availability block that sits where pricing would. */
 
-const CAPABILITIES: [string, string, string][] = [
-  [
-    'bounded by arithmetic',
-    'A node spawns a peer by handing over part of its own slice.',
-    'The pot is seeded once and never minted again, so replication terminates whether or not anything supervises it.',
-  ],
-  [
-    'enforced out of process',
-    'The policy engine, the ledger and the harm judge live behind a socket.',
-    'The agent holds its own ledger read-only, so a stray write fails in sqlite instead of at a check it could argue with.',
-  ],
-  [
-    'paid in receipts',
-    'Revenue counts when Stripe says it landed, net of fees.',
-    'Nothing in the loop reports its own earnings, and a charge missing its experiment id is worth zero.',
-  ],
-]
-
 export function Capabilities() {
   return (
-    <div className="grid gap-px bg-[#1f4536]/15 md:grid-cols-3">
-      {CAPABILITIES.map(([title, line, detail]) => (
-        <div key={title} className="bg-[#e9e4d4] px-6 py-7">
-          <h3 className="font-mono text-[12px] uppercase tracking-[0.2em] text-[#2a6b46]">{title}</h3>
-          <p className="mt-4 text-[17px] leading-snug text-[#1f4536]">{line}</p>
-          <p className="mt-3 text-[14.5px] leading-relaxed text-[#1f4536]/80">{detail}</p>
-        </div>
-      ))}
+    <div className="max-w-[60ch] space-y-4 text-[17px] leading-relaxed text-[#1f4536]/85">
+      <p>
+        The pot gets seeded once and never minted again. A node that wants a peer buys it out of its own slice, so the
+        fleet can never outgrow the money. Nobody has to sit there watching it.
+      </p>
+      <p>
+        Enforcement runs in another process. The agent reads the books and cannot write them, so a spend it should not
+        make dies in sqlite instead of in a check it could talk its way past.
+      </p>
+      <p>
+        Revenue is whatever Stripe says landed, minus fees. The node never grades its own work, and a charge with no
+        experiment id on it is worth nothing.
+      </p>
     </div>
   )
 }
 
-const STEPS: [string, string][] = [
-  ['seed the pot', 'The operator mints one budget and seeds the node manifest. Nothing the node sends can change either.'],
-  ['it proposes and runs', 'The node picks a method, generates the code for the first step, and runs it inside a jail with one socket out.'],
-  ['every spend is gated', 'Each spend, publish and execute crosses the gateway, where policy compares the amount against a lifetime sum on disk.'],
-  ['receipts settle it', 'Charges are polled from Stripe, matched to an experiment, and netted of fees. The arm lives or dies on that number.'],
-]
-
 export function HowItWorks() {
   return (
-    <ol className="grid gap-px bg-[#1f4536]/15 sm:grid-cols-2 lg:grid-cols-4">
-      {STEPS.map(([title, what], i) => (
-        <li key={title} className="bg-[#e9e4d4] px-5 py-6">
-          <span className="font-mono text-[11px] tabular-nums text-[#2a6b46]">{String(i + 1).padStart(2, '0')}</span>
-          <h3 className="mt-3 font-mono text-[13px] text-[#1f4536]">{title}</h3>
-          <p className="mt-2.5 text-[14.5px] leading-relaxed text-[#1f4536]/80">{what}</p>
-        </li>
-      ))}
-    </ol>
+    <div className="max-w-[60ch] space-y-4 text-[17px] leading-relaxed text-[#1f4536]/85">
+      <p>
+        The operator seeds a budget and a manifest. The node cannot change either. It picks a method, writes the code,
+        and runs it in a jail that has one socket out.
+      </p>
+      <p>
+        Every spend, publish, and execute crosses the gateway. Policy compares the amount against a lifetime sum the
+        node cannot write. Receipts come from Stripe, matched to an experiment, netted of fees. The arm lives or dies
+        on that number.
+      </p>
+    </div>
   )
 }
 
@@ -414,7 +391,7 @@ const SPEC: [string, string][] = [
   ['agent', 'pydantic ai over litellm, gemini flash'],
   ['policy', 'cedar, 11 policies, forbid overrides permit'],
   ['state', 'sqlite, 18 tables, append-only audit rows'],
-  ['payments', 'stripe charges, test keys only, live secret keys refused'],
+  ['payments', 'stripe charges; live secret keys are refused outright'],
   ['isolation', 'bwrap jail, own network namespace, one unix socket'],
   ['tests', '843 green across policy, node and gateway'],
   ['availability', 'private repository, no package, no install'],
@@ -433,18 +410,18 @@ export function Spec() {
   )
 }
 
-const WORKS = [
-  'the safety floor and the gray-zone gates, tested on both policy engines',
-  'the out-of-process gateway, the jail, and the credential vault',
-  'real receipt intake, verified against a live stripe account',
+const SHIPPED = [
+  'the safety floor and the gray-zone gates, green on both policy engines',
+  'the out-of-process gateway, the jail and the credential vault',
+  'receipt intake, wired to a live Stripe account and verified against real charges',
   'the convergence monitor, the attempt record and the kill switch',
 ]
 
-const DOES_NOT = [
-  'earn anything: no stranger has paid, and the only receipts came from the node paying itself with a test card',
-  'spawn: the mesh is one node, and the depth and fleet caps guard code that is not written',
-  'publish anywhere: the publisher has no channel configured',
-  'seal its own boundary: the placement work that closes it is a later stage',
+const NEXT = [
+  'a publishing channel, so what the node builds reaches a buyer',
+  'break-even on one arm, which is the gate the whole roadmap hangs on',
+  'the spawn path, once one node can pay for the next',
+  'pinned placement, which seals the gateway boundary for good',
 ]
 
 export function Availability() {
@@ -452,9 +429,9 @@ export function Availability() {
     <div className={`border ${RULE}`}>
       <div className="grid gap-px bg-[#1f4536]/15 md:grid-cols-2">
         <div className="bg-[#e9e4d4] px-6 py-6">
-          <h3 className="font-mono text-[11px] uppercase tracking-[0.22em] text-[#2a6b46]">what runs today</h3>
+          <h3 className="font-mono text-[11px] uppercase tracking-[0.22em] text-[#2a6b46]">running now</h3>
           <ul className="mt-4 space-y-2.5">
-            {WORKS.map((t) => (
+            {SHIPPED.map((t) => (
               <li key={t} className="text-[15px] leading-relaxed text-[#1f4536]/80">
                 {t}
               </li>
@@ -462,9 +439,9 @@ export function Availability() {
           </ul>
         </div>
         <div className="bg-[#dfd9c6] px-6 py-6">
-          <h3 className="font-mono text-[11px] uppercase tracking-[0.22em] text-[#1f4536]">what it does not do</h3>
+          <h3 className="font-mono text-[11px] uppercase tracking-[0.22em] text-[#1f4536]">next up</h3>
           <ul className="mt-4 space-y-2.5">
-            {DOES_NOT.map((t) => (
+            {NEXT.map((t) => (
               <li key={t} className="text-[15px] leading-relaxed text-[#1f4536]/80">
                 {t}
               </li>
@@ -473,8 +450,44 @@ export function Availability() {
         </div>
       </div>
       <p className={`border-t ${RULE} px-6 py-4 font-mono text-[12px] uppercase tracking-[0.16em] text-[#1f4536]/80`}>
-        private repository · no package · nothing to install
+        stage three of six · source private for now
       </p>
     </div>
+  )
+}
+
+/* Unit economics. The burn is measured off live ticks; everything else is
+   arithmetic on the shipped defaults, and the header says so. */
+const ECON: [string, string, string][] = [
+  ['burn', '$14 / month', 'measured per node, flash-tier model, one tick at a time'],
+  ['runway', '20 experiments', 'a 500c slice at 25c a trial, before anything has to sell'],
+  ['break-even', '1 subscriber', 'one seat at $19 a month clears the burn and the fees'],
+  ['second node', '2 subscribers', 'the pot does not grow, so node two comes out of node one'],
+]
+
+export function Economics() {
+  return (
+    <Frame
+      title="unit economics · projection"
+      ref_="burn measured, the rest is arithmetic"
+      foot={
+        <>
+          Assumes the burn we measured and a $19 seat. The point of the number is how small it is: one customer per
+          node clears the bill, and everything past that funds the next node.
+        </>
+      }
+    >
+      <dl className={`divide-y ${HAIR}`}>
+        {ECON.map(([k, v, note]) => (
+          <div key={k} className="grid grid-cols-[7.5rem_1fr] gap-x-5 px-5 py-4 sm:grid-cols-[9rem_10rem_1fr]">
+            <dt className="font-mono text-[12px] uppercase tracking-[0.14em] text-[#1f4536]/80">{k}</dt>
+            <dd className="font-mono text-[15px] tabular-nums text-[#2a6b46]">{v}</dd>
+            <dd className="col-span-2 mt-1 text-[14.5px] leading-snug text-[#1f4536]/80 sm:col-span-1 sm:mt-0">
+              {note}
+            </dd>
+          </div>
+        ))}
+      </dl>
+    </Frame>
   )
 }

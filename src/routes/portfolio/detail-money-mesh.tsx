@@ -1,6 +1,5 @@
-import { useEffect, useRef, type ReactNode } from 'react'
+import { useEffect, useRef } from 'react'
 import gsap from 'gsap'
-import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { TLink } from '../../components/page-transition'
 import { ArrowRight } from '../../components/icons'
 import { prefersReducedMotion } from '../../lib/motion'
@@ -9,6 +8,7 @@ import { MintSequence } from '../../components/money-mesh/budget-split'
 import {
   Availability,
   Capabilities,
+  Economics,
   Escape,
   Gauntlet,
   HowItWorks,
@@ -21,42 +21,11 @@ import {
 } from '../../components/money-mesh/plates'
 import type { LayoutProps } from './layouts'
 
-gsap.registerPlugin(ScrollTrigger)
-
 // the stock: banknote paper, engraving ink, and a lighter green for figures
 const PAPER = '#e9e4d4'
 const INK = '#1f4536'
 
 const PROSE = 'text-[18px] leading-[1.7] text-[#1f4536]/80 [&>p]:my-6 [&>p]:max-w-[60ch]'
-
-/* Every plate is a spread: a rule, a number, a kicker, one statement set
-   large, then the evidence under it. */
-function Plate({
-  n,
-  kicker,
-  statement,
-  children,
-}: {
-  n: number
-  kicker: string
-  statement: ReactNode
-  children?: ReactNode
-}) {
-  return (
-    <section data-plate className="relative border-t border-[#1f4536]/20 px-6 py-24 lg:py-28">
-      <div className="mx-auto max-w-5xl">
-        <div className="flex items-baseline gap-5">
-          <span className="font-mono text-[11px] tabular-nums text-[#2a6b46]">{String(n).padStart(2, '0')}</span>
-          <span className="font-mono text-[11px] uppercase tracking-[0.28em] text-[#1f4536]/80">{kicker}</span>
-        </div>
-        <h2 className="mt-7 max-w-[24ch] font-display text-3xl font-black leading-[1.12] text-[#1f4536] md:text-5xl">
-          {statement}
-        </h2>
-        {children && <div className="mt-12">{children}</div>}
-      </div>
-    </section>
-  )
-}
 
 function Code({ children }: { children: string }) {
   return (
@@ -102,16 +71,6 @@ export default function MoneyMesh({ p, c }: LayoutProps) {
         )
       }
 
-      gsap.utils.toArray<HTMLElement>('[data-plate]', scope.current).forEach((pl) => {
-        const bits = pl.querySelectorAll<HTMLElement>('h2, [data-body]')
-        gsap.set(bits, { opacity: 0, y: 26 })
-        ScrollTrigger.create({
-          trigger: pl,
-          start: 'top 72%',
-          once: true,
-          onEnter: () => gsap.to(bits, { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out', stagger: 0.12 }),
-        })
-      })
     }, scope)
     return () => ctx.revert()
   }, [])
@@ -145,7 +104,7 @@ export default function MoneyMesh({ p, c }: LayoutProps) {
                   className="flex flex-wrap items-center gap-x-4 gap-y-1 font-mono text-[11px] uppercase tracking-[0.28em] text-[#2a6b46]"
                 >
                   <span>mm · 0001</span>
-                  <span className="text-[#1f4536]/80">autonomous earning agents, bounded by one budget</span>
+                  <span className="text-[#1f4536]/80">agents that earn, and pay for their own children</span>
                 </p>
 
                 <h1
@@ -164,12 +123,11 @@ export default function MoneyMesh({ p, c }: LayoutProps) {
                   {c.lede}
                 </p>
 
-                {/* where a product page puts its three selling points */}
                 <ul data-print className="mt-8 flex flex-wrap gap-x-8 gap-y-3">
                   {[
-                    ['bounded', 'spawning divides the pot'],
-                    ['enforced', 'policy runs out of process'],
-                    ['measured', 'revenue is a receipt'],
+                    ['one pot', 'seeded once, never minted again'],
+                    ['hard rules', 'enforced in another process'],
+                    ['real money', 'counted off Stripe receipts'],
                   ].map(([k, v]) => (
                     <li key={k}>
                       <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-[#2a6b46]">{k}</p>
@@ -186,7 +144,7 @@ export default function MoneyMesh({ p, c }: LayoutProps) {
                     className="border-2 border-[#2a6b46] px-3 py-1.5 font-mono text-[11px] uppercase tracking-[0.24em] text-[#2a6b46]"
                     style={{ transform: 'rotate(-3deg)' }}
                   >
-                    building · nothing earns yet
+                    stage three · first earning loop
                   </span>
                 </div>
               </div>
@@ -194,116 +152,106 @@ export default function MoneyMesh({ p, c }: LayoutProps) {
           </div>
 
           <p className="mt-6 font-mono text-[11.5px] uppercase tracking-[0.2em] text-[#1f4536]/80">
-            private repository · 843 tests green · single node
+            843 tests green · 150k lines · one node live
           </p>
         </div>
       </section>
 
-      <Plate n={1} kicker="what it does" statement="One pot, split between agents that each have to earn their keep.">
-        <div data-body className="space-y-12">
-          <Capabilities />
-          <div className={PROSE}>
-            <p>
-              The system runs a leaderless mesh: no supervisor allocates work, and every node carries the same intent
-              and constraints. What bounds it is the budget. A node that wants a peer pays for it out of its own
-              slice.
-            </p>
-          </div>
-        </div>
-      </Plate>
+      <section className="mx-auto max-w-5xl space-y-16 px-6 py-20 lg:py-28">
+        <Capabilities />
 
-      <Plate n={2} kicker="how it works" statement="Four steps, and the agent controls none of the ones that count.">
-        <div data-body className="space-y-12">
-          <HowItWorks />
-          <MintSequence />
-          <div className={PROSE}>
-            <p>
-              The cap is a policy rather than a convention. It compares an amount against a lifetime sum the node
-              cannot write, and it is a forbid, so it beats every grant in the file.
-            </p>
-            <div className="mt-8">
-              <Code>{`forbid (principal, action in [Action::"spend", Action::"transact"], resource)
-when { context.amount + context.spent_lifetime > principal.budget_slice };`}</Code>
-            </div>
-          </div>
-        </div>
-      </Plate>
-
-      <Plate n={3} kicker="the method space" statement="Twelve arms, one issued note, and a bandit that only believes receipts.">
-        <div data-body>
-          <Spread />
-        </div>
-      </Plate>
-
-      <Plate n={4} kicker="under the hood" statement="What enforces runs in a different process from what wants.">
-        <div data-body className="space-y-12">
-          <Processes />
-          <Tick />
-        </div>
-      </Plate>
-
-      <Plate n={5} kicker="the policy layer" statement="A request nothing has an opinion about goes to a person, not through.">
-        <div data-body className="space-y-12">
-          <Trichotomy />
-          <div className={PROSE}>
-            <p>
-              Every incident in this repo has one shape. A cap gets compared against a number the caller supplied, and
-              the cap stops meaning anything. A forged manifest once recorded half a million dollars of spend against
-              a thousand dollar slice.
-            </p>
-          </div>
-          <TrustMap />
-        </div>
-      </Plate>
-
-      <Plate n={6} kicker="revenue" statement="Revenue is a receipt or it is nothing.">
-        <div data-body className="space-y-12">
-          <Gauntlet />
-          <div className={PROSE}>
-            <p>
-              The node has produced receipts exactly once, and it produced them by paying itself: it built a product,
-              a price and a payment link on the operator&rsquo;s Stripe account, then confirmed two charges against
-              that same account with a test card. The money moved in a circle, which the constraints file names as
-              the thing not to do. No stranger has paid for anything.
-            </p>
-          </div>
-        </div>
-      </Plate>
-
-      <Plate n={7} kicker="security" statement="Given a filesystem, the first live tick went looking for how it was scored.">
-        <div data-body>
-          <Escape />
-        </div>
-      </Plate>
-
-      <Plate n={8} kicker="specifications" statement="What it is built on, and what the limits are.">
-        <div data-body className="space-y-12">
-          <Spec />
-          <div className="border border-[#1f4536]/25">
-            <dl className="divide-y divide-[#1f4536]/15">
-              {CAPS.map(([k, v, note]) => (
-                <div key={k} className="grid grid-cols-[9rem_1fr] gap-x-5 px-5 py-4 sm:grid-cols-[11rem_8rem_1fr]">
-                  <dt className="font-mono text-[12px] uppercase tracking-[0.14em] text-[#1f4536]/80">{k}</dt>
-                  <dd className="font-mono text-[13px] tabular-nums text-[#2a6b46]">{v}</dd>
-                  <dd className="col-span-2 mt-1 text-[14px] leading-snug text-[#1f4536]/80 sm:col-span-1 sm:mt-0">
-                    {note}
-                  </dd>
-                </div>
-              ))}
-            </dl>
-          </div>
-          <p className="max-w-[60ch] text-[15px] leading-relaxed text-[#1f4536]/80">
-            Those limits come from logged runs. The comment beside each one in the source carries the measurements it
-            was derived from.
+        <div className={PROSE}>
+          <p>
+            Nothing allocates work from above. Every node carries the same intent and the same constraints, and a
+            node that wants a peer pays for it out of its own slice.
           </p>
         </div>
-      </Plate>
 
-      <Plate n={9} kicker="availability" statement="It runs. It does not earn, and you cannot have it yet.">
-        <div data-body>
-          <Availability />
+        <hr className="border-[#1f4536]/20" />
+
+        <HowItWorks />
+        <MintSequence />
+
+        <div className={PROSE}>
+          <p>
+            The cap is a policy, not a promise. It weighs the amount against a lifetime total the node cannot touch,
+            and it is a forbid, so it beats every grant in the file.
+          </p>
+          <div className="mt-8">
+            <Code>{`forbid (principal, action in [Action::"spend", Action::"transact"], resource)
+when { context.amount + context.spent_lifetime > principal.budget_slice };`}</Code>
+          </div>
         </div>
-      </Plate>
+
+        <hr className="border-[#1f4536]/20" />
+
+        <Spread />
+
+        <hr className="border-[#1f4536]/20" />
+
+        <Processes />
+        <Tick />
+
+        <hr className="border-[#1f4536]/20" />
+
+        <Trichotomy />
+
+        <div className={PROSE}>
+          <p>
+            Every incident here has the same shape: a cap weighed against a number the caller handed over. A forged
+            manifest once booked half a million dollars of spend against a thousand dollar slice. Now the wire carries
+            a node id and nothing worth forging.
+          </p>
+        </div>
+
+        <TrustMap />
+
+        <hr className="border-[#1f4536]/20" />
+
+        <Gauntlet />
+
+        <div className={PROSE}>
+          <p>
+            Handed a payment rail, the first thing it did was invoice itself. It built a product, priced it, made the
+            link, then put two charges through on a test card and stamped its own experiment id on them. The receipts
+            came back clean through every check above. The money went in a circle, which is the one shape the
+            constraints file names outright, and the loop caught it.
+          </p>
+        </div>
+
+        <hr className="border-[#1f4536]/20" />
+
+        <Escape />
+
+        <hr className="border-[#1f4536]/20" />
+
+        <Spec />
+
+        <div className="border border-[#1f4536]/25">
+          <dl className="divide-y divide-[#1f4536]/15">
+            {CAPS.map(([k, v, note]) => (
+              <div key={k} className="grid grid-cols-[9rem_1fr] gap-x-5 px-5 py-4 sm:grid-cols-[11rem_8rem_1fr]">
+                <dt className="font-mono text-[12px] uppercase tracking-[0.14em] text-[#1f4536]/80">{k}</dt>
+                <dd className="font-mono text-[13px] tabular-nums text-[#2a6b46]">{v}</dd>
+                <dd className="col-span-2 mt-1 text-[14px] leading-snug text-[#1f4536]/80 sm:col-span-1 sm:mt-0">
+                  {note}
+                </dd>
+              </div>
+            ))}
+          </dl>
+        </div>
+
+        <p className="max-w-[60ch] text-[15px] leading-relaxed text-[#1f4536]/80">
+          Every limit came off a logged run, and the comment beside each one in the source carries the numbers it was
+          cut from.
+        </p>
+
+        <hr className="border-[#1f4536]/20" />
+
+        <Economics />
+
+        <Availability />
+      </section>
 
       <div className="mx-auto max-w-5xl px-6">
         <footer className="mb-24 mt-8 flex items-center justify-between border-t border-[#1f4536]/20 pt-10">
