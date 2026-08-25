@@ -3,7 +3,7 @@ import gsap from 'gsap'
 import { TLink } from '../../components/page-transition'
 import { ArrowRight } from '../../components/icons'
 import { prefersReducedMotion } from '../../lib/motion'
-import { Band, Rosette } from '../../components/money-mesh/guilloche'
+import { Band } from '../../components/money-mesh/guilloche'
 import { MintSequence } from '../../components/money-mesh/budget-split'
 import {
   Availability,
@@ -89,27 +89,68 @@ export default function MoneyMesh({ p, c }: LayoutProps) {
           </TLink>
 
           <div ref={sheet} className="relative border border-[#1f4536]/45 p-1.5">
-            <div className="relative overflow-hidden border border-[#1f4536]/25 px-6 py-12 sm:px-12 sm:py-16">
-              <Band lines={14} className="pointer-events-none absolute inset-x-0 top-0 h-14 w-full opacity-70" />
-              <Band lines={14} className="pointer-events-none absolute inset-x-0 bottom-0 h-14 w-full opacity-50" />
-              <Rosette
-                size={300}
-                rings={4}
-                className="pointer-events-none absolute -right-24 top-1/2 hidden h-[300px] w-[300px] -translate-y-1/2 opacity-70 lg:block"
+            <div className="relative overflow-hidden border border-[#1f4536]/25 px-6 py-10 sm:px-10 sm:py-12">
+              <Band lines={14} className="pointer-events-none absolute inset-x-0 top-0 h-12 w-full opacity-60" />
+              <Band lines={14} className="pointer-events-none absolute inset-x-0 bottom-0 h-12 w-full opacity-45" />
+
+              {/* microprint, the way a real note carries it along the frame */}
+              <p
+                aria-hidden
+                className="pointer-events-none absolute inset-x-0 top-[3px] select-none overflow-hidden whitespace-nowrap px-2 font-mono text-[5.5px] uppercase tracking-[0.3em] text-[#1f4536]/45"
+              >
+                {'money-mesh · one pot · no supervisor · '.repeat(14)}
+              </p>
+
+              {/* the corners a bill puts its denomination in */}
+              <span
+                aria-hidden
+                className="pointer-events-none absolute left-4 top-4 font-display text-2xl font-black text-[#1f4536]/25"
+              >
+                500c
+              </span>
+              <span
+                aria-hidden
+                className="pointer-events-none absolute bottom-4 right-4 font-display text-2xl font-black text-[#1f4536]/25"
+              >
+                500c
+              </span>
+
+              <p
+                data-print
+                className="relative text-center font-mono text-[10.5px] uppercase tracking-[0.32em] text-[#1f4536]/80"
+              >
+                engrammic · note of account · series 2026
+              </p>
+
+              {/* the face sits in the paper like a watermark: masked on every
+                  edge, multiplied into the stock, never competing with the type */}
+              <img
+                aria-hidden
+                src="/assets/portfolio/moneymesh.webp"
+                alt=""
+                loading="eager"
+                className="pointer-events-none absolute -right-16 top-1/2 hidden h-[150%] w-[58%] -translate-y-1/2 object-cover lg:block"
+                style={{
+                  filter: 'grayscale(0.6) contrast(1.05) sepia(0.4) hue-rotate(74deg) saturate(1.35)',
+                  mixBlendMode: 'multiply',
+                  opacity: 0.3,
+                  maskImage:
+                    'radial-gradient(ellipse 54% 46% at 62% 50%, black 12%, transparent 78%), linear-gradient(to right, transparent, black 42%)',
+                  maskComposite: 'intersect',
+                  WebkitMaskImage:
+                    'radial-gradient(ellipse 54% 46% at 62% 50%, black 12%, transparent 78%), linear-gradient(to right, transparent, black 42%)',
+                  WebkitMaskComposite: 'source-in',
+                }}
               />
 
-              <div className="relative">
-                <p
-                  data-print
-                  className="flex flex-wrap items-center gap-x-4 gap-y-1 font-mono text-[11px] uppercase tracking-[0.28em] text-[#2a6b46]"
-                >
-                  <span>mm · 0001</span>
-                  <span className="text-[#1f4536]/80">agents that earn, and pay for their own children</span>
+              <div className="relative mt-8">
+                <p data-print className="font-mono text-[11px] uppercase tracking-[0.26em] text-[#2a6b46]">
+                  agents that earn, and pay for their own children
                 </p>
 
                 <h1
                   data-print
-                  className="mt-5 flex flex-wrap items-baseline gap-x-5 gap-y-2 font-display text-5xl font-black md:text-7xl"
+                  className="mt-4 flex flex-wrap items-baseline gap-x-5 gap-y-2 font-display text-5xl font-black md:text-7xl"
                 >
                   money-mesh
                   {p.jp && (
@@ -119,11 +160,11 @@ export default function MoneyMesh({ p, c }: LayoutProps) {
                   )}
                 </h1>
 
-                <p data-print className="mt-7 max-w-[46ch] text-[19px] leading-relaxed text-[#1f4536]/80">
+                <p data-print className="mt-6 max-w-[44ch] text-[18px] leading-relaxed text-[#1f4536]/80">
                   {c.lede}
                 </p>
 
-                <ul data-print className="mt-8 flex flex-wrap gap-x-8 gap-y-3">
+                <ul data-print className="mt-7 flex flex-wrap gap-x-8 gap-y-3">
                   {[
                     ['one pot', 'seeded once, never minted again'],
                     ['hard rules', 'enforced in another process'],
@@ -135,19 +176,39 @@ export default function MoneyMesh({ p, c }: LayoutProps) {
                     </li>
                   ))}
                 </ul>
-
-                <div data-print className="mt-9 flex flex-wrap items-end justify-between gap-6">
-                  <p className="font-mono text-[12px] uppercase tracking-[0.2em] text-[#1f4536]/80">
-                    {p.tech.join(' · ')}
-                  </p>
-                  <span
-                    className="border-2 border-[#2a6b46] px-3 py-1.5 font-mono text-[11px] uppercase tracking-[0.24em] text-[#2a6b46]"
-                    style={{ transform: 'rotate(-3deg)' }}
-                  >
-                    in arithmetic we trust
-                  </span>
-                </div>
               </div>
+
+              {/* the two signature lines and the overprint */}
+              <div data-print className="relative mt-10 flex flex-wrap items-end justify-between gap-x-10 gap-y-6">
+                <div className="flex flex-wrap gap-x-10 gap-y-4">
+                  {[
+                    ['operator', 'seeds the pot'],
+                    ['supervisor', 'holds the plug'],
+                  ].map(([role, duty]) => (
+                    <div key={role} className="min-w-[9rem]">
+                      <div className="h-px w-full bg-[#1f4536]/40" />
+                      <p className="mt-1.5 font-mono text-[10px] uppercase tracking-[0.22em] text-[#1f4536]/80">
+                        {role}
+                      </p>
+                      <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-[#1f4536]/80">{duty}</p>
+                    </div>
+                  ))}
+                </div>
+
+                <span
+                  className="border-2 border-[#2a6b46] px-3 py-1.5 font-mono text-[11px] uppercase tracking-[0.24em] text-[#2a6b46]"
+                  style={{ transform: 'rotate(-3deg)' }}
+                >
+                  in arithmetic we trust
+                </span>
+              </div>
+
+              <p
+                data-print
+                className="relative mt-8 border-t border-[#1f4536]/20 pt-4 font-mono text-[11px] uppercase tracking-[0.2em] text-[#1f4536]/80"
+              >
+                {p.tech.join(' · ')}
+              </p>
             </div>
           </div>
 
