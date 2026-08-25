@@ -352,3 +352,129 @@ export function Escape() {
     </Frame>
   )
 }
+
+/* Product-page furniture: the capability triad, the how-it-works steps, the
+   spec block, and the availability block that sits where pricing would. */
+
+const CAPABILITIES: [string, string, string][] = [
+  [
+    'bounded by arithmetic',
+    'A node spawns a peer by handing over part of its own slice.',
+    'The pot is seeded once and never minted again, so replication terminates whether or not anything supervises it.',
+  ],
+  [
+    'enforced out of process',
+    'The policy engine, the ledger and the harm judge live behind a socket.',
+    'The agent holds its own ledger read-only, so a stray write fails in sqlite instead of at a check it could argue with.',
+  ],
+  [
+    'paid in receipts',
+    'Revenue counts when Stripe says it landed, net of fees.',
+    'Nothing in the loop reports its own earnings, and a charge missing its experiment id is worth zero.',
+  ],
+]
+
+export function Capabilities() {
+  return (
+    <div className="grid gap-px bg-[#1f4536]/15 md:grid-cols-3">
+      {CAPABILITIES.map(([title, line, detail]) => (
+        <div key={title} className="bg-[#e9e4d4] px-6 py-7">
+          <h3 className="font-mono text-[12px] uppercase tracking-[0.2em] text-[#2a6b46]">{title}</h3>
+          <p className="mt-4 text-[17px] leading-snug text-[#1f4536]">{line}</p>
+          <p className="mt-3 text-[14.5px] leading-relaxed text-[#1f4536]/80">{detail}</p>
+        </div>
+      ))}
+    </div>
+  )
+}
+
+const STEPS: [string, string][] = [
+  ['seed the pot', 'The operator mints one budget and seeds the node manifest. Nothing the node sends can change either.'],
+  ['it proposes and runs', 'The node picks a method, generates the code for the first step, and runs it inside a jail with one socket out.'],
+  ['every spend is gated', 'Each spend, publish and execute crosses the gateway, where policy compares the amount against a lifetime sum on disk.'],
+  ['receipts settle it', 'Charges are polled from Stripe, matched to an experiment, and netted of fees. The arm lives or dies on that number.'],
+]
+
+export function HowItWorks() {
+  return (
+    <ol className="grid gap-px bg-[#1f4536]/15 sm:grid-cols-2 lg:grid-cols-4">
+      {STEPS.map(([title, what], i) => (
+        <li key={title} className="bg-[#e9e4d4] px-5 py-6">
+          <span className="font-mono text-[11px] tabular-nums text-[#2a6b46]">{String(i + 1).padStart(2, '0')}</span>
+          <h3 className="mt-3 font-mono text-[13px] text-[#1f4536]">{title}</h3>
+          <p className="mt-2.5 text-[14.5px] leading-relaxed text-[#1f4536]/80">{what}</p>
+        </li>
+      ))}
+    </ol>
+  )
+}
+
+const SPEC: [string, string][] = [
+  ['runtime', 'python 3.12+, uv, single process per node'],
+  ['agent', 'pydantic ai over litellm, gemini flash'],
+  ['policy', 'cedar, 11 policies, forbid overrides permit'],
+  ['state', 'sqlite, 18 tables, append-only audit rows'],
+  ['payments', 'stripe charges, test keys only, live secret keys refused'],
+  ['isolation', 'bwrap jail, own network namespace, one unix socket'],
+  ['tests', '843 green across policy, node and gateway'],
+  ['availability', 'private repository, no package, no install'],
+]
+
+export function Spec() {
+  return (
+    <dl className="grid gap-px bg-[#1f4536]/15 sm:grid-cols-2">
+      {SPEC.map(([k, v]) => (
+        <div key={k} className="bg-[#e9e4d4] px-5 py-4">
+          <dt className="font-mono text-[11px] uppercase tracking-[0.18em] text-[#1f4536]/80">{k}</dt>
+          <dd className="mt-1.5 font-mono text-[13.5px] leading-snug text-[#1f4536]">{v}</dd>
+        </div>
+      ))}
+    </dl>
+  )
+}
+
+const WORKS = [
+  'the safety floor and the gray-zone gates, tested on both policy engines',
+  'the out-of-process gateway, the jail, and the credential vault',
+  'real receipt intake, verified against a live stripe account',
+  'the convergence monitor, the attempt record and the kill switch',
+]
+
+const DOES_NOT = [
+  'earn anything: no stranger has paid, and the only receipts came from the node paying itself with a test card',
+  'spawn: the mesh is one node, and the depth and fleet caps guard code that is not written',
+  'publish anywhere: the publisher has no channel configured',
+  'seal its own boundary: the placement work that closes it is a later stage',
+]
+
+export function Availability() {
+  return (
+    <div className={`border ${RULE}`}>
+      <div className="grid gap-px bg-[#1f4536]/15 md:grid-cols-2">
+        <div className="bg-[#e9e4d4] px-6 py-6">
+          <h3 className="font-mono text-[11px] uppercase tracking-[0.22em] text-[#2a6b46]">what runs today</h3>
+          <ul className="mt-4 space-y-2.5">
+            {WORKS.map((t) => (
+              <li key={t} className="text-[15px] leading-relaxed text-[#1f4536]/80">
+                {t}
+              </li>
+            ))}
+          </ul>
+        </div>
+        <div className="bg-[#dfd9c6] px-6 py-6">
+          <h3 className="font-mono text-[11px] uppercase tracking-[0.22em] text-[#1f4536]">what it does not do</h3>
+          <ul className="mt-4 space-y-2.5">
+            {DOES_NOT.map((t) => (
+              <li key={t} className="text-[15px] leading-relaxed text-[#1f4536]/80">
+                {t}
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+      <p className={`border-t ${RULE} px-6 py-4 font-mono text-[12px] uppercase tracking-[0.16em] text-[#1f4536]/80`}>
+        private repository · no package · nothing to install
+      </p>
+    </div>
+  )
+}

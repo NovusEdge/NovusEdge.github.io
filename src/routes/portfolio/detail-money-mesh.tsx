@@ -6,7 +6,19 @@ import { ArrowRight } from '../../components/icons'
 import { prefersReducedMotion } from '../../lib/motion'
 import { Band, Rosette } from '../../components/money-mesh/guilloche'
 import { MintSequence } from '../../components/money-mesh/budget-split'
-import { Escape, Gauntlet, Processes, Spread, Tick, Trichotomy, TrustMap } from '../../components/money-mesh/plates'
+import {
+  Availability,
+  Capabilities,
+  Escape,
+  Gauntlet,
+  HowItWorks,
+  Processes,
+  Spec,
+  Spread,
+  Tick,
+  Trichotomy,
+  TrustMap,
+} from '../../components/money-mesh/plates'
 import type { LayoutProps } from './layouts'
 
 gsap.registerPlugin(ScrollTrigger)
@@ -61,13 +73,6 @@ const CAPS: [string, string, string][] = [
   ['heartbeat', '60 s × 3', 'three misses inside a 180 s budget and the supervisor kills the group'],
   ['sandbox', '60 s cpu', '512 MB, 10 processes, 100 MB disk, 1 MB of output'],
   ['model burn', '$14 / month', 'measured per node, after a first estimate that was wrong by forty times'],
-]
-
-const UNBUILT = [
-  'Spawning is policy and nothing else. One node runs, and the depth and fleet caps guard code that is not written.',
-  'The gateway boundary is real but not yet sealed; the placement work that closes it is a later stage.',
-  'Publishing has no channel configured, so a product the node builds has nowhere to be seen.',
-  'No sandbox implementation claims trusted placement, and a host without bwrap runs no code at all.',
 ]
 
 export default function MoneyMesh({ p, c }: LayoutProps) {
@@ -140,7 +145,7 @@ export default function MoneyMesh({ p, c }: LayoutProps) {
                   className="flex flex-wrap items-center gap-x-4 gap-y-1 font-mono text-[11px] uppercase tracking-[0.28em] text-[#2a6b46]"
                 >
                   <span>mm · 0001</span>
-                  <span className="text-[#1f4536]/80">one conserved pot</span>
+                  <span className="text-[#1f4536]/80">autonomous earning agents, bounded by one budget</span>
                 </p>
 
                 <h1
@@ -158,6 +163,20 @@ export default function MoneyMesh({ p, c }: LayoutProps) {
                 <p data-print className="mt-7 max-w-[46ch] text-[19px] leading-relaxed text-[#1f4536]/80">
                   {c.lede}
                 </p>
+
+                {/* where a product page puts its three selling points */}
+                <ul data-print className="mt-8 flex flex-wrap gap-x-8 gap-y-3">
+                  {[
+                    ['bounded', 'spawning divides the pot'],
+                    ['enforced', 'policy runs out of process'],
+                    ['measured', 'revenue is a receipt'],
+                  ].map(([k, v]) => (
+                    <li key={k}>
+                      <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-[#2a6b46]">{k}</p>
+                      <p className="mt-1 text-[15px] text-[#1f4536]/80">{v}</p>
+                    </li>
+                  ))}
+                </ul>
 
                 <div data-print className="mt-9 flex flex-wrap items-end justify-between gap-6">
                   <p className="font-mono text-[12px] uppercase tracking-[0.2em] text-[#1f4536]/80">
@@ -180,27 +199,24 @@ export default function MoneyMesh({ p, c }: LayoutProps) {
         </div>
       </section>
 
-      <Plate n={1} kicker="the sheet" statement="Twelve arms, one issued note, and a bandit that only believes receipts.">
-        <div data-body>
-          <Spread />
-        </div>
-      </Plate>
-
-      <Plate n={2} kicker="the wiring" statement="What enforces runs in a different process from what wants.">
+      <Plate n={1} kicker="what it does" statement="One pot, split between agents that each have to earn their keep.">
         <div data-body className="space-y-12">
-          <Processes />
-          <Tick />
+          <Capabilities />
+          <div className={PROSE}>
+            <p>
+              The system runs a leaderless mesh: no supervisor allocates work, and every node carries the same intent
+              and constraints. What bounds it is the budget. A node that wants a peer pays for it out of its own
+              slice.
+            </p>
+          </div>
         </div>
       </Plate>
 
-      <Plate
-        n={3}
-        kicker="conservation"
-        statement="Spawning divides the pot. It never mints, so the recursion terminates by arithmetic."
-      >
-        <div data-body>
+      <Plate n={2} kicker="how it works" statement="Four steps, and the agent controls none of the ones that count.">
+        <div data-body className="space-y-12">
+          <HowItWorks />
           <MintSequence />
-          <div className={`mt-14 ${PROSE}`}>
+          <div className={PROSE}>
             <p>
               The cap is a policy rather than a convention. It compares an amount against a lifetime sum the node
               cannot write, and it is a forbid, so it beats every grant in the file.
@@ -213,30 +229,37 @@ when { context.amount + context.spent_lifetime > principal.budget_slice };`}</Co
         </div>
       </Plate>
 
-      <Plate n={4} kicker="decisions" statement="A request nothing has an opinion about goes to a person, not through.">
+      <Plate n={3} kicker="the method space" statement="Twelve arms, one issued note, and a bandit that only believes receipts.">
         <div data-body>
-          <Trichotomy />
+          <Spread />
         </div>
       </Plate>
 
-      <Plate n={5} kicker="provenance" statement="A cap compared against a number the caller supplied is not a cap.">
-        <div data-body>
+      <Plate n={4} kicker="under the hood" statement="What enforces runs in a different process from what wants.">
+        <div data-body className="space-y-12">
+          <Processes />
+          <Tick />
+        </div>
+      </Plate>
+
+      <Plate n={5} kicker="the policy layer" statement="A request nothing has an opinion about goes to a person, not through.">
+        <div data-body className="space-y-12">
+          <Trichotomy />
           <div className={PROSE}>
             <p>
-              Every incident in this repo has that shape. A forged manifest once recorded half a million dollars of
-              spend against a thousand dollar slice. The fix each time moves the operand instead of adding a check.
+              Every incident in this repo has one shape. A cap gets compared against a number the caller supplied, and
+              the cap stops meaning anything. A forged manifest once recorded half a million dollars of spend against
+              a thousand dollar slice.
             </p>
           </div>
-          <div className="mt-10">
-            <TrustMap />
-          </div>
+          <TrustMap />
         </div>
       </Plate>
 
       <Plate n={6} kicker="revenue" statement="Revenue is a receipt or it is nothing.">
-        <div data-body>
+        <div data-body className="space-y-12">
           <Gauntlet />
-          <div className={`mt-12 ${PROSE}`}>
+          <div className={PROSE}>
             <p>
               The node has produced receipts exactly once, and it produced them by paying itself: it built a product,
               a price and a payment link on the operator&rsquo;s Stripe account, then confirmed two charges against
@@ -247,43 +270,38 @@ when { context.amount + context.spent_lifetime > principal.budget_slice };`}</Co
         </div>
       </Plate>
 
-      <Plate n={7} kicker="the first live tick" statement="Given a filesystem, it went looking for how it was being scored.">
+      <Plate n={7} kicker="security" statement="Given a filesystem, the first live tick went looking for how it was scored.">
         <div data-body>
           <Escape />
         </div>
       </Plate>
 
-      <Plate n={8} kicker="limits" statement="The numbers come from logged runs, not from round figures.">
-        <div data-body className="border border-[#1f4536]/25">
-          <dl className="divide-y divide-[#1f4536]/15">
-            {CAPS.map(([k, v, note]) => (
-              <div key={k} className="grid grid-cols-[9rem_1fr] gap-x-5 px-5 py-4 sm:grid-cols-[11rem_8rem_1fr]">
-                <dt className="font-mono text-[12px] uppercase tracking-[0.14em] text-[#1f4536]/80">{k}</dt>
-                <dd className="font-mono text-[13px] tabular-nums text-[#2a6b46]">{v}</dd>
-                <dd className="col-span-2 mt-1 text-[14px] leading-snug text-[#1f4536]/80 sm:col-span-1 sm:mt-0">
-                  {note}
-                </dd>
-              </div>
-            ))}
-          </dl>
+      <Plate n={8} kicker="specifications" statement="What it is built on, and what the limits are.">
+        <div data-body className="space-y-12">
+          <Spec />
+          <div className="border border-[#1f4536]/25">
+            <dl className="divide-y divide-[#1f4536]/15">
+              {CAPS.map(([k, v, note]) => (
+                <div key={k} className="grid grid-cols-[9rem_1fr] gap-x-5 px-5 py-4 sm:grid-cols-[11rem_8rem_1fr]">
+                  <dt className="font-mono text-[12px] uppercase tracking-[0.14em] text-[#1f4536]/80">{k}</dt>
+                  <dd className="font-mono text-[13px] tabular-nums text-[#2a6b46]">{v}</dd>
+                  <dd className="col-span-2 mt-1 text-[14px] leading-snug text-[#1f4536]/80 sm:col-span-1 sm:mt-0">
+                    {note}
+                  </dd>
+                </div>
+              ))}
+            </dl>
+          </div>
+          <p className="max-w-[60ch] text-[15px] leading-relaxed text-[#1f4536]/80">
+            Those limits come from logged runs. The comment beside each one in the source carries the measurements it
+            was derived from.
+          </p>
         </div>
       </Plate>
 
-      <Plate n={9} kicker="unbuilt" statement="The safety floor is real. Some of the rest is a policy waiting for its code.">
+      <Plate n={9} kicker="availability" statement="It runs. It does not earn, and you cannot have it yet.">
         <div data-body>
-          <ul className="space-y-3">
-            {UNBUILT.map((t) => (
-              <li key={t} className="border-l-2 border-[#2a6b46]/50 pl-4 text-[16px] leading-relaxed text-[#1f4536]/80">
-                {t}
-              </li>
-            ))}
-          </ul>
-          <div className={`mt-10 ${PROSE}`}>
-            <p>
-              Each of those is written in the repo in the same words, next to the thing it limits. One gateway
-              docstring spends five lines on what its own slice does not close.
-            </p>
-          </div>
+          <Availability />
         </div>
       </Plate>
 

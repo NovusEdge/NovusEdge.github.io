@@ -4,6 +4,6 @@ import type { ProjectContent } from './types'
    project registers as having a page, which is what makes the index card link
    inward instead of out to a repo that is private. */
 export const moneyMesh: ProjectContent = {
-  lede: 'A leaderless mesh of earning agents, each carrying the same immutable core and a slice of one conserved pot. Spawning a peer divides a slice and mints nothing, so the global spend cap holds by arithmetic rather than by supervision. One node runs today, and no stranger has paid it yet.',
+  lede: 'money-mesh runs agents that pick their own way of making money and pay for their own peers out of one budget seeded at the start. Spawning divides a slice and mints nothing, so the spend cap holds by arithmetic and needs nobody watching. One node runs today, and no stranger has paid it yet.',
   sections: [],
 }
