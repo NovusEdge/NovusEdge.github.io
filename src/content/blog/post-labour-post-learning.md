@@ -1,8 +1,8 @@
 ---
-title: We Don't Need Everyone to Work Anymore
+title: Do We Even Need People to Work This Much Anymore?
 date: 2026-08-26
 tags: [labour, education, economics, epistemics, ai, essay]
-description: Industrial capacity outgrew the need for universal work decades ago. School kept issuing credentials for a queue that was already shrinking. Now the answers are free too, and the kids can't read.
+description: Industrial capacity outgrew the need for universal work decades ago and nobody updated the institutions. School kept issuing credentials for a queue that was already shrinking. Now the answers are free too, and the kids can't read.
 draft: true
 toc: true
 ---
