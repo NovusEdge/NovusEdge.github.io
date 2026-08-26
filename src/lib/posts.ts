@@ -17,9 +17,10 @@ const files = import.meta.glob('../content/blog/*.md', {
   eager: true,
 }) as Record<string, string>
 
-// vite.config builds the route list from the directory, so a draft still gets
-// a prerendered URL. getPost reads this filtered list, so that URL serves the
-// not-found page.
+// Drafts list and open normally under `vite dev` and drop out of the build.
+// vite.config builds the route list from the directory either way, so a draft
+// still gets a prerendered URL, and getPost reads this filtered list, so that
+// URL serves the not-found page in production.
 export const posts: Post[] = Object.entries(files)
   .map(([path, raw]) => {
     const slug = path.split('/').pop()!.replace(/\.md$/, '')
@@ -35,7 +36,7 @@ export const posts: Post[] = Object.entries(files)
       draft: data.draft === 'true',
     }
   })
-  .filter((p) => !p.draft)
+  .filter((p) => !p.draft || import.meta.env.DEV)
   .sort((a, b) => b.date.localeCompare(a.date))
 
 export const getPost = (slug: string) => posts.find((p) => p.slug === slug)
