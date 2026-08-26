@@ -26,6 +26,7 @@ export function getPostThumbnail(slug: string): string | null {
   if (slug === 'i-build-cool-shit-and-also-spreadsheets') return '/assets/moth.jpeg'
   // other option: /assets/eros-resting.jpeg
   if (slug === 'rsi-emergence-and-the-pope') return '/assets/pandora.jpeg'
+  if (slug === 'post-labour-post-learning') return '/assets/blog/scribble-figure.jpeg'
   // personal / blog-update posts -> art assets
   if (slug === 'im-back-pt-1') return '/assets/cosmos_1829710684.jpeg'
   if (slug === 'im-back-pt-2') return '/assets/fallen_angel.webp'

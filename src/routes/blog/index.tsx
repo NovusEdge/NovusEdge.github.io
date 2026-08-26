@@ -8,6 +8,7 @@ import { ArrowRight } from '../../components/icons'
 import { getListThumbnail } from '../../lib/thumbnails'
 import { SurveillanceCard } from '../../components/surveillance-card'
 import { CRTCard } from '../../components/crt-card'
+import { AttritionCard } from '../../components/attrition-card'
 import { useReveal } from '../../lib/motion'
 import { revealBlogList } from '../../lib/reveals'
 import { SideFlourish } from '../../components/side-flourish'
@@ -95,6 +96,14 @@ export default function BlogIndex() {
                   return (
                     <div key={post.slug}>
                       <CRTCard post={post} img={img} dayOf={dayOf} monthOf={monthOf} />
+                      <InlineBlipCount count={blipCount} />
+                    </div>
+                  )
+                }
+                if (post.slug === 'post-labour-post-learning' && img) {
+                  return (
+                    <div key={post.slug}>
+                      <AttritionCard post={post} img={img} dayOf={dayOf} monthOf={monthOf} />
                       <InlineBlipCount count={blipCount} />
                     </div>
                   )

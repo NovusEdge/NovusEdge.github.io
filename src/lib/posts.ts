@@ -17,7 +17,7 @@ const files = import.meta.glob('../content/blog/*.md', {
 }) as Record<string, string>
 
 // ponytail: hidden slugs — uncomment when ready to publish
-const HIDDEN = ['ai-industry-trends', 'plan-a-ai', 'shader-journeys-part-2']
+const HIDDEN = ['ai-industry-trends', 'plan-a-ai', 'shader-journeys-part-2', 'post-labour-post-learning']
 
 export const posts: Post[] = Object.entries(files)
   .map(([path, raw]) => {
