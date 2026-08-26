@@ -8,6 +8,7 @@ export type Post = {
   description: string
   content: string
   toc?: boolean
+  draft?: boolean
 }
 
 const files = import.meta.glob('../content/blog/*.md', {
@@ -16,9 +17,9 @@ const files = import.meta.glob('../content/blog/*.md', {
   eager: true,
 }) as Record<string, string>
 
-// ponytail: hidden slugs — uncomment when ready to publish
-const HIDDEN = ['ai-industry-trends', 'plan-a-ai', 'shader-journeys-part-2', 'post-labour-post-learning']
-
+// vite.config builds the route list from the directory, so a draft still gets
+// a prerendered URL. getPost reads this filtered list, so that URL serves the
+// not-found page.
 export const posts: Post[] = Object.entries(files)
   .map(([path, raw]) => {
     const slug = path.split('/').pop()!.replace(/\.md$/, '')
@@ -31,9 +32,10 @@ export const posts: Post[] = Object.entries(files)
       description: (data.description as string) || '',
       content,
       toc: data.toc === 'true',
+      draft: data.draft === 'true',
     }
   })
-  .filter((p) => !HIDDEN.includes(p.slug))
+  .filter((p) => !p.draft)
   .sort((a, b) => b.date.localeCompare(a.date))
 
 export const getPost = (slug: string) => posts.find((p) => p.slug === slug)

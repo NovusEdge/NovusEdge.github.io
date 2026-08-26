@@ -3,7 +3,6 @@ title: On RSI, Emergence, and the Pope
 date: 2026-08-05
 tags: [ai, rsi, emergence, alignment, essay]
 description: The Pope said machines can't feel anything. The guy from the AI lab standing next to him said they keep finding things that look a lot like feeling. Same stage, same morning.
-draft: true
 ---
 
 Okay so back in May Pope Leo gave his encyclical about AI, which I heard about in passing but never checked it out. I recent spent some time actually reading [the thing](https://www.vatican.va/content/leo-xiv/en/encyclicals/documents/20260515-magnifica-humanitas.html) and it's genuinely... _good_. Like _actually_ good and honestly I'm not sure how I feel about the whole affair as a whole.
