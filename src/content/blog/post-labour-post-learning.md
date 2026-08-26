@@ -1,8 +1,8 @@
 ---
-title: TODO
+title: We Don't Need Everyone to Work Anymore
 date: 2026-08-26
-tags: [labour, education, ai, economics, essay]
-description: TODO
+tags: [labour, education, economics, epistemics, ai, essay]
+description: Industrial capacity outgrew the need for universal work decades ago. School kept issuing credentials for a queue that was already shrinking. Now the answers are free too, and the kids can't read.
 draft: true
 toc: true
 ---
