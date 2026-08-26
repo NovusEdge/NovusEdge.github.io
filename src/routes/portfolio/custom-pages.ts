@@ -5,7 +5,6 @@ import Ocloak from './detail-ocloak'
 import Engrammic from './detail-engrammic'
 import Palpatine from './detail-palpatine'
 import Veil from './detail-veil'
-import MoneyMesh from './detail-money-mesh'
 
 // Per-project fully-custom detail pages. A slug present here overrides the
 // shared Dossier layout; absent slugs keep the dossier.
@@ -15,5 +14,4 @@ export const CUSTOM_PAGES: Record<string, ComponentType<LayoutProps>> = {
   engrammic: Engrammic,
   palpatine: Palpatine,
   veil: Veil,
-  'money-mesh': MoneyMesh,
 }

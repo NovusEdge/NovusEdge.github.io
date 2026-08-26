@@ -48,38 +48,6 @@
 .pal-space .site-footer {
   background-color: #05060a;
 }
-/* the money-mesh page is printed on paper stock, so the body under it takes
-   the same ground; otherwise the dark page background shows in the seam
-   between the end of the page and the shared footer */
-html.mm-note body {
-  background-color: #e9e4d4;
-}
-/* The paper world states its colors as literal hex on the elements, so the
-   site's high-contrast mode cannot reach it through the charcoal/bone token
-   selectors above. These four rules put the page back under that switch. */
-html.a11y-high-contrast.mm-note body,
-html.a11y-high-contrast.mm-note main,
-html.a11y-high-contrast.mm-note .site-footer {
-  background-color: #fff !important;
-}
-html.a11y-high-contrast.mm-note main [class*='text-[#'],
-html.a11y-high-contrast.mm-note main {
-  color: #06140e !important;
-}
-html.a11y-high-contrast.mm-note main [class*='border-[#'] {
-  border-color: #06140e !important;
-}
-html.a11y-high-contrast.mm-note main [class*='bg-[#'] {
-  background-color: #fff !important;
-}
-
-.mm-note .site-footer {
-  background-color: #e9e4d4;
-  color: #1f4536;
-}
-.mm-note .site-footer .footer-word {
-  color: rgba(31, 69, 54, 0.12);
-}
 .eg-sepia .site-footer {
   background-color: #f4f0e6;
   color: #1c1a17;
