@@ -436,6 +436,9 @@ function LocaleTree({ locale }: { locale: Locale }) {
   // the prerender pass reads headState after render and writes lang onto <html>
   headState.lang = locale.htmlLang
 
+  // block body, not an implicit-return arrow: a browser that patches scrollTo to
+  // return a Promise (Brave, smooth-scroll extensions) would otherwise feed it to
+  // React as the effect cleanup, and StrictMode's teardown throws "destroy is not a function".
   useEffect(() => {
     window.scrollTo(0, 0)
   }, [pathname])
