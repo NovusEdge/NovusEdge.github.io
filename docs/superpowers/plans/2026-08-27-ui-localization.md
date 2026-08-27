@@ -389,6 +389,7 @@ git commit -s -m "i18n: add string catalogs and per-locale instances"
 
 **Files:**
 - Modify: `src/App.tsx`
+- Modify: `src/lib/meta.tsx:5`
 
 **Interfaces:**
 - Consumes: `DEFAULT_LOCALE`, `PREFIXED_LOCALES`, `stripLocale`, `type Locale` from `src/i18n/paths.ts`; `LocaleContext` from `src/i18n/context.ts`; `i18nFor` from `src/i18n/index.ts`; `headState` from `src/lib/meta.tsx`.
@@ -491,24 +492,39 @@ export default function App() {
 }
 ```
 
-`headState.lang` does not exist yet, so `tsc` fails here. Task 4 adds it. Run the dev server for this step's check, and leave the type error until Task 4 closes it.
+- [ ] **Step 2: Add the lang field to headState**
 
-- [ ] **Step 2: Verify English routing by hand**
+`LocaleTree` writes `headState.lang`, so the field has to exist in the same commit or `tsc` fails.
+
+In `src/lib/meta.tsx`, replace line 5:
+
+```ts
+export const headState = { title: 'NovusEdge', description: DEFAULT_DESCRIPTION, image: null as string | null, lang: 'en' }
+```
+
+Task 4 wires it into the prerender output.
+
+- [ ] **Step 3: Verify the tree compiles**
+
+Run: `pnpm exec tsc`
+Expected: no output, exit 0.
+
+- [ ] **Step 4: Verify English routing by hand**
 
 Use the dev server that is already running. Do not start another.
 
 Check `/`, `/about`, `/blog`, and one post. Confirm the header hides on `/` and shows elsewhere, and that the footer hides on `/stack`.
 
-- [ ] **Step 3: Verify prefixed routing by hand**
+- [ ] **Step 5: Verify prefixed routing by hand**
 
 In the same dev server, check `/de`, `/de/about`, `/zh/blog`, and `/ja/stack`.
 
 Confirm `/de` renders the landing page with no header, and that `/de/about` renders About. Confirm `/xx/about` renders the 404 page, since `xx` is not a manifest code and the splat catches it.
 
-- [ ] **Step 4: Commit**
+- [ ] **Step 6: Commit**
 
 ```bash
-git add src/App.tsx
+git add src/App.tsx src/lib/meta.tsx
 git commit -s -m "i18n: mount the route tree once per locale"
 ```
 
@@ -517,22 +533,13 @@ git commit -s -m "i18n: mount the route tree once per locale"
 ### Task 4: Language markup on every prerendered page
 
 **Files:**
-- Modify: `src/lib/meta.tsx:5`
 - Modify: `src/main.tsx:44-50`
 
 **Interfaces:**
-- Consumes: `headState` from `src/lib/meta.tsx`, written by `LocaleTree` in Task 3.
-- Produces: `headState.lang`, and a `head.lang` field on the object `prerender()` returns.
+- Consumes: `headState.lang` from `src/lib/meta.tsx`, added and written in Task 3.
+- Produces: a `head.lang` field on the object `prerender()` returns.
 
-- [ ] **Step 1: Add lang to headState**
-
-In `src/lib/meta.tsx`, replace line 5:
-
-```ts
-export const headState = { title: 'NovusEdge', description: DEFAULT_DESCRIPTION, image: null as string | null, lang: 'en' }
-```
-
-- [ ] **Step 2: Return it from prerender**
+- [ ] **Step 1: Return it from prerender**
 
 In `src/main.tsx`, replace the returned object at lines 44 to 50:
 
@@ -549,12 +556,7 @@ In `src/main.tsx`, replace the returned object at lines 44 to 50:
 
 `vite-prerender-plugin` reads `head.lang` and calls `setAttribute('lang', ...)` on the `html` element (see `node_modules/vite-prerender-plugin/src/plugins/prerender-plugin.js:483`).
 
-- [ ] **Step 3: Verify the type error from Task 3 is gone**
-
-Run: `pnpm exec tsc`
-Expected: no output, exit 0.
-
-- [ ] **Step 4: Verify the built markup**
+- [ ] **Step 2: Verify the built markup**
 
 Run: `pnpm build`
 
@@ -568,10 +570,10 @@ Expected: `dist/index.html` shows `en`, `dist/zh/index.html` shows `zh-Hans`, `d
 
 If `dist/zh/index.html` does not exist yet, that is correct at this point. Task 9 adds the locale routes to the prerender list. Check `dist/index.html` alone for now, and repeat this whole step after Task 9.
 
-- [ ] **Step 5: Commit**
+- [ ] **Step 3: Commit**
 
 ```bash
-git add src/lib/meta.tsx src/main.tsx
+git add src/main.tsx
 git commit -s -m "i18n: write the active language onto prerendered pages"
 ```
 
