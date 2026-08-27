@@ -39,6 +39,19 @@ function LocaleTree({ locale }: { locale: Locale }) {
     document.documentElement.lang = locale.htmlLang
   }, [locale.htmlLang])
 
+  // Hanzi has no coverage in the four base families, and a CJK face is far too large to
+  // load for the four locales that never render one
+  useEffect(() => {
+    if (locale.code !== 'zh') return
+    const id = 'noto-sans-sc'
+    if (document.getElementById(id)) return
+    const link = document.createElement('link')
+    link.id = id
+    link.rel = 'stylesheet'
+    link.href = 'https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700;900&display=swap'
+    document.head.appendChild(link)
+  }, [locale.code])
+
   // remount + replay the fade-up per route; collapse /stack so its sub-views keep their own slide
   const key = bare.startsWith('/stack') ? '/stack' : pathname
 

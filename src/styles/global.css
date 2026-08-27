@@ -33,6 +33,14 @@
   --font-mono: 'JetBrains Mono', monospace;
 }
 
+/* Hanzi falls back per family rather than per rule, because every font utility reads these
+   tokens through var(). Zen Kaku Gothic New already covers ja in --font-display. */
+:lang(zh-Hans) {
+  --font-display: 'Amulya', 'Noto Sans SC', 'Zen Kaku Gothic New', sans-serif;
+  --font-body: 'Satoshi', 'Noto Sans SC', sans-serif;
+  --font-prose: 'Supreme', 'Noto Sans SC', sans-serif;
+}
+
 @layer base {
   html, body {
     @apply bg-bone text-charcoal font-body antialiased dark:bg-charcoal dark:text-bone;
