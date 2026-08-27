@@ -955,7 +955,9 @@ The script runs by hand and never in the build. Without the lock file, a transla
 
 - [ ] **Step 1: Confirm the current model id**
 
-The model id belongs in the endpoint URL, and published model names go stale fast. Check Google's current model list at https://ai.google.dev/gemini-api/docs/models before writing the constant, and pick the full Flash tier rather than Flash Lite.
+The model is `gemini-3.7-flash`, the full Flash tier, verified against https://ai.google.dev/gemini-api/docs/models on 2026-08-27. The same check confirmed three things this script depends on: `v1beta` is still a valid path for `generateContent`, `responseMimeType: 'application/json'` is still how JSON output is requested, and the generated text still reads from `body.candidates[0].content.parts[0].text`.
+
+It also turned up one change to act on. Google deprecated the sampling parameters, `temperature` among them, on current models in July 2026, so the request omits it. If translations come back inconsistent between runs, report that rather than reinstating the parameter.
 
 Verify the key loads without printing it:
 
@@ -973,8 +975,8 @@ Create `scripts/translate-ui.mjs`:
 import { readFileSync, writeFileSync, existsSync } from 'node:fs'
 import { createHash } from 'node:crypto'
 
-// Confirmed against https://ai.google.dev/gemini-api/docs/models before each run.
-const MODEL = 'gemini-flash-latest'
+// Verified against https://ai.google.dev/gemini-api/docs/models on 2026-08-27.
+const MODEL = 'gemini-3.7-flash'
 const ENDPOINT = `https://generativelanguage.googleapis.com/v1beta/models/${MODEL}:generateContent`
 
 const LOCALES = JSON.parse(readFileSync('src/i18n/locales.json', 'utf8'))
@@ -1023,7 +1025,8 @@ async function translate(locale, entries) {
     headers: { 'content-type': 'application/json' },
     body: JSON.stringify({
       contents: [{ parts: [{ text: prompt }] }],
-      generationConfig: { responseMimeType: 'application/json', temperature: 0.2 },
+      // no temperature: Google deprecated the sampling parameters on current models in July 2026
+      generationConfig: { responseMimeType: 'application/json' },
     }),
   })
   if (!res.ok) throw new Error(`${locale.code}: ${res.status} ${await res.text()}`)

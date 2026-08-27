@@ -140,8 +140,8 @@ in this repo, so the script never reads a `.env` file itself. Node loads one nat
 node --env-file=$HOME/Projects/goob/.env scripts/translate-ui.mjs
 ```
 
-Rather than Flash Lite, the model is a full Flash tier, with the exact id confirmed against
-Google's model docs at implementation time. Lite tiers trade quality for throughput, and
+Rather than Flash Lite, the model is the full Flash tier: `gemini-3.7-flash`, verified against
+Google's model docs on 2026-08-27 at $0.75 per million input tokens. Lite tiers trade quality for throughput, and
 translation into Chinese and Japanese is where that shows. The whole run costs cents on
 either tier, so price does not decide it.
 
