@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react'
+import { useTranslation } from 'react-i18next'
 import { TLink } from '../components/page-transition'
 import { Dithering } from '@paper-design/shaders-react'
 import { Meta } from '../lib/meta'
@@ -8,14 +9,13 @@ import { LocaleSwitcher } from '../components/locale-switcher'
 
 const NAME = 'Aliasgar Khimani'
 const HANDLE = 'NovusEdge'
-const TAGLINE = 'making computers have opinions.'
 
 const NAV = [
-  { to: '/about', label: 'About' },
-  { to: '/blog', label: 'Blog' },
-  { to: '/portfolio', label: 'Portfolio' },
-  { to: '/research', label: 'Research' },
-  { to: '/stack', label: 'Stack' },
+  { to: '/about', key: 'nav.about' },
+  { to: '/blog', key: 'nav.blog' },
+  { to: '/portfolio', key: 'nav.portfolio' },
+  { to: '/research', key: 'nav.research' },
+  { to: '/stack', key: 'nav.stack' },
 ]
 
 const PERF = { minPixelRatio: 1, maxPixelCount: 380_000 }
@@ -62,6 +62,7 @@ function DitherBg() {
 }
 
 export default function Landing() {
+  const { t } = useTranslation()
   const lp = useLocalePath()
   return (
     <>
@@ -83,7 +84,7 @@ export default function Landing() {
               <h1 className="font-display text-6xl font-black tracking-tight text-bone md:text-8xl">{NAME}</h1>
               <span className="mt-2 font-mono text-xs font-medium uppercase tracking-[0.4em] text-bone/55">@{HANDLE}</span>
             </div>
-            <p className="max-w-md font-mono text-sm font-medium text-bone/75">{TAGLINE}</p>
+            <p className="max-w-md font-mono text-sm font-medium text-bone/75">{t('landing.tagline')}</p>
             <nav className="flex flex-wrap items-center justify-center gap-3 sm:gap-4">
               {NAV.map((l, i) => (
                 <TLink
@@ -92,14 +93,14 @@ export default function Landing() {
                   style={{ animationDelay: `${0.15 + i * 0.08}s` }}
                   className="nav-pill rounded-full border border-bone/25 px-5 py-2 font-display text-sm font-bold uppercase tracking-[0.2em] text-bone/85 transition-[transform,background-color,border-color,box-shadow] duration-300 hover:-translate-y-0.5 hover:border-gold hover:bg-gold hover:text-charcoal hover:shadow-[0_8px_24px_rgba(212,160,60,0.25)]"
                 >
-                  {l.label}
+                  {t(l.key)}
                 </TLink>
               ))}
             </nav>
             <LocaleSwitcher variant="landing" />
           </div>
           <div className="absolute bottom-8 left-1/2 flex -translate-x-1/2 flex-col items-center gap-1.5 font-mono text-[10px] font-medium uppercase tracking-[0.3em] text-bone/55">
-            scroll
+            {t('landing.scroll')}
             <ArrowDown className="h-4 w-4 animate-bounce text-gold" />
           </div>
         </section>
