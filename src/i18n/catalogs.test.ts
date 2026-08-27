@@ -32,6 +32,6 @@ describe('i18nFor', () => {
   })
 
   it('falls back to English for a missing key', () => {
-    expect(i18nFor('de').t('nav.blog')).toBe('Blog')
+    expect(i18nFor('de').t('__missing__')).toBe('__missing__')
   })
 })

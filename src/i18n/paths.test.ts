@@ -23,6 +23,10 @@ describe('manifest', () => {
   it('excludes the default from the prefixed list', () => {
     expect(PREFIXED_LOCALES.map((l) => l.code)).toEqual(['fi', 'de', 'ja', 'zh'])
   })
+  it('derives every prefix from its code', () => {
+    expect(DEFAULT_LOCALE.prefix).toBe('')
+    for (const l of PREFIXED_LOCALES) expect(l.prefix).toBe(`/${l.code}`)
+  })
 })
 
 describe('localeFromPath', () => {

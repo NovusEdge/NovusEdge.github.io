@@ -75,7 +75,17 @@ for (const locale of LOCALES.filter((l) => !l.default)) {
   const catalog = readJson(path)
   const missing = Object.keys(english).filter((k) => !(k in catalog))
   const todo = [...new Set([...staleKeys, ...missing])]
+
+  let pruned = false
+  for (const k of Object.keys(catalog)) {
+    if (!(k in english)) {
+      delete catalog[k]
+      pruned = true
+    }
+  }
+
   if (!todo.length) {
+    if (pruned) writeJson(path, catalog)
     console.log(`${locale.code}: up to date`)
     continue
   }
@@ -97,7 +107,6 @@ for (const locale of LOCALES.filter((l) => !l.default)) {
     catalog[k] = value
   }
 
-  for (const k of Object.keys(catalog)) if (!(k in english)) delete catalog[k]
   writeJson(path, catalog)
   console.log(`${locale.code}: wrote ${todo.length} keys`)
 }
