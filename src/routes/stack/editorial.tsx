@@ -4,6 +4,7 @@ import { TLink } from '../../components/page-transition'
 import { revealCards } from '../../lib/reveals'
 import { prefersReducedMotion } from '../../lib/motion'
 import { ArrowRight } from '../../components/icons'
+import { SectionNumber } from '../../components/motifs'
 import { DOMAINS, STACK, LANGS, LANG_TOTAL, LATELY, GROUP_NOTES, DEPTH, PROJECTS, type Tech, type Depth } from './data'
 import { useLocalePath } from '../../i18n/use-locale-path'
 
@@ -85,7 +86,7 @@ export default function StackEditorial() {
         {/* masthead: magazine header wired with a live folio line */}
         <header className="relative" data-card>
           <div className="flex items-baseline justify-between gap-3 font-mono text-xs uppercase tracking-[0.3em] text-charcoal/50 dark:text-bone/50">
-            <span>{t('stack.sectionLabel')}</span>
+            <SectionNumber n="04" label={t('stack.sectionLabel')} />
             <span>技 · gijutsu</span>
           </div>
 

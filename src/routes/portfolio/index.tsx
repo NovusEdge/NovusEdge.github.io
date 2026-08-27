@@ -9,6 +9,7 @@ import { fuzzyMatch } from '../../lib/blog-list'
 import { revealCards } from '../../lib/reveals'
 import { MarginQuote } from '../../components/side-flourish'
 import { Meta } from '../../lib/meta'
+import { SectionNumber } from '../../components/motifs'
 import { HeroBackground } from './hero-bg'
 import { useLocalePath } from '../../i18n/use-locale-path'
 
@@ -341,7 +342,7 @@ export default function PortfolioIndex() {
       <div className="relative z-10 mx-auto max-w-6xl px-6 pb-40 pt-40 md:px-10 md:pt-44">
         <header data-card className="mb-10">
           <div className="flex items-baseline justify-between font-mono text-[11px] uppercase tracking-[0.3em] text-bone/40">
-            <span>{t('portfolio.sectionLabel')}</span>
+            <SectionNumber n="01" label={t('portfolio.sectionLabel')} />
             <span>作品 · sakuhin</span>
           </div>
           <div className="mt-4 flex flex-col gap-5 md:flex-row md:items-end md:justify-between">
