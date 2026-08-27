@@ -698,49 +698,100 @@ git commit -s -m "i18n: keep internal links inside the active locale"
 
 The switcher links to the current path with the prefix swapped, so changing language holds the reader's place. It renders plain links, never a redirect. The spec rules out any load-time redirect, including a remembered choice, because a client-side redirect fights the prerendered pages.
 
+It is a dropdown, not a row of five links. The desktop header pill already carries Home, five nav links, and the theme toggle, and five more inline items would make twelve in one fixed-width pill. The trigger shows the active locale's code, and the open menu lists the five native labels from the manifest, which is what a reader who cannot read the current language scans for.
+
 - [ ] **Step 1: Write the component**
 
 Create `src/components/locale-switcher.tsx`:
 
 ```tsx
+import { useEffect, useRef, useState } from 'react'
 import { useLocation } from 'react-router'
 import { useTranslation } from 'react-i18next'
 import { TLink } from './page-transition'
 import { LOCALES, localePath } from '../i18n/paths'
 import { useLocale } from '../i18n/context'
 
-// the label of each option stays in its own language, so a reader who cannot read the
-// current locale can still find theirs
+// Each option keeps its own language and its own lang attribute, so a reader who cannot
+// read the active locale can still find theirs, and a screen reader switches voice.
 export function LocaleSwitcher({ variant = 'header' }: { variant?: 'header' | 'landing' }) {
   const { pathname } = useLocation()
   const active = useLocale()
   const { t } = useTranslation()
+  const [open, setOpen] = useState(false)
+  const ref = useRef<HTMLDivElement>(null)
 
-  const tone =
-    variant === 'landing'
-      ? { on: 'text-gold', off: 'text-bone/55 hover:text-bone' }
-      : { on: 'text-gold', off: 'text-charcoal/50 hover:text-charcoal dark:text-bone/50 dark:hover:text-bone' }
+  useEffect(() => setOpen(false), [pathname])
+
+  useEffect(() => {
+    if (!open) return
+    const onPointer = (e: PointerEvent) => {
+      if (!ref.current?.contains(e.target as Node)) setOpen(false)
+    }
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setOpen(false)
+    }
+    document.addEventListener('pointerdown', onPointer)
+    document.addEventListener('keydown', onKey)
+    return () => {
+      document.removeEventListener('pointerdown', onPointer)
+      document.removeEventListener('keydown', onKey)
+    }
+  }, [open])
+
+  const landing = variant === 'landing'
+  const trigger = landing
+    ? 'text-bone/70 hover:text-bone'
+    : 'text-charcoal/60 hover:text-gold dark:text-bone/60 dark:hover:text-gold'
+  const panel = landing
+    ? 'border-bone/20 bg-charcoal/95 text-bone'
+    : 'border-charcoal/10 bg-bone/95 text-charcoal dark:border-bone/10 dark:bg-charcoal/95 dark:text-bone'
 
   return (
-    <nav aria-label={t('nav.language')} className="flex items-center gap-2 font-mono text-[10px] uppercase tracking-wider">
-      {LOCALES.map((l) => (
-        <TLink
-          key={l.code}
-          to={localePath(pathname, l)}
-          hrefLang={l.htmlLang}
-          lang={l.htmlLang}
-          aria-current={l.code === active.code ? 'true' : undefined}
-          className={`transition-colors ${l.code === active.code ? tone.on : tone.off}`}
+    <div ref={ref} className="relative">
+      <button
+        type="button"
+        aria-label={t('nav.language')}
+        aria-haspopup="menu"
+        aria-expanded={open}
+        onClick={() => setOpen((v) => !v)}
+        className={`flex cursor-pointer items-center gap-1 font-display text-sm font-semibold uppercase tracking-wider transition-colors ${trigger}`}
+      >
+        {active.code}
+        <span aria-hidden className={`text-[8px] transition-transform ${open ? 'rotate-180' : ''}`}>
+          &#9662;
+        </span>
+      </button>
+
+      {open && (
+        <div
+          role="menu"
+          className={`absolute right-0 top-full z-50 mt-2 flex min-w-36 flex-col overflow-hidden rounded-xl border shadow-lg backdrop-blur-lg ${panel}`}
         >
-          {l.code.toUpperCase()}
-        </TLink>
-      ))}
-    </nav>
+          {LOCALES.map((l) => (
+            <TLink
+              key={l.code}
+              role="menuitem"
+              to={localePath(pathname, l)}
+              hrefLang={l.htmlLang}
+              lang={l.htmlLang}
+              aria-current={l.code === active.code ? 'true' : undefined}
+              className={`flex items-center justify-between gap-4 px-4 py-2 text-sm transition-colors hover:bg-gold/10 ${
+                l.code === active.code ? 'text-gold' : ''
+              }`}
+            >
+              {l.label}
+              {l.code === active.code && <span aria-hidden>&#10003;</span>}
+            </TLink>
+          ))}
+        </div>
+      )}
+    </div>
   )
 }
 ```
 
-`src/components/page-transition.tsx:4` re-exports react-router's `Link` as `TLink` and `NavLink` as `TNavLink`. The switcher wants `TLink`, since it styles its own active state and does not need `NavLink`.
+Two notes on this code. `src/components/page-transition.tsx:4` re-exports react-router's `Link` as `TLink` and `NavLink` as `TNavLink`, and the switcher wants `TLink` because it styles its own active state. And the dismissal effects are written inline rather than reusing the `useOutsideClick` at `src/routes/blips/index.tsx:29`, which is local to that route file. Extracting it into a shared hook would mean editing an unrelated route, which is outside this task.
 
 - [ ] **Step 2: Mount it in the header**
 
@@ -757,13 +808,17 @@ Mobile nav, after the `<ThemeToggle />` on line 103, add `<LocaleSwitcher />` be
 
 - [ ] **Step 3: Mount it on the landing**
 
-`src/App.tsx` renders no header on `/`, so the landing needs its own mount. In `src/routes/index.tsx`, add `<LocaleSwitcher variant="landing" />` directly after the closing `</nav>` of the nav pill row at line 106.
+`src/App.tsx` renders no header on `/`, so the landing needs its own mount. In `src/routes/index.tsx`, add `<LocaleSwitcher variant="landing" />` directly after the closing `</nav>` of the nav pill row.
+
+Note that `StatusStrip` was removed from this file in commit `da1176a`, so the nav pill row now sits directly under the tagline. Do not reintroduce it.
 
 - [ ] **Step 4: Verify by hand**
 
 Use the dev server that is already running. Do not start another.
 
-From `/blog/hello-world`, click ZH. Confirm the URL becomes `/zh/blog/hello-world` and the page stays on the same post. Click EN and confirm it returns to `/blog/hello-world`. Confirm the switcher appears on the landing page.
+From `/blog/hello-world`, open the switcher and click 简体中文. Confirm the URL becomes `/zh/blog/hello-world` and the page stays on the same post. Open it again and click English, confirming it returns to `/blog/hello-world`.
+
+Confirm the menu closes on an outside click, on Escape, and after navigating. Confirm the trigger shows the active code and the open menu marks the active row. Confirm the switcher appears on the landing page and in the mobile header bar.
 
 - [ ] **Step 5: Commit**
 
