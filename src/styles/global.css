@@ -39,6 +39,10 @@
   --font-display: 'Amulya', 'Noto Sans SC', 'Zen Kaku Gothic New', sans-serif;
   --font-body: 'Satoshi', 'Noto Sans SC', sans-serif;
   --font-prose: 'Supreme', 'Noto Sans SC', sans-serif;
+  --font-mono: 'JetBrains Mono', 'Noto Sans SC', monospace;
+}
+:lang(ja) {
+  --font-mono: 'JetBrains Mono', 'Zen Kaku Gothic New', monospace;
 }
 
 @layer base {
