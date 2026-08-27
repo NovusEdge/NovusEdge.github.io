@@ -44,6 +44,7 @@ export async function prerender(data: { url: string }) {
   return {
     html,
     head: {
+      lang: headState.lang,
       title: headState.title,
       elements: new Set(elements),
     },
