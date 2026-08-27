@@ -7,6 +7,7 @@ import { Rule } from '../../components/motifs'
 import { ArrowRight } from '../../components/icons'
 import { prefersReducedMotion } from '../../lib/motion'
 import type { ProjectContent } from './content/types'
+import { useLocalePath } from '../../i18n/use-locale-path'
 
 export type LayoutProps = { p: Project; c: ProjectContent }
 
@@ -90,6 +91,7 @@ export function Dossier({ p, c }: LayoutProps) {
   const ids = useMemo(() => c.sections.map((s) => s.id), [c])
   const { active, progress } = useScrollSpy(ids)
   const pct = Math.round(progress * 100)
+  const lp = useLocalePath()
 
   // IntersectionObserver rather than ScrollTrigger: an anchor jump from the
   // rail skips scroll positions, and IO still fires for the landed section.
@@ -187,7 +189,7 @@ export function Dossier({ p, c }: LayoutProps) {
                 </span>
               )}
               <TLink
-                to="/portfolio"
+                to={lp('/portfolio')}
                 className="group inline-flex items-center gap-1.5 font-mono text-xs uppercase tracking-[0.2em] text-charcoal/50 transition-colors hover:text-gold dark:text-bone/50"
               >
                 back to portfolio

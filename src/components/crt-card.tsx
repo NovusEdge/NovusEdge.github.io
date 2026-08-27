@@ -4,6 +4,7 @@ import 'vault66-crt-effect/style.css'
 import { TLink } from './page-transition'
 import { ArrowRight } from './icons'
 import type { Post } from '../lib/posts'
+import { useLocalePath } from '../i18n/use-locale-path'
 
 type Props = {
   post: Post
@@ -14,6 +15,7 @@ type Props = {
 
 export function CRTCard({ post, img, dayOf, monthOf }: Props) {
   const [hovered, setHovered] = useState(false)
+  const lp = useLocalePath()
 
   return (
     <li
@@ -36,7 +38,7 @@ export function CRTCard({ post, img, dayOf, monthOf }: Props) {
 
       {/* Image with CRT effect */}
       <div data-col className="md:col-span-4 order-2">
-        <TLink to={`/blog/${post.slug}`} className="block">
+        <TLink to={lp(`/blog/${post.slug}`)} className="block">
           <div
             data-thumb
             className="relative overflow-hidden rounded-lg border border-charcoal/10 dark:border-bone/10 bg-black aspect-[4/5] w-full max-w-[220px] shadow-md transition-all duration-300 group-hover:shadow-amber-500/20 group-hover:shadow-lg"
@@ -69,7 +71,7 @@ export function CRTCard({ post, img, dayOf, monthOf }: Props) {
       {/* Title */}
       <div data-col className="md:col-span-6 flex flex-col justify-center order-3">
         <TLink
-          to={`/blog/${post.slug}`}
+          to={lp(`/blog/${post.slug}`)}
           className="font-display text-2xl font-bold leading-snug text-charcoal transition-all duration-200 group-hover:text-amber-500 dark:text-bone md:text-3xl"
         >
           {post.title}

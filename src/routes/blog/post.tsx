@@ -17,6 +17,7 @@ import { BlogInterstitials } from '../../components/blog-interstitial'
 import NotFound from '../not-found'
 import Magnetic from '../../components/react-bits/Magnetic'
 import { PostHero } from './post-hero'
+import { useLocalePath } from '../../i18n/use-locale-path'
 
 // ponytail: per-post decorations, add more as needed
 const POST_DECORATIONS: Record<string, { id: string; src: string; side: 'left' | 'right'; triggerId: string; size?: string; offset?: Record<string, string> }[]> = {
@@ -52,6 +53,7 @@ export default function BlogPost() {
   const { slug } = useParams()
   const post = slug ? getPost(slug) : undefined
   const proseRef = useRef<HTMLDivElement>(null)
+  const lp = useLocalePath()
 
   useGSAP(
     () => {
@@ -82,7 +84,7 @@ export default function BlogPost() {
         <div className="mb-10">
           <Magnetic range={25}>
             <TLink
-              to="/blog"
+              to={lp('/blog')}
               className="group inline-block rounded border border-charcoal/10 bg-bone-tint/10 px-3.5 py-1.5 font-mono text-xs uppercase tracking-[0.2em] text-paper-deep transition-colors hover:border-gold dark:border-bone/10 dark:bg-charcoal-tint/10 dark:text-paper dark:hover:border-gold"
             >
               [ back to blog ]

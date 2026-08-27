@@ -6,6 +6,7 @@ import { Github, ArrowRight } from '../../components/icons'
 import { prefersReducedMotion } from '../../lib/motion'
 import Starfield from '../../components/palpatine/Starfield'
 import type { LayoutProps } from './layouts'
+import { useLocalePath } from '../../i18n/use-locale-path'
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -55,6 +56,7 @@ export default function Palpatine({ p, c }: LayoutProps) {
   const hero = useRef<HTMLDivElement>(null)
   const crawl = useRef<HTMLDivElement>(null)
   const intro = useRef<HTMLParagraphElement>(null)
+  const lp = useLocalePath()
 
   // paint the shared site footer in this page's space black while it is mounted
   useEffect(() => {
@@ -163,7 +165,7 @@ export default function Palpatine({ p, c }: LayoutProps) {
       {/* title + content */}
       <div className="relative z-10 mx-auto max-w-3xl px-6 pb-24">
         <TLink
-          to="/portfolio"
+          to={lp('/portfolio')}
           aria-label="Back to portfolio"
           title="Back to portfolio"
           className="group inline-flex h-9 w-9 items-center justify-center rounded border border-[#e8e4da]/15 text-[#e8e4da]/50 transition-colors hover:border-[#e10600] hover:text-[#e10600]"
@@ -282,7 +284,7 @@ Append **Power dynamics:** with leverage points and applicable laws.
             {p.jp}
           </span>
           <TLink
-            to="/portfolio"
+            to={lp('/portfolio')}
             className="group inline-flex items-center gap-1.5 font-mono text-xs uppercase tracking-[0.2em] text-[#e8e4da]/50 transition-colors hover:text-[#e10600]"
           >
             back to portfolio

@@ -4,6 +4,7 @@ import { TLink } from '../../components/page-transition'
 import { Github, Globe, Package, FileText, ArrowRight } from '../../components/icons'
 import { prefersReducedMotion } from '../../lib/motion'
 import type { LayoutProps } from './layouts'
+import { useLocalePath } from '../../i18n/use-locale-path'
 
 const iconFor = (href: string) =>
   href.includes('github.com') ? Github : href.includes('npmjs.com') || href.includes('pypi.org') ? Package : Globe
@@ -63,6 +64,7 @@ const Code = ({ children }: { children: ReactNode }) => (
 
 export default function Stoat({ p, c }: LayoutProps) {
   const scope = useRef<HTMLDivElement>(null)
+  const lp = useLocalePath()
 
   useEffect(() => {
     if (prefersReducedMotion() || !scope.current) return
@@ -102,7 +104,7 @@ export default function Stoat({ p, c }: LayoutProps) {
         <div className="relative mx-auto flex max-w-6xl flex-col gap-12 px-6 pb-16 pt-32 lg:flex-row lg:items-center lg:gap-16 lg:pt-36">
           <div className="lg:w-5/12">
             <TLink
-              to="/portfolio"
+              to={lp('/portfolio')}
               aria-label="Back to portfolio"
               title="Back to portfolio"
               className="group inline-flex h-9 w-9 items-center justify-center rounded border border-bone/15 text-bone/50 transition-colors hover:border-gold hover:text-gold"
@@ -408,7 +410,7 @@ export default function Stoat({ p, c }: LayoutProps) {
             {p.jp}
           </span>
           <TLink
-            to="/portfolio"
+            to={lp('/portfolio')}
             className="group inline-flex items-center gap-1.5 font-mono text-xs uppercase tracking-[0.2em] text-bone/50 transition-colors hover:text-gold"
           >
             back to portfolio

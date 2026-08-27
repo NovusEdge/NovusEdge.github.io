@@ -7,6 +7,7 @@ import DecryptedText from '../../components/react-bits/DecryptedText'
 import { projects, type Project } from '../../content/projects'
 import { revealCards } from '../../lib/reveals'
 import { RedactedCard } from '../../components/redacted-card'
+import { useLocalePath } from '../../i18n/use-locale-path'
 
 const building = projects.filter((p) => p.phase === 'building')
 
@@ -143,6 +144,7 @@ const TOTAL_PAGES = Math.ceil(CARDS.length / PROJECTS_PER_PAGE)
 export default function AboutPage() {
   const scope = useRef<HTMLElement>(null)
   const [projectPage, setProjectPage] = useState(0)
+  const lp = useLocalePath()
   const pageItems = CARDS.slice(projectPage * PROJECTS_PER_PAGE, (projectPage + 1) * PROJECTS_PER_PAGE)
 
   useEffect(() => revealCards(scope.current), [])
@@ -230,7 +232,7 @@ export default function AboutPage() {
               <span className="font-mono text-sm font-semibold uppercase tracking-[0.3em] text-gold">Building Now</span>
             </h2>
             <TLink
-              to="/portfolio"
+              to={lp('/portfolio')}
               className="group inline-flex items-center gap-1.5 font-mono text-xs font-medium uppercase tracking-[0.2em] text-charcoal/60 transition-colors hover:text-gold dark:text-bone/60"
             >
               <span className="link-draw">all projects</span>

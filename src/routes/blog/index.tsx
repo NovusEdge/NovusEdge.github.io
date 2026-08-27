@@ -16,6 +16,7 @@ import { TopFlourish } from '../../components/top-flourish'
 import DecryptedText from '../../components/react-bits/DecryptedText'
 import Magnetic from '../../components/react-bits/Magnetic'
 import { countBlipsBetween, InlineBlipCount, FloatingPill } from '../../components/inline-blips'
+import { useLocalePath } from '../../i18n/use-locale-path'
 
 const MONTHS = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC']
 const dayOf = (iso: string) => iso.slice(8, 10)
@@ -24,6 +25,7 @@ const monthOf = (iso: string) => MONTHS[Number(iso.slice(5, 7)) - 1] ?? iso.slic
 export default function BlogIndex() {
   const [q, setQ] = useState('')
   const scope = useRef<HTMLElement>(null)
+  const lp = useLocalePath()
   useReveal(scope)
   const groups = groupByYear(filterPosts(posts, q))
   const stats = {
@@ -160,7 +162,7 @@ export default function BlogIndex() {
                       <div data-col className="md:col-span-7 flex flex-col">
                         <Magnetic range={20}>
                           <TLink
-                            to={`/blog/${post.slug}`}
+                            to={lp(`/blog/${post.slug}`)}
                             className="font-display text-xl font-bold leading-snug text-charcoal transition-all duration-200 group-hover:translate-x-1 group-hover:text-paper-deep dark:text-bone dark:group-hover:text-paper md:text-2xl"
                           >
                             {post.title}

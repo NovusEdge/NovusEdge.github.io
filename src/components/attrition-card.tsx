@@ -4,6 +4,7 @@ import { TLink } from './page-transition'
 import { ArrowRight } from './icons'
 import { isMobile, prefersReducedMotion } from '../lib/motion'
 import type { Post } from '../lib/posts'
+import { useLocalePath } from '../i18n/use-locale-path'
 
 const VERTEX = `
 attribute vec2 uv;
@@ -397,6 +398,7 @@ export function AttritionCard({ post, img, dayOf, monthOf }: Props) {
   const [shaded, setShaded] = useState(false)
   // setState identity is stable, so the canvas can hold this across its lifetime.
   const [glitching, setGlitching] = useState(false)
+  const lp = useLocalePath()
 
   useEffect(() => {
     setShaded(!prefersReducedMotion() && !isMobile())
@@ -421,7 +423,7 @@ export function AttritionCard({ post, img, dayOf, monthOf }: Props) {
       </div>
 
       <div data-col className="md:col-span-4 order-2">
-        <TLink to={`/blog/${post.slug}`} className="block">
+        <TLink to={lp(`/blog/${post.slug}`)} className="block">
           <div
             data-thumb
             className="relative overflow-hidden rounded-lg border border-charcoal/10 dark:border-bone/10 bg-black aspect-[4/5] w-full max-w-[220px] shadow-md transition-all duration-300 group-hover:border-cyan-400/40 group-hover:shadow-cyan-400/20 group-hover:shadow-lg"
@@ -438,7 +440,7 @@ export function AttritionCard({ post, img, dayOf, monthOf }: Props) {
       <div data-col className="md:col-span-6 flex flex-col justify-center order-3">
         {shaded && <WarpFilters />}
         <TLink
-          to={`/blog/${post.slug}`}
+          to={lp(`/blog/${post.slug}`)}
           className="font-display text-2xl font-bold leading-snug text-charcoal transition-colors duration-200 group-hover:text-cyan-400 dark:text-bone md:text-3xl"
           style={
             shaded

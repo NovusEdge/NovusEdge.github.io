@@ -9,6 +9,7 @@ import { revealCards } from '../../lib/reveals'
 import { MarginQuote } from '../../components/side-flourish'
 import { Meta } from '../../lib/meta'
 import { HeroBackground } from './hero-bg'
+import { useLocalePath } from '../../i18n/use-locale-path'
 
 const primaryLink = (p: Project) => p.links[0]?.href ?? '#'
 
@@ -62,6 +63,7 @@ function DataRow({ k, v }: { k: string; v: string }) {
 
 // framed print plate: shader inside crop corners, mono data column beside it
 function Slide({ p }: { p: Project }) {
+  const lp = useLocalePath()
   return (
     <div className="relative border border-bone/12 bg-charcoal-tint/85 p-4 backdrop-blur-sm md:p-6">
       <div className="relative grid gap-5 md:grid-cols-[40%_1fr] md:items-center md:gap-8">
@@ -105,7 +107,7 @@ function Slide({ p }: { p: Project }) {
             <div className="mt-5 flex flex-wrap items-center gap-2">
               {hasPage(p.slug) && (
                 <TLink
-                  to={`/portfolio/${p.slug}`}
+                  to={lp(`/portfolio/${p.slug}`)}
                   onClick={(e) => e.stopPropagation()}
                   className="group/read inline-flex items-center gap-2 border border-gold bg-gold/15 px-4 py-2 font-mono text-[11px] font-semibold uppercase tracking-[0.25em] text-gold transition-colors hover:bg-gold hover:text-charcoal"
                 >
@@ -256,6 +258,7 @@ function Carousel({ items }: { items: Project[] }) {
 // same proof-sheet language, shrunk: crop corners, mono foot, gold tick rule
 function InfoCard({ p }: { p: Project }) {
   const outbound = !hasPage(p.slug)
+  const lp = useLocalePath()
   const inner = (
     <>
       <Crops inset="inset-2" />
@@ -291,7 +294,7 @@ function InfoCard({ p }: { p: Project }) {
       {inner}
     </a>
   ) : (
-    <TLink to={`/portfolio/${p.slug}`} className={cls}>
+    <TLink to={lp(`/portfolio/${p.slug}`)} className={cls}>
       {inner}
     </TLink>
   )

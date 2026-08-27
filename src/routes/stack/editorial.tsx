@@ -4,6 +4,7 @@ import { revealCards } from '../../lib/reveals'
 import { prefersReducedMotion } from '../../lib/motion'
 import { ArrowRight } from '../../components/icons'
 import { DOMAINS, STACK, LANGS, LANG_TOTAL, LATELY, GROUP_NOTES, DEPTH, PROJECTS, type Tech, type Depth } from './data'
+import { useLocalePath } from '../../i18n/use-locale-path'
 
 // look up a tech's icon by name, for the project rows
 const TECH_BY_NAME = new Map(STACK.flatMap((g) => g.items.map((t) => [t.name, t] as const)))
@@ -63,6 +64,7 @@ function TechEntry({ t }: { t: Tech }) {
 
 export default function StackEditorial() {
   const scope = useRef<HTMLElement>(null)
+  const lp = useLocalePath()
   useEffect(() => revealCards(scope.current), [])
 
   const reduced = prefersReducedMotion()
@@ -133,7 +135,7 @@ export default function StackEditorial() {
               </span>
             </div>
             <TLink
-              to="/portfolio"
+              to={lp('/portfolio')}
               className="group inline-flex items-center gap-2 rounded-full border border-gold/40 bg-gold/[0.06] px-4 py-1.5 font-mono text-[11px] uppercase tracking-[0.2em] text-gold transition-colors hover:bg-gold/15"
             >
               full portfolio

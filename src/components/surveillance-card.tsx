@@ -2,6 +2,7 @@ import { useRef, useState, useEffect } from 'react'
 import { TLink } from './page-transition'
 import { ArrowRight } from './icons'
 import type { Post } from '../lib/posts'
+import { useLocalePath } from '../i18n/use-locale-path'
 
 // Redacted text - word by word slide reveal
 function RedactedText({ text, revealed }: { text: string; revealed: boolean }) {
@@ -37,6 +38,7 @@ export function SurveillanceCard({ post, img, dayOf, monthOf }: Props) {
   const imgRef = useRef<HTMLImageElement>(null)
   const [hovered, setHovered] = useState(false)
   const [eyeOffset, setEyeOffset] = useState({ x: 0, y: 0 })
+  const lp = useLocalePath()
 
   // Eye tracking effect
   useEffect(() => {
@@ -84,7 +86,7 @@ export function SurveillanceCard({ post, img, dayOf, monthOf }: Props) {
 
       {/* Image with eye tracking */}
       <div data-col className="md:col-span-4 order-2">
-        <TLink to={`/blog/${post.slug}`} className="block">
+        <TLink to={lp(`/blog/${post.slug}`)} className="block">
           <div
             data-thumb
             className="relative overflow-hidden rounded-lg border border-charcoal/10 dark:border-bone/10 bg-black aspect-[4/5] w-full max-w-[220px] shadow-md transition-all duration-300 group-hover:border-emerald-500/50 group-hover:shadow-emerald-500/20 group-hover:shadow-lg"
@@ -115,7 +117,7 @@ export function SurveillanceCard({ post, img, dayOf, monthOf }: Props) {
       {/* Title with redaction effect */}
       <div data-col className="md:col-span-6 flex flex-col justify-center order-3">
         <TLink
-          to={`/blog/${post.slug}`}
+          to={lp(`/blog/${post.slug}`)}
           className="font-display text-2xl font-bold leading-snug text-charcoal transition-all duration-200 group-hover:text-emerald-400 dark:text-bone md:text-3xl"
         >
           <RedactedText text={post.title} revealed={hovered} />

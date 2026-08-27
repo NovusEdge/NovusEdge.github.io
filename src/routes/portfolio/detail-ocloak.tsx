@@ -8,6 +8,7 @@ import { prefersReducedMotion } from '../../lib/motion'
 import { techRef } from '../../lib/tech-icons'
 import TrustCollapse from '../../components/ocloak/TrustCollapse'
 import type { LayoutProps } from './layouts'
+import { useLocalePath } from '../../i18n/use-locale-path'
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -144,6 +145,7 @@ export default function Ocloak({ p, c }: LayoutProps) {
   const [mounted, setMounted] = useState(false)
   useEffect(() => setMounted(true), [])
   const eyesOn = !prefersReducedMotion()
+  const lp = useLocalePath()
 
   // reveal-on-scroll for body blocks
   useEffect(() => {
@@ -228,7 +230,7 @@ export default function Ocloak({ p, c }: LayoutProps) {
         <div className="relative mx-auto max-w-3xl px-6 pb-40 pt-36 lg:pb-52 lg:pt-44">
           <div>
             <TLink
-              to="/portfolio"
+              to={lp('/portfolio')}
               aria-label="Back to portfolio"
               title="Back to portfolio"
               className="group inline-flex h-9 w-9 items-center justify-center rounded border border-bone/15 text-bone/50 transition-colors hover:border-gold hover:text-gold"
@@ -317,7 +319,7 @@ export default function Ocloak({ p, c }: LayoutProps) {
             {p.jp}
           </span>
           <TLink
-            to="/portfolio"
+            to={lp('/portfolio')}
             className="group inline-flex items-center gap-1.5 font-mono text-xs uppercase tracking-[0.2em] text-bone/50 transition-colors hover:text-gold"
           >
             back to portfolio

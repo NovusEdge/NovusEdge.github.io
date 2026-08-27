@@ -5,6 +5,7 @@ import { Rule } from './motifs'
 import { Github, Globe, Package, ArrowRight } from './icons'
 import { techRef } from '../lib/tech-icons'
 import DecryptedText from './react-bits/DecryptedText'
+import { useLocalePath } from '../i18n/use-locale-path'
 
 const PHASE_STYLE: Record<Project['phase'], { label: string; class: string }> = {
   building: { label: 'building', class: 'border-gold/50 text-gold' },
@@ -95,11 +96,12 @@ function LinkRow({ l }: { l: { label: string; href: string } }) {
    styled per project. */
 export function ProjectHeader({ p, lede }: { p: Project; lede: ReactNode }) {
   const phase = PHASE_STYLE[p.phase]
+  const lp = useLocalePath()
   return (
     <header className="mx-auto max-w-5xl px-6 pt-32">
       <div className="mb-10">
         <TLink
-          to="/portfolio"
+          to={lp('/portfolio')}
           className="group inline-flex items-center gap-1.5 font-mono text-xs uppercase tracking-[0.2em] text-charcoal/50 transition-colors hover:text-gold dark:text-bone/50"
         >
           <ArrowRight className="h-3.5 w-3.5 rotate-180 transition-transform group-hover:-translate-x-1" />
