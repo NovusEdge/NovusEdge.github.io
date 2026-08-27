@@ -41,5 +41,12 @@
   "toc.onThisPage": "On this page",
   "notFound.tag": "404 : not found",
   "notFound.message": "This page does not exist or has moved.",
-  "notFound.home": "[ home ]"
+  "notFound.home": "[ home ]",
+  "blog.title": "Blog",
+  "blog.sectionLabel": "blog",
+  "blog.searchPlaceholder": "search posts...",
+  "blog.searchLabel": "Search posts",
+  "blog.noMatch": "no posts match [ {{query}} ]",
+  "blog.docPlaceholder": "[ doc ]",
+  "blog.backToBlog": "[ back to blog ]"
 }

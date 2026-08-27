@@ -1,5 +1,6 @@
 import { useRef } from 'react'
 import { useParams } from 'react-router'
+import { useTranslation } from 'react-i18next'
 import { TLink } from '../../components/page-transition'
 import { useGSAP } from '@gsap/react'
 import { Meta } from '../../lib/meta'
@@ -50,6 +51,7 @@ const POST_HERO: Record<string, number> = {
 }
 
 export default function BlogPost() {
+  const { t } = useTranslation()
   const { slug } = useParams()
   const post = slug ? getPost(slug) : undefined
   const proseRef = useRef<HTMLDivElement>(null)
@@ -87,7 +89,7 @@ export default function BlogPost() {
               to={lp('/blog')}
               className="group inline-block rounded border border-charcoal/10 bg-bone-tint/10 px-3.5 py-1.5 font-mono text-xs uppercase tracking-[0.2em] text-paper-deep transition-colors hover:border-gold dark:border-bone/10 dark:bg-charcoal-tint/10 dark:text-paper dark:hover:border-gold"
             >
-              [ back to blog ]
+              {t('blog.backToBlog')}
             </TLink>
           </Magnetic>
         </div>
