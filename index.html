@@ -93,8 +93,15 @@
       href="https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@400;500;700;900&family=JetBrains+Mono:wght@400;500;600;700&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap"
       rel="stylesheet"
     />
+    <!-- one family per request: the Fontshare API returns only the first f[] and silently
+         drops the rest, so the combined request served zero Amulya @font-face rules and every
+         font-display heading fell back to Zen Kaku Gothic New -->
     <link
-      href="https://api.fontshare.com/v2/css?f[]=satoshi@300,400,500,700,900&f[]=amulya@400,500,700,900&display=swap"
+      href="https://api.fontshare.com/v2/css?f[]=satoshi@300,400,500,700,900&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://api.fontshare.com/v2/css?f[]=amulya@400,500,700,900&display=swap"
       rel="stylesheet"
     />
     <script async src="https://scripts.withcabin.com/hello.js"></script>
