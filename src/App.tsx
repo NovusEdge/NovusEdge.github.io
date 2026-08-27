@@ -1,5 +1,6 @@
 import { useEffect } from 'react'
 import { Routes, Route, useLocation } from 'react-router'
+import { I18nextProvider } from 'react-i18next'
 import { Header } from './components/header'
 import GrainShader from './components/react-bits/GrainShader'
 import Landing from './routes/index'
@@ -15,42 +16,69 @@ import NotFound from './routes/not-found'
 import { SiteFooter } from './components/site-footer'
 import { AccessibilityPanel } from './components/accessibility-panel'
 import ClickSpark from './components/react-bits/ClickSpark'
+import { DEFAULT_LOCALE, PREFIXED_LOCALES, stripLocale, type Locale } from './i18n/paths'
+import { LocaleContext } from './i18n/context'
+import { i18nFor } from './i18n'
+import { headState } from './lib/meta'
 
-export default function App() {
+function LocaleTree({ locale }: { locale: Locale }) {
   const { pathname } = useLocation()
-  // block body, not an implicit-return arrow: a browser that patches scrollTo to
-  // return a Promise (Brave, smooth-scroll extensions) would otherwise feed it to
-  // React as the effect cleanup, and StrictMode's teardown throws "destroy is not a function".
+  const bare = stripLocale(pathname)
+
+  // the prerender pass reads headState after render and writes lang onto <html>
+  headState.lang = locale.htmlLang
+
   useEffect(() => {
     window.scrollTo(0, 0)
   }, [pathname])
+
+  useEffect(() => {
+    document.documentElement.lang = locale.htmlLang
+  }, [locale.htmlLang])
+
   // remount + replay the fade-up per route; collapse /stack so its sub-views keep their own slide
-  const key = pathname.startsWith('/stack') ? '/stack' : pathname
+  const key = bare.startsWith('/stack') ? '/stack' : pathname
 
   return (
+    <I18nextProvider i18n={i18nFor(locale.code)}>
+      <LocaleContext value={locale}>
+        {/* landing is a self-contained dark cover with its own nav; header rides every other page */}
+        {bare !== '/' && <Header />}
+        <GrainShader />
+        <div key={key} className="page-enter">
+          {/* nested Routes match against the remainder of the parent path, so these are relative */}
+          <Routes>
+            <Route path="" element={<Landing />} />
+            <Route path="about" element={<AboutPage />} />
+            <Route path="blog" element={<BlogIndex />} />
+            <Route path="blog/:slug" element={<BlogPost />} />
+            <Route path="portfolio" element={<PortfolioIndex />} />
+            <Route path="portfolio/:slug" element={<ProjectPage />} />
+            <Route path="research" element={<ResearchIndex />} />
+            <Route path="stack" element={<StackPage />} />
+            <Route path="stack/editorial" element={<StackPage />} />
+            <Route path="stack/graph" element={<StackPage />} />
+            <Route path="blips" element={<BlipsPage />} />
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </div>
+        {/* universal footer; /stack carries its own colophon (editorial) or runs immersive (graph) */}
+        {!bare.startsWith('/stack') && <SiteFooter />}
+        <AccessibilityPanel />
+      </LocaleContext>
+    </I18nextProvider>
+  )
+}
+
+export default function App() {
+  return (
     <ClickSpark sparkColor="#d4a03c" sparkCount={12} sparkSize={12} sparkRadius={20} extraScale={1.2}>
-      {/* landing is a self-contained dark cover with its own nav; header rides every other page */}
-      {pathname !== '/' && <Header />}
-      <GrainShader />
-      <div key={key} className="page-enter">
-        <Routes>
-          <Route path="/" element={<Landing />} />
-          <Route path="/about" element={<AboutPage />} />
-          <Route path="/blog" element={<BlogIndex />} />
-          <Route path="/blog/:slug" element={<BlogPost />} />
-          <Route path="/portfolio" element={<PortfolioIndex />} />
-          <Route path="/portfolio/:slug" element={<ProjectPage />} />
-          <Route path="/research" element={<ResearchIndex />} />
-          <Route path="/stack" element={<StackPage />} />
-          <Route path="/stack/editorial" element={<StackPage />} />
-          <Route path="/stack/graph" element={<StackPage />} />
-          <Route path="/blips" element={<BlipsPage />} />
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </div>
-      {/* universal footer; /stack carries its own colophon (editorial) or runs immersive (graph) */}
-      {!pathname.startsWith('/stack') && <SiteFooter />}
-      <AccessibilityPanel />
+      <Routes>
+        {PREFIXED_LOCALES.map((l) => (
+          <Route key={l.code} path={`${l.code}/*`} element={<LocaleTree locale={l} />} />
+        ))}
+        <Route path="/*" element={<LocaleTree locale={DEFAULT_LOCALE} />} />
+      </Routes>
     </ClickSpark>
   )
 }
