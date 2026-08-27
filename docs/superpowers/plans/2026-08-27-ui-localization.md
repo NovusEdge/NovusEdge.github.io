@@ -671,7 +671,7 @@ Then change all four `to` props. The two `to="/"` links become `to={lp('/')}`, a
 
 - [ ] **Step 6: Prefix the landing nav pills**
 
-In `src/routes/index.tsx`, add the same import, call `const lp = useLocalePath()` inside the landing component, and change the nav pill link at line 99 from `to={l.to}` to `to={lp(l.to)}`.
+In `src/routes/index.tsx`, add the same import, call `const lp = useLocalePath()` inside the `Landing` component, and change the nav pill link inside the `NAV.map` body from `to={l.to}` to `to={lp(l.to)}`.
 
 - [ ] **Step 7: Verify by hand**
 
