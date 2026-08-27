@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import { createPortal } from 'react-dom'
+import { useTranslation } from 'react-i18next'
 import { ChevronDown } from './icons'
 
 type Heading = { id: string; text: string; level: number }
@@ -23,6 +24,7 @@ function extractHeadings(markdown: string): Heading[] {
 }
 
 export function TableOfContents({ content }: { content: string }) {
+  const { t } = useTranslation()
   const headings = useMemo(() => extractHeadings(content), [content])
   const [active, setActive] = useState<string | null>(null)
   const [collapsed, setCollapsed] = useState(true)
@@ -52,7 +54,7 @@ export function TableOfContents({ content }: { content: string }) {
           onClick={() => setCollapsed(!collapsed)}
           className="flex w-full items-center justify-between gap-2 font-mono text-xs font-semibold uppercase tracking-[0.15em] text-charcoal/70 dark:text-bone/70 hover:text-gold transition-colors"
         >
-          <span>On this page</span>
+          <span>{t('toc.onThisPage')}</span>
           <ChevronDown
             className={`h-4 w-4 transition-transform duration-200 ${collapsed ? '-rotate-90' : ''}`}
           />
