@@ -4,6 +4,7 @@ import { useLocation, useNavigate } from 'react-router'
 import { AnimatePresence, motion } from 'framer-motion'
 import { Meta } from '../../lib/meta'
 import { prefersReducedMotion } from '../../lib/motion'
+import { useLocalePath } from '../../i18n/use-locale-path'
 import StackEditorial from './editorial'
 import StackGraph from './graph'
 
@@ -122,6 +123,7 @@ export default function StackPage() {
   const { t } = useTranslation()
   const { pathname } = useLocation()
   const navigate = useNavigate()
+  const lp = useLocalePath()
   const reduced = prefersReducedMotion()
 
   const view: View = pathname.endsWith('/graph') ? 'graph' : 'editorial'
@@ -133,7 +135,7 @@ export default function StackPage() {
   last.current = idx
 
   // stack sub-views have their own framer-motion slide, so no view transition here (would double up)
-  const goTo = (i: number) => navigate(`/stack/${VIEWS[i]}`)
+  const goTo = (i: number) => navigate(lp(`/stack/${VIEWS[i]}`))
 
   return (
     <>
