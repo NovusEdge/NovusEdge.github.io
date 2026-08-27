@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react'
+import { useTranslation } from 'react-i18next'
 import { useLocation, useNavigate } from 'react-router'
 import { AnimatePresence, motion } from 'framer-motion'
 import { Meta } from '../../lib/meta'
@@ -10,8 +11,14 @@ import StackGraph from './graph'
 const VIEWS = ['editorial', 'graph'] as const
 type View = (typeof VIEWS)[number]
 
+const VIEW_LABEL_KEY: Record<View, string> = {
+  editorial: 'stack.viewEditorial',
+  graph: 'stack.viewGraph',
+}
+
 // a firefly field at the page edge; drifts toward the exit direction, swarms brighter on hover
-function EdgeZone({ side, label, onClick }: { side: 'left' | 'right'; label: string; onClick: () => void }) {
+function EdgeZone({ side, label, onClick }: { side: 'left' | 'right'; label: View; onClick: () => void }) {
+  const { t } = useTranslation()
   const left = side === 'left'
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const hovering = useRef(false)
@@ -94,7 +101,7 @@ function EdgeZone({ side, label, onClick }: { side: 'left' | 'right'; label: str
       onClick={onClick}
       onMouseEnter={() => (hovering.current = true)}
       onMouseLeave={() => (hovering.current = false)}
-      aria-label={`Switch to ${label} view`}
+      aria-label={t('stack.switchToView', { view: t(VIEW_LABEL_KEY[label]) })}
       className={`group fixed inset-y-0 z-40 hidden w-24 md:block ${left ? 'left-0' : 'right-0'}`}
     >
       <span
@@ -112,6 +119,7 @@ function EdgeZone({ side, label, onClick }: { side: 'left' | 'right'; label: str
 }
 
 export default function StackPage() {
+  const { t } = useTranslation()
   const { pathname } = useLocation()
   const navigate = useNavigate()
   const reduced = prefersReducedMotion()
@@ -130,7 +138,7 @@ export default function StackPage() {
   return (
     <>
       <Meta
-        title={view === 'graph' ? 'Stack · Graph' : 'Stack'}
+        title={view === 'graph' ? t('stack.titleGraph') : t('stack.title')}
         description="What i build with: the tools, and the map of how they connect."
       />
       {idx > 0 && <EdgeZone side="left" label={VIEWS[idx - 1]} onClick={() => goTo(idx - 1)} />}
@@ -147,7 +155,7 @@ export default function StackPage() {
                 view === v ? 'bg-gold/15 text-gold' : 'text-bone/55'
               }`}
             >
-              {v}
+              {t(VIEW_LABEL_KEY[v])}
             </button>
           ))}
         </div>

@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react'
+import { useTranslation } from 'react-i18next'
 import { STACK, type Tech } from './data'
 
 type Node = {
@@ -84,6 +85,7 @@ function build(w: number, h: number) {
 }
 
 export default function StackGraph() {
+  const { t } = useTranslation()
   const ref = useRef<HTMLCanvasElement>(null)
 
   useEffect(() => {
@@ -394,9 +396,9 @@ export default function StackGraph() {
       />
       <canvas ref={ref} className="relative h-full w-full" />
       <div className="pointer-events-none absolute bottom-6 left-6">
-        <h1 className="font-display text-2xl font-black text-charcoal dark:text-bone">技 Stack</h1>
+        <h1 className="font-display text-2xl font-black text-charcoal dark:text-bone">技 {t('stack.title')}</h1>
         <p className="mt-1 font-mono text-[11px] uppercase tracking-[0.2em] text-charcoal/50 dark:text-bone/50">
-          hover a node for its logo · click a hub to lock focus · drag to explore
+          {t('stack.graphHint')}
         </p>
       </div>
     </div>
