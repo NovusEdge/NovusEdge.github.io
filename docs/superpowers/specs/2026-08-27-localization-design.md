@@ -52,8 +52,8 @@ while `zh-Hans` is the correct tag for markup and hreflang.
 ```
 
 Three files read it: `src/App.tsx` for the route tree, `vite.config.ts` for the prerender
-route list, and `scripts/postbuild.mjs` for sitemap alternates. JSON rather than a TS module
-because `postbuild.mjs` is plain ESM and cannot import TypeScript.
+route list, and `scripts/postbuild.mjs` for sitemap alternates. Rather than a TS module, it is
+JSON, because `postbuild.mjs` is plain ESM and cannot import TypeScript.
 
 This closes a real hole. Today `vite.config.ts:10`, `scripts/postbuild.mjs:18`, and
 `src/lib/posts.ts:14` each walk `src/content/blog/` independently with their own filename
@@ -94,15 +94,15 @@ five catalogs imported statically as `resources`. No backend plugin, no lazy loa
 `react: { useSuspense: false }`. Every string must be present synchronously on first render,
 or hydration flashes English before swapping.
 
-`fallbackLng: 'en'` so a missing key renders English rather than a raw key path.
+`fallbackLng: 'en'`, so rather than a raw key path, a missing key renders English.
 
 Catalogs live at `src/i18n/locales/<code>.json`, flat key namespace, dotted keys such as
 `nav.about`. `src/components/header.tsx:6-12` already carries a `jp` label beside each
 English one, so those Japanese values seed `ja.json` directly.
 
 Dates go through `Intl.DateTimeFormat(htmlLang)`. The prerendered string and the hydrated
-string must match, so the formatter takes an explicit locale and time zone rather than
-picking up the environment's.
+string must match, so rather than picking up the environment's, the formatter takes an
+explicit locale and time zone.
 
 ## Language Markup
 
@@ -127,10 +127,21 @@ because `src/App.tsx:36` renders no header on `/`.
 
 `scripts/translate-ui.mjs`, run by hand, never in the build.
 
-It reads `src/i18n/locales/en.json` and writes the other four catalogs. It calls the Gemini
-REST API with `fetch` and no SDK dependency, reading `GEMINI_API_KEY` from the environment.
-The exact model gets verified against live pricing and model docs at implementation time,
-since published model names go stale fast.
+It reads `src/i18n/locales/en.json` and writes the other four catalogs. It posts to
+`https://generativelanguage.googleapis.com/v1beta/models/<model>:generateContent` with
+`fetch` and no SDK dependency.
+
+The key comes from `GEMINI_API_KEY` in the environment. No key and no absolute path belongs
+in this repo, so the script never reads a `.env` file itself. Node loads one natively:
+
+```
+node --env-file=$HOME/Projects/goob/.env scripts/translate-ui.mjs
+```
+
+Rather than Flash Lite, the model is a full Flash tier, with the exact id confirmed against
+Google's model docs at implementation time. Lite tiers trade quality for throughput, and
+translation into Chinese and Japanese is where that shows. The whole run costs cents on
+either tier, so price does not decide it.
 
 Staleness is tracked in `src/i18n/translations.lock.json`, mapping each key to a SHA-256 hash
 of its English source string. On each run the script translates keys that are missing from a
