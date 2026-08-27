@@ -1369,9 +1369,11 @@ Add this after the `@theme` block:
 
 - [ ] **Step 4: Verify**
 
-Run: `pnpm build && pnpm preview`
+Use the dev server that is already running. Do not start another, and do not run `pnpm build`: this task runs concurrently with the string sweep, and two builds writing `dist/` at once clobber each other. Task 11 covers the built output.
 
-Open `/zh` and confirm Chinese renders in Noto Sans SC. Open `/de` and confirm the Noto stylesheet is absent from the network panel.
+Open `/zh` and confirm Chinese renders in Noto Sans SC rather than a system fallback. Open `/de` and confirm the Noto stylesheet is absent from the network panel.
+
+Run `pnpm exec tsc` and `pnpm test` as usual.
 
 - [ ] **Step 5: Commit**
 
@@ -1411,7 +1413,18 @@ grep -o '<html lang="[^"]*"' dist/index.html dist/fi/index.html dist/de/index.ht
 
 Expected: `en`, `fi`, `de`, `ja`, `zh-Hans`.
 
-- [ ] **Step 5: Confirm the English URLs did not move**
+- [ ] **Step 5: Confirm the Chinese font ships only where it belongs**
+
+Task 10 deferred its build check to here, because it ran concurrently with the string sweep.
+
+```bash
+grep -l "Noto+Sans+SC" dist/zh/index.html
+grep -L "Noto+Sans+SC" dist/index.html dist/de/index.html dist/fi/index.html dist/ja/index.html
+```
+
+Expected: the first names `dist/zh/index.html`, and the second names all four of the others. A CJK face loading on a locale that never renders one is the failure this guards against.
+
+- [ ] **Step 6: Confirm the English URLs did not move**
 
 ```bash
 test -f dist/blog/index.html && test -f dist/posts/hello-world/index.html && echo "English URLs intact"
@@ -1419,7 +1432,7 @@ test -f dist/blog/index.html && test -f dist/posts/hello-world/index.html && ech
 
 Expected: `English URLs intact`. The legacy redirect stubs and the bare blog path are the reason English stays unprefixed, so a regression here defeats the whole URL design.
 
-- [ ] **Step 6: Commit any fixes**
+- [ ] **Step 7: Commit any fixes**
 
 ```bash
 git add -A
