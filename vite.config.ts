@@ -36,7 +36,7 @@ export default defineConfig({
       prerenderScript: new URL('./src/main.tsx', import.meta.url).pathname,
       additionalPrerenderRoutes: (() => {
         const bare = [
-          '/', '/blog', '/portfolio', '/research', '/stack', '/blips', '/404',
+          '/', '/about', '/blog', '/portfolio', '/research', '/stack', '/stack/editorial', '/stack/graph', '/blips', '/404',
           ...blogSlugs.map((s) => `/blog/${s}`),
           ...projectSlugs.map((s) => `/portfolio/${s}`),
         ]
