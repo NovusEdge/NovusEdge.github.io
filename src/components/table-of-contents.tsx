@@ -23,7 +23,7 @@ function extractHeadings(markdown: string): Heading[] {
   return headings
 }
 
-export function TableOfContents({ content }: { content: string }) {
+export function TableOfContents({ content, lang }: { content: string; lang?: string }) {
   const { t } = useTranslation()
   const headings = useMemo(() => extractHeadings(content), [content])
   const [active, setActive] = useState<string | null>(null)
@@ -61,7 +61,7 @@ export function TableOfContents({ content }: { content: string }) {
         </button>
 
         {!collapsed && (
-          <ul className="mt-3 space-y-2.5 overflow-y-auto max-h-[55vh] pr-2">
+          <ul lang={lang} className="mt-3 space-y-2.5 overflow-y-auto max-h-[55vh] pr-2">
             {headings.map((h) => (
               <li key={h.id} style={{ paddingLeft: h.level === 3 ? '0.75rem' : 0 }}>
                 <a
