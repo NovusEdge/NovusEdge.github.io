@@ -69,5 +69,7 @@
   "portfolio.sectionLabel": "01 / portfolio",
   "portfolio.searchPlaceholder": "search projects...",
   "portfolio.searchLabel": "Search projects",
-  "portfolio.noMatch": "no projects match [ {{query}} ]"
+  "portfolio.noMatch": "no projects match [ {{query}} ]",
+  "research.title": "Research",
+  "research.sectionLabel": "research"
 }

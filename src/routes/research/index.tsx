@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react'
+import { useTranslation } from 'react-i18next'
 import { Meta } from '../../lib/meta'
 import { papers, type Paper } from '../../content/papers'
 import { Rule, SectionNumber, JPLabel } from '../../components/motifs'
@@ -94,13 +95,14 @@ function PaperCard({ paper }: { paper: Paper }) {
 }
 
 export default function ResearchIndex() {
+  const { t } = useTranslation()
   const scope = useRef<HTMLElement>(null)
   useEffect(() => revealCards(scope.current), [])
 
   return (
     <>
       <Meta
-        title="Research"
+        title={t('research.title')}
         description="Papers I've published on agent memory, epistemics, and cognitive infrastructure."
       />
 
@@ -108,14 +110,14 @@ export default function ResearchIndex() {
 
       <section ref={scope} className="relative mx-auto max-w-4xl px-6 pb-24 pt-36">
         <div data-card className="relative">
-          <SectionNumber n="03" label="research" />
+          <SectionNumber n="03" label={t('research.sectionLabel')} />
           <div className="relative mt-3 w-fit">
             <div className="absolute -left-10 top-1/2 hidden -translate-y-1/2 flex-col items-center gap-2 lg:flex">
               <JPLabel>研究</JPLabel>
               <span aria-hidden className="h-4 w-px bg-gold/50" />
             </div>
             <h1 className="font-display text-5xl font-black text-charcoal dark:text-bone">
-              <DecryptedText text="Research" speed={50} delay={100} />
+              <DecryptedText text={t('research.title')} speed={50} delay={100} />
             </h1>
           </div>
         </div>
