@@ -172,13 +172,14 @@ export default function BlogIndex() {
                         <Magnetic range={20}>
                           <TLink
                             to={lp(`/blog/${post.slug}`)}
+                            lang={locale.default ? undefined : 'en'}
                             className="font-display text-xl font-bold leading-snug text-charcoal transition-all duration-200 group-hover:translate-x-1 group-hover:text-paper-deep dark:text-bone dark:group-hover:text-paper md:text-2xl"
                           >
                             {post.title}
                           </TLink>
                         </Magnetic>
                         {post.description && (
-                          <p className="mt-2 text-sm font-medium leading-relaxed text-charcoal/75 dark:text-bone/75">
+                          <p lang={locale.default ? undefined : 'en'} className="mt-2 text-sm font-medium leading-relaxed text-charcoal/75 dark:text-bone/75">
                             {post.description}
                           </p>
                         )}

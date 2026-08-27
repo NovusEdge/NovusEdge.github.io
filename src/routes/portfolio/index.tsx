@@ -12,6 +12,7 @@ import { Meta } from '../../lib/meta'
 import { SectionNumber } from '../../components/motifs'
 import { HeroBackground } from './hero-bg'
 import { useLocalePath } from '../../i18n/use-locale-path'
+import { useLocale } from '../../i18n/context'
 
 const primaryLink = (p: Project) => p.links[0]?.href ?? '#'
 
@@ -67,6 +68,7 @@ function DataRow({ k, v }: { k: string; v: string }) {
 function Slide({ p }: { p: Project }) {
   const { t } = useTranslation()
   const lp = useLocalePath()
+  const locale = useLocale()
   return (
     <div className="relative border border-bone/12 bg-charcoal-tint/85 p-4 backdrop-blur-sm md:p-6">
       <div className="relative grid gap-5 md:grid-cols-[40%_1fr] md:items-center md:gap-8">
@@ -87,7 +89,7 @@ function Slide({ p }: { p: Project }) {
             <span className="font-mono text-[11px] uppercase tracking-[0.3em] text-gold">{p.phase.replace('-', ' ')}</span>
             {p.stars ? <span className="font-mono text-[11px] text-bone/45">★ {p.stars}</span> : null}
           </div>
-          <h2 className="mt-2 font-display text-5xl font-black leading-none text-bone md:text-6xl">{p.title}</h2>
+          <h2 lang={locale.default ? undefined : 'en'} className="mt-2 font-display text-5xl font-black leading-none text-bone md:text-6xl">{p.title}</h2>
           <div className="my-4 h-px bg-bone/15">
             <span className="block h-px w-16 bg-gold" />
           </div>
@@ -263,11 +265,12 @@ function Carousel({ items }: { items: Project[] }) {
 function InfoCard({ p }: { p: Project }) {
   const outbound = !hasPage(p.slug)
   const lp = useLocalePath()
+  const locale = useLocale()
   const inner = (
     <>
       <Crops inset="inset-2" />
       <div className="relative flex items-baseline gap-2">
-        <h3 className="font-display text-xl font-black text-bone transition-colors group-hover:text-gold">{p.title}</h3>
+        <h3 lang={locale.default ? undefined : 'en'} className="font-display text-xl font-black text-bone transition-colors group-hover:text-gold">{p.title}</h3>
         {p.jp && <span className="font-display text-sm text-bone/25">{p.jp}</span>}
         <span className="ml-auto font-mono text-[12px] font-medium tabular-nums text-bone/50">
           {p.year} {outbound ? '↗' : '→'}
