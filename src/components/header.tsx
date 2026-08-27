@@ -3,6 +3,7 @@ import { useLocation } from 'react-router'
 import Magnetic from './react-bits/Magnetic'
 import { TNavLink } from './page-transition'
 import { useLocalePath } from '../i18n/use-locale-path'
+import { LocaleSwitcher } from './locale-switcher'
 
 const links = [
   { to: '/about', label: 'About', jp: '私' },
@@ -91,6 +92,8 @@ export function Header() {
           </Magnetic>
         ))}
         <ThemeToggle />
+        <span aria-hidden className="h-4 w-px bg-charcoal/15 dark:bg-bone/15" />
+        <LocaleSwitcher />
       </nav>
 
       {/* Mobile nav */}
@@ -103,6 +106,7 @@ export function Header() {
             Home
           </TNavLink>
           <ThemeToggle />
+          <LocaleSwitcher />
           <Hamburger open={menuOpen} onClick={() => setMenuOpen(!menuOpen)} />
         </div>
 

@@ -4,6 +4,7 @@ import { Dithering } from '@paper-design/shaders-react'
 import { Meta } from '../lib/meta'
 import { ArrowDown } from '../components/icons'
 import { useLocalePath } from '../i18n/use-locale-path'
+import { LocaleSwitcher } from '../components/locale-switcher'
 
 const NAME = 'Aliasgar Khimani'
 const HANDLE = 'NovusEdge'
@@ -95,6 +96,7 @@ export default function Landing() {
                 </TLink>
               ))}
             </nav>
+            <LocaleSwitcher variant="landing" />
           </div>
           <div className="absolute bottom-8 left-1/2 flex -translate-x-1/2 flex-col items-center gap-1.5 font-mono text-[10px] font-medium uppercase tracking-[0.3em] text-bone/55">
             scroll
