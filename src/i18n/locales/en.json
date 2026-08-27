@@ -52,5 +52,22 @@
   "blips.expandedLabel": "Expanded blip",
   "blips.title": "Blips",
   "blips.sectionLabel": "blips",
-  "blips.empty": "nothing here yet"
+  "blips.empty": "nothing here yet",
+  "portfolio.groupNow": "building now",
+  "portfolio.groupShipped": "shipped",
+  "portfolio.groupOss": "open source",
+  "portfolio.groupChaos": "chaos & tools",
+  "portfolio.previous": "Previous",
+  "portfolio.next": "Next",
+  "portfolio.showProject": "Show {{title}}",
+  "portfolio.readMore": "read more",
+  "portfolio.year": "year",
+  "portfolio.writtenIn": "written in",
+  "portfolio.stack": "stack",
+  "portfolio.toolsCount": "{{count}} tools",
+  "portfolio.title": "Portfolio",
+  "portfolio.sectionLabel": "01 / portfolio",
+  "portfolio.searchPlaceholder": "search projects...",
+  "portfolio.searchLabel": "Search projects",
+  "portfolio.noMatch": "no projects match [ {{query}} ]"
 }
