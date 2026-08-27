@@ -1,4 +1,5 @@
 import { describe, it, expect } from 'vitest'
+import i18next from 'i18next'
 import { LOCALES } from './paths'
 import { catalogs, i18nFor } from './index'
 
@@ -33,5 +34,20 @@ describe('i18nFor', () => {
 
   it('falls back to English for a missing key', () => {
     expect(i18nFor('de').t('__missing__')).toBe('__missing__')
+  })
+
+  it('falls back to English for a key missing from a locale', () => {
+    const probe = i18next.createInstance()
+    probe.init({
+      lng: 'de',
+      fallbackLng: 'en',
+      resources: {
+        de: { translation: {} },
+        en: { translation: { 'probe.key': 'English value' } },
+      },
+      initAsync: false,
+      react: { useSuspense: false },
+    })
+    expect(probe.t('probe.key')).toBe('English value')
   })
 })
