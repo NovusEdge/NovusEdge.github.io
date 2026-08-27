@@ -1,26 +1,28 @@
 import { useEffect, useState } from 'react'
 import { useLocation } from 'react-router'
+import { useTranslation } from 'react-i18next'
 import Magnetic from './react-bits/Magnetic'
 import { TNavLink } from './page-transition'
 import { useLocalePath } from '../i18n/use-locale-path'
 import { LocaleSwitcher } from './locale-switcher'
 
 const links = [
-  { to: '/about', label: 'About', jp: '私' },
-  { to: '/blog', label: 'Blog', jp: 'ブログ' },
-  { to: '/portfolio', label: 'Portfolio', jp: '作品' },
-  { to: '/research', label: 'Research', jp: '研究' },
-  { to: '/stack', label: 'Stack', jp: '技' },
+  { to: '/about', key: 'nav.about' },
+  { to: '/blog', key: 'nav.blog' },
+  { to: '/portfolio', key: 'nav.portfolio' },
+  { to: '/research', key: 'nav.research' },
+  { to: '/stack', key: 'nav.stack' },
 ]
 
 function ThemeToggle() {
+  const { t } = useTranslation()
   const [dark, setDark] = useState(false)
   useEffect(() => setDark(document.documentElement.classList.contains('dark')), [])
 
   return (
     <Magnetic range={40}>
       <button
-        aria-label="Toggle theme"
+        aria-label={t('nav.themeToggle')}
         className="cursor-pointer font-display text-sm font-semibold text-charcoal/60 transition-colors hover:text-gold dark:text-bone/60"
         onClick={() => {
           const isDark = document.documentElement.classList.toggle('dark')
@@ -34,10 +36,10 @@ function ThemeToggle() {
   )
 }
 
-function Hamburger({ open, onClick }: { open: boolean; onClick: () => void }) {
+function Hamburger({ open, onClick, t }: { open: boolean; onClick: () => void; t: (key: string) => string }) {
   return (
     <button
-      aria-label={open ? 'Close menu' : 'Open menu'}
+      aria-label={open ? t('nav.closeMenu') : t('nav.openMenu')}
       aria-expanded={open}
       className="flex h-8 w-8 cursor-pointer flex-col items-center justify-center gap-1.5 md:hidden"
       onClick={onClick}
@@ -56,6 +58,7 @@ function Hamburger({ open, onClick }: { open: boolean; onClick: () => void }) {
 }
 
 export function Header() {
+  const { t } = useTranslation()
   const [menuOpen, setMenuOpen] = useState(false)
   const location = useLocation()
   const lp = useLocalePath()
@@ -70,10 +73,10 @@ export function Header() {
         <Magnetic range={40}>
           <TNavLink
             to={lp('/')}
-            aria-label="Home"
+            aria-label={t('nav.home')}
             className="font-display text-sm font-black uppercase tracking-wider text-charcoal transition-colors hover:text-gold dark:text-bone"
           >
-            Home
+            {t('nav.home')}
           </TNavLink>
         </Magnetic>
         <span aria-hidden className="h-4 w-px bg-charcoal/15 dark:bg-bone/15" />
@@ -87,7 +90,7 @@ export function Header() {
                 }`
               }
             >
-              {l.label}
+              {t(l.key)}
             </TNavLink>
           </Magnetic>
         ))}
@@ -103,11 +106,11 @@ export function Header() {
             to={lp('/')}
             className="font-display text-sm font-black uppercase tracking-wider text-charcoal transition-colors hover:text-gold dark:text-bone"
           >
-            Home
+            {t('nav.home')}
           </TNavLink>
           <ThemeToggle />
           <LocaleSwitcher />
-          <Hamburger open={menuOpen} onClick={() => setMenuOpen(!menuOpen)} />
+          <Hamburger open={menuOpen} onClick={() => setMenuOpen(!menuOpen)} t={t} />
         </div>
 
         {menuOpen && (
@@ -124,7 +127,7 @@ export function Header() {
                   }`
                 }
               >
-                {l.label}
+                {t(l.key)}
               </TNavLink>
             ))}
           </nav>
