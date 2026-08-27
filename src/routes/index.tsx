@@ -59,16 +59,6 @@ function DitherBg() {
   )
 }
 
-function StatusStrip() {
-  return (
-    <div className="flex flex-wrap items-center justify-center gap-x-5 gap-y-2 font-mono text-[10px] font-medium uppercase tracking-[0.25em] text-bone/65">
-      <span>LOC: FINLAND</span>
-      <span className="font-semibold text-gold">STATUS: [REDACTED]</span>
-      <span>OUTPUT: 51 REPOS</span>
-    </div>
-  )
-}
-
 export default function Landing() {
   return (
     <>
@@ -91,7 +81,6 @@ export default function Landing() {
               <span className="mt-2 font-mono text-xs font-medium uppercase tracking-[0.4em] text-bone/55">@{HANDLE}</span>
             </div>
             <p className="max-w-md font-mono text-sm font-medium text-bone/75">{TAGLINE}</p>
-            <StatusStrip />
             <nav className="flex flex-wrap items-center justify-center gap-3 sm:gap-4">
               {NAV.map((l, i) => (
                 <TLink
