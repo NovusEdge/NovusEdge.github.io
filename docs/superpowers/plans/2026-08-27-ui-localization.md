@@ -14,7 +14,7 @@
 
 - Locales are exactly: `en` (bare paths), `fi` (`/fi`), `de` (`/de`), `ja` (`/ja`), `zh` (`/zh`, html lang `zh-Hans`).
 - Blog posts stay English. Never touch `src/content/blog/*.md`.
-- Portfolio detail prose stays English. Never touch `src/routes/portfolio/content/*.tsx` or `src/routes/portfolio/detail-*.tsx`.
+- Portfolio detail prose stays English. Never translate or reword the text in `src/routes/portfolio/content/*.tsx` or `src/routes/portfolio/detail-*.tsx`. Task 12 does edit link targets in those files, which is allowed: a `to` value is not prose.
 - Commit with `git commit -s`. No `Co-Authored-By` trailer, ever.
 - No em-dashes in commit messages, comments, or documents. Use commas or hyphens.
 - No API key and no absolute `.env` path goes in this repo.
@@ -1421,4 +1421,117 @@ Expected: `English URLs intact`. The legacy redirect stubs and the bare blog pat
 ```bash
 git add -A
 git commit -s -m "i18n: fix issues found in full verification"
+```
+
+---
+
+### Task 12: Prefix the remaining internal links
+
+Added after Task 5 shipped. Task 5 converted the header and the landing nav, which is where
+the plan stopped, and 27 further link sites across 16 files still point at bare paths. A
+reader on `/de/blog` who clicks a post card lands on the English `/blog/<slug>` and loses the
+prefix, which defeats the routing work. Run this task directly after Task 5, before Task 6.
+
+**Files:**
+- Modify: `src/routes/portfolio/detail-palpatine.tsx:166,285`
+- Modify: `src/routes/portfolio/detail-ocloak.tsx:231,320`
+- Modify: `src/routes/portfolio/detail-engrammic.tsx:135,158,324`
+- Modify: `src/routes/portfolio/detail-veil.tsx:736,788`
+- Modify: `src/routes/portfolio/detail-stoat.tsx:105,411`
+- Modify: `src/routes/portfolio/layouts.tsx:190`
+- Modify: `src/routes/portfolio/index.tsx:108,294`
+- Modify: `src/routes/stack/editorial.tsx:136`
+- Modify: `src/routes/blog/post.tsx:85`
+- Modify: `src/routes/blog/index.tsx:163`
+- Modify: `src/routes/about/index.tsx:233`
+- Modify: `src/components/project-header.tsx:102`
+- Modify: `src/components/inline-blips.tsx:43,103`
+- Modify: `src/components/surveillance-card.tsx:87,118`
+- Modify: `src/components/attrition-card.tsx:424,441`
+- Modify: `src/components/crt-card.tsx:39,72`
+
+**Interfaces:**
+- Consumes: `useLocalePath` from `src/i18n/use-locale-path.ts`, built in Task 5.
+- Produces: nothing new. This task only rewires call sites.
+
+The change is the same everywhere. Import the hook, call it once at the top of the component,
+and wrap the link target:
+
+```tsx
+import { useLocalePath } from '../../i18n/use-locale-path'
+
+export default function SomePage() {
+  const lp = useLocalePath()
+  ...
+  <TLink to={lp('/portfolio')}>
+  <TLink to={lp(`/blog/${post.slug}`)}>
+}
+```
+
+The import depth differs by directory. Files under `src/routes/<dir>/` use
+`'../../i18n/use-locale-path'`, and files under `src/components/` use
+`'../i18n/use-locale-path'`.
+
+`useLocalePath` is a hook, so call it in the component body, never inside a `.map` callback or
+a nested helper that is not itself a component. Several of these sites sit inside `.map`
+bodies; the hook call still belongs at the top of the enclosing component.
+
+- [ ] **Step 1: Convert the shared card components**
+
+These render on index pages and are the highest-traffic path. Each takes a `post` prop and
+links to that post twice.
+
+`src/components/crt-card.tsx`, `src/components/attrition-card.tsx`, and
+`src/components/surveillance-card.tsx`: add the import, add `const lp = useLocalePath()` to the
+component that contains the two `to={`/blog/${post.slug}`}` sites, and wrap both with `lp(...)`.
+
+`src/components/project-header.tsx` and `src/components/inline-blips.tsx`: same shape, with
+targets `'/portfolio'` and `'/blips'` respectively. `inline-blips.tsx` has two sites.
+
+- [ ] **Step 2: Convert the index and post pages**
+
+`src/routes/portfolio/index.tsx` has two `to={`/portfolio/${p.slug}`}` sites, at lines 108 and
+294. Check whether they sit in the same component or two different ones, and add a `lp` call
+per component that needs it.
+
+`src/routes/blog/index.tsx:163` and `src/routes/blog/post.tsx:85` take the same treatment.
+
+- [ ] **Step 3: Convert the portfolio detail pages and the rest**
+
+`detail-palpatine.tsx`, `detail-ocloak.tsx`, `detail-engrammic.tsx`, `detail-veil.tsx`,
+`detail-stoat.tsx`, `layouts.tsx`, `stack/editorial.tsx`, and `about/index.tsx`.
+
+Most are a back-link to `'/portfolio'`. `detail-engrammic.tsx:158` is different: it links to
+`'/blog/on-building-something-engrammic'`, and it needs the same wrap.
+
+These files hold essay prose that stays in English. You are changing link targets only. Do not
+touch any prose, headings, or labels in them.
+
+- [ ] **Step 4: Verify nothing was missed**
+
+```bash
+grep -rn 'to="/[a-z]' src/routes src/components --include='*.tsx'
+grep -rn 'to={`/' src/routes src/components --include='*.tsx'
+```
+
+Expected: every remaining hit is inside `src/components/locale-switcher.tsx`, which
+deliberately builds absolute cross-locale paths with `localePath` and must not be wrapped.
+
+- [ ] **Step 5: Verify by hand**
+
+Use the dev server that is already running. Do not start another.
+
+From `/de/blog`, click a post card and confirm the URL is `/de/blog/<slug>`. From
+`/de/portfolio`, click a project and confirm `/de/portfolio/<slug>`, then click the back link
+and confirm `/de/portfolio`. From `/blog`, click a post and confirm the URL stays bare at
+`/blog/<slug>`.
+
+- [ ] **Step 6: Run the checks and commit**
+
+Run: `pnpm exec tsc && pnpm test`
+Expected: clean, 31/31 passing.
+
+```bash
+git add src/routes src/components
+git commit -s -m "i18n: prefix the remaining internal links"
 ```
