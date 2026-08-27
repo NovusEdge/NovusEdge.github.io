@@ -798,20 +798,20 @@ Two notes on this code. `src/components/page-transition.tsx:4` re-exports react-
 
 - [ ] **Step 2: Mount it in the header**
 
-In `src/components/header.tsx`, import the component and place it after `<ThemeToggle />` in both navs.
+In `src/components/header.tsx`, import the component and place it after `<ThemeToggle />` in both navs. Find the two `<ThemeToggle />` call sites structurally rather than by line number: earlier tasks have shifted this file more than once.
 
-Desktop nav, after line 91:
+In the desktop nav, the one that closes with `</nav>` right after `<ThemeToggle />`, add a divider and the switcher:
 
 ```tsx
         <span aria-hidden className="h-4 w-px bg-charcoal/15 dark:bg-bone/15" />
         <LocaleSwitcher />
 ```
 
-Mobile nav, after the `<ThemeToggle />` on line 103, add `<LocaleSwitcher />` before `<Hamburger .../>`.
+In the mobile bar, the `<ThemeToggle />` followed by `<Hamburger ... />`, put `<LocaleSwitcher />` between them.
 
 - [ ] **Step 3: Mount it on the landing**
 
-`src/App.tsx` renders no header on `/`, so the landing needs its own mount. In `src/routes/index.tsx`, add `<LocaleSwitcher variant="landing" />` directly after the closing `</nav>` of the nav pill row.
+`src/App.tsx` renders no header on `/`, so the landing needs its own mount. In `src/routes/index.tsx`, add `<LocaleSwitcher variant="landing" />` directly after the closing `</nav>` of the nav pill row, the one built from `NAV.map`.
 
 Note that `StatusStrip` was removed from this file in commit `da1176a`, so the nav pill row now sits directly under the tagline. Do not reintroduce it.
 
