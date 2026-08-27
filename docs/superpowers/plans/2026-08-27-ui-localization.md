@@ -21,7 +21,7 @@
 - `tsconfig.json` sets `noUnusedLocals: true`. An unused import fails `tsc`.
 - The full build is `pnpm build`, which runs `tsc && vite build && node scripts/postbuild.mjs`.
 - Tests run with `pnpm test` (`vitest run`). The default environment is node, and jsdom is not installed. Every test in this plan is a pure-function test. Do not add a DOM environment.
-- Never put Suspense or async catalog loading on the i18n path. A late catalog makes hydration flash English.
+- Never put Suspense or async catalog loading on the i18n path. A late catalog makes hydration flash English. The option that enforces this is `initAsync: false` in i18next 26. Older documentation calls it `initImmediate`, which no longer exists.
 - A dev server is already running. Use it for every manual check and never start another.
 - Work happens on the `i18n-ui` branch, not on `main`.
 - Comments follow the repo's existing style. Write a comment only when it carries a fact the code does not.
@@ -349,7 +349,7 @@ import zh from './locales/zh.json'
 
 export const catalogs: Record<string, Record<string, string>> = { en, fi, de, ja, zh }
 
-// initImmediate: false plus inline resources makes init() finish before it returns, so the
+// initAsync: false plus inline resources makes init() finish before it returns, so the
 // first render already has strings. Any async path here flashes English through hydration.
 const instances = new Map<string, i18n>()
 for (const locale of LOCALES) {
@@ -362,7 +362,7 @@ for (const locale of LOCALES) {
       en: { translation: catalogs.en },
     },
     interpolation: { escapeValue: false },
-    initImmediate: false,
+    initAsync: false,
     react: { useSuspense: false },
   })
   instances.set(locale.code, instance)
