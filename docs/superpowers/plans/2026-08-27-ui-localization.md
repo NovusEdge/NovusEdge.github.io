@@ -1237,7 +1237,9 @@ function split(route) {
 }
 
 const shippedRoutes = findPageDirs(dist)
-  .filter((r) => !r.startsWith('/posts/') && r !== '/404')
+  // endsWith, not equality: every locale ships its own /404, and letting /de/404 and friends
+  // into the sitemap breaks hreflang reciprocity because English has no /404 to pair them with
+  .filter((r) => !r.startsWith('/posts/') && !r.endsWith('/404'))
   .sort()
 
 // group by bare path so every URL in a cluster links to every other, which hreflang requires
