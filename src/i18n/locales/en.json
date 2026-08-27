@@ -48,5 +48,9 @@
   "blog.searchLabel": "Search posts",
   "blog.noMatch": "no posts match [ {{query}} ]",
   "blog.docPlaceholder": "[ doc ]",
-  "blog.backToBlog": "[ back to blog ]"
+  "blog.backToBlog": "[ back to blog ]",
+  "blips.expandedLabel": "Expanded blip",
+  "blips.title": "Blips",
+  "blips.sectionLabel": "blips",
+  "blips.empty": "nothing here yet"
 }
