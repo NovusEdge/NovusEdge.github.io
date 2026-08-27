@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { TLink } from '../../components/page-transition'
 import { Meta } from '../../lib/meta'
@@ -20,9 +20,7 @@ import { countBlipsBetween, InlineBlipCount, FloatingPill } from '../../componen
 import { useLocalePath } from '../../i18n/use-locale-path'
 import { useLocale } from '../../i18n/context'
 
-const MONTHS = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC']
 const dayOf = (iso: string) => iso.slice(8, 10)
-const monthOf = (iso: string) => MONTHS[Number(iso.slice(5, 7)) - 1] ?? iso.slice(5, 7)
 
 export default function BlogIndex() {
   const { t } = useTranslation()
@@ -30,6 +28,10 @@ export default function BlogIndex() {
   const [q, setQ] = useState('')
   const scope = useRef<HTMLElement>(null)
   const lp = useLocalePath()
+  const monthOf = useMemo(() => {
+    const fmt = new Intl.DateTimeFormat(locale.htmlLang, { month: 'short', timeZone: 'UTC' })
+    return (iso: string) => fmt.format(new Date(`${iso}T00:00:00Z`)).toLocaleUpperCase(locale.htmlLang)
+  }, [locale.htmlLang])
   useReveal(scope)
   const groups = groupByYear(filterPosts(posts, q))
   const stats = {

@@ -255,7 +255,7 @@ export default function StackEditorial() {
                 <div className="mt-3 flex items-center gap-2">
                   <span className="h-px w-6 bg-gold/60" />
                   <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-charcoal/40 dark:text-bone/40">
-                    {t('stack.unitsCount', { count: g.items.length, n: String(g.items.length).padStart(2, '0') })}
+                    {t('stack.unitsCount', { n: String(g.items.length).padStart(2, '0') })}
                   </span>
                 </div>
               </div>
