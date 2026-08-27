@@ -65,6 +65,9 @@ ${items}
 // the sitemap always matches what actually got prerendered. Every directory
 // containing an index.html becomes a URL (the dist root itself maps to '/'),
 // excluding the /posts/* redirect stubs (added above, not real pages) and /404.
+//
+// One feed, English only. Locale pages carry translated chrome around identical English
+// posts, so a per-locale feed would ship the same items N times.
 function findPageDirs(dir, base = '') {
   const routes = []
   if (existsSync(join(dir, 'index.html'))) routes.push(base === '' ? '/' : base)
@@ -74,16 +77,55 @@ function findPageDirs(dir, base = '') {
   }
   return routes
 }
+
+const locales = JSON.parse(readFileSync('src/i18n/locales.json', 'utf8'))
+const byPrefix = new Map(locales.map((l) => [l.prefix, l]))
+
+// map a shipped route back to (locale, bare path) so alternates can be grouped
+function split(route) {
+  const first = `/${route.split('/')[1]}`
+  const locale = byPrefix.get(first)
+  if (locale && !locale.default) {
+    const rest = route.slice(first.length)
+    return { locale, bare: rest === '' ? '/' : rest }
+  }
+  return { locale: locales.find((l) => l.default), bare: route }
+}
+
 const shippedRoutes = findPageDirs(dist)
-  .filter((r) => !r.startsWith('/posts/') && r !== '/404')
+  .filter((r) => !r.startsWith('/posts/') && !r.endsWith('/404'))
   .sort()
+
+// group by bare path so every URL in a cluster links to every other, which hreflang requires
+const clusters = new Map()
+for (const route of shippedRoutes) {
+  const { locale, bare } = split(route)
+  if (!clusters.has(bare)) clusters.set(bare, new Map())
+  clusters.get(bare).set(locale.code, route)
+}
+
 const urls = shippedRoutes
-  .map((u) => `  <url><loc>${ORIGIN}${u}</loc></url>`)
+  .map((route) => {
+    const { bare } = split(route)
+    const cluster = clusters.get(bare)
+    const alternates = [...cluster.entries()]
+      .map(([code, url]) => {
+        const l = locales.find((x) => x.code === code)
+        return `    <xhtml:link rel="alternate" hreflang="${l.htmlLang}" href="${ORIGIN}${url}"/>`
+      })
+      .join('\n')
+    const xDefault = cluster.get(locales.find((l) => l.default).code)
+    const fallback = xDefault
+      ? `\n    <xhtml:link rel="alternate" hreflang="x-default" href="${ORIGIN}${xDefault}"/>`
+      : ''
+    return `  <url>\n    <loc>${ORIGIN}${route}</loc>\n${alternates}${fallback}\n  </url>`
+  })
   .join('\n')
+
 writeFileSync(
   `${dist}/sitemap.xml`,
   `<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
 ${urls}
 </urlset>`,
 )

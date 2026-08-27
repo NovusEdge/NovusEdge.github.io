@@ -1,11 +1,13 @@
 import { createRequire } from 'node:module'
-import { readdirSync } from 'node:fs'
+import { readdirSync, readFileSync } from 'node:fs'
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
 import { vitePrerenderPlugin } from 'vite-prerender-plugin'
 
 const require = createRequire(import.meta.url)
+
+const locales = JSON.parse(readFileSync('src/i18n/locales.json', 'utf8'))
 
 const blogSlugs = readdirSync('src/content/blog')
   .filter((f) => f.endsWith('.md'))
@@ -32,11 +34,19 @@ export default defineConfig({
     vitePrerenderPlugin({
       renderTarget: '#root',
       prerenderScript: new URL('./src/main.tsx', import.meta.url).pathname,
-      additionalPrerenderRoutes: [
-        '/blog', '/portfolio', '/research', '/stack', '/blips', '/404',
-        ...blogSlugs.map((s) => `/blog/${s}`),
-        ...projectSlugs.map((s) => `/portfolio/${s}`),
-      ],
+      additionalPrerenderRoutes: (() => {
+        const bare = [
+          '/', '/blog', '/portfolio', '/research', '/stack', '/blips', '/404',
+          ...blogSlugs.map((s) => `/blog/${s}`),
+          ...projectSlugs.map((s) => `/portfolio/${s}`),
+        ]
+        // the plugin prerenders '/' on its own, so the bare root would be a duplicate
+        return locales.flatMap((l) =>
+          bare
+            .filter((r) => !(l.default && r === '/'))
+            .map((r) => (r === '/' ? l.prefix : `${l.prefix}${r}`)),
+        )
+      })(),
     }),
     {
       // the prerender pass leaves a handle open and the process sometimes never
