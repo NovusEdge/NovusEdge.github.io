@@ -3,6 +3,7 @@ import { TLink } from '../components/page-transition'
 import { Dithering } from '@paper-design/shaders-react'
 import { Meta } from '../lib/meta'
 import { ArrowDown } from '../components/icons'
+import { useLocalePath } from '../i18n/use-locale-path'
 
 const NAME = 'Aliasgar Khimani'
 const HANDLE = 'NovusEdge'
@@ -60,6 +61,7 @@ function DitherBg() {
 }
 
 export default function Landing() {
+  const lp = useLocalePath()
   return (
     <>
       <Meta description="Aliasgar Khimani (NovusEdge): epistemic memory, cognitive infrastructure for AI agents, and whatever I'm building next." />
@@ -85,7 +87,7 @@ export default function Landing() {
               {NAV.map((l, i) => (
                 <TLink
                   key={l.to}
-                  to={l.to}
+                  to={lp(l.to)}
                   style={{ animationDelay: `${0.15 + i * 0.08}s` }}
                   className="nav-pill rounded-full border border-bone/25 px-5 py-2 font-display text-sm font-bold uppercase tracking-[0.2em] text-bone/85 transition-[transform,background-color,border-color,box-shadow] duration-300 hover:-translate-y-0.5 hover:border-gold hover:bg-gold hover:text-charcoal hover:shadow-[0_8px_24px_rgba(212,160,60,0.25)]"
                 >
