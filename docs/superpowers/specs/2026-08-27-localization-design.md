@@ -100,11 +100,15 @@ Catalogs live at `src/i18n/locales/<code>.json`, flat key namespace, dotted keys
 `nav.about`. `src/components/header.tsx:6-12` already carries a `jp` label beside each
 English one, so those Japanese values seed `ja.json` directly.
 
-Dates need no work. The codebase formats no dates today: nothing calls
-`toLocaleDateString` or `Intl.DateTimeFormat`, and post dates render as the ISO strings that
-come out of frontmatter. Those read the same in all five locales. Should a formatted date
-appear later, it must take an explicit locale and time zone, because a prerendered string and
-a hydrated string that disagree make React warn.
+Dates were assumed to need no work, since nothing called `toLocaleDateString` or
+`Intl.DateTimeFormat`. That was wrong in one place: the blog index formats a month by indexing
+a hardcoded `['JAN', 'FEB', ...]` array, which is a date format wearing a different shape, and
+it renders on every post row.
+
+That one site uses `Intl.DateTimeFormat(htmlLang, { month: 'short', timeZone: 'UTC' })`, built
+from the active locale. Any formatted date added later follows the same rule: an explicit
+locale and an explicit time zone, because a prerendered string and a hydrated string that
+disagree make React warn. Day numbers stay as they are, being locale-neutral.
 
 ## Language Markup
 
