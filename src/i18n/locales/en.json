@@ -38,5 +38,8 @@
   "a11y.motion": "Motion",
   "a11y.reduced": "Reduced",
   "a11y.resetToDefaults": "Reset to defaults",
-  "toc.onThisPage": "On this page"
+  "toc.onThisPage": "On this page",
+  "notFound.tag": "404 : not found",
+  "notFound.message": "This page does not exist or has moved.",
+  "notFound.home": "[ home ]"
 }
