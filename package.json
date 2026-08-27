@@ -7,7 +7,9 @@
     "dev": "vite",
     "build": "tsc && vite build && node scripts/postbuild.mjs",
     "preview": "vite preview",
-    "test": "vitest run"
+    "test": "vitest run",
+    "i18n:translate": "node --env-file=${GEMINI_ENV_FILE:-$HOME/Projects/goob/.env} scripts/translate-ui.mjs",
+    "i18n:check": "node scripts/translate-ui.mjs --check"
   },
   "dependencies": {
     "@gsap/react": "^2.1.2",

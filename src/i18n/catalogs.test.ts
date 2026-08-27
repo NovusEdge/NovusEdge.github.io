@@ -10,11 +10,10 @@ describe('catalogs', () => {
     for (const l of LOCALES) expect(catalogs[l.code]).toBeDefined()
   })
 
-  it('never carries a key English does not have', () => {
-    const english = new Set(Object.keys(catalogs.en))
+  it('carries exactly the English key set', () => {
+    const english = Object.keys(catalogs.en).sort()
     for (const l of LOCALES) {
-      const orphans = Object.keys(catalogs[l.code]).filter((k) => !english.has(k))
-      expect(orphans, `orphan keys in ${l.code}.json`).toEqual([])
+      expect(Object.keys(catalogs[l.code]).sort(), `${l.code}.json`).toEqual(english)
     }
   })
 
