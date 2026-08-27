@@ -101,7 +101,7 @@ export default function Landing() {
           </div>
           <div className="absolute bottom-8 left-1/2 flex -translate-x-1/2 flex-col items-center gap-1.5 font-mono text-[10px] font-medium uppercase tracking-[0.3em] text-bone/55">
             {t('landing.scroll')}
-            <ArrowDown className="h-4 w-4 animate-bounce text-gold" />
+            <ArrowDown className="h-4 w-4 scroll-hint text-gold" />
           </div>
         </section>
       </div>
@@ -110,6 +110,9 @@ export default function Landing() {
         @keyframes navpill { from { opacity: 0; transform: translateY(16px) } to { opacity: 1; transform: none } }
         .nav-pill { animation: navpill 0.5s ease-out backwards }
         @media (prefers-reduced-motion: reduce) { .nav-pill { animation: none } }
+        @keyframes scrollhint { 0%, 100% { transform: translateY(0); opacity: 0.55 } 50% { transform: translateY(5px); opacity: 1 } }
+        .scroll-hint { animation: scrollhint 2.4s cubic-bezier(0.22, 1, 0.36, 1) infinite }
+        @media (prefers-reduced-motion: reduce) { .scroll-hint { animation: none } }
       `}</style>
     </>
   )
