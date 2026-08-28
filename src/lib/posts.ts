@@ -47,10 +47,12 @@ export const posts: Post[] = Object.entries(files)
   .sort((a, b) => b.date.localeCompare(a.date))
 
 export async function getPost(slug: string, locale: string): Promise<Post | undefined> {
-  if (locale === 'en') return posts.find((p) => p.slug === slug)
+  const en = posts.find((p) => p.slug === slug)
+  if (!en) return undefined
+  if (locale === 'en') return en
   const key = `../content/blog/${slug}.${locale}.md`
   const loader = localeFiles[key]
-  if (!loader) return posts.find((p) => p.slug === slug)
+  if (!loader) return en
   const raw = await loader()
   return parsePost(slug, raw)
 }
