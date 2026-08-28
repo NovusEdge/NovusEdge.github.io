@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { AnimatePresence, motion } from 'framer-motion'
 import { Dithering } from '@paper-design/shaders-react'
 import { Meta } from '../../lib/meta'
@@ -63,6 +64,7 @@ function ExpandedCard({
   blip: Blip
   onClose: () => void
 }) {
+  const { t } = useTranslation()
   const ref = useRef<HTMLDivElement>(null)
 
   useOutsideClick(ref, onClose)
@@ -93,7 +95,7 @@ function ExpandedCard({
         layoutId={`blip-${blip.date}-${blip.media}`}
         role="dialog"
         aria-modal="true"
-        aria-label="Expanded blip"
+        aria-label={t('blips.expandedLabel')}
         tabIndex={-1}
         className="relative max-h-[85vh] w-full max-w-2xl overflow-auto bg-bone p-6 shadow-2xl outline-none dark:bg-charcoal"
       >
@@ -235,23 +237,24 @@ function BlipCard({
 }
 
 export default function BlipsPage() {
+  const { t } = useTranslation()
   const [expandedBlip, setExpandedBlip] = useState<Blip | null>(null)
 
   return (
     <>
-      <Meta title="Blips" description="Short-form updates: notes, screenshots, and clips as they happen." />
+      <Meta title={t('blips.title')} description="Short-form updates: notes, screenshots, and clips as they happen." />
       <DitherBg />
 
       <section className="relative z-10 mx-auto max-w-5xl px-6 pb-24 pt-36">
         <div className="relative">
-          <SectionNumber n="05" label="blips" />
+          <SectionNumber n="05" label={t('blips.sectionLabel')} />
           <div className="relative mt-3 w-fit">
             <div className="absolute -left-10 top-1/2 hidden -translate-y-1/2 flex-col items-center gap-2 lg:flex">
               <JPLabel>断片</JPLabel>
               <span aria-hidden className="h-4 w-px bg-gold/50" />
             </div>
             <h1 className="font-display text-5xl font-black text-charcoal dark:text-bone">
-              <DecryptedText text="Blips" speed={50} delay={100} />
+              <DecryptedText text={t('blips.title')} speed={50} delay={100} />
             </h1>
           </div>
         </div>
@@ -259,7 +262,7 @@ export default function BlipsPage() {
 
         {blips.length === 0 && (
           <p className="mt-16 font-mono text-xs font-medium uppercase tracking-[0.25em] text-charcoal/65 dark:text-bone/65">
-            nothing here yet
+            {t('blips.empty')}
           </p>
         )}
 

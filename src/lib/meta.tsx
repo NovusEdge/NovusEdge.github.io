@@ -2,7 +2,7 @@ import { useEffect } from 'react'
 
 // ponytail: module-global head state — single render pass per prerendered page, no context needed
 const DEFAULT_DESCRIPTION = 'Security, systems, and writeups. Personal site of NovusEdge.'
-export const headState = { title: 'NovusEdge', description: DEFAULT_DESCRIPTION, image: null as string | null }
+export const headState = { title: 'NovusEdge', description: DEFAULT_DESCRIPTION, image: null as string | null, lang: 'en' }
 
 export function Meta({ title, description, image }: { title?: string; description?: string; image?: string | null }) {
   headState.title = title ? `${title} · NovusEdge` : 'NovusEdge'

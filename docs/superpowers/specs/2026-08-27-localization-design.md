@@ -100,9 +100,15 @@ Catalogs live at `src/i18n/locales/<code>.json`, flat key namespace, dotted keys
 `nav.about`. `src/components/header.tsx:6-12` already carries a `jp` label beside each
 English one, so those Japanese values seed `ja.json` directly.
 
-Dates go through `Intl.DateTimeFormat(htmlLang)`. The prerendered string and the hydrated
-string must match, so rather than picking up the environment's, the formatter takes an
-explicit locale and time zone.
+Dates were assumed to need no work, since nothing called `toLocaleDateString` or
+`Intl.DateTimeFormat`. That was wrong in one place: the blog index formats a month by indexing
+a hardcoded `['JAN', 'FEB', ...]` array, which is a date format wearing a different shape, and
+it renders on every post row.
+
+That one site uses `Intl.DateTimeFormat(htmlLang, { month: 'short', timeZone: 'UTC' })`, built
+from the active locale. Any formatted date added later follows the same rule: an explicit
+locale and an explicit time zone, because a prerendered string and a hydrated string that
+disagree make React warn. Day numbers stay as they are, being locale-neutral.
 
 ## Language Markup
 
@@ -138,8 +144,8 @@ in this repo, so the script never reads a `.env` file itself. Node loads one nat
 node --env-file=$HOME/Projects/goob/.env scripts/translate-ui.mjs
 ```
 
-Rather than Flash Lite, the model is a full Flash tier, with the exact id confirmed against
-Google's model docs at implementation time. Lite tiers trade quality for throughput, and
+Rather than Flash Lite, the model is the full Flash tier: `gemini-3.7-flash`, verified against
+Google's model docs on 2026-08-27 at $0.75 per million input tokens. Lite tiers trade quality for throughput, and
 translation into Chinese and Japanese is where that shows. The whole run costs cents on
 either tier, so price does not decide it.
 
@@ -180,13 +186,19 @@ so the other four locales never pay for it.
 
 ## Testing
 
-Vitest is already configured. Four checks in `src/i18n/i18n.test.ts`:
+Vitest is already configured. Its default environment is node, and jsdom is not installed, so
+every check here is a pure-function check. Adding a DOM environment to render pages would
+also mean rendering the shader and three.js components, which is not worth it for this.
 
 - Every catalog has exactly the key set of `en.json`. No missing keys, no orphans.
 - Every translated string carries the same `{{placeholder}}` tokens as its English source.
 - The manifest has exactly one default, unique prefixes, and unique codes.
-- Route resolution: `/about` renders the About page in English, `/de/about` renders it in
-  German, and `/xx/about` renders the 404 page.
+- Locale path resolution: `localeFromPath`, `stripLocale`, and `localePath` handle bare
+  paths, prefixed paths, prefix swaps, and the root of each locale. These pure functions are
+  where the routing logic actually lives, so testing them covers the routing risk.
+
+Route rendering itself is checked by hand against the dev server, and by asserting the
+`lang` attribute of the built pages in `dist/`.
 
 ## Known Issue Left Alone
 
@@ -200,10 +212,15 @@ worse and requires making that glob lazy first.
 Add:
 
 - `src/i18n/locales.json`
+- `src/i18n/paths.ts`
+- `src/i18n/context.ts`, holding `LocaleContext` and `useLocale`. It lives apart from
+  `App.tsx` because `App.tsx` imports `Header`, and `Header` needs the active locale, so a
+  context exported from `App.tsx` would make that import cycle.
 - `src/i18n/index.ts`
+- `src/i18n/use-locale-path.ts`
 - `src/i18n/locales/{en,fi,de,ja,zh}.json`
 - `src/i18n/translations.lock.json`
-- `src/i18n/i18n.test.ts`
+- `src/i18n/{paths,catalogs,use-locale-path}.test.ts`
 - `src/components/locale-switcher.tsx`
 - `scripts/translate-ui.mjs`
 

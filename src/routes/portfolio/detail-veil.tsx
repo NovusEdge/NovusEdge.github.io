@@ -6,6 +6,7 @@ import { Github, Package, Globe, ArrowRight } from '../../components/icons'
 import { prefersReducedMotion } from '../../lib/motion'
 import { AimdTrack, Cascade, ForgettingCurves, SessionFrame, Wiring } from '../../components/veil/diagrams'
 import type { LayoutProps } from './layouts'
+import { useLocalePath } from '../../i18n/use-locale-path'
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -600,6 +601,7 @@ export default function Veil({ p, c }: LayoutProps) {
   const [progress, setProgress] = useState(0)
   const [heroDecay, setHeroDecay] = useState(0)
   const still = prefersReducedMotion()
+  const lp = useLocalePath()
 
   useEffect(() => {
     if (still || !scope.current) return
@@ -733,7 +735,7 @@ export default function Veil({ p, c }: LayoutProps) {
 
         <div className="relative mx-auto max-w-3xl px-6 pb-24 pt-36 lg:pt-44">
           <TLink
-            to="/portfolio"
+            to={lp('/portfolio')}
             aria-label="Back to portfolio"
             title="Back to portfolio"
             className="group inline-flex h-9 w-9 items-center justify-center rounded border border-bone/15 bg-charcoal/80 text-bone/50 transition-colors hover:border-gold hover:text-gold"
@@ -785,7 +787,7 @@ export default function Veil({ p, c }: LayoutProps) {
             {p.jp}
           </span>
           <TLink
-            to="/portfolio"
+            to={lp('/portfolio')}
             className="group inline-flex items-center gap-1.5 font-mono text-xs uppercase tracking-[0.2em] text-bone/50 transition-colors hover:text-gold"
           >
             back to portfolio

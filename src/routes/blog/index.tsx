@@ -1,4 +1,5 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { TLink } from '../../components/page-transition'
 import { Meta } from '../../lib/meta'
 import { posts } from '../../lib/posts'
@@ -16,14 +17,21 @@ import { TopFlourish } from '../../components/top-flourish'
 import DecryptedText from '../../components/react-bits/DecryptedText'
 import Magnetic from '../../components/react-bits/Magnetic'
 import { countBlipsBetween, InlineBlipCount, FloatingPill } from '../../components/inline-blips'
+import { useLocalePath } from '../../i18n/use-locale-path'
+import { useLocale } from '../../i18n/context'
 
-const MONTHS = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC']
 const dayOf = (iso: string) => iso.slice(8, 10)
-const monthOf = (iso: string) => MONTHS[Number(iso.slice(5, 7)) - 1] ?? iso.slice(5, 7)
 
 export default function BlogIndex() {
+  const { t } = useTranslation()
+  const locale = useLocale()
   const [q, setQ] = useState('')
   const scope = useRef<HTMLElement>(null)
+  const lp = useLocalePath()
+  const monthOf = useMemo(() => {
+    const fmt = new Intl.DateTimeFormat(locale.htmlLang, { month: 'short', timeZone: 'UTC' })
+    return (iso: string) => fmt.format(new Date(`${iso}T00:00:00Z`)).toLocaleUpperCase(locale.htmlLang)
+  }, [locale.htmlLang])
   useReveal(scope)
   const groups = groupByYear(filterPosts(posts, q))
   const stats = {
@@ -37,13 +45,13 @@ export default function BlogIndex() {
 
   return (
     <>
-      <Meta title="Blog" description="Weekly notes, CTF writeups, and Linux journeys." />
+      <Meta title={t('blog.title')} description="Weekly notes, CTF writeups, and Linux journeys." />
       <SideFlourish variant={2} /> {/* Kana */}
       <section ref={scope} className="relative mx-auto max-w-4xl px-6 pb-24 pt-36">
         <TopFlourish variant={0} stats={stats} /> {/* Readout */}
         <div data-reveal className="flex flex-col gap-6 md:flex-row md:items-baseline md:justify-between">
           <div className="relative">
-            <SectionNumber n="02" label="blog" />
+            <SectionNumber n="02" label={t('blog.sectionLabel')} />
             <div className="relative mt-3 w-fit">
               {/* vertical JP label centered on the big heading, not floating up by the section number */}
               <div className="absolute -left-10 top-1/2 hidden -translate-y-1/2 flex-col items-center gap-2 lg:flex">
@@ -51,7 +59,7 @@ export default function BlogIndex() {
                 <span aria-hidden className="h-4 w-px bg-gold/50" />
               </div>
               <h1 className="font-display text-5xl font-black text-charcoal dark:text-bone">
-                <DecryptedText text="Blog" speed={50} delay={100} />
+                <DecryptedText text={t('blog.title')} speed={50} delay={100} />
               </h1>
             </div>
           </div>
@@ -59,17 +67,20 @@ export default function BlogIndex() {
             type="search"
             value={q}
             onChange={(e) => setQ(e.target.value)}
-            placeholder="search posts..."
-            aria-label="Search posts"
+            placeholder={t('blog.searchPlaceholder')}
+            aria-label={t('blog.searchLabel')}
             className="w-full max-w-xs border-b border-charcoal/25 bg-transparent pb-1 font-mono text-xs font-medium tracking-wider outline-none placeholder:text-charcoal/55 focus:border-gold dark:border-bone/25 dark:placeholder:text-bone/55 transition-colors"
           />
         </div>
         <div data-reveal>
           <Rule className="mt-8" />
         </div>
+        {!locale.default && (
+          <p className="font-mono text-xs text-charcoal/50 dark:text-bone/50">{t('blog.postsInEnglish')}</p>
+        )}
         {groups.length === 0 && (
           <p className="mt-16 font-mono text-xs font-medium uppercase tracking-[0.25em] text-charcoal/65 dark:text-bone/65">
-            no posts match [ {q} ]
+            {t('blog.noMatch', { query: q })}
           </p>
         )}
         {groups.map(({ year, posts: yearPosts }) => (
@@ -150,7 +161,7 @@ export default function BlogIndex() {
                         ) : (
                           <div className="flex aspect-[16/10] w-full items-center justify-center rounded border border-dashed border-charcoal/15 bg-bone-tint/20 dark:border-bone/15 dark:bg-charcoal-tint/10">
                             <span className="font-mono text-[10px] font-medium text-charcoal/45 dark:text-bone/45 uppercase tracking-widest">
-                              [ doc ]
+                              {t('blog.docPlaceholder')}
                             </span>
                           </div>
                         )}
@@ -160,14 +171,15 @@ export default function BlogIndex() {
                       <div data-col className="md:col-span-7 flex flex-col">
                         <Magnetic range={20}>
                           <TLink
-                            to={`/blog/${post.slug}`}
+                            to={lp(`/blog/${post.slug}`)}
+                            lang={locale.default ? undefined : 'en'}
                             className="font-display text-xl font-bold leading-snug text-charcoal transition-all duration-200 group-hover:translate-x-1 group-hover:text-paper-deep dark:text-bone dark:group-hover:text-paper md:text-2xl"
                           >
                             {post.title}
                           </TLink>
                         </Magnetic>
                         {post.description && (
-                          <p className="mt-2 text-sm font-medium leading-relaxed text-charcoal/75 dark:text-bone/75">
+                          <p lang={locale.default ? undefined : 'en'} className="mt-2 text-sm font-medium leading-relaxed text-charcoal/75 dark:text-bone/75">
                             {post.description}
                           </p>
                         )}

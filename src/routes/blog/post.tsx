@@ -1,5 +1,6 @@
-import { useRef } from 'react'
+import { use, useMemo, useRef } from 'react'
 import { useParams } from 'react-router'
+import { useTranslation } from 'react-i18next'
 import { TLink } from '../../components/page-transition'
 import { useGSAP } from '@gsap/react'
 import { Meta } from '../../lib/meta'
@@ -17,6 +18,8 @@ import { BlogInterstitials } from '../../components/blog-interstitial'
 import NotFound from '../not-found'
 import Magnetic from '../../components/react-bits/Magnetic'
 import { PostHero } from './post-hero'
+import { useLocalePath } from '../../i18n/use-locale-path'
+import { useLocale } from '../../i18n/context'
 
 // ponytail: per-post decorations, add more as needed
 const POST_DECORATIONS: Record<string, { id: string; src: string; side: 'left' | 'right'; triggerId: string; size?: string; offset?: Record<string, string> }[]> = {
@@ -49,9 +52,13 @@ const POST_HERO: Record<string, number> = {
 }
 
 export default function BlogPost() {
+  const { t } = useTranslation()
   const { slug } = useParams()
-  const post = slug ? getPost(slug) : undefined
   const proseRef = useRef<HTMLDivElement>(null)
+  const lp = useLocalePath()
+  const locale = useLocale()
+  const postPromise = useMemo(() => (slug ? getPost(slug, locale.code) : undefined), [slug, locale.code])
+  const post = postPromise ? use(postPromise) : undefined
 
   useGSAP(
     () => {
@@ -69,11 +76,11 @@ export default function BlogPost() {
     <>
       <Meta title={post.title} description={post.description || post.title} image={image} />
 
-      <PostHero variant={POST_HERO[post.slug] ?? DEFAULT_HERO} post={post} image={image} />
+      <PostHero variant={POST_HERO[post.slug] ?? DEFAULT_HERO} post={post} image={image} lang={locale.default ? undefined : 'en'} />
 
       {!HIDE_SIDE_FLOURISH.includes(slug || '') && <SideFlourish variant={2} heroGate />}
 
-      {post.toc && <TableOfContents content={post.content} />}
+      {post.toc && <TableOfContents content={post.content} lang={locale.default ? undefined : 'en'} />}
 
       {slug && POST_DECORATIONS[slug] && <BlogDecorations decorations={POST_DECORATIONS[slug]} />}
       {slug && POST_INTERSTITIALS[slug] && <BlogInterstitials interstitials={POST_INTERSTITIALS[slug]} />}
@@ -82,10 +89,10 @@ export default function BlogPost() {
         <div className="mb-10">
           <Magnetic range={25}>
             <TLink
-              to="/blog"
+              to={lp('/blog')}
               className="group inline-block rounded border border-charcoal/10 bg-bone-tint/10 px-3.5 py-1.5 font-mono text-xs uppercase tracking-[0.2em] text-paper-deep transition-colors hover:border-gold dark:border-bone/10 dark:bg-charcoal-tint/10 dark:text-paper dark:hover:border-gold"
             >
-              [ back to blog ]
+              {t('blog.backToBlog')}
             </TLink>
           </Magnetic>
         </div>
@@ -94,6 +101,7 @@ export default function BlogPost() {
 
         <div
           ref={proseRef}
+          lang={locale.default ? undefined : 'en'}
           className="prose prose-neutral prose-blog max-w-none leading-relaxed text-charcoal/80 dark:prose-invert dark:text-bone/85 prose-headings:mt-12 prose-headings:mb-6 prose-headings:font-display prose-p:my-6 prose-h2:text-4xl prose-h3:text-2xl"
         >
           <Markdown>{post.content}</Markdown>

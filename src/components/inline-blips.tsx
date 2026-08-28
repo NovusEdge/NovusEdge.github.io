@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { TLink } from './page-transition'
 import { blips } from '../lib/blips'
+import { useLocalePath } from '../i18n/use-locale-path'
 
 // Get count of blips between two dates
 export function countBlipsBetween(after: string, before: string) {
@@ -14,6 +15,7 @@ export function InlineBlipCount({ count }: { count: number }) {
   const [displayText, setDisplayText] = useState(`${count} blip${count > 1 ? 's' : ''}`)
   const targetText = `${count} blip${count > 1 ? 's' : ''}`
   const chars = '░▒▓█▄▀■□'
+  const lp = useLocalePath()
 
   useEffect(() => {
     if (!hovered) {
@@ -40,7 +42,7 @@ export function InlineBlipCount({ count }: { count: number }) {
 
   return (
     <TLink
-      to="/blips"
+      to={lp('/blips')}
       className="group my-8 flex items-center justify-center"
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
@@ -66,6 +68,7 @@ export function InlineBlipCount({ count }: { count: number }) {
 // Floating pill — portaled to body, scroll-tied parallax like SideFlourish
 export function FloatingPill() {
   const ref = useRef<HTMLDivElement>(null)
+  const lp = useLocalePath()
 
   useEffect(() => {
     let current = 0
@@ -100,7 +103,7 @@ export function FloatingPill() {
   return createPortal(
     <div ref={ref} className="group fixed right-6 top-1/3 z-50 hidden lg:block xl:right-10" aria-hidden>
       <TLink
-        to="/blips"
+        to={lp('/blips')}
         className="relative flex h-14 w-14 items-center justify-center overflow-hidden rounded-full border-2 border-gold bg-charcoal shadow-xl transition-transform hover:scale-110"
       >
         {/* Dither pattern */}

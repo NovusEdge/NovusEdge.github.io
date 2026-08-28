@@ -1,24 +1,28 @@
 import { useEffect, useState } from 'react'
 import { useLocation } from 'react-router'
+import { useTranslation } from 'react-i18next'
 import Magnetic from './react-bits/Magnetic'
 import { TNavLink } from './page-transition'
+import { useLocalePath } from '../i18n/use-locale-path'
+import { LocaleSwitcher } from './locale-switcher'
 
 const links = [
-  { to: '/about', label: 'About', jp: '私' },
-  { to: '/blog', label: 'Blog', jp: 'ブログ' },
-  { to: '/portfolio', label: 'Portfolio', jp: '作品' },
-  { to: '/research', label: 'Research', jp: '研究' },
-  { to: '/stack', label: 'Stack', jp: '技' },
+  { to: '/about', key: 'nav.about' },
+  { to: '/blog', key: 'nav.blog' },
+  { to: '/portfolio', key: 'nav.portfolio' },
+  { to: '/research', key: 'nav.research' },
+  { to: '/stack', key: 'nav.stack' },
 ]
 
 function ThemeToggle() {
+  const { t } = useTranslation()
   const [dark, setDark] = useState(false)
   useEffect(() => setDark(document.documentElement.classList.contains('dark')), [])
 
   return (
     <Magnetic range={40}>
       <button
-        aria-label="Toggle theme"
+        aria-label={t('nav.themeToggle')}
         className="cursor-pointer font-display text-sm font-semibold text-charcoal/60 transition-colors hover:text-gold dark:text-bone/60"
         onClick={() => {
           const isDark = document.documentElement.classList.toggle('dark')
@@ -32,10 +36,10 @@ function ThemeToggle() {
   )
 }
 
-function Hamburger({ open, onClick }: { open: boolean; onClick: () => void }) {
+function Hamburger({ open, onClick, t }: { open: boolean; onClick: () => void; t: (key: string) => string }) {
   return (
     <button
-      aria-label={open ? 'Close menu' : 'Open menu'}
+      aria-label={open ? t('nav.closeMenu') : t('nav.openMenu')}
       aria-expanded={open}
       className="flex h-8 w-8 cursor-pointer flex-col items-center justify-center gap-1.5 md:hidden"
       onClick={onClick}
@@ -54,8 +58,10 @@ function Hamburger({ open, onClick }: { open: boolean; onClick: () => void }) {
 }
 
 export function Header() {
+  const { t } = useTranslation()
   const [menuOpen, setMenuOpen] = useState(false)
   const location = useLocation()
+  const lp = useLocalePath()
 
   // ponytail: close menu on route change
   useEffect(() => setMenuOpen(false), [location.pathname])
@@ -66,42 +72,45 @@ export function Header() {
       <nav className="hidden items-center gap-6 rounded-full border border-charcoal/10 bg-bone/75 px-6 py-2.5 shadow-[0_8px_30px_rgb(0,0,0,0.04)] backdrop-blur-lg md:flex dark:border-bone/10 dark:bg-charcoal/75 dark:shadow-[0_8px_30px_rgb(0,0,0,0.3)]">
         <Magnetic range={40}>
           <TNavLink
-            to="/"
-            aria-label="Home"
+            to={lp('/')}
+            aria-label={t('nav.home')}
             className="font-display text-sm font-black uppercase tracking-wider text-charcoal transition-colors hover:text-gold dark:text-bone"
           >
-            Home
+            {t('nav.home')}
           </TNavLink>
         </Magnetic>
         <span aria-hidden className="h-4 w-px bg-charcoal/15 dark:bg-bone/15" />
         {links.map((l) => (
           <Magnetic key={l.to} range={40}>
             <TNavLink
-              to={l.to}
+              to={lp(l.to)}
               className={({ isActive }) =>
                 `link-draw font-display text-sm font-semibold uppercase tracking-wider transition-colors ${
                   isActive ? 'text-gold' : 'text-charcoal/70 hover:text-charcoal dark:text-bone/70 dark:hover:text-bone'
                 }`
               }
             >
-              {l.label}
+              {t(l.key)}
             </TNavLink>
           </Magnetic>
         ))}
         <ThemeToggle />
+        <span aria-hidden className="h-4 w-px bg-charcoal/15 dark:bg-bone/15" />
+        <LocaleSwitcher />
       </nav>
 
       {/* Mobile nav */}
       <div className="md:hidden">
         <div className="flex items-center gap-3 rounded-full border border-charcoal/10 bg-bone/95 px-4 py-2 shadow-[0_8px_30px_rgb(0,0,0,0.04)] dark:border-bone/10 dark:bg-charcoal/95 dark:shadow-[0_8px_30px_rgb(0,0,0,0.3)]">
           <TNavLink
-            to="/"
+            to={lp('/')}
             className="font-display text-sm font-black uppercase tracking-wider text-charcoal transition-colors hover:text-gold dark:text-bone"
           >
-            Home
+            {t('nav.home')}
           </TNavLink>
           <ThemeToggle />
-          <Hamburger open={menuOpen} onClick={() => setMenuOpen(!menuOpen)} />
+          <LocaleSwitcher />
+          <Hamburger open={menuOpen} onClick={() => setMenuOpen(!menuOpen)} t={t} />
         </div>
 
         {menuOpen && (
@@ -109,7 +118,7 @@ export function Header() {
             {links.map((l) => (
               <TNavLink
                 key={l.to}
-                to={l.to}
+                to={lp(l.to)}
                 className={({ isActive }) =>
                   `rounded-lg px-4 py-2 font-display text-sm font-semibold uppercase tracking-wider transition-colors ${
                     isActive
@@ -118,7 +127,7 @@ export function Header() {
                   }`
                 }
               >
-                {l.label}
+                {t(l.key)}
               </TNavLink>
             ))}
           </nav>

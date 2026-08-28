@@ -6,6 +6,7 @@ import { prefersReducedMotion } from '../../lib/motion'
 import { techRef } from '../../lib/tech-icons'
 import SuperpositionGraph from '../../components/engrammic/SuperpositionGraph'
 import type { LayoutProps } from './layouts'
+import { useLocalePath } from '../../i18n/use-locale-path'
 
 // Engrammic runs its own world: the sepia editorial look of engrammic.ai
 // (cream ground, Libre Baskerville serif, gold accents), forced regardless of
@@ -90,6 +91,7 @@ function LogoBadge({ name }: { name: string }) {
 
 export default function Engrammic({ p }: LayoutProps) {
   const scope = useRef<HTMLElement>(null)
+  const lp = useLocalePath()
 
   // paint the shared site footer in this page's cream ground while it is mounted
   useEffect(() => {
@@ -132,7 +134,7 @@ export default function Engrammic({ p }: LayoutProps) {
       {/* hero */}
       <section className="mx-auto max-w-4xl px-6 pb-10 pt-32 lg:pt-36">
         <TLink
-          to="/portfolio"
+          to={lp('/portfolio')}
           aria-label="Back to portfolio"
           title="Back to portfolio"
           className="group inline-flex h-9 w-9 items-center justify-center rounded border border-[#1c1a17]/20 text-[#1c1a17]/50 transition-colors hover:border-[#9a6f33] hover:text-[#9a6f33]"
@@ -155,7 +157,7 @@ export default function Engrammic({ p }: LayoutProps) {
             <p className="mt-6 max-w-xl text-[17px] leading-relaxed text-[#1c1a17]/70">
               Epistemic memory for agents. Every observation enters as a sourced claim, and a claim has to survive
               consensus before it counts as a fact an agent can act on. This page is the architecture; the{' '}
-              <TLink to="/blog/on-building-something-engrammic" className="underline decoration-[#9a6f33]/40 underline-offset-2 hover:decoration-[#9a6f33]">
+              <TLink to={lp('/blog/on-building-something-engrammic')} className="underline decoration-[#9a6f33]/40 underline-offset-2 hover:decoration-[#9a6f33]">
                 origin story is on the blog
               </TLink>
               .
@@ -321,7 +323,7 @@ export default function Engrammic({ p }: LayoutProps) {
             {p.jp}
           </span>
           <TLink
-            to="/portfolio"
+            to={lp('/portfolio')}
             className="group inline-flex items-center gap-1.5 font-mono text-xs uppercase tracking-[0.2em] text-[#1c1a17]/50 transition-colors hover:text-[#9a6f33]"
           >
             back to portfolio

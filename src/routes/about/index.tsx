@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { Meta } from '../../lib/meta'
 import { Rule, SectionNumber, JPLabel, RegMarks } from '../../components/motifs'
 import { TLink } from '../../components/page-transition'
@@ -7,6 +8,7 @@ import DecryptedText from '../../components/react-bits/DecryptedText'
 import { projects, type Project } from '../../content/projects'
 import { revealCards } from '../../lib/reveals'
 import { RedactedCard } from '../../components/redacted-card'
+import { useLocalePath } from '../../i18n/use-locale-path'
 
 const building = projects.filter((p) => p.phase === 'building')
 
@@ -45,6 +47,7 @@ function iconFor(href: string) {
 }
 
 function PhotoCarousel() {
+  const { t } = useTranslation()
   const [idx, setIdx] = useState(0)
   const n = PHOTOS.length
 
@@ -70,7 +73,7 @@ function PhotoCarousel() {
           <button
             key={i}
             onClick={() => setIdx(i)}
-            aria-label={`Show photo ${i + 1}`}
+            aria-label={t('about.showPhoto', { n: i + 1 })}
             className={`h-1.5 rounded-full transition-all ${i === idx ? 'w-4 bg-gold' : 'w-1.5 bg-bone/50 hover:bg-bone/80'}`}
           />
         ))}
@@ -141,28 +144,30 @@ const CARDS = [
 const TOTAL_PAGES = Math.ceil(CARDS.length / PROJECTS_PER_PAGE)
 
 export default function AboutPage() {
+  const { t } = useTranslation()
   const scope = useRef<HTMLElement>(null)
   const [projectPage, setProjectPage] = useState(0)
+  const lp = useLocalePath()
   const pageItems = CARDS.slice(projectPage * PROJECTS_PER_PAGE, (projectPage + 1) * PROJECTS_PER_PAGE)
 
   useEffect(() => revealCards(scope.current), [])
 
   return (
     <>
-      <Meta title="About" description="Aliasgar Khimani - AI alignment researcher, RSI, and the things that happen when systems start building themselves." />
+      <Meta title={t('about.title')} description="Aliasgar Khimani - AI alignment researcher, RSI, and the things that happen when systems start building themselves." />
       <section ref={scope} className="relative mx-auto max-w-4xl px-6 pb-24 pt-36">
 
         {/* 00 - Header */}
         <div className="flex flex-col gap-6">
           <div className="relative">
-            <SectionNumber n="00" label="about" />
+            <SectionNumber n="00" label={t('about.sectionLabel')} />
             <div className="relative mt-3 w-fit">
               <div className="absolute -left-10 top-1/2 hidden -translate-y-1/2 flex-col items-center gap-2 lg:flex">
                 <JPLabel>私</JPLabel>
                 <span aria-hidden className="h-4 w-px bg-gold/50" />
               </div>
               <h1 className="font-display text-5xl font-black text-charcoal dark:text-bone">
-                <DecryptedText text="About" speed={50} delay={100} />
+                <DecryptedText text={t('about.title')} speed={50} delay={100} />
               </h1>
             </div>
           </div>
@@ -203,7 +208,7 @@ export default function AboutPage() {
         <div className="mt-12">
           <h2 data-card className="flex items-baseline gap-3">
             <span className="font-mono text-xs text-charcoal/40 dark:text-bone/40">01</span>
-            <span className="font-mono text-sm font-semibold uppercase tracking-[0.3em] text-gold">Operating Principles</span>
+            <span className="font-mono text-sm font-semibold uppercase tracking-[0.3em] text-gold">{t('about.operatingPrinciples')}</span>
           </h2>
           <ul data-card className="mt-4 space-y-2">
             {PRINCIPLES.map((p, i) => (
@@ -217,7 +222,7 @@ export default function AboutPage() {
 
         {/* Now status */}
         <div data-card className="mt-6 flex items-baseline gap-3 font-mono text-sm">
-          <span className="rounded bg-gold/10 px-2 py-1 text-gold">now</span>
+          <span className="rounded bg-gold/10 px-2 py-1 text-gold">{t('about.now')}</span>
           <span className="text-charcoal/70 dark:text-bone/70">{NOW.text}</span>
           <span className="text-charcoal/30 dark:text-bone/30">({NOW.updated})</span>
         </div>
@@ -227,13 +232,13 @@ export default function AboutPage() {
           <div data-card className="mb-6 flex items-baseline justify-between">
             <h2 className="flex items-baseline gap-3">
               <span className="font-mono text-xs text-charcoal/40 dark:text-bone/40">02</span>
-              <span className="font-mono text-sm font-semibold uppercase tracking-[0.3em] text-gold">Building Now</span>
+              <span className="font-mono text-sm font-semibold uppercase tracking-[0.3em] text-gold">{t('about.buildingNow')}</span>
             </h2>
             <TLink
-              to="/portfolio"
+              to={lp('/portfolio')}
               className="group inline-flex items-center gap-1.5 font-mono text-xs font-medium uppercase tracking-[0.2em] text-charcoal/60 transition-colors hover:text-gold dark:text-bone/60"
             >
-              <span className="link-draw">all projects</span>
+              <span className="link-draw">{t('about.allProjects')}</span>
               <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-1" />
             </TLink>
           </div>
@@ -252,7 +257,7 @@ export default function AboutPage() {
                 <button
                   key={i}
                   onClick={() => setProjectPage(i)}
-                  aria-label={`Page ${i + 1}`}
+                  aria-label={t('about.page', { n: i + 1 })}
                   className={`h-2 rounded-full transition-all ${i === projectPage ? 'w-6 bg-gold' : 'w-2 bg-charcoal/20 hover:bg-charcoal/40 dark:bg-bone/20 dark:hover:bg-bone/40'}`}
                 />
               ))}
@@ -264,7 +269,7 @@ export default function AboutPage() {
         <div className="mt-16">
           <h2 data-card className="flex items-baseline gap-3">
             <span className="font-mono text-xs text-charcoal/40 dark:text-bone/40">03</span>
-            <span className="font-mono text-sm font-semibold uppercase tracking-[0.3em] text-gold">Open Source</span>
+            <span className="font-mono text-sm font-semibold uppercase tracking-[0.3em] text-gold">{t('about.openSource')}</span>
           </h2>
           <div className="mt-6 space-y-1">
             {OSS.map((o) => (
@@ -286,7 +291,7 @@ export default function AboutPage() {
                     className="flex items-center gap-2 font-mono text-sm text-charcoal/50 transition-colors hover:text-gold dark:text-bone/50"
                   >
                     <Github className="h-4 w-4" />
-                    <span className="hidden sm:inline">view PRs</span>
+                    <span className="hidden sm:inline">{t('about.viewPRs')}</span>
                     <ArrowRight className="h-3.5 w-3.5" />
                   </a>
                 )}

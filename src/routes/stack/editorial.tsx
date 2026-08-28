@@ -1,9 +1,12 @@
 import { useEffect, useRef } from 'react'
+import { useTranslation } from 'react-i18next'
 import { TLink } from '../../components/page-transition'
 import { revealCards } from '../../lib/reveals'
 import { prefersReducedMotion } from '../../lib/motion'
 import { ArrowRight } from '../../components/icons'
+import { SectionNumber } from '../../components/motifs'
 import { DOMAINS, STACK, LANGS, LANG_TOTAL, LATELY, GROUP_NOTES, DEPTH, PROJECTS, type Tech, type Depth } from './data'
+import { useLocalePath } from '../../i18n/use-locale-path'
 
 // look up a tech's icon by name, for the project rows
 const TECH_BY_NAME = new Map(STACK.flatMap((g) => g.items.map((t) => [t.name, t] as const)))
@@ -32,12 +35,19 @@ const DEPTH_DOT: Record<Depth, string> = {
   dabbling: 'border border-gold/50',
 }
 
+const DEPTH_LABEL_KEY: Record<Depth, string> = {
+  daily: 'stack.depthDaily',
+  comfortable: 'stack.depthComfortable',
+  dabbling: 'stack.depthDabbling',
+}
+
 // index entry: depth dot, big display name, brand icon surfaces on hover
-function TechEntry({ t }: { t: Tech }) {
-  const depth = DEPTH[t.name] ?? 'comfortable'
+function TechEntry({ t: tech }: { t: Tech }) {
+  const { t } = useTranslation()
+  const depth = DEPTH[tech.name] ?? 'comfortable'
   return (
     <li className="group flex cursor-default items-center gap-2">
-      <span aria-hidden className={`h-1.5 w-1.5 shrink-0 rounded-full ${DEPTH_DOT[depth]}`} title={depth} />
+      <span aria-hidden className={`h-1.5 w-1.5 shrink-0 rounded-full ${DEPTH_DOT[depth]}`} title={t(DEPTH_LABEL_KEY[depth])} />
       <span
         className={`font-display text-2xl font-bold transition-colors group-hover:text-gold md:text-3xl ${
           depth === 'dabbling'
@@ -45,24 +55,26 @@ function TechEntry({ t }: { t: Tech }) {
             : 'text-charcoal/75 dark:text-bone/75'
         }`}
       >
-        {t.name}
+        {tech.name}
       </span>
       <svg
         viewBox="0 0 24 24"
         aria-hidden
         className={`h-4 w-4 self-center opacity-0 transition-opacity duration-300 group-hover:opacity-100 ${
-          t.mono ? 'fill-charcoal dark:fill-bone' : ''
+          tech.mono ? 'fill-charcoal dark:fill-bone' : ''
         }`}
-        style={t.mono ? undefined : { fill: `#${t.icon.hex}` }}
+        style={tech.mono ? undefined : { fill: `#${tech.icon.hex}` }}
       >
-        <path d={t.icon.path} />
+        <path d={tech.icon.path} />
       </svg>
     </li>
   )
 }
 
 export default function StackEditorial() {
+  const { t } = useTranslation()
   const scope = useRef<HTMLElement>(null)
+  const lp = useLocalePath()
   useEffect(() => revealCards(scope.current), [])
 
   const reduced = prefersReducedMotion()
@@ -74,7 +86,7 @@ export default function StackEditorial() {
         {/* masthead: magazine header wired with a live folio line */}
         <header className="relative" data-card>
           <div className="flex items-baseline justify-between gap-3 font-mono text-xs uppercase tracking-[0.3em] text-charcoal/50 dark:text-bone/50">
-            <span>04 / stack</span>
+            <SectionNumber n="04" label={t('stack.sectionLabel')} />
             <span>技 · gijutsu</span>
           </div>
 
@@ -91,13 +103,13 @@ export default function StackEditorial() {
           data-card
           className="mt-14 flex flex-col gap-2 border-y border-charcoal/10 py-4 sm:flex-row sm:items-baseline sm:gap-5 dark:border-bone/10"
         >
-          <span className="shrink-0 font-mono text-[10px] uppercase tracking-[0.3em] text-gold">lately · 2026</span>
+          <span className="shrink-0 font-mono text-[10px] uppercase tracking-[0.3em] text-gold">{t('stack.lately')}</span>
           <p className="text-sm leading-relaxed text-charcoal/70 dark:text-bone/70">{LATELY}</p>
         </div>
 
         {/* domains: numbered features */}
         <section className="mt-24">
-          <h2 className="sr-only">Focus areas</h2>
+          <h2 className="sr-only">{t('stack.focusAreas')}</h2>
           {DOMAINS.map((d, i) => (
             <article
               key={d.title}
@@ -127,16 +139,16 @@ export default function StackEditorial() {
         <section className="mt-28">
           <div className="mb-8 flex flex-wrap items-baseline justify-between gap-3" data-card>
             <div className="flex items-baseline gap-3">
-              <h2 className="font-mono text-sm uppercase tracking-[0.4em] text-gold">proof</h2>
+              <h2 className="font-mono text-sm uppercase tracking-[0.4em] text-gold">{t('stack.proof')}</h2>
               <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-charcoal/40 dark:text-bone/40">
-                the stack, doing real work
+                {t('stack.proofCaption')}
               </span>
             </div>
             <TLink
-              to="/portfolio"
+              to={lp('/portfolio')}
               className="group inline-flex items-center gap-2 rounded-full border border-gold/40 bg-gold/[0.06] px-4 py-1.5 font-mono text-[11px] uppercase tracking-[0.2em] text-gold transition-colors hover:bg-gold/15"
             >
-              full portfolio
+              {t('stack.fullPortfolio')}
               <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-1" />
             </TLink>
           </div>
@@ -180,9 +192,9 @@ export default function StackEditorial() {
         <section className="relative mt-28 px-6 py-12 md:px-12" data-card>
           <RegMarks />
           <div className="mb-8 flex items-baseline gap-3">
-            <h2 className="font-mono text-sm uppercase tracking-[0.4em] text-gold">languages</h2>
+            <h2 className="font-mono text-sm uppercase tracking-[0.4em] text-gold">{t('stack.languages')}</h2>
             <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-charcoal/40 dark:text-bone/40">
-              by repo
+              {t('stack.byRepo')}
             </span>
           </div>
           <div className="space-y-3">
@@ -212,16 +224,16 @@ export default function StackEditorial() {
         {/* the index: each group carries a how/why line; dots encode honest depth */}
         <section className="mt-28">
           <div className="mb-12 flex flex-wrap items-baseline justify-between gap-4" data-card>
-            <h2 className="font-mono text-sm uppercase tracking-[0.4em] text-gold">the index</h2>
+            <h2 className="font-mono text-sm uppercase tracking-[0.4em] text-gold">{t('stack.theIndex')}</h2>
             <div className="flex items-center gap-4 font-mono text-[10px] uppercase tracking-[0.15em] text-charcoal/45 dark:text-bone/45">
               <span className="flex items-center gap-1.5">
-                <span className="h-1.5 w-1.5 rounded-full bg-gold" /> daily
+                <span className="h-1.5 w-1.5 rounded-full bg-gold" /> {t(DEPTH_LABEL_KEY.daily)}
               </span>
               <span className="flex items-center gap-1.5">
-                <span className="h-1.5 w-1.5 rounded-full bg-gold/40" /> comfortable
+                <span className="h-1.5 w-1.5 rounded-full bg-gold/40" /> {t(DEPTH_LABEL_KEY.comfortable)}
               </span>
               <span className="flex items-center gap-1.5">
-                <span className="h-1.5 w-1.5 rounded-full border border-gold/50" /> dabbling
+                <span className="h-1.5 w-1.5 rounded-full border border-gold/50" /> {t(DEPTH_LABEL_KEY.dabbling)}
               </span>
             </div>
           </div>
@@ -244,7 +256,7 @@ export default function StackEditorial() {
                 <div className="mt-3 flex items-center gap-2">
                   <span className="h-px w-6 bg-gold/60" />
                   <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-charcoal/40 dark:text-bone/40">
-                    {String(g.items.length).padStart(2, '0')} units
+                    {t('stack.unitsCount', { n: String(g.items.length).padStart(2, '0') })}
                   </span>
                 </div>
               </div>

@@ -1,3 +1,4 @@
 #!/bin/sh
-# Type-check before committing (faster than full build)
-pnpm tsc --noEmit
+# tsc catches type errors, test catches catalog gaps, i18n:check catches lock staleness.
+# Each fails on a different mismatch, so all three run.
+pnpm tsc --noEmit && pnpm test && pnpm i18n:check

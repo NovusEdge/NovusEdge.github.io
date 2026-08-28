@@ -7,7 +7,11 @@
     "dev": "vite",
     "build": "tsc && vite build && node scripts/postbuild.mjs",
     "preview": "vite preview",
-    "test": "vitest run"
+    "test": "vitest run",
+    "i18n:translate": "node --env-file=${GEMINI_ENV_FILE:-$HOME/Projects/goob/.env} scripts/translate-ui.mjs",
+    "i18n:check": "node scripts/translate-ui.mjs --check",
+    "translate:blog": "node --env-file=${GEMINI_ENV_FILE:-$HOME/Projects/goob/.env} scripts/translate-blog.mjs",
+    "translate:blog:check": "node scripts/translate-blog.mjs --check"
   },
   "dependencies": {
     "@gsap/react": "^2.1.2",
@@ -20,6 +24,7 @@
     "animejs": "^4.5.0",
     "framer-motion": "^12.43.0",
     "gsap": "^3.15.0",
+    "i18next": "^26.4.0",
     "katex": "^0.17.0",
     "lucide-react": "^1.31.0",
     "ogl": "^1.0.11",
@@ -27,6 +32,7 @@
     "prism-react-renderer": "^2.4.1",
     "react": "^19.2.8",
     "react-dom": "^19.2.8",
+    "react-i18next": "^17.0.12",
     "react-markdown": "^10.1.0",
     "react-router": "^7.18.2",
     "react-simple-code-editor": "^0.14.1",

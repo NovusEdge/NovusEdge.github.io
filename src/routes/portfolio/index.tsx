@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { TLink } from '../../components/page-transition'
 import { hasPage } from './content'
 import { projects, type Project } from '../../content/projects'
@@ -8,7 +9,10 @@ import { fuzzyMatch } from '../../lib/blog-list'
 import { revealCards } from '../../lib/reveals'
 import { MarginQuote } from '../../components/side-flourish'
 import { Meta } from '../../lib/meta'
+import { SectionNumber } from '../../components/motifs'
 import { HeroBackground } from './hero-bg'
+import { useLocalePath } from '../../i18n/use-locale-path'
+import { useLocale } from '../../i18n/context'
 
 const primaryLink = (p: Project) => p.links[0]?.href ?? '#'
 
@@ -62,6 +66,9 @@ function DataRow({ k, v }: { k: string; v: string }) {
 
 // framed print plate: shader inside crop corners, mono data column beside it
 function Slide({ p }: { p: Project }) {
+  const { t } = useTranslation()
+  const lp = useLocalePath()
+  const locale = useLocale()
   return (
     <div className="relative border border-bone/12 bg-charcoal-tint/85 p-4 backdrop-blur-sm md:p-6">
       <div className="relative grid gap-5 md:grid-cols-[40%_1fr] md:items-center md:gap-8">
@@ -82,16 +89,16 @@ function Slide({ p }: { p: Project }) {
             <span className="font-mono text-[11px] uppercase tracking-[0.3em] text-gold">{p.phase.replace('-', ' ')}</span>
             {p.stars ? <span className="font-mono text-[11px] text-bone/45">★ {p.stars}</span> : null}
           </div>
-          <h2 className="mt-2 font-display text-5xl font-black leading-none text-bone md:text-6xl">{p.title}</h2>
+          <h2 lang={locale.default ? undefined : 'en'} className="mt-2 font-display text-5xl font-black leading-none text-bone md:text-6xl">{p.title}</h2>
           <div className="my-4 h-px bg-bone/15">
             <span className="block h-px w-16 bg-gold" />
           </div>
           <p className="max-w-xl text-[15px] leading-relaxed text-bone/70">{p.description}</p>
 
           <dl className="mt-5 max-w-xs">
-            <DataRow k="year" v={p.year} />
-            {p.lang && <DataRow k="written in" v={p.lang} />}
-            <DataRow k="stack" v={`${p.tech.length} tools`} />
+            <DataRow k={t('portfolio.year')} v={p.year} />
+            {p.lang && <DataRow k={t('portfolio.writtenIn')} v={p.lang} />}
+            <DataRow k={t('portfolio.stack')} v={t('portfolio.toolsCount', { count: p.tech.length })} />
           </dl>
 
           <div className="mt-auto pt-6">
@@ -105,11 +112,11 @@ function Slide({ p }: { p: Project }) {
             <div className="mt-5 flex flex-wrap items-center gap-2">
               {hasPage(p.slug) && (
                 <TLink
-                  to={`/portfolio/${p.slug}`}
+                  to={lp(`/portfolio/${p.slug}`)}
                   onClick={(e) => e.stopPropagation()}
                   className="group/read inline-flex items-center gap-2 border border-gold bg-gold/15 px-4 py-2 font-mono text-[11px] font-semibold uppercase tracking-[0.25em] text-gold transition-colors hover:bg-gold hover:text-charcoal"
                 >
-                  read more <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover/read:translate-x-1" />
+                  {t('portfolio.readMore')} <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover/read:translate-x-1" />
                 </TLink>
               )}
               <div className="ml-auto flex flex-wrap gap-2">
@@ -126,6 +133,7 @@ function Slide({ p }: { p: Project }) {
 }
 
 function Carousel({ items }: { items: Project[] }) {
+  const { t } = useTranslation()
   const n = items.length
   const slides = [items[n - 1], ...items, items[0]]
   const [pos, setPos] = useState(1)
@@ -207,10 +215,10 @@ function Carousel({ items }: { items: Project[] }) {
           <span className="text-bone/70">{items[active]?.title}</span>
         </div>
         <div className="flex items-center gap-2">
-          <button onClick={() => go(-1)} aria-label="Previous" className="flex h-7 w-7 items-center justify-center border border-bone/15 text-bone/60 transition-colors hover:border-gold hover:text-gold">
+          <button onClick={() => go(-1)} aria-label={t('portfolio.previous')} className="flex h-7 w-7 items-center justify-center border border-bone/15 text-bone/60 transition-colors hover:border-gold hover:text-gold">
             <ArrowRight className="h-3.5 w-3.5 rotate-180" />
           </button>
-          <button onClick={() => go(1)} aria-label="Next" className="flex h-7 w-7 items-center justify-center border border-bone/15 text-bone/60 transition-colors hover:border-gold hover:text-gold">
+          <button onClick={() => go(1)} aria-label={t('portfolio.next')} className="flex h-7 w-7 items-center justify-center border border-bone/15 text-bone/60 transition-colors hover:border-gold hover:text-gold">
             <ArrowRight className="h-3.5 w-3.5" />
           </button>
         </div>
@@ -240,7 +248,7 @@ function Carousel({ items }: { items: Project[] }) {
         {items.map((p, d) => (
           <button
             key={p.slug}
-            aria-label={`Show ${p.title}`}
+            aria-label={t('portfolio.showProject', { title: p.title })}
             onClick={() => {
               setAnim(true)
               setPos(d + 1)
@@ -256,11 +264,13 @@ function Carousel({ items }: { items: Project[] }) {
 // same proof-sheet language, shrunk: crop corners, mono foot, gold tick rule
 function InfoCard({ p }: { p: Project }) {
   const outbound = !hasPage(p.slug)
+  const lp = useLocalePath()
+  const locale = useLocale()
   const inner = (
     <>
       <Crops inset="inset-2" />
       <div className="relative flex items-baseline gap-2">
-        <h3 className="font-display text-xl font-black text-bone transition-colors group-hover:text-gold">{p.title}</h3>
+        <h3 lang={locale.default ? undefined : 'en'} className="font-display text-xl font-black text-bone transition-colors group-hover:text-gold">{p.title}</h3>
         {p.jp && <span className="font-display text-sm text-bone/25">{p.jp}</span>}
         <span className="ml-auto font-mono text-[12px] font-medium tabular-nums text-bone/50">
           {p.year} {outbound ? '↗' : '→'}
@@ -291,17 +301,17 @@ function InfoCard({ p }: { p: Project }) {
       {inner}
     </a>
   ) : (
-    <TLink to={`/portfolio/${p.slug}`} className={cls}>
+    <TLink to={lp(`/portfolio/${p.slug}`)} className={cls}>
       {inner}
     </TLink>
   )
 }
 
 const GROUPS = [
-  { key: 'now', label: 'building now', jp: '現在' },
-  { key: 'shipped', label: 'shipped', jp: '完了' },
-  { key: 'oss', label: 'open source', jp: '貢献' },
-  { key: 'chaos', label: 'chaos & tools', jp: '混沌' },
+  { key: 'now', labelKey: 'portfolio.groupNow', jp: '現在' },
+  { key: 'shipped', labelKey: 'portfolio.groupShipped', jp: '完了' },
+  { key: 'oss', labelKey: 'portfolio.groupOss', jp: '貢献' },
+  { key: 'chaos', labelKey: 'portfolio.groupChaos', jp: '混沌' },
 ] as const
 
 // carousel curation + order: strongest work first
@@ -317,6 +327,7 @@ function matches(p: Project, q: string) {
 }
 
 export default function PortfolioIndex() {
+  const { t } = useTranslation()
   const [q, setQ] = useState('')
   const scope = useRef<HTMLElement>(null)
   useEffect(() => revealCards(scope.current), [q])
@@ -327,24 +338,24 @@ export default function PortfolioIndex() {
 
   return (
     <main ref={scope} className="relative bg-charcoal text-bone">
-      <Meta title="Portfolio" description="Projects and builds, from AI memory to forkbombs." />
+      <Meta title={t('portfolio.title')} description="Projects and builds, from AI memory to forkbombs." />
       <HeroBackground />
       <MarginQuote lines={POEM_LINES} translation={POEM_EN} side="right" />
 
       <div className="relative z-10 mx-auto max-w-6xl px-6 pb-40 pt-40 md:px-10 md:pt-44">
         <header data-card className="mb-10">
           <div className="flex items-baseline justify-between font-mono text-[11px] uppercase tracking-[0.3em] text-bone/40">
-            <span>01 / portfolio</span>
+            <SectionNumber n="01" label={t('portfolio.sectionLabel')} />
             <span>作品 · sakuhin</span>
           </div>
           <div className="mt-4 flex flex-col gap-5 md:flex-row md:items-end md:justify-between">
-            <h1 className="font-display text-6xl font-black leading-none md:text-8xl">Portfolio</h1>
+            <h1 className="font-display text-6xl font-black leading-none md:text-8xl">{t('portfolio.title')}</h1>
             <input
               type="search"
               value={q}
               onChange={(e) => setQ(e.target.value)}
-              placeholder="search projects..."
-              aria-label="Search projects"
+              placeholder={t('portfolio.searchPlaceholder')}
+              aria-label={t('portfolio.searchLabel')}
               className="w-full border-b border-bone/25 bg-transparent pb-1 font-mono text-xs tracking-wider outline-none transition-colors placeholder:text-bone/45 focus:border-gold sm:max-w-xs"
             />
           </div>
@@ -358,7 +369,7 @@ export default function PortfolioIndex() {
 
         {query && shown.length === 0 && (
           <p data-card className="mt-10 font-mono text-xs uppercase tracking-[0.25em] text-bone/60">
-            no projects match [ {q} ]
+            {t('portfolio.noMatch', { query: q })}
           </p>
         )}
 
@@ -368,7 +379,7 @@ export default function PortfolioIndex() {
           return (
             <section key={g.key} className="mt-20">
               <div data-card className="mb-6 flex items-center gap-4">
-                <span className="font-mono text-sm font-semibold uppercase tracking-[0.3em] text-gold">{g.label}</span>
+                <span className="font-mono text-sm font-semibold uppercase tracking-[0.3em] text-gold">{t(g.labelKey)}</span>
                 <span className="font-display text-sm text-bone/30">{g.jp}</span>
                 <div className="h-px flex-1 bg-bone/10" />
                 <span className="font-mono text-[11px] tabular-nums text-bone/30">{String(items.length).padStart(2, '0')}</span>

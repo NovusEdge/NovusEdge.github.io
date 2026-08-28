@@ -41,9 +41,19 @@ export async function prerender(data: { url: string }) {
       { type: 'meta', props: { name: 'twitter:image', content: imageUrl } },
     )
   }
+  if (headState.lang === 'zh-Hans') {
+    elements.push({
+      type: 'link',
+      props: {
+        rel: 'stylesheet',
+        href: 'https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700;900&display=swap',
+      },
+    })
+  }
   return {
     html,
     head: {
+      lang: headState.lang,
       title: headState.title,
       elements: new Set(elements),
     },

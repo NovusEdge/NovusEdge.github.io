@@ -16,16 +16,17 @@ const NOISE =
 
 export const HERO_VARIANTS = ['Cinematic', 'Dither', 'Framed', 'Duotone', 'Grain', 'WarmthShift', 'Raw'] as const
 
-type HeroProps = { post: Post; image: string | null }
+type HeroProps = { post: Post; image: string | null; lang?: string }
 
 const BLEED = 'relative flex h-[80vh] min-h-[520px] w-full items-end overflow-hidden bg-charcoal pb-16'
 const PAGE_FADE = 'pointer-events-none absolute inset-x-0 bottom-0 h-40 bg-gradient-to-b from-transparent to-bone dark:to-charcoal'
 
 // title + meta laid over a dark image
-function OverTitle({ post }: { post: Post }) {
+function OverTitle({ post, lang }: { post: Post; lang?: string }) {
   return (
     <div
       data-herotitle
+      lang={lang}
       className="relative z-10 mx-auto w-full max-w-3xl px-6 [text-shadow:0_2px_24px_rgba(0,0,0,0.6)]"
     >
       <div className="flex flex-wrap items-center gap-3 font-mono text-[11px] font-medium uppercase tracking-[0.2em] text-bone/75">
@@ -57,7 +58,7 @@ function useHeroMotion(scope: React.RefObject<HTMLElement | null>, parallax: boo
 }
 
 // 1 — full-bleed photo, darkened, parallax + ken-burns
-function HeroCinematic({ post, image }: HeroProps) {
+function HeroCinematic({ post, image, lang }: HeroProps) {
   const scope = useRef<HTMLElement>(null)
   useHeroMotion(scope, true)
   return (
@@ -72,13 +73,13 @@ function HeroCinematic({ post, image }: HeroProps) {
       )}
       <div className="absolute inset-0 bg-gradient-to-t from-charcoal via-charcoal/45 to-charcoal/25" />
       <div className={PAGE_FADE} />
-      <OverTitle post={post} />
+      <OverTitle post={post} lang={lang} />
     </header>
   )
 }
 
 // 2 — image run through the ImageDithering shader (on-brand with the landing)
-function HeroDither({ post, image }: HeroProps) {
+function HeroDither({ post, image, lang }: HeroProps) {
   const scope = useRef<HTMLElement>(null)
   useHeroMotion(scope, false)
   return (
@@ -109,13 +110,13 @@ function HeroDither({ post, image }: HeroProps) {
       )}
       <div className="absolute inset-0 bg-gradient-to-t from-charcoal via-charcoal/30 to-transparent" />
       <div className={PAGE_FADE} />
-      <OverTitle post={post} />
+      <OverTitle post={post} lang={lang} />
     </header>
   )
 }
 
 // 3 — contained framed panel with reg-marks, title BELOW (most readable / editorial)
-function HeroFramed({ post, image }: HeroProps) {
+function HeroFramed({ post, image, lang }: HeroProps) {
   const scope = useRef<HTMLElement>(null)
   useGSAP(
     () => {
@@ -145,7 +146,7 @@ function HeroFramed({ post, image }: HeroProps) {
           </div>
         </div>
       )}
-      <div data-herotitle className="mt-8">
+      <div data-herotitle lang={lang} className="mt-8">
         <div className="flex flex-wrap items-center gap-3 font-mono text-[11px] font-medium uppercase tracking-[0.2em] text-charcoal/60 dark:text-bone/60">
           <span className="text-gold">{post.date}</span>
           {post.tags.map((t) => (
@@ -161,7 +162,7 @@ function HeroFramed({ post, image }: HeroProps) {
 }
 
 // 4 — duotone (grayscale + paper-blue/gold) + grain, moody
-function HeroDuotone({ post, image }: HeroProps) {
+function HeroDuotone({ post, image, lang }: HeroProps) {
   const scope = useRef<HTMLElement>(null)
   useHeroMotion(scope, true)
   return (
@@ -179,7 +180,7 @@ function HeroDuotone({ post, image }: HeroProps) {
       <div className="absolute inset-0 bg-gradient-to-t from-charcoal via-charcoal/50 to-transparent" />
       <div className="absolute inset-0 opacity-[0.12] mix-blend-overlay" style={{ backgroundImage: NOISE }} />
       <div className={PAGE_FADE} />
-      <OverTitle post={post} />
+      <OverTitle post={post} lang={lang} />
     </header>
   )
 }
@@ -190,7 +191,7 @@ const GRAIN_VIDEOS: Record<string, string> = {
   'building-vs-creating': '/assets/blog/building-vs-creating.mp4',
 }
 
-function HeroGrain({ post, image }: HeroProps) {
+function HeroGrain({ post, image, lang }: HeroProps) {
   const scope = useRef<HTMLElement>(null)
   useHeroMotion(scope, true)
   const video = GRAIN_VIDEOS[post.slug]
@@ -222,13 +223,13 @@ function HeroGrain({ post, image }: HeroProps) {
       />
       <div className="absolute inset-0 bg-gradient-to-t from-charcoal via-charcoal/50 to-charcoal/20" />
       <div className={PAGE_FADE} />
-      <OverTitle post={post} />
+      <OverTitle post={post} lang={lang} />
     </header>
   )
 }
 
 // 6 — warmth shift: warm amber → cool blue as you scroll
-function HeroWarmthShift({ post, image }: HeroProps) {
+function HeroWarmthShift({ post, image, lang }: HeroProps) {
   const scope = useRef<HTMLElement>(null)
   const imgRef = useRef<HTMLImageElement>(null)
 
@@ -264,7 +265,7 @@ function HeroWarmthShift({ post, image }: HeroProps) {
       )}
       <div className="absolute inset-0 bg-gradient-to-t from-charcoal via-charcoal/40 to-transparent" />
       <div className={PAGE_FADE} />
-      <OverTitle post={post} />
+      <OverTitle post={post} lang={lang} />
     </header>
   )
 }
@@ -274,7 +275,7 @@ const RAW_VIDEOS: Record<string, string> = {
   'building-vs-creating': '/assets/blog/building-vs-creating.mp4',
 }
 
-function HeroRaw({ post, image }: HeroProps) {
+function HeroRaw({ post, image, lang }: HeroProps) {
   const scope = useRef<HTMLElement>(null)
   const video = RAW_VIDEOS[post.slug]
   useHeroMotion(scope, false)
@@ -301,15 +302,15 @@ function HeroRaw({ post, image }: HeroProps) {
       <div className="pointer-events-none absolute inset-y-0 right-0 w-[15%] bg-gradient-to-l from-[#2a1f1a] to-transparent" />
       <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-[#2a1f1a]/80 to-transparent" />
       <div className={PAGE_FADE} />
-      <OverTitle post={post} />
+      <OverTitle post={post} lang={lang} />
     </header>
   )
 }
 
 const VARIANTS = [HeroCinematic, HeroDither, HeroFramed, HeroDuotone, HeroGrain, HeroWarmthShift, HeroRaw]
 
-export function PostHero({ variant, post, image }: { variant: number } & HeroProps) {
+export function PostHero({ variant, post, image, lang }: { variant: number } & HeroProps) {
   const Hero = VARIANTS[variant] ?? HeroCinematic
   // key on variant+slug so switching variants / posts fully remounts (clean shader + GSAP state)
-  return <Hero key={`${variant}-${post.slug}`} post={post} image={image} />
+  return <Hero key={`${variant}-${post.slug}`} post={post} image={image} lang={lang} />
 }

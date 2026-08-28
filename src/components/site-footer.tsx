@@ -1,4 +1,5 @@
 import { lazy, Suspense, useEffect, useRef, useState, type CSSProperties } from 'react'
+import { useTranslation } from 'react-i18next'
 import { ImageDithering } from '@paper-design/shaders-react'
 import { isMobile } from '../lib/motion'
 
@@ -41,6 +42,7 @@ function DitherHand({ src, className = '', active, style = {} }: { src: string; 
 }
 
 export function SiteFooter({ word = 'Creation' }: { word?: string }) {
+  const { t } = useTranslation()
   const [open, setOpen] = useState(false)
   const [near, setNear] = useState(false)
   const ref = useRef<HTMLElement>(null)
@@ -93,14 +95,14 @@ export function SiteFooter({ word = 'Creation' }: { word?: string }) {
         />
         <button
           onClick={() => setOpen(true)}
-          aria-label="Get in touch"
+          aria-label={t('footer.getInTouchLabel')}
           className="group relative z-10 shrink-0 font-body text-6xl font-bold md:absolute md:left-1/2 md:top-1/2 md:-translate-x-1/2 md:-translate-y-1/2"
         >
           <span className="animate-neon text-rose-400 group-hover:animate-none group-hover:drop-shadow-[0_0_8px_rgba(251,113,133,0.6)]">
             @
           </span>
           <span className="pointer-events-none absolute left-1/2 top-full mt-2 -translate-x-1/2 whitespace-nowrap rounded-full border border-rose-400/30 bg-charcoal-deep px-3 py-1 font-mono text-xs tracking-wider text-rose-400 opacity-0 transition-opacity group-hover:opacity-100">
-            get in touch
+            {t('footer.getInTouch')}
           </span>
         </button>
         <DitherHand
