@@ -8,6 +8,7 @@ const ENDPOINT = `https://generativelanguage.googleapis.com/v1beta/models/${MODE
 const LOCALES = JSON.parse(readFileSync('src/i18n/locales.json', 'utf8')).filter((l) => !l.default)
 const BLOG_DIR = 'src/content/blog'
 const LOCK_PATH = 'src/i18n/content-translations.lock.json'
+const LISTINGS_PATH = 'src/i18n/blog-listings.json'
 
 const force = process.argv.includes('--force')
 const checkOnly = process.argv.includes('--check')
@@ -178,4 +179,21 @@ if (failed) {
 if (!dryRun) {
   writeJson(LOCK_PATH, lock)
   console.log(`lock updated for ${todoSlugs.length} post(s)`)
+
+  // Build listings manifest from all locale files
+  const listings = {}
+  for (const locale of LOCALES) {
+    listings[locale.code] = {}
+    for (const slug of slugs) {
+      const path = `${BLOG_DIR}/${slug}.${locale.code}.md`
+      if (!existsSync(path)) continue
+      const { data } = parseFrontmatter(readFileSync(path, 'utf8'))
+      listings[locale.code][slug] = {
+        title: data.title || slug,
+        description: data.description || '',
+      }
+    }
+  }
+  writeFileSync(LISTINGS_PATH, JSON.stringify(listings, null, 2) + '\n')
+  console.log(`wrote ${LISTINGS_PATH}`)
 }

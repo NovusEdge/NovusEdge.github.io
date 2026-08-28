@@ -1,0 +1,426 @@
+{
+  "fi": {
+    "ai-industry-trends": {
+      "title": "Tekoälyalan trendit",
+      "description": "TODO"
+    },
+    "building-vs-creating": {
+      "title": "Rakentaminen vs. luominen",
+      "description": "Kunhan pyörittelen yhtä satunnaista ajatusta, joka heräsi hiljattain"
+    },
+    "chat-control-eu": {
+      "title": "Puhutaanpa EU:n Chat Control -laista",
+      "description": "Chat Controlista, joka puolelta kiristyvästä valvontakoneistosta ja siitä, miksi ainoa kestävä ratkaisu on tehdä massavalvonnasta arkkitehtonisesti mahdotonta."
+    },
+    "chocolate-factory-writeup": {
+      "title": "Chocolate Factory -writeup",
+      "description": "FTP- ja web-palveluiden enumerointia rustscanilla ennen alkupääsyn saamista ja oikeuksien korotusta TryHackMen Chocolate Factory -huoneessa."
+    },
+    "daily-bugle-writeup": {
+      "title": "Daily Bugle -writeup",
+      "description": "Joomla-asennuksen sormenjälkien tunnistaminen ja hyväksikäyttö Metasploitilla jalansijan saamiseksi ja oikeuksien korottamiseksi TryHackMen Daily Bugle -huoneessa."
+    },
+    "epistemic-collapse": {
+      "title": "Mistä tiedät, mikä on totta?",
+      "description": "Luominen on nykyään ilmaista. Todentaminen maksaa edelleen saman kuin aina ennenkin. Tämä epäsymmetria rikkoo kaiken."
+    },
+    "game-zone-writeup": {
+      "title": "Game Zone Writeup",
+      "description": "Haavoittuvan verkkofoorumin skannaus ja hyväksikäyttö TryHackMen Game Zone -huoneessa shellin saamiseksi ja käyttöoikeuksien korottamiseksi."
+    },
+    "going-forward": {
+      "title": "Tästä eteenpäin",
+      "description": "Kiitokset kouralliselle varhaisia lukijoita ja katsaus tulevaan aikatauluttomaan julkaisutahtiin (postauksia tulee aina kun ne ovat valmiita)."
+    },
+    "hardware-journeys-starting-from-zero": {
+      "title": "Hardware Journeys: Aloitus absoluuttisesta nollasta",
+      "description": "Potkaistaan uusi sarja käyntiin. Softatyyppi opettelemassa rautaa tyhjästä, julkisesti ja huonosti. Miksi fysiikka on parempi opettaja kuin mikään framework, ja se yksi projekti, josta en ole vielä valmis puhumaan."
+    },
+    "hello-world": {
+      "title": "hei, maailma!",
+      "description": "Yhden kuvan tervehdyspostaus, joka polkaisee tämän blogin käyntiin luuppaavalla animoidulla gifillä."
+    },
+    "im-back-pt-1": {
+      "title": "Oon takas!",
+      "description": "Kaksi vuotta hiljaisuutta selitettynä. Ensimmäinen osa siitä, miten vuosi 2025 meni: yhteisön rakentaminen viidestä ihmisestä yli 250 henkeen, yrittäjyyden opettelua ja yksi startup, joka opetti minulle tasan tarkkaan, millainen ei pidä olla."
+    },
+    "im-back-pt-2": {
+      "title": "Oon takas! (Osa 2)",
+      "description": "Kakkososa, ja se vaikea sellainen. Kesä 2025 vei kaiken, olin vähällä olla selviämättä, ja olin vähällä lähteä sotimaan. Näin mä putosin aivan pohjalle ja raavin tieni takaisin ylös, ja nämä ovat ne ihmiset, jotka eivät antaneet mun jäädä maahan."
+    },
+    "linux-journeys-customizing-the-bootsplash": {
+      "title": "Linux Journeys – Bootsplashin kustomointi",
+      "description": "Tensuran inspiroima kaninkolo Linux-tuunaukseen (ricing), joka päättyy plymouthin asentamiseen ja teemoittamiseen kustomoidun bootsplashin luomiseksi."
+    },
+    "linux-journeys-tiling-window-managers-and-linux-ricing": {
+      "title": "Linux Journeys - Tiling Window Managerit ja Linux-ricing",
+      "description": "Jatkoa ricing-kaninkoloon: käydään läpi i3-, Polybar-, Rofi-, compton-, kitty- ja zsh-setuppi ensimmäisen tiling window manager -ricen takana."
+    },
+    "on-building-something-engrammic": {
+      "title": "Jonkin... Engrammisen rakentamisesta",
+      "description": "Ensifiiliksiä ongelmasta, joka toi minut tähän pisteeseen. Miksi agenttien muistia kohdellaan hakuongelmana, vaikka kyse on todellisuudessa uskomuksista – ja mitä ulkoistetun epistemologian rakentaminen oikein tarkoittaa."
+    },
+    "plan-a-ai": {
+      "title": "Suunnitelma A",
+      "description": "TODO"
+    },
+    "post-labour-post-learning": {
+      "title": "Tarvitseeko ihmisten edes tehdä enää näin paljon töitä?",
+      "description": "Teollinen kapasiteetti kasvoi ulos yleisen työnteon tarpeesta jo vuosikymmeniä sitten, eikä kukaan päivittänyt instituutioita. Koulu jatkoi pätevyyksien jakamista jonoon, joka oli jo valmiiksi kutistumassa. Nyt vastauksetkin ovat ilmaisia, eivätkä lapset osaa lukea."
+    },
+    "red-writeup": {
+      "title": "Red Writeup",
+      "description": "Avoimen palvelun hyödyntäminen jalansijan saamiseksi ja TryHackMe:n Red-huoneen roottaminen CVE-2021-4034 pkexec -haavoittuvuuden avulla."
+    },
+    "rsi-emergence-and-the-pope": {
+      "title": "RSI:stä, emergenssistä ja paavista",
+      "description": "Paavi sanoi, etteivät koneet voi tuntea mitään. Hänen vieressään seissyt tekoälylabran kaveri sanoi, että he löytävät jatkuvasti asioita, jotka näyttävät hyvin paljon tunteilta. Sama lava, sama aamu."
+    },
+    "shader-journeys-part-1": {
+      "title": "Shader-seikkailut: Osa 1",
+      "description": "Aloitetaan uusi sarja shaderien opettelusta ihan nollasta. Fragmentteja, verteksejä ja paljon hämmentynyttä matikan tuijottelua."
+    },
+    "shader-journeys-part-2": {
+      "title": "Shader-matkat: Osa 2",
+      "description": "TODO"
+    },
+    "thm-blue-writeup": {
+      "title": "THM Blue -writeup",
+      "description": "Avoinna olevan SMB-palvelun skannaaminen ja MS17-010 EternalBlue -exploitin hyödyntäminen jalansijan saamiseksi TryHackMen Blue-huoneessa."
+    },
+    "thm-writeup-alfred": {
+      "title": "Alfred Writeup",
+      "description": "Jenkins-kirjautumisen bruteforcetus Burp Intruderilla ja PowerShell-reverse shellin ketjuttaminen token impersonation -privesciin TryHackMen Alfred-huoneessa."
+    },
+    "toolsrus-writeup": {
+      "title": "ToolsRus Writeup",
+      "description": "Haitallisen WAR-tiedoston lataaminen haavoittuvaan Tomcat-manageriin reverse shellin saamiseksi TryHackMen ToolsRus-huoneessa ja pysyvyyden varmistaminen SSH-avaimella."
+    },
+    "university": {
+      "title": "Yliopisto!!",
+      "description": "Ensivaikutelmia ulkomaille muuttamisesta ja opintojen aloittamisesta LUT Universityn Lahden kampuksella Suomessa."
+    },
+    "what-do-i-want": {
+      "title": "Mitä minä haluan?",
+      "description": "Polveileva pohdinta siitä, miten unohdin miksi hakkeroiminen ja asioiden rakentelu oli ennen hauskaa, ja uravalinnan kyseenalaistamista, kun se tuli valittua enemmänkin kelkasta putoamisen ahdistuksesta kuin aidosta kiinnostuksesta."
+    }
+  },
+  "de": {
+    "ai-industry-trends": {
+      "title": "Trends in der KI-Branche",
+      "description": "TODO"
+    },
+    "building-vs-creating": {
+      "title": "Bauen vs. Erschaffen",
+      "description": "Einfach mal ein zufälliger Gedanke, der mir neulich durch den Kopf ging"
+    },
+    "chat-control-eu": {
+      "title": "Reden wir über das EU-Chatkontrolle-Gesetz",
+      "description": "Über Chatkontrolle, den Überwachungs-Stack, der sich von allen Seiten zusammenzieht, und warum die einzig dauerhafte Lösung darin besteht, Massenüberwachung architektonisch unmöglich zu machen."
+    },
+    "chocolate-factory-writeup": {
+      "title": "Chocolate Factory Writeup",
+      "description": "Enumeration von FTP- und Webdiensten mit rustscan, bevor es an den Initial Access und die Privilege Escalation im TryHackMe-Room Chocolate Factory geht."
+    },
+    "daily-bugle-writeup": {
+      "title": "Daily Bugle Writeup",
+      "description": "Fingerprinting und Exploiten einer Joomla-Installation mit Metasploit, um Fuß zu fassen und im TryHackMe-Room Daily Bugle Privilegien zu eskalieren."
+    },
+    "epistemic-collapse": {
+      "title": "Woher weißt du, was wahr ist?",
+      "description": "Generierung kostet mittlerweile nichts mehr. Verifikation kostet immer noch so viel wie eh und je. Diese Asymmetrie macht alles kaputt."
+    },
+    "game-zone-writeup": {
+      "title": "Game Zone Writeup",
+      "description": "Scannen und Exploit eines verwundbaren Webforums im TryHackMe-Raum Game Zone, um eine Shell zu bekommen und Rechte zu eskalieren."
+    },
+    "going-forward": {
+      "title": "Wie es weitergeht",
+      "description": "Ein Dank an die Handvoll früher Leser und der Plan für einen unregelmäßigen „fertig, wenn es fertig ist“-Posting-Rhythmus für die Zukunft."
+    },
+    "hardware-journeys-starting-from-zero": {
+      "title": "Hardware Journeys: Bei absolut Null anfangen",
+      "description": "Start einer neuen Reihe. Ein Software-Mensch lernt Hardware aus dem Nichts, in aller Öffentlichkeit, und zwar schlecht. Warum Physik ein besserer Lehrer ist als jedes Framework, und das eine Projekt, über das ich noch nicht bereit bin zu sprechen."
+    },
+    "hello-world": {
+      "title": "hallo, welt!",
+      "description": "Ein Begrüßungspost mit nur einem Bild, der diesen Blog mit einem animierten Endlos-GIF startet."
+    },
+    "im-back-pt-1": {
+      "title": "Ich bin wieder da!",
+      "description": "Zwei Jahre Funkstille, erklärt. Teil eins davon, wie 2025 gelaufen ist: Eine Community von 5 Leuten auf 250+ aufbauen, etwas über Unternehmertum lernen und ein Startup, das mir genau gezeigt hat, was man auf keinen Fall sein sollte."
+    },
+    "im-back-pt-2": {
+      "title": "Ich bin zurück! (Teil 2)",
+      "description": "Teil zwei, und der schwere Teil. Der Sommer 2025 hat mir alles genommen, ich hätte es fast nicht geschafft und wäre fast in den Krieg gezogen. So bin ich ganz nach unten gestürzt und habe mich wieder hochgekämpft – und das sind die Leute, die mich nicht am Boden liegen ließen."
+    },
+    "linux-journeys-customizing-the-bootsplash": {
+      "title": "Linux Journeys – Bootsplash anpassen",
+      "description": "Ein von Tensura inspiriertes Rabbit-Hole ins Linux-Ricing, das mit der Installation und Anpassung von plymouth für einen eigenen Boot-Splash endet."
+    },
+    "linux-journeys-tiling-window-managers-and-linux-ricing": {
+      "title": "Linux Journeys – Tiling Window Manager und Linux Ricing",
+      "description": "Ein Follow-up zum Ricing-Rabbit-Hole, das durch das Setup aus i3, Polybar, Rofi, compton, kitty und zsh hinter einem ersten Tiling-Window-Manager-Rice führt."
+    },
+    "on-building-something-engrammic": {
+      "title": "Über das Bauen von etwas... Engrammischem",
+      "description": "Erste Gedanken zu dem Problem, das mich hierher gebracht hat. Warum das Gedächtnis von Agenten als Retrieval-Problem behandelt wird, obwohl es eigentlich eine Frage von Überzeugungen ist, und was es bedeutet, externalisierte Epistemik zu bauen."
+    },
+    "plan-a-ai": {
+      "title": "Plan A",
+      "description": "TODO"
+    },
+    "post-labour-post-learning": {
+      "title": "Müssen die Leute überhaupt noch so viel arbeiten?",
+      "description": "Die industrielle Kapazität hat den Bedarf an Erwerbsarbeit für alle schon vor Jahrzehnten überholt, und niemand hat die Institutionen aktualisiert. Die Schule hat fleißig weiter Zeugnisse für eine Warteschlange ausgestellt, die ohnehin schon schrumpfte. Jetzt sind die Antworten auch noch kostenlos, und die Kids können nicht lesen."
+    },
+    "red-writeup": {
+      "title": "Red Writeup",
+      "description": "Einen exponierten Dienst ausnutzen, um Fuß zu fassen, und den CVE-2021-4034 pkexec-Bug nutzen, um TryHackMes Red-Room zu rooten."
+    },
+    "rsi-emergence-and-the-pope": {
+      "title": "Über RSI, Emergenz und den Papst",
+      "description": "Der Papst sagte, Maschinen können nichts fühlen. Der Typ vom KI-Labor neben ihm meinte, sie fänden ständig Dinge, die verdammt nach Gefühlen aussehen. Gleiche Bühne, gleicher Morgen."
+    },
+    "shader-journeys-part-1": {
+      "title": "Shader Journeys: Teil 1",
+      "description": "Ich starte eine neue Reihe darüber, Shader von Grund auf zu lernen. Fragmente, Vertices und jede Menge verwirrtes Starren auf Mathe."
+    },
+    "shader-journeys-part-2": {
+      "title": "Shader Journeys: Teil 2",
+      "description": "TODO"
+    },
+    "thm-blue-writeup": {
+      "title": "THM Blue Writeup",
+      "description": "Scannen eines exponierten SMB-Dienstes und Nutzen des MS17-010-EternalBlue-Exploits, um in TryHackMes Blue-Room Fuß zu fassen."
+    },
+    "thm-writeup-alfred": {
+      "title": "Alfred Writeup",
+      "description": "Bruteforcen eines Jenkins-Logins mit Burp Intruder, gefolgt von einer PowerShell-Reverse-Shell und einer Token-Impersonation-Privesc im Alfred-Room auf TryHackMe."
+    },
+    "toolsrus-writeup": {
+      "title": "ToolsRus Writeup",
+      "description": "Hochladen einer bösartigen WAR-Datei auf einen verwundbaren Tomcat-Manager für eine Reverse-Shell im ToolsRus-Room von TryHackMe, gefolgt von Persistenz über einen SSH-Key."
+    },
+    "university": {
+      "title": "Universität!!",
+      "description": "Erste Eindrücke vom Umzug ins Ausland, um mein Studium am Campus Lahti der LUT University in Finnland zu beginnen."
+    },
+    "what-do-i-want": {
+      "title": "Was will ich?",
+      "description": "Eine ausschweifende Reflexion darüber, warum Hacking und das Bauen von Dingen mal Spaß gemacht haben, und das Hinterfragen eines Karrierewegs, der eher aus Angst vor Irrelevanz als aus echtem Interesse gewählt wurde."
+    }
+  },
+  "ja": {
+    "ai-industry-trends": {
+      "title": "AI業界のトレンド",
+      "description": "TODO"
+    },
+    "building-vs-creating": {
+      "title": "Building vs. Creating",
+      "description": "最近ふと考えたことについての雑記"
+    },
+    "chat-control-eu": {
+      "title": "EUのChat Control法案について話そう",
+      "description": "Chat Control、全方位から迫りくる監視スタック、そして大規模監視を構造的に不可能にすることだけが唯一の恒久的な解決策である理由について。"
+    },
+    "chocolate-factory-writeup": {
+      "title": "Chocolate Factory Writeup",
+      "description": "rustscanでFTPやWebサービスを列挙し、TryHackMeのChocolate Factoryルームで初期アクセスと権限昇格を進めていきます。"
+    },
+    "daily-bugle-writeup": {
+      "title": "Daily Bugle Writeup",
+      "description": "TryHackMeのDaily Bugleルームで、Metasploitを使ってJoomlaのフィンガープリント採取とエクスプロイトを行い、足がかりを得て権限昇格する手順。"
+    },
+    "epistemic-collapse": {
+      "title": "何が本当かなんて、どうやって見分ければいいんだ？",
+      "description": "生成は今やタダになった。だが検証にはこれまで通りのコストがかかり続ける。この非対称性が、すべてをぶち壊している。"
+    },
+    "game-zone-writeup": {
+      "title": "Game Zone Writeup",
+      "description": "TryHackMeのGame Zoneルームにある脆弱なWebフォーラムをスキャン・攻略して、シェルを取得し権限昇格を行う。"
+    },
+    "going-forward": {
+      "title": "今後について",
+      "description": "初期の数少ない読者への感謝と、今後の不定期・でき次第更新という投稿ペースについて。"
+    },
+    "hardware-journeys-starting-from-zero": {
+      "title": "Hardware Journeys: 完全なゼロからのスタート",
+      "description": "新シリーズのスタート。ソフトウェア畑の人間が、ゼロから人前で下手くそにハードウェアを学ぶ記録。なぜ物理学がどんなフレームワークよりも優れた教師なのか、そしてまだ話す準備ができていないあるプロジェクトについて。"
+    },
+    "hello-world": {
+      "title": "hello, world!",
+      "description": "ループするアニメーションGIF 1枚でこのブログをスタートさせる、挨拶代わりの投稿。"
+    },
+    "im-back-pt-1": {
+      "title": "戻ってきたよ！",
+      "description": "2年間の沈黙の真相。2025年がどうだったかのパート1：5人から250人以上へとコミュニティを立ち上げたこと、起業について学んだこと、そして「絶対にこうはなりたくない姿」を教えてくれたあるスタートアップの話。"
+    },
+    "im-back-pt-2": {
+      "title": "復活！（Part 2）",
+      "description": "パート2、そして一番キツかった話。2025年の夏はすべてを奪っていった。死にかけたし、戦争に行きそうにすらなった。これは、俺がどん底まで落ちてどうやって這い上がってきたか、そして俺を見捨てずにいてくれた人たちの話。"
+    },
+    "linux-journeys-customizing-the-bootsplash": {
+      "title": "Linux Journeys - ブートスプラッシュのカスタマイズ",
+      "description": "転スラに影響されてLinuxのricing（外観カスタマイズ）の沼にハマり、最終的にplymouthを導入・テーマ設定してカスタムブートスプラッシュを作ることになった話。"
+    },
+    "linux-journeys-tiling-window-managers-and-linux-ricing": {
+      "title": "Linux Journeys - タイリングウィンドウマネージャーとLinux Ricing",
+      "description": "Ricingの沼にハマった話の続き。初めて組んだタイリングウィンドウマネージャーのriceについて、i3、Polybar、Rofi、compton、kitty、zshのセットアップを紹介します。"
+    },
+    "on-building-something-engrammic": {
+      "title": "何か…Engrammicなものを作ることについて",
+      "description": "ここに至るきっかけとなった問題についての最初の考察。なぜエージェントのメモリは本質的に信念の問題であるにもかかわらず検索の問題として扱われてしまうのか、そして「外在化された認識論」を構築することが何を意味するのか。"
+    },
+    "plan-a-ai": {
+      "title": "プランA",
+      "description": "TODO"
+    },
+    "post-labour-post-learning": {
+      "title": "人間ってもうこんなに働く必要あるんだっけ？",
+      "description": "産業の生産能力は何十年も前に「全員が働く必要性」を追い越したのに、誰も社会制度をアップデートしなかった。学校は縮小し続ける順番待ちの列のために資格を発行し続けた。今や答えだってタダで手に入るのに、子どもたちは文字が読めなくなっている。"
+    },
+    "red-writeup": {
+      "title": "Red Writeup",
+      "description": "公開されているサービスを悪用して足がかりを得て、CVE-2021-4034 pkexecのバグを使ってTryHackMeのRedルームでroot権限を奪取する。"
+    },
+    "rsi-emergence-and-the-pope": {
+      "title": "RSI、創発、そして教皇について",
+      "description": "教皇は機械には何も感じられないと言った。その隣に立っていたAIラボの男は、感情に酷似したものが次々と見つかっていると言った。同じステージで、同じ日の朝に。"
+    },
+    "shader-journeys-part-1": {
+      "title": "シェーダーの旅：Part 1",
+      "description": "シェーダーをゼロから学ぶ新シリーズをスタート。フラグメント、頂点、そして数式を前に呆然と立ち尽くす日々。"
+    },
+    "shader-journeys-part-2": {
+      "title": "Shader Journeys: Part 2",
+      "description": "TODO"
+    },
+    "thm-blue-writeup": {
+      "title": "THM Blue Writeup",
+      "description": "公開されているSMBサービスをスキャンし、MS17-010 EternalBlueエクスプロイトを使ってTryHackMeのBlueルームで足がかりを得る。"
+    },
+    "thm-writeup-alfred": {
+      "title": "Alfred Writeup",
+      "description": "TryHackMeのAlfredルームで、Burp Intruderを使ってJenkinsログインをブルートフォースし、PowerShellリバースシェルからトークン偽装による権限昇格へと繋げていく手順の解説。"
+    },
+    "toolsrus-writeup": {
+      "title": "ToolsRus Writeup",
+      "description": "TryHackMeのToolsRusルームで、脆弱なTomcat managerに悪意のあるWARファイルをアップロードしてリバースシェルを取得し、SSHキーで永続化する。"
+    },
+    "university": {
+      "title": "大学！！",
+      "description": "フィンランドにあるLUT UniversityのLahtiキャンパスで留学生活をスタートさせた第一印象。"
+    },
+    "what-do-i-want": {
+      "title": "自分は何がしたいのか？",
+      "description": "ハッキングやモノづくりの何が楽しかったのかを見失い、純粋な興味からではなく「取り残されるかもしれない」という不安から選んだキャリアパスに疑問を抱く、とりとめのない振り返り。"
+    }
+  },
+  "zh": {
+    "ai-industry-trends": {
+      "title": "AI 行业趋势",
+      "description": "TODO"
+    },
+    "building-vs-creating": {
+      "title": "Building vs. Creating（构建与创造）",
+      "description": "随笔聊聊最近脑子里冒出的一个碎碎念"
+    },
+    "chat-control-eu": {
+      "title": "聊聊欧盟的 Chat Control 法案",
+      "description": "关于 Chat Control、正在从四面八方逼近的监控技术栈，以及为什么唯一的长久之计是从架构层面让大规模监控变得彻底不可能。"
+    },
+    "chocolate-factory-writeup": {
+      "title": "Chocolate Factory Writeup",
+      "description": "在 TryHackMe 的 Chocolate Factory 靶房中，先用 rustscan 枚举 FTP 和 Web 服务，接着完成初始立足点获取与权限提升。"
+    },
+    "daily-bugle-writeup": {
+      "title": "Daily Bugle Writeup",
+      "description": "通过指纹识别并使用 Metasploit 攻击 Joomla 站点，在 TryHackMe 的 Daily Bugle 靶房中获取立足点并完成提权。"
+    },
+    "epistemic-collapse": {
+      "title": "你怎么知道什么是真的？",
+      "description": "如今生成是免费的。而验证依然保留着原有的成本。这种不对称性打破了一切。"
+    },
+    "game-zone-writeup": {
+      "title": "Game Zone Writeup",
+      "description": "在 TryHackMe 的 Game Zone 房间中扫描并利用一个存在漏洞的 Web 论坛，成功拿到 shell 并完成提权。"
+    },
+    "going-forward": {
+      "title": "后续规划",
+      "description": "感谢少数早期读者，并说明后续随缘更新、写好就发的节奏。"
+    },
+    "hardware-journeys-starting-from-zero": {
+      "title": "硬件之旅：从绝对零点起步",
+      "description": "开启一个新系列。一个搞软件的公开从零学硬件，过程惨不忍睹。聊聊为什么物理比任何框架都更善于教人做人，以及一个我还暂时不打算聊的项目。"
+    },
+    "hello-world": {
+      "title": "你好，世界！",
+      "description": "一篇只有一张图片的打招呼博文，用循环播放的动图开启这个博客。"
+    },
+    "im-back-pt-1": {
+      "title": "我回来了！",
+      "description": "两年来的沉默，终于要解释一下了。2025 年经历的第一部分：把一个社区从 5 个人做到 250+ 人、学习创业知识，以及一家教会了我「绝对不能成为什么样的初创公司」的创业团队。"
+    },
+    "im-back-pt-2": {
+      "title": "我回来了！（Part 2）",
+      "description": "第二部分，也是最难熬的那段。2025 年的夏天夺走了一切，我差点没撑过去，甚至差点跑去参战。这就是我如何跌落谷底又拼命爬上来的过程，以及那些不愿看着我就此沉沦的人们。"
+    },
+    "linux-journeys-customizing-the-bootsplash": {
+      "title": "Linux 之旅 - 自定义 bootsplash 开机画面",
+      "description": "一次受《关于我转生变成史莱姆这档事》（Tensura）启发的 Linux 桌面美化（ricing）折腾之旅，最终通过安装和配置 plymouth 主题实现了自定义开机动画。"
+    },
+    "linux-journeys-tiling-window-managers-and-linux-ricing": {
+      "title": "Linux 探索之旅 - 平铺式窗口管理器与 Linux Ricing",
+      "description": "掉入 ricing 坑之后的后续篇，带你了解初次尝试平铺式窗口管理器 rice 所用到的 i3、Polybar、Rofi、compton、kitty 和 zsh 配置。"
+    },
+    "on-building-something-engrammic": {
+      "title": "论构建某种……Engrammic之物",
+      "description": "关于引我走到这一步的问题的初步思考。为什么 Agent 记忆被当作一个检索问题对待，而它本质上却是一个信念（belief）问题；以及构建外置认识论（externalized epistemics）究竟意味着什么。"
+    },
+    "plan-a-ai": {
+      "title": "计划 A",
+      "description": "待办"
+    },
+    "post-labour-post-learning": {
+      "title": "我们真的还需要大家干这么多活吗？",
+      "description": "几十年前工业产能就超出了对普遍劳动的需求，却没人去更新相应的体制。学校还在为一个本就在缩小的队伍不断发放文凭认证。如今连答案都是免费的了，而孩子们却连书都读不明白了。"
+    },
+    "red-writeup": {
+      "title": "Red Writeup",
+      "description": "利用暴露的服务获取立足点，并利用 CVE-2021-4034 pkexec 漏洞拿下 TryHackMe 的 Red 房间的 root 权限。"
+    },
+    "rsi-emergence-and-the-pope": {
+      "title": "论 RSI、涌现与教皇",
+      "description": "教皇说机器没有任何感受。站在他身旁的 AI 实验室大佬却说，他们总能在模型里发现非常像感受的东西。同一个舞台，同一个上午。"
+    },
+    "shader-journeys-part-1": {
+      "title": "Shader 之旅：第 1 篇",
+      "description": "开启一个从零开始学 Shader 的全新系列。片元、顶点，以及对着一堆数学公式发懵。"
+    },
+    "shader-journeys-part-2": {
+      "title": "Shader 之旅：第 2 部分",
+      "description": "待办"
+    },
+    "thm-blue-writeup": {
+      "title": "THM Blue Writeup",
+      "description": "扫描暴露的 SMB 服务，并利用 MS17-010 EternalBlue 漏洞在 TryHackMe 的 Blue 房间中拿下初始立足点。"
+    },
+    "thm-writeup-alfred": {
+      "title": "Alfred Writeup",
+      "description": "在 TryHackMe 的 Alfred 靶机中，使用 Burp Intruder 爆破 Jenkins 登录凭据，接着通过 PowerShell 反弹 shell，最终利用令牌模拟（token impersonation）实现权限提升。"
+    },
+    "toolsrus-writeup": {
+      "title": "ToolsRus Writeup",
+      "description": "在 TryHackMe 的 ToolsRus 靶房中，向存在漏洞的 Tomcat manager 上传恶意 WAR 文件以获取反向 shell，随后利用 SSH 密钥实现权限维持。"
+    },
+    "university": {
+      "title": "上大学啦！！",
+      "description": "远赴芬兰 LUT University 的 Lahti 校区开启留学生活的第一印象。"
+    },
+    "what-do-i-want": {
+      "title": "我到底想要什么？",
+      "description": "一篇碎碎念式的反思：关于我是如何弄丢了曾经觉得搞黑客技术和造东西很有趣的初衷，以及如何开始反思自己因为“过时焦虑”而非真正兴趣所选择的职业道路。"
+    }
+  }
+}

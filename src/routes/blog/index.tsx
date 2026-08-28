@@ -2,7 +2,8 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { TLink } from '../../components/page-transition'
 import { Meta } from '../../lib/meta'
-import { posts } from '../../lib/posts'
+import { posts, type Post } from '../../lib/posts'
+import blogListings from '../../i18n/blog-listings.json'
 import { filterPosts, groupByYear } from '../../lib/blog-list'
 import { Rule, SectionNumber, JPLabel } from '../../components/motifs'
 import { ArrowRight } from '../../components/icons'
@@ -32,8 +33,17 @@ export default function BlogIndex() {
     const fmt = new Intl.DateTimeFormat(locale.htmlLang, { month: 'short', timeZone: 'UTC' })
     return (iso: string) => fmt.format(new Date(`${iso}T00:00:00Z`)).toLocaleUpperCase(locale.htmlLang)
   }, [locale.htmlLang])
+  const localizedPosts = useMemo((): Post[] => {
+    if (locale.default) return posts
+    const listing = (blogListings as Record<string, Record<string, { title: string; description: string }>>)[locale.code]
+    if (!listing) return posts
+    return posts.map((p) => {
+      const loc = listing[p.slug]
+      return loc ? { ...p, title: loc.title, description: loc.description } : p
+    })
+  }, [locale.code, locale.default])
   useReveal(scope)
-  const groups = groupByYear(filterPosts(posts, q))
+  const groups = groupByYear(filterPosts(localizedPosts, q))
   const stats = {
     posts: posts.length,
     tags: new Set(posts.flatMap((p) => p.tags)).size,
@@ -75,10 +85,7 @@ export default function BlogIndex() {
         <div data-reveal>
           <Rule className="mt-8" />
         </div>
-        {!locale.default && (
-          <p className="font-mono text-xs text-charcoal/50 dark:text-bone/50">{t('blog.postsInEnglish')}</p>
-        )}
-        {groups.length === 0 && (
+                {groups.length === 0 && (
           <p className="mt-16 font-mono text-xs font-medium uppercase tracking-[0.25em] text-charcoal/65 dark:text-bone/65">
             {t('blog.noMatch', { query: q })}
           </p>
@@ -172,14 +179,13 @@ export default function BlogIndex() {
                         <Magnetic range={20}>
                           <TLink
                             to={lp(`/blog/${post.slug}`)}
-                            lang={locale.default ? undefined : 'en'}
                             className="font-display text-xl font-bold leading-snug text-charcoal transition-all duration-200 group-hover:translate-x-1 group-hover:text-paper-deep dark:text-bone dark:group-hover:text-paper md:text-2xl"
                           >
                             {post.title}
                           </TLink>
                         </Magnetic>
                         {post.description && (
-                          <p lang={locale.default ? undefined : 'en'} className="mt-2 text-sm font-medium leading-relaxed text-charcoal/75 dark:text-bone/75">
+                          <p className="mt-2 text-sm font-medium leading-relaxed text-charcoal/75 dark:text-bone/75">
                             {post.description}
                           </p>
                         )}
