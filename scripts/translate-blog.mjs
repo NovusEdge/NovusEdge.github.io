@@ -20,6 +20,8 @@ if (!key && !checkOnly && !dryRun) {
 }
 
 const sha = (s) => createHash('sha256').update(s).digest('hex')
+const tokens = (s) => new Set(Array.from(s.matchAll(/\{\{(\w+)\}\}/g), (m) => m[1]))
+const sameTokens = (a, b) => a.size === b.size && [...a].every((x) => b.has(x))
 const readJson = (p) => (existsSync(p) ? JSON.parse(readFileSync(p, 'utf8')) : {})
 const writeJson = (p, o) =>
   writeFileSync(p, JSON.stringify(Object.fromEntries(Object.keys(o).sort().map((k) => [k, o[k]])), null, 2) + '\n')
@@ -37,7 +39,7 @@ function parseFrontmatter(raw) {
     const i = line.indexOf(':')
     if (i === -1) continue
     const key = line.slice(0, i).trim()
-    data[key] = line.slice(i + 1).trim()
+    data[key] = line.slice(i + 1).trim().replace(/^['"]|['"]$/g, '')
     order.push(key)
   }
   return { data, order, body: raw.slice(m[0].length) }
@@ -86,7 +88,7 @@ async function translateStrings(locale, strings) {
 function buildFrontmatter(data, order, overrides) {
   const lines = order.map((k) => {
     const v = k in overrides ? overrides[k] : data[k]
-    return `${k}: ${v}`
+    return k in overrides ? `${k}: ${JSON.stringify(v)}` : `${k}: ${v}`
   })
   return `---\n${lines.join('\n')}\n---\n`
 }
@@ -138,7 +140,17 @@ for (const slug of todoSlugs) {
       continue
     }
 
-    const [title, description, ...proseTranslated] = translated
+    const checked = translated.map((value, i) =>
+      sameTokens(tokens(value), tokens(proseStrings[i])) ? value : proseStrings[i],
+    )
+    for (let i = 0; i < translated.length; i++) {
+      if (checked[i] === proseStrings[i] && translated[i] !== proseStrings[i]) {
+        console.error(`${slug} (${locale.code}): chunk ${i} changed its {{placeholders}}, keeping the English text`)
+        failed = true
+      }
+    }
+
+    const [title, description, ...proseTranslated] = checked
     proseIdx.forEach((chunkIndex, j) => {
       chunks[chunkIndex] = { ...chunks[chunkIndex], text: proseTranslated[j] }
     })
