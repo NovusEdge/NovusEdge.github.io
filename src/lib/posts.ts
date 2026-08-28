@@ -11,32 +11,46 @@ export type Post = {
   draft?: boolean
 }
 
-const files = import.meta.glob('../content/blog/*.md', {
+// Exclude locale variants (*.de.md, *.ja.md, etc.) from the English-only list
+const files = import.meta.glob(['../content/blog/*.md', '!../content/blog/*.*.md'], {
   query: '?raw',
   import: 'default',
   eager: true,
 }) as Record<string, string>
+
+const localeFiles = import.meta.glob('../content/blog/*.*.md', {
+  query: '?raw',
+  import: 'default',
+}) as Record<string, () => Promise<string>>
+
+function parsePost(slug: string, raw: string): Post {
+  const { data, content } = parseFrontmatter(raw)
+  return {
+    slug,
+    title: (data.title as string) || slug,
+    date: (data.date as string) || '1970-01-01',
+    tags: Array.isArray(data.tags) ? data.tags : [],
+    description: (data.description as string) || '',
+    content,
+    toc: data.toc === 'true',
+    draft: data.draft === 'true',
+  }
+}
 
 // Drafts list and open normally under `vite dev` and drop out of the build.
 // vite.config builds the route list from the directory either way, so a draft
 // still gets a prerendered URL, and getPost reads this filtered list, so that
 // URL serves the not-found page in production.
 export const posts: Post[] = Object.entries(files)
-  .map(([path, raw]) => {
-    const slug = path.split('/').pop()!.replace(/\.md$/, '')
-    const { data, content } = parseFrontmatter(raw)
-    return {
-      slug,
-      title: (data.title as string) || slug,
-      date: (data.date as string) || '1970-01-01',
-      tags: Array.isArray(data.tags) ? data.tags : [],
-      description: (data.description as string) || '',
-      content,
-      toc: data.toc === 'true',
-      draft: data.draft === 'true',
-    }
-  })
+  .map(([path, raw]) => parsePost(path.split('/').pop()!.replace(/\.md$/, ''), raw))
   .filter((p) => !p.draft || import.meta.env.DEV)
   .sort((a, b) => b.date.localeCompare(a.date))
 
-export const getPost = (slug: string) => posts.find((p) => p.slug === slug)
+export async function getPost(slug: string, locale: string): Promise<Post | undefined> {
+  if (locale === 'en') return posts.find((p) => p.slug === slug)
+  const key = `../content/blog/${slug}.${locale}.md`
+  const loader = localeFiles[key]
+  if (!loader) return posts.find((p) => p.slug === slug)
+  const raw = await loader()
+  return parsePost(slug, raw)
+}

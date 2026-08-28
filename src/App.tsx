@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { Suspense, useEffect } from 'react'
 import { Routes, Route, useLocation } from 'react-router'
 import { I18nextProvider } from 'react-i18next'
 import { Header } from './components/header'
@@ -67,7 +67,14 @@ function LocaleTree({ locale }: { locale: Locale }) {
             <Route path="" element={<Landing />} />
             <Route path="about" element={<AboutPage />} />
             <Route path="blog" element={<BlogIndex />} />
-            <Route path="blog/:slug" element={<BlogPost />} />
+            <Route
+              path="blog/:slug"
+              element={
+                <Suspense fallback={null}>
+                  <BlogPost />
+                </Suspense>
+              }
+            />
             <Route path="portfolio" element={<PortfolioIndex />} />
             <Route path="portfolio/:slug" element={<ProjectPage />} />
             <Route path="research" element={<ResearchIndex />} />

@@ -1,4 +1,4 @@
-import { useRef } from 'react'
+import { use, useRef } from 'react'
 import { useParams } from 'react-router'
 import { useTranslation } from 'react-i18next'
 import { TLink } from '../../components/page-transition'
@@ -54,10 +54,10 @@ const POST_HERO: Record<string, number> = {
 export default function BlogPost() {
   const { t } = useTranslation()
   const { slug } = useParams()
-  const post = slug ? getPost(slug) : undefined
   const proseRef = useRef<HTMLDivElement>(null)
   const lp = useLocalePath()
   const locale = useLocale()
+  const post = slug ? use(getPost(slug, locale.code)) : undefined
 
   useGSAP(
     () => {
