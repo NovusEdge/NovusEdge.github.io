@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import { useTranslation } from 'react-i18next'
+import { Trans, useTranslation } from 'react-i18next'
 import { Meta } from '../../lib/meta'
 import { Rule, SectionNumber, JPLabel, RegMarks } from '../../components/motifs'
 import { TLink } from '../../components/page-transition'
@@ -14,31 +14,28 @@ const building = projects.filter((p) => p.phase === 'building')
 
 const PHOTOS = ['/photos/profile1.JPG', '/photos/profile2.JPG', '/photos/profile3.JPG', '/photos/profile4.JPG', '/photos/profile5.JPG']
 
-const DOSSIER = [
-  { key: 'coding since', val: '2013' },
-  { key: 'focus', val: 'AI alignment / RSI' },
-  { key: 'cats', val: 'yes' },
-  { key: 'status', val: '[REDACTED]' },
+const DOSSIER_KEYS = [
+  { keyI18n: 'about.dossier.codingSince', val: '2013' },
+  { keyI18n: 'about.dossier.focus', valI18n: 'about.dossier.focusVal' },
+  { keyI18n: 'about.dossier.cats', valI18n: 'about.dossier.catsVal' },
+  { keyI18n: 'about.dossier.status', valI18n: 'about.dossier.statusVal', redacted: true },
 ]
 
-const PRINCIPLES = [
-  'meaningful design first',
-  'less is more',
-  'ship fast, iterate faster',
-  'build for the problem you have',
-  'YAGNI',
+const PRINCIPLE_KEYS = [
+  'about.principles.1',
+  'about.principles.2',
+  'about.principles.3',
+  'about.principles.4',
+  'about.principles.5',
 ]
 
-const NOW = {
-  text: 'RSI research, stoat, ØCLOAK',
-  updated: '2026-08',
-}
+const NOW_UPDATED = '2026-08'
 
 const OSS = [
-  { org: 'Microsoft', project: 'DeepSpeed', what: 'type hints, changelog, warning fixes', prs: 'https://github.com/deepspeedai/DeepSpeed/pulls?q=author%3ANovusEdge' },
-  { org: 'The AI Alliance', project: 'Tapestry', what: 'eval schema, CI fixes', prs: 'https://github.com/The-AI-Alliance/tapestry/pulls?q=author%3ANovusEdge' },
-  { org: 'Microsoft', project: 'LightGBM', what: 'early contributions', prs: 'https://github.com/microsoft/LightGBM/pulls?q=author%3ANovusEdge' },
-  { org: 'ROS-Industrial', project: 'ROSIN', what: 'industrial robotics components', prs: null },
+  { org: 'Microsoft', project: 'DeepSpeed', whatI18n: 'about.oss.deepspeed', prs: 'https://github.com/deepspeedai/DeepSpeed/pulls?q=author%3ANovusEdge' },
+  { org: 'The AI Alliance', project: 'Tapestry', whatI18n: 'about.oss.tapestry', prs: 'https://github.com/The-AI-Alliance/tapestry/pulls?q=author%3ANovusEdge' },
+  { org: 'Microsoft', project: 'LightGBM', whatI18n: 'about.oss.lightgbm', prs: 'https://github.com/microsoft/LightGBM/pulls?q=author%3ANovusEdge' },
+  { org: 'ROS-Industrial', project: 'ROSIN', whatI18n: 'about.oss.rosin', prs: null },
 ]
 
 function iconFor(href: string) {
@@ -177,17 +174,28 @@ export default function AboutPage() {
         {/* 01 - Bio + Photo + Dossier */}
         <div className="mt-12 grid gap-8 md:grid-cols-[1fr_auto]">
           <div data-card className="space-y-4 text-lg leading-relaxed text-charcoal/80 dark:text-bone/80">
-            <p>I'm <strong className="text-charcoal dark:text-bone">Aliasgar Khimani</strong>.</p>
             <p>
-              I research <a href="https://en.wikipedia.org/wiki/AI_alignment" target="_blank" rel="noopener noreferrer" className="italic text-charcoal hover:text-gold dark:text-bone">AI alignment</a>, <a href="https://en.wikipedia.org/wiki/Recursive_self-improvement" target="_blank" rel="noopener noreferrer" className="italic text-charcoal hover:text-gold dark:text-bone">recursive self-improvement</a>, and <a href="https://en.wikipedia.org/wiki/Emergence" target="_blank" rel="noopener noreferrer" className="italic text-charcoal hover:text-gold dark:text-bone">emergence</a>: the stuff that happens when systems start building themselves.
+              <Trans i18nKey="about.bio.intro" components={{ strong: <strong className="text-charcoal dark:text-bone" /> }} />
             </p>
             <p>
-              Also interested in <a href="https://en.wikipedia.org/wiki/Epistemology" target="_blank" rel="noopener noreferrer" className="italic text-charcoal hover:text-gold dark:text-bone">epistemics</a>: how we know what's true when generation is free and verification still costs what it always did.
+              <Trans
+                i18nKey="about.bio.research"
+                components={{
+                  ai: <a href="https://en.wikipedia.org/wiki/AI_alignment" target="_blank" rel="noopener noreferrer" className="italic text-charcoal hover:text-gold dark:text-bone" />,
+                  rsi: <a href="https://en.wikipedia.org/wiki/Recursive_self-improvement" target="_blank" rel="noopener noreferrer" className="italic text-charcoal hover:text-gold dark:text-bone" />,
+                  emergence: <a href="https://en.wikipedia.org/wiki/Emergence" target="_blank" rel="noopener noreferrer" className="italic text-charcoal hover:text-gold dark:text-bone" />,
+                }}
+              />
             </p>
             <p>
-              Started in offensive security (CTFs, malware dev, the chaos era), now trying to understand things before they get too hard to understand.
-              Hardware tinkering on weekends, mostly because I'm tired of everything being software.
+              <Trans
+                i18nKey="about.bio.epistemics"
+                components={{
+                  epistemics: <a href="https://en.wikipedia.org/wiki/Epistemology" target="_blank" rel="noopener noreferrer" className="italic text-charcoal hover:text-gold dark:text-bone" />,
+                }}
+              />
             </p>
+            <p>{t('about.bio.background')}</p>
           </div>
 
           {/* Photo carousel */}
@@ -196,10 +204,10 @@ export default function AboutPage() {
 
         {/* Dossier strip */}
         <div data-card className="mt-8 flex flex-wrap gap-x-6 gap-y-2 border-y border-charcoal/10 py-4 font-mono text-sm dark:border-bone/10">
-          {DOSSIER.map((d) => (
-            <span key={d.key} className="text-charcoal/60 dark:text-bone/60">
-              <span className="text-charcoal/40 dark:text-bone/40">{d.key}:</span>{' '}
-              <span className={d.val === '[REDACTED]' ? 'text-gold' : ''}>{d.val}</span>
+          {DOSSIER_KEYS.map((d) => (
+            <span key={d.keyI18n} className="text-charcoal/60 dark:text-bone/60">
+              <span className="text-charcoal/40 dark:text-bone/40">{t(d.keyI18n)}:</span>{' '}
+              <span className={d.redacted ? 'text-gold' : ''}>{d.valI18n ? t(d.valI18n) : d.val}</span>
             </span>
           ))}
         </div>
@@ -211,10 +219,10 @@ export default function AboutPage() {
             <span className="font-mono text-sm font-semibold uppercase tracking-[0.3em] text-gold">{t('about.operatingPrinciples')}</span>
           </h2>
           <ul data-card className="mt-4 space-y-2">
-            {PRINCIPLES.map((p, i) => (
+            {PRINCIPLE_KEYS.map((key, i) => (
               <li key={i} className="flex items-center gap-3 font-mono text-base text-charcoal/70 dark:text-bone/70">
                 <span className="h-1.5 w-1.5 rounded-full bg-gold/60" />
-                {p}
+                {t(key)}
               </li>
             ))}
           </ul>
@@ -223,8 +231,8 @@ export default function AboutPage() {
         {/* Now status */}
         <div data-card className="mt-6 flex items-baseline gap-3 font-mono text-sm">
           <span className="rounded bg-gold/10 px-2 py-1 text-gold">{t('about.now')}</span>
-          <span className="text-charcoal/70 dark:text-bone/70">{NOW.text}</span>
-          <span className="text-charcoal/30 dark:text-bone/30">({NOW.updated})</span>
+          <span className="text-charcoal/70 dark:text-bone/70">{t('about.nowText')}</span>
+          <span className="text-charcoal/30 dark:text-bone/30">({NOW_UPDATED})</span>
         </div>
 
         {/* 03 - Building Now */}
@@ -281,7 +289,7 @@ export default function AboutPage() {
                 <div className="flex items-baseline gap-3">
                   <span className="font-display text-lg font-bold text-charcoal transition-colors group-hover:text-gold dark:text-bone">{o.project}</span>
                   <span className="text-sm text-charcoal/50 dark:text-bone/50">{o.org}</span>
-                  <span className="hidden text-sm text-charcoal/40 sm:inline dark:text-bone/40">- {o.what}</span>
+                  <span className="hidden text-sm text-charcoal/40 sm:inline dark:text-bone/40">- {t(o.whatI18n)}</span>
                 </div>
                 {o.prs && (
                   <a
@@ -303,7 +311,7 @@ export default function AboutPage() {
         {/* 05 - CTA */}
         <div data-card className="mt-20 rounded border border-gold/30 bg-gold/5 p-6">
           <p className="text-lg text-charcoal/80 dark:text-bone/80">
-            Open to interesting problems - AI infrastructure, distributed systems, or anything that makes computers have opinions.
+            {t('about.cta')}
           </p>
           <a
             href="#footer"
