@@ -11,14 +11,13 @@ export type Post = {
   draft?: boolean
 }
 
-// Exclude locale variants (*.de.md, *.ja.md, etc.) from the English-only list
-const files = import.meta.glob(['../content/blog/*.md', '!../content/blog/*.*.md'], {
+const files = import.meta.glob('../content/blog/*.md', {
   query: '?raw',
   import: 'default',
   eager: true,
 }) as Record<string, string>
 
-const localeFiles = import.meta.glob('../content/blog/*.*.md', {
+const localeFiles = import.meta.glob('../content/blog/translations/*/*.md', {
   query: '?raw',
   import: 'default',
 }) as Record<string, () => Promise<string>>
@@ -50,7 +49,7 @@ export async function getPost(slug: string, locale: string): Promise<Post | unde
   const en = posts.find((p) => p.slug === slug)
   if (!en) return undefined
   if (locale === 'en') return en
-  const key = `../content/blog/${slug}.${locale}.md`
+  const key = `../content/blog/translations/${locale}/${slug}.md`
   const loader = localeFiles[key]
   if (!loader) return en
   const raw = await loader()

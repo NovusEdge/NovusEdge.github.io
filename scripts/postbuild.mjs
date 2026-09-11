@@ -15,6 +15,7 @@ function fm(raw) {
   return data
 }
 
+// Translations live in blog/translations/<code>/, so every .md here is a post.
 const posts = readdirSync('src/content/blog')
   .filter((f) => f.endsWith('.md'))
   .map((f) => ({ slug: f.replace(/\.md$/, ''), ...fm(readFileSync(`src/content/blog/${f}`, 'utf8')) }))

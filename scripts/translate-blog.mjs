@@ -1,4 +1,5 @@
-import { readFileSync, writeFileSync, existsSync, readdirSync } from 'node:fs'
+import { readFileSync, writeFileSync, existsSync, readdirSync, mkdirSync } from 'node:fs'
+import { dirname } from 'node:path'
 import { createHash } from 'node:crypto'
 
 // Verified against https://ai.google.dev/gemini-api/docs/models on 2026-08-27.
@@ -7,8 +8,11 @@ const ENDPOINT = `https://generativelanguage.googleapis.com/v1beta/models/${MODE
 
 const LOCALES = JSON.parse(readFileSync('src/i18n/locales.json', 'utf8')).filter((l) => !l.default)
 const BLOG_DIR = 'src/content/blog'
+const TRANSLATIONS_DIR = `${BLOG_DIR}/translations`
 const LOCK_PATH = 'src/i18n/content-translations.lock.json'
 const LISTINGS_PATH = 'src/i18n/blog-listings.json'
+
+const translationPath = (slug, code) => `${TRANSLATIONS_DIR}/${code}/${slug}.md`
 
 const force = process.argv.includes('--force')
 const checkOnly = process.argv.includes('--check')
@@ -27,8 +31,9 @@ const readJson = (p) => (existsSync(p) ? JSON.parse(readFileSync(p, 'utf8')) : {
 const writeJson = (p, o) =>
   writeFileSync(p, JSON.stringify(Object.fromEntries(Object.keys(o).sort().map((k) => [k, o[k]])), null, 2) + '\n')
 
+// Translations live in translations/<code>/, so every .md here is a post.
 const slugs = readdirSync(BLOG_DIR)
-  .filter((f) => f.endsWith('.md') && !/\.[a-z]{2}\.md$/.test(f))
+  .filter((f) => f.endsWith('.md'))
   .map((f) => f.slice(0, -3))
 
 function parseFrontmatter(raw) {
@@ -104,7 +109,7 @@ if (checkOnly) {
   const missing = []
   for (const slug of slugs) {
     for (const locale of LOCALES) {
-      if (!existsSync(`${BLOG_DIR}/${slug}.${locale.code}.md`)) missing.push(`${slug}.${locale.code}`)
+      if (!existsSync(translationPath(slug, locale.code))) missing.push(`${locale.code}/${slug}`)
     }
   }
   if (staleSlugs.length || missing.length) {
@@ -131,7 +136,7 @@ for (const slug of todoSlugs) {
   const proseStrings = [data.title ?? '', data.description ?? '', ...proseIdx.map((i) => chunks[i].text)]
 
   for (const locale of LOCALES) {
-    const outPath = `${BLOG_DIR}/${slug}.${locale.code}.md`
+    const outPath = translationPath(slug, locale.code)
     let translated
     try {
       translated = await translateStrings(locale, proseStrings)
@@ -163,6 +168,8 @@ for (const slug of todoSlugs) {
       console.log(`--- ${outPath} (dry run) ---`)
       console.log(out)
     } else {
+      // A locale added to locales.json has no directory yet.
+      mkdirSync(dirname(outPath), { recursive: true })
       writeFileSync(outPath, out)
       console.log(`wrote ${outPath}`)
     }
@@ -185,7 +192,7 @@ if (!dryRun) {
   for (const locale of LOCALES) {
     listings[locale.code] = {}
     for (const slug of slugs) {
-      const path = `${BLOG_DIR}/${slug}.${locale.code}.md`
+      const path = translationPath(slug, locale.code)
       if (!existsSync(path)) continue
       const { data } = parseFrontmatter(readFileSync(path, 'utf8'))
       listings[locale.code][slug] = {

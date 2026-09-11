@@ -9,6 +9,7 @@ const require = createRequire(import.meta.url)
 
 const locales = JSON.parse(readFileSync('src/i18n/locales.json', 'utf8'))
 
+// Translations live in blog/translations/<code>/, so every .md here is a post.
 const blogSlugs = readdirSync('src/content/blog')
   .filter((f) => f.endsWith('.md'))
   .map((f) => f.replace(/\.md$/, ''))
