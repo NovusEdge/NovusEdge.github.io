@@ -369,10 +369,9 @@ const STATS: [string, string, string][] = [
   ['upstream', 'pi-mono', 'four workspaces keep their upstream names for merges'],
 ]
 
-const SECTIONS: { id: string; title: string; body: ReactNode }[] = [
+const SECTIONS: { id: string; body: ReactNode }[] = [
   {
     id: 'what-compaction-misses',
-    title: 'what compaction misses',
     body: (
       <>
         <p>
@@ -395,7 +394,6 @@ const SECTIONS: { id: string; title: string; body: ReactNode }[] = [
   },
   {
     id: 'install',
-    title: 'install',
     body: (
       <>
         <p>
@@ -414,7 +412,6 @@ veil`}</Code>
   },
   {
     id: 'in-the-loop',
-    title: 'where it sits in the agent',
     body: (
       <>
         <p>
@@ -442,7 +439,6 @@ const config: AgentLoopConfig = {
   },
   {
     id: 'decay',
-    title: 'how memory decays',
     body: (
       <>
         <p>
@@ -463,7 +459,6 @@ const config: AgentLoopConfig = {
   },
   {
     id: 'scoring',
-    title: 'scoring without a model',
     body: (
       <>
         <p>
@@ -485,7 +480,6 @@ const config: AgentLoopConfig = {
   },
   {
     id: 'eviction',
-    title: 'eviction',
     body: (
       <>
         <p>
@@ -507,7 +501,6 @@ const config: AgentLoopConfig = {
   },
   {
     id: 'turns',
-    title: 'the conversation forgets too',
     body: (
       <>
         <p>
@@ -524,7 +517,6 @@ const config: AgentLoopConfig = {
   },
   {
     id: 'failure-memory',
-    title: 'failed attempts get remembered',
     body: (
       <>
         <p>
@@ -547,7 +539,6 @@ const config: AgentLoopConfig = {
   },
   {
     id: 'storage',
-    title: 'nothing is deleted',
     body: (
       <>
         <p>
@@ -568,7 +559,6 @@ const config: AgentLoopConfig = {
   },
   {
     id: 'visible-forgetting',
-    title: 'forgetting is visible',
     body: (
       <>
         <p>
@@ -583,7 +573,6 @@ const config: AgentLoopConfig = {
   },
   {
     id: 'what-it-is-made-of',
-    title: 'what it is made of',
     body: (
       <>
         <div className="my-8">
@@ -602,6 +591,11 @@ export default function Veil({ p, c }: LayoutProps) {
   const [heroDecay, setHeroDecay] = useState(0)
   const still = prefersReducedMotion()
   const lp = useLocalePath()
+
+  useEffect(() => {
+    document.documentElement.classList.add('veil-dark')
+    return () => document.documentElement.classList.remove('veil-dark')
+  }, [])
 
   useEffect(() => {
     if (still || !scope.current) return
@@ -698,7 +692,7 @@ export default function Veil({ p, c }: LayoutProps) {
             behind reads, top to bottom, as a sentence of its own */}
         <div
           aria-hidden
-          className="pointer-events-none absolute inset-0 select-none px-6 pt-28 font-mono text-[12px] leading-[2.6] text-bone/[0.22] sm:text-[13.5px]"
+          className="pointer-events-none absolute inset-0 select-none px-6 pt-28 font-mono text-[12px] leading-[2.6] text-bone/[0.22] opacity-40 sm:text-[13.5px] lg:opacity-100"
           style={{
             maskImage: 'linear-gradient(to bottom, transparent 3%, black 16%, black 74%, transparent 96%)',
             WebkitMaskImage: 'linear-gradient(to bottom, transparent 3%, black 16%, black 74%, transparent 96%)',
@@ -722,13 +716,15 @@ export default function Veil({ p, c }: LayoutProps) {
           <Wall decay={() => 0} />
         </div>
 
-        {/* the title reads over the wall only because this clears a hole in it */}
+        {/* the title reads over the wall only because this clears a hole in it.
+            Below lg the text column spans the viewport, so the hole has to cover
+            nearly the whole band; the desktop hole sits left of centre instead. */}
         <div
           aria-hidden
-          className="pointer-events-none absolute inset-0"
+          className="pointer-events-none absolute inset-0 [--veil-hole:160%_92%_at_50%_52%] lg:[--veil-hole:62%_52%_at_30%_58%]"
           style={{
             background:
-              'radial-gradient(62% 52% at 30% 58%, var(--veil-scrim) 0%, var(--veil-scrim) 46%, transparent 100%)',
+              'radial-gradient(var(--veil-hole), var(--veil-scrim) 0%, var(--veil-scrim) 46%, transparent 100%)',
             ['--veil-scrim' as string]: 'color-mix(in srgb, var(--color-charcoal) 94%, transparent)',
           }}
         />
@@ -750,7 +746,7 @@ export default function Veil({ p, c }: LayoutProps) {
 
           <p className="mt-8 max-w-xl text-xl leading-relaxed text-bone/75">{c.lede}</p>
 
-          <p className="mt-8 font-mono text-[12px] uppercase tracking-[0.2em] text-bone/35">{p.tech.join(' · ')}</p>
+          <p className="mt-8 font-mono text-[12px] uppercase tracking-[0.2em] text-bone/55">{p.tech.join(' · ')}</p>
 
           <div className="mt-6 flex flex-wrap items-center gap-3">
             {p.links.map((l) => {
@@ -769,20 +765,20 @@ export default function Veil({ p, c }: LayoutProps) {
             })}
           </div>
 
-          <p className="mt-10 hidden font-mono text-[11px] uppercase tracking-[0.22em] text-bone/30 lg:block">
+          <p className="mt-10 hidden font-mono text-[11px] uppercase tracking-[0.22em] text-bone/50 lg:block">
             move the cursor over the page it forgot
           </p>
         </div>
       </section>
 
-      <div className="relative z-10 mx-auto max-w-3xl px-6">
+      <div className="relative z-10 mx-auto max-w-3xl px-6 pb-24">
         {SECTIONS.map((s) => (
           <section key={s.id} id={s.id} data-sec className="scroll-mt-32 pt-10 first:pt-4">
             <div className={PROSE}>{s.body}</div>
           </section>
         ))}
 
-        <footer data-sec className="mb-24 mt-20 flex items-center justify-between border-t border-bone/10 pt-10">
+        <footer data-sec className="mt-20 flex items-center justify-between border-t border-bone/10 pt-10">
           <span aria-hidden className="select-none font-display text-3xl text-bone/10">
             {p.jp}
           </span>

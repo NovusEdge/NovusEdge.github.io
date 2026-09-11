@@ -60,6 +60,17 @@
 .pal-space .site-footer {
   background-color: #05060a;
 }
+/* Veil is a dark page on a bone document. color-scheme drives the scrollbars,
+   the page's own and the ones inside each diagram's scroll area, which are
+   otherwise painted light against charcoal. */
+.veil-dark,
+.veil-dark body {
+  background-color: var(--color-charcoal);
+}
+.veil-dark {
+  color-scheme: dark;
+}
+
 .eg-sepia .site-footer {
   background-color: #f4f0e6;
   color: #1c1a17;
