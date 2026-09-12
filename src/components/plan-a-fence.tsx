@@ -10,21 +10,23 @@ gsap.registerPlugin(ScrollTrigger)
 
 type Rgb = [number, number, number]
 
-// sRGB floats. Blending happens in sRGB so a lerp toward GROUND lands on the
-// same pixel the page's rgba() rules produce on the cream background.
-const INK: Rgb = [0x11 / 255, 0x11 / 255, 0x11 / 255]
-// Brighter than the page's --pa-ox: the accent is tuned for small text on
-// cream and reads dull on a 6px mark. Mirrors --pa-ox-mark in global.css.
-const OX: Rgb = [0xc0 / 255, 0x52 / 255, 0x2f / 255]
-const GROUND: Rgb = [1, 1, 0xf8 / 255]
+type Palette = { ink: Rgb; ox: Rgb; ground: Rgb; fence: Rgb; faded: Rgb; sweep: Rgb }
 
 function mix(a: Rgb, b: Rgb, t: number): Rgb {
   return [a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t, a[2] + (b[2] - a[2]) * t]
 }
 
-const FENCE_COLOR = mix(INK, GROUND, 0.3)
-const FADED = mix(OX, GROUND, 0.55)
-const SWEEP_COLOR = mix(INK, GROUND, 0.2)
+function readPalette(el: Element): Palette {
+  const style = getComputedStyle(el)
+  const read = (token: string): Rgb => {
+    const rgb = new THREE.Color(style.getPropertyValue(token).trim()).getRGB({ r: 0, g: 0, b: 0 }, THREE.SRGBColorSpace)
+    return [rgb.r, rgb.g, rgb.b]
+  }
+  const ink = read('--pa-ink')
+  const ox = read('--pa-ox-mark')
+  const ground = read('--pa-ground')
+  return { ink, ox, ground, fence: mix(ink, ground, 0.3), faded: mix(ox, ground, 0.55), sweep: mix(ink, ground, 0.2) }
+}
 
 const INTERIOR = 220
 const EXTERIOR = 320
@@ -103,6 +105,7 @@ function shuffle<T>(arr: T[], rand: () => number): T[] {
 }
 
 type Sim = {
+  palette: Palette
   index: number
   applied: number
   snap: boolean
@@ -142,7 +145,7 @@ function lattice(pitch: number): Float32Array {
   return out
 }
 
-function createSim(): Sim {
+function createSim(palette: Palette): Sim {
   const rand = mulberry32(20260709)
   const cell = (EXT_EXTENT * 2) / EXT_CELLS
 
@@ -178,6 +181,7 @@ function createSim(): Sim {
   const pair = new Float32Array([-MARK_R * 1.4, 0, MARK_R * 1.4, 0])
 
   return {
+    palette,
     index: 0,
     applied: -1,
     snap: true,
@@ -242,11 +246,11 @@ function applyState(sim: Sim, k: number, now: number) {
   for (let i = 0; i < INTERIOR; i++) {
     const shown = k > 0 || i < 2
     const src = k === 0 && i < 2 ? sim.pair : k >= 7 ? sim.wide : sim.dense
-    setTarget(sim, i, src, i, shown ? 1 : 0, k >= 3 ? 1 : 0, k >= 4 && sim.faded[i] ? FADED : OX)
+    setTarget(sim, i, src, i, shown ? 1 : 0, k >= 3 ? 1 : 0, k >= 4 && sim.faded[i] ? sim.palette.faded : sim.palette.ox)
   }
   for (let j = 0; j < EXTERIOR; j++) {
     const shown = j < EXTERIOR_AT[k]
-    setTarget(sim, INTERIOR + j, k >= 8 ? sim.cells : sim.scatter, j, shown ? 1 : 0, 0, INK)
+    setTarget(sim, INTERIOR + j, k >= 8 ? sim.cells : sim.scatter, j, shown ? 1 : 0, 0, sim.palette.ink)
   }
   for (let i = 0; i < COUNT; i++) sim.startAt[i] = now + sim.delay[i]
 
@@ -319,10 +323,7 @@ function fenceGeometry(): { geometry: THREE.BufferGeometry; quads: number } {
 
 function Fence({ state }: Props) {
   const { geometry, quads } = useMemo(fenceGeometry, [])
-  const material = useMemo(
-    () => new THREE.MeshBasicMaterial({ color: new THREE.Color().setRGB(...FENCE_COLOR, THREE.SRGBColorSpace) }),
-    [],
-  )
+  const material = useMemo(() => new THREE.MeshBasicMaterial(), [])
   useEffect(
     () => () => {
       geometry.dispose()
@@ -336,6 +337,7 @@ function Fence({ state }: Props) {
   useFrame((r3f, delta) => {
     const sim = state.current
     if (!sim.visible) return
+    material.color.setRGB(...sim.palette.fence, THREE.SRGBColorSpace)
     const goal = sim.index >= 1 ? 1 : 0
     const step = Math.min(delta, 0.05) / FENCE_DRAW_SECONDS
     const p = sim.fence.progress
@@ -457,9 +459,9 @@ function Sweep({ state }: Props) {
     for (let i = 0; i < INTERIOR; i++) {
       const px = sim.pos[i * 2]
       if (sim.goalScale[i] > 0 && px > sw.prevX && px <= sw.x) {
-        sim.color[i * 3] = OX[0]
-        sim.color[i * 3 + 1] = OX[1]
-        sim.color[i * 3 + 2] = OX[2]
+        sim.color[i * 3] = sim.palette.ox[0]
+        sim.color[i * 3 + 1] = sim.palette.ox[1]
+        sim.color[i * 3 + 2] = sim.palette.ox[2]
         sim.hollowMix[i] = 0
       }
     }
@@ -473,7 +475,7 @@ function Sweep({ state }: Props) {
     }
     m.visible = true
     m.position.x = sw.x
-    m.material.color.setRGB(...mix(SWEEP_COLOR, GROUND, fade), THREE.SRGBColorSpace)
+    m.material.color.setRGB(...mix(sim.palette.sweep, sim.palette.ground, fade), THREE.SRGBColorSpace)
     r3f.invalidate()
   })
 
@@ -495,12 +497,19 @@ function stateAtScroll(): number {
   return state
 }
 
-function Figure() {
+function Figure({ palette }: { palette: Palette }) {
   const sim = useRef<Sim>(null!)
-  if (sim.current === null) sim.current = createSim()
+  if (sim.current === null) sim.current = createSim(palette)
   const figure = useRef<HTMLElement>(null)
   const caption = useRef<HTMLElement>(null)
   const [reduced] = useState(prefersReducedMotion)
+
+  useEffect(() => {
+    sim.current.palette = palette
+    sim.current.applied = -1
+    sim.current.snap = true
+    sim.current.invalidate()
+  }, [palette])
 
   useEffect(() => {
     const el = figure.current
@@ -593,6 +602,17 @@ function Figure() {
 
 export function PlanAFence() {
   const [enabled, setEnabled] = useState(false)
+  const [palette, setPalette] = useState<Palette | null>(null)
+
+  useEffect(() => {
+    const el = document.querySelector('.pa')
+    if (!el) return
+    const sync = () => setPalette(readPalette(el))
+    sync()
+    const observer = new MutationObserver(sync)
+    observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] })
+    return () => observer.disconnect()
+  }, [])
 
   // Read at mount rather than at render: the route is prerendered in Node,
   // and below 1700px no WebGL context should ever exist.
@@ -604,5 +624,5 @@ export function PlanAFence() {
     return () => mq.removeEventListener('change', sync)
   }, [])
 
-  return enabled ? <Figure /> : null
+  return enabled && palette ? <Figure palette={palette} /> : null
 }

@@ -19,7 +19,7 @@ const RAIL = '(min-width: 1280px)'
 export function GridIndex({ heads }: { heads: GridHeading[] }) {
   const [active, setActive] = useState<string | null>(null)
   const [past, setPast] = useState(false)
-  const [rail, setRail] = useState(() => typeof matchMedia !== 'undefined' && matchMedia(RAIL).matches)
+  const [rail, setRail] = useState(false)
 
   useEffect(() => {
     const mq = matchMedia(RAIL)

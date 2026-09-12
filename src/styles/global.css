@@ -213,8 +213,7 @@
 
 /* ------------------------------------------------------------------ */
 /* Plan A: the post is typeset as the report it argues with.           */
-/* ET Book + cream ground + margin sidenotes, forced light regardless  */
-/* of site theme. Scoped to .plan-a-paper on <html>.                   */
+/* ET Book + warm paper tones + margin sidenotes.                     */
 /* ------------------------------------------------------------------ */
 @font-face {
   font-family: 'ET Book';
@@ -238,55 +237,74 @@
   font-display: swap;
 }
 
+.plan-a-paper,
+.pa {
+  --pa-ink: #111111;
+  --pa-ground: #fffff8;
+  --pa-footer: #f7f4e8;
+  --pa-ox: #93392a;
+  --pa-ox-mark: #c0522f;
+  --pa-rule: color-mix(in srgb, var(--pa-ink) 22%, transparent);
+}
+.plan-a-paper.dark,
+.dark .pa {
+  --pa-ink: #e9e5da;
+  --pa-ground: #1c1b18;
+  --pa-footer: #171613;
+  --pa-ox: #e49c85;
+  --pa-ox-mark: #df896a;
+}
+.plan-a-paper.dark {
+  color-scheme: dark;
+}
 .plan-a-paper {
   color-scheme: light;
-  background-color: #fffff8;
+  background-color: var(--pa-ground);
 }
 .plan-a-paper body {
-  background-color: #fffff8;
-  color: #111111;
+  background-color: var(--pa-ground);
+  color: var(--pa-ink);
 }
 /* The site chrome sits on charcoal everywhere else, so both ends of the page
    have to be repainted or the cream column reads as a floating card. */
 .plan-a-paper .site-footer {
-  background-color: #f7f4e8;
-  color: #111111;
+  background-color: var(--pa-footer);
+  color: var(--pa-ink);
 }
 .plan-a-paper .site-footer .footer-word {
-  color: rgba(17, 17, 17, 0.1);
+  color: color-mix(in srgb, var(--pa-ink) 10%, transparent);
 }
 .plan-a-paper ::selection {
-  background-color: rgba(147, 57, 42, 0.18);
+  background-color: color-mix(in srgb, var(--pa-ox) 18%, transparent);
 }
 
-/* The floating nav keeps the site's own typeface here: it is the chrome around
-   the document, not part of it. Only the palette changes, because the pill is
-   painted for charcoal and this page is cream even when the site is dark. */
+/* The floating nav keeps the site's typeface and follows the paper palette. */
 /* Scoped to header.fixed, which is the site's floating nav. A bare `header`
    would also catch the page's own masthead element and grey out its links. */
-.plan-a-paper header.fixed nav {
-  background-color: rgba(255, 255, 248, 0.85);
-  border-color: rgba(17, 17, 17, 0.14);
-  box-shadow: 0 6px 24px rgba(17, 17, 17, 0.06);
+.plan-a-paper header.fixed nav,
+.plan-a-paper header.fixed > div > div {
+  background-color: color-mix(in srgb, var(--pa-ground) 85%, transparent);
+  border-color: color-mix(in srgb, var(--pa-ink) 14%, transparent);
+  box-shadow: 0 6px 24px color-mix(in srgb, var(--pa-ink) 6%, transparent);
 }
 .plan-a-paper header.fixed a,
 .plan-a-paper header.fixed button,
 .plan-a-paper header.fixed span:not(.sr-only) {
-  color: rgba(17, 17, 17, 0.62);
+  color: color-mix(in srgb, var(--pa-ink) 62%, transparent);
 }
 .plan-a-paper header.fixed a:hover,
 .plan-a-paper header.fixed button:hover {
-  color: #93392a;
+  color: var(--pa-ox);
 }
 /* The active-route link and the hamburger bars are painted from the gold and
    charcoal tokens, which both read as foreign objects on the paper. */
 .plan-a-paper header.fixed a[aria-current],
 .plan-a-paper header.fixed .text-gold {
-  color: #93392a;
+  color: var(--pa-ox);
 }
 .plan-a-paper header.fixed .bg-charcoal,
 .plan-a-paper header.fixed .dark\:bg-bone {
-  background-color: #111111;
+  background-color: var(--pa-ink);
 }
 /* The nav is fixed at top-5 and about 44px tall, so the masthead starts below it. */
 .plan-a-paper .pa-masthead {
@@ -294,11 +312,6 @@
 }
 
 .pa {
-  --pa-ink: #111111;
-  --pa-ground: #fffff8;
-  --pa-ox: #93392a;
-  --pa-ox-mark: #c0522f;
-  --pa-rule: rgba(17, 17, 17, 0.22);
   font-family: 'ET Book', Palatino, 'Palatino Linotype', 'Book Antiqua', Georgia, serif;
   color: var(--pa-ink);
   font-size: 1.35rem;
@@ -349,7 +362,7 @@
   text-decoration: underline;
   text-decoration-thickness: 1px;
   text-underline-offset: 0.16em;
-  text-decoration-color: rgba(17, 17, 17, 0.42);
+  text-decoration-color: color-mix(in srgb, var(--pa-ink) 42%, transparent);
 }
 .pa a:hover {
   text-decoration-color: var(--pa-ox);
@@ -370,7 +383,7 @@
 .pa code {
   font-family: var(--font-mono);
   font-size: 0.8em;
-  background: rgba(17, 17, 17, 0.05);
+  background: color-mix(in srgb, var(--pa-ink) 5%, transparent);
   padding: 0.1em 0.3em;
   border-radius: 2px;
 }
@@ -411,7 +424,7 @@
 }
 .pa-byline {
   font-size: 0.85em;
-  color: rgba(17, 17, 17, 0.62);
+  color: color-mix(in srgb, var(--pa-ink) 62%, transparent);
   margin-bottom: 0.9em;
 }
 .pa-byline-sep {
@@ -435,7 +448,7 @@
 .pa-fence figcaption {
   font-size: 0.74em;
   line-height: 1.45;
-  color: rgba(17, 17, 17, 0.68);
+  color: color-mix(in srgb, var(--pa-ink) 68%, transparent);
   padding-top: 0.9rem;
 }
 .pa-runway-n {
@@ -450,7 +463,7 @@
   font-style: normal;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: rgba(17, 17, 17, 0.55);
+  color: color-mix(in srgb, var(--pa-ink) 55%, transparent);
   margin-block: 0 0.9em;
 }
 .pa-contents ol {
@@ -479,7 +492,7 @@
 }
 .pa-end {
   font-size: 0.84em;
-  color: rgba(17, 17, 17, 0.62);
+  color: color-mix(in srgb, var(--pa-ink) 62%, transparent);
 }
 .pa-end p {
   font-style: italic;
@@ -518,7 +531,7 @@
   line-height: 1.4;
   position: relative;
   text-align: left;
-  color: rgba(17, 17, 17, 0.78);
+  color: color-mix(in srgb, var(--pa-ink) 78%, transparent);
 }
 .pa-sn .pa-sn-num {
   color: var(--pa-ox);
@@ -528,7 +541,7 @@
   padding-right: 0.35em;
 }
 .pa-sn a {
-  text-decoration-color: rgba(17, 17, 17, 0.3);
+  text-decoration-color: color-mix(in srgb, var(--pa-ink) 30%, transparent);
   overflow-wrap: anywhere;
 }
 
@@ -569,7 +582,7 @@
   font-size: 0.82em;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: rgba(17, 17, 17, 0.55);
+  color: color-mix(in srgb, var(--pa-ink) 55%, transparent);
   margin: 0 0 0.6em;
 }
 .pa-fence-legend {
@@ -577,7 +590,7 @@
   padding: 0;
   margin: 0.9em 0 0;
   font-size: 0.7em;
-  color: rgba(17, 17, 17, 0.68);
+  color: color-mix(in srgb, var(--pa-ink) 68%, transparent);
 }
 .pa .pa-fence-legend li {
   display: flex;
@@ -1204,65 +1217,77 @@
 }
 
 /* ------------------------------------------------------------------ */
-/* Finland grid: Aalto-era functionalism on a cold ground. Forced      */
-/* light regardless of site theme. Scoped to .fg-frost on <html>.      */
+/* Finland grid: Aalto-era functionalism on a cold ground.             */
 /* ------------------------------------------------------------------ */
+.fg-frost,
+.fg {
+  --fg-ink: #16232e;
+  --fg-ground: #e6ebef;
+  --fg-lake: #1b4a6b;
+  --fg-signal: #9a5a05;
+  --fg-rule: color-mix(in srgb, var(--fg-lake) 20%, transparent);
+}
+.fg-frost.dark,
+.dark .fg {
+  --fg-ink: #dfe7ee;
+  --fg-ground: #141e27;
+  --fg-lake: #92bddb;
+  --fg-signal: #e5b56f;
+}
+.fg-frost.dark {
+  color-scheme: dark;
+}
 .fg-frost {
   color-scheme: light;
-  background-color: #e6ebef;
+  background-color: var(--fg-ground);
 }
 .fg-frost body {
-  background-color: #e6ebef;
-  color: #16232e;
+  background-color: var(--fg-ground);
+  color: var(--fg-ink);
 }
 /* Both ends of the page have to be repainted or the cold column reads as a
    card floating on the site's charcoal. */
 .fg-frost .site-footer {
-  background-color: #e6ebef;
-  color: #16232e;
+  background-color: var(--fg-ground);
+  color: var(--fg-ink);
 }
 .fg-frost .site-footer .footer-word {
-  color: rgba(27, 74, 107, 0.09);
+  color: color-mix(in srgb, var(--fg-lake) 9%, transparent);
 }
 .fg-frost ::selection {
-  background-color: rgba(27, 74, 107, 0.16);
+  background-color: color-mix(in srgb, var(--fg-lake) 16%, transparent);
 }
 
-/* The floating nav is painted for charcoal and this page is pale even when the
-   site is dark, so the pill needs its own palette. */
+/* The floating nav follows the post's cold palette. */
 /* header.fixed is the floating site nav. The page has its own <header> for the
    masthead, so an unqualified `header` here would repaint that too. */
 /* The desktop pill is a <nav>; the phone one is a plain div inside the
    md:hidden wrapper, and it carries the same dark-mode background. */
 .fg-frost header.fixed nav,
 .fg-frost header.fixed > div > div {
-  background-color: rgba(230, 235, 239, 0.92);
-  border-color: rgba(27, 74, 107, 0.18);
-  box-shadow: 0 6px 24px rgba(22, 35, 46, 0.07);
+  background-color: color-mix(in srgb, var(--fg-ground) 92%, transparent);
+  border-color: color-mix(in srgb, var(--fg-lake) 18%, transparent);
+  box-shadow: 0 6px 24px color-mix(in srgb, var(--fg-ink) 7%, transparent);
 }
 .fg-frost header.fixed a,
 .fg-frost header.fixed button,
 .fg-frost header.fixed span:not(.sr-only) {
-  color: rgba(22, 35, 46, 0.66);
+  color: color-mix(in srgb, var(--fg-ink) 66%, transparent);
 }
 .fg-frost header.fixed a:hover,
 .fg-frost header.fixed button:hover {
-  color: #1b4a6b;
+  color: var(--fg-lake);
 }
 .fg-frost header.fixed a[aria-current],
 .fg-frost header.fixed .text-gold {
-  color: #1b4a6b;
+  color: var(--fg-lake);
 }
 .fg-frost header.fixed .bg-charcoal,
 .fg-frost header.fixed .dark\:bg-bone {
-  background-color: #16232e;
+  background-color: var(--fg-ink);
 }
 
 .fg {
-  --fg-ink: #16232e;
-  --fg-lake: #1b4a6b;
-  --fg-signal: #9a5a05;
-  --fg-rule: rgba(27, 74, 107, 0.2);
   /* Left margin the conductor line and its pylons live in. Zero below the
      breakpoint, where there is no margin to draw furniture in. */
   --fg-gutter: 0rem;
@@ -1299,7 +1324,7 @@
   font-size: 0.7rem;
   text-transform: uppercase;
   letter-spacing: 0.18em;
-  color: rgba(22, 35, 46, 0.55);
+  color: color-mix(in srgb, var(--fg-ink) 55%, transparent);
 }
 /* The masthead text is set small and tinted, which left the back link with a
    hit target the size of its own glyphs. The link opts out of both. */
@@ -1330,7 +1355,7 @@
 .fg-standfirst {
   font-size: 1.2rem;
   line-height: 1.6;
-  color: rgba(22, 35, 46, 0.78);
+  color: color-mix(in srgb, var(--fg-ink) 78%, transparent);
   margin-bottom: 2.5rem;
 }
 .fg-byline {
@@ -1340,7 +1365,7 @@
   font-size: 0.7rem;
   text-transform: uppercase;
   letter-spacing: 0.16em;
-  color: rgba(22, 35, 46, 0.5);
+  color: color-mix(in srgb, var(--fg-ink) 50%, transparent);
   padding-bottom: 5rem;
 }
 
@@ -1353,11 +1378,11 @@
   font-weight: 500;
   text-transform: uppercase;
   letter-spacing: 0.2em;
-  color: rgba(27, 74, 107, 0.62);
+  color: color-mix(in srgb, var(--fg-lake) 62%, transparent);
   margin: 0;
 }
 .fg-chip-n {
-  color: rgba(27, 74, 107, 0.38);
+  color: color-mix(in srgb, var(--fg-lake) 38%, transparent);
 }
 
 .fg-index {
@@ -1377,7 +1402,7 @@
   gap: 1rem;
   padding-block: 0.28rem;
   font-size: 0.95rem;
-  color: rgba(22, 35, 46, 0.72);
+  color: color-mix(in srgb, var(--fg-ink) 72%, transparent);
   text-decoration: none;
 }
 .fg-index a:hover,
@@ -1393,7 +1418,7 @@
   font-family: var(--font-mono);
   font-size: 0.68rem;
   letter-spacing: 0.1em;
-  color: rgba(27, 74, 107, 0.42);
+  color: color-mix(in srgb, var(--fg-lake) 42%, transparent);
 }
 .fg-index-t {
   flex: 1;
@@ -1403,7 +1428,7 @@
   font-size: 0.62rem;
   text-transform: uppercase;
   letter-spacing: 0.16em;
-  color: rgba(27, 74, 107, 0.4);
+  color: color-mix(in srgb, var(--fg-lake) 40%, transparent);
 }
 
 .fg-body {
@@ -1417,7 +1442,7 @@
   top: 0.6rem;
   bottom: 4rem;
   width: 1px;
-  background: rgba(27, 74, 107, 0.16);
+  background: color-mix(in srgb, var(--fg-lake) 16%, transparent);
   display: none;
 }
 .fg-body p {
@@ -1428,7 +1453,7 @@
   text-decoration: underline;
   text-decoration-thickness: 1px;
   text-underline-offset: 0.2em;
-  text-decoration-color: rgba(27, 74, 107, 0.4);
+  text-decoration-color: color-mix(in srgb, var(--fg-lake) 40%, transparent);
 }
 .fg-body a:hover {
   color: var(--fg-lake);
@@ -1446,7 +1471,7 @@
   margin: 0 0 1.5rem;
   padding-left: 1.2rem;
   border-left: 1px solid var(--fg-rule);
-  color: rgba(22, 35, 46, 0.74);
+  color: color-mix(in srgb, var(--fg-ink) 74%, transparent);
 }
 .fg-body code {
   font-family: var(--font-mono);
@@ -1511,7 +1536,7 @@
   font-size: 0.7rem;
   text-transform: uppercase;
   letter-spacing: 0.18em;
-  color: rgba(22, 35, 46, 0.55);
+  color: color-mix(in srgb, var(--fg-ink) 55%, transparent);
 }
 .fg-end a:hover {
   color: var(--fg-lake);
@@ -1559,7 +1584,7 @@
     font-size: 0.62rem;
     text-transform: uppercase;
     letter-spacing: 0.2em;
-    color: rgba(27, 74, 107, 0.42);
+    color: color-mix(in srgb, var(--fg-lake) 42%, transparent);
     margin: 0 0 1.1rem;
   }
   .fg-index a {
@@ -1567,7 +1592,7 @@
     padding-block: 0.34rem;
     font-size: 0.82rem;
     line-height: 1.4;
-    color: rgba(22, 35, 46, 0.5);
+    color: color-mix(in srgb, var(--fg-ink) 50%, transparent);
   }
   /* A tap off the conductor, drawn at the entry's first baseline. Width stays
      at its full 22px and the bar is scaled down at rest: the tick is flex: none

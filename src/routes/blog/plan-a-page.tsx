@@ -41,15 +41,15 @@ function Runway() {
   return (
     <figure className="pa-runway">
       <svg viewBox="-2 0 104 26" className="w-full" role="img" aria-label="Plan A published July 9 2026, Navier-Stokes proof 61 days later, first negotiating milestone 2029">
-        <line x1="0.4" y1="13" x2="99.6" y2="13" stroke="rgba(17,17,17,0.3)" strokeWidth="0.3" />
-        <line x1="0.4" y1="13" x2={proofAt} y2="13" stroke="#93392a" strokeWidth="1.1" />
-        <circle cx="0.4" cy="13" r="1.1" fill="#93392a" />
-        <circle cx={proofAt} cy="13" r="1.1" fill="#93392a" />
-        <circle cx="99.6" cy="13" r="1.1" fill="none" stroke="rgba(17,17,17,0.45)" strokeWidth="0.35" />
-        <text x="0.4" y="7.6" fontSize="3.1" fill="#111" textAnchor="start">9 Jul 2026</text>
-        <text x="0.4" y="21.5" fontSize="2.7" fill="rgba(17,17,17,0.6)" textAnchor="start">Plan A published</text>
-        <text x="99.6" y="7.6" fontSize="3.1" fill="#111" textAnchor="end">2029</text>
-        <text x="99.6" y="21.5" fontSize="2.7" fill="rgba(17,17,17,0.6)" textAnchor="end">negotiate, declare, pause</text>
+        <line x1="0.4" y1="13" x2="99.6" y2="13" stroke="color-mix(in srgb, var(--pa-ink) 30%, transparent)" strokeWidth="0.3" />
+        <line x1="0.4" y1="13" x2={proofAt} y2="13" stroke="var(--pa-ox)" strokeWidth="1.1" />
+        <circle cx="0.4" cy="13" r="1.1" fill="var(--pa-ox)" />
+        <circle cx={proofAt} cy="13" r="1.1" fill="var(--pa-ox)" />
+        <circle cx="99.6" cy="13" r="1.1" fill="none" stroke="color-mix(in srgb, var(--pa-ink) 45%, transparent)" strokeWidth="0.35" />
+        <text x="0.4" y="7.6" fontSize="3.1" fill="var(--pa-ink)" textAnchor="start">9 Jul 2026</text>
+        <text x="0.4" y="21.5" fontSize="2.7" fill="color-mix(in srgb, var(--pa-ink) 60%, transparent)" textAnchor="start">Plan A published</text>
+        <text x="99.6" y="7.6" fontSize="3.1" fill="var(--pa-ink)" textAnchor="end">2029</text>
+        <text x="99.6" y="21.5" fontSize="2.7" fill="color-mix(in srgb, var(--pa-ink) 60%, transparent)" textAnchor="end">negotiate, declare, pause</text>
       </svg>
       <figcaption>
         <span className="pa-runway-n">61</span> days from publication to a Lean-checked proof of a Millennium Prize

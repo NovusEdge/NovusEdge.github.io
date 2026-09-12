@@ -3,6 +3,14 @@ import { prerender } from './main'
 import { getPost } from './lib/posts'
 
 describe('blog prerendering', () => {
+  it('renders the same Plan A overlays with or without a trailing slash', async () => {
+    const canonical = await prerender({ url: '/blog/plan-a-ai' })
+    const trailing = await prerender({ url: '/blog/plan-a-ai/' })
+
+    expect(trailing.head.title).toBe(canonical.head.title)
+    expect(trailing.html.match(/<canvas\b/g)).toEqual(canonical.html.match(/<canvas\b/g))
+  })
+
   it('reuses a post request across suspended render retries', async () => {
     const first = getPost('what-did-we-all-miss', 'en')
     expect(getPost('what-did-we-all-miss', 'en')).toBe(first)
