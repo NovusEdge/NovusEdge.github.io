@@ -5,6 +5,7 @@ Preferred-Languages: en
 Canonical: https://novusedge.github.io/security.txt
 
 # If you find a security issue in any of my projects:
+# - Docket (https://github.com/NovusEdge/docket)
 # - Engrammic (https://github.com/engrammic-ai/engrammic)
 # - Veil (https://github.com/engrammic-ai/veil)
 # - stoat (https://github.com/NovusEdge/stoat)

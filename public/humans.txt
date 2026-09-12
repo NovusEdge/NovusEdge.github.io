@@ -18,8 +18,31 @@ Location: Finland
 Coding since: 2013
 
 /* WHAT I BUILD */
-AI infrastructure, agent memory systems, evals, privacy hardware.
+AI infrastructure, agent memory and decision tracking, evals, privacy hardware.
 The stuff that makes agents trustworthy instead of just fluent.
+
+/* SELECTED PROJECTS */
+Docket: decision tracking for agents and complex agent workflows.
+https://novusedge.github.io/portfolio/docket/
+
+Engrammic: agent memory built around claims, evidence, and provenance.
+https://novusedge.github.io/portfolio/engrammic/
+
+stoat: local QEMU virtual machines on Linux, with a TUI and CLI.
+https://novusedge.github.io/portfolio/stoat/
+
+ØCLOAK: work on privacy infrastructure against mass surveillance.
+https://novusedge.github.io/portfolio/ocloak/
+
+/* THIS SITE */
+Built with React, TypeScript, Vite, Tailwind CSS, and GSAP.
+Prerendered pages hosted on GitHub Pages.
+Languages: English, Finnish, German, Japanese, Simplified Chinese.
+Translation coverage varies by page.
+
+Portfolio: https://novusedge.github.io/portfolio/
+Writing: https://novusedge.github.io/blog/
+RSS: https://novusedge.github.io/feed.xml
 
 /* LANGUAGES */
 Rust, Go, C, C#, Python, TypeScript, JavaScript, Lua, GDScript
@@ -40,9 +63,11 @@ ESP32, Raspberry Pi, Arduino, RF, P2P
 Godot
 
 /* LINKS */
-GitHub: github.com/NovusEdge
-Engrammic: engrammic.ai
+GitHub: https://github.com/NovusEdge
+Engrammic: https://engrammic.ai
 Email: khimanialiasgar@gmail.com
+
+Updated: 2026-09-12
 
 /* NOTE */
 hey, you actually read these. coffee's on me if we ever meet.
