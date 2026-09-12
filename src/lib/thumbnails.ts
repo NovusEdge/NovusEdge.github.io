@@ -20,6 +20,9 @@ export function getPostThumbnail(slug: string): string | null {
   // essays - hero uses the red vintage banner, list uses the dithered eye
   if (slug === 'chat-control-eu') return '/assets/blog/chat-control-hero.jpeg'
   if (slug === 'epistemic-collapse') return '/assets/blog/epistemic-banner.gif'
+  if (slug === 'plan-a-ai') return '/assets/blog/plan-a-thumb.jpeg'
+  if (slug === 'googles-13-billion-in-finland') return '/assets/blog/google-finland-thumb.webp'
+  if (slug === 'what-did-we-all-miss') return '/assets/blog/fatigue-thumb.webp'
   // AI / founder-log posts -> art assets
   if (slug === 'on-building-something-engrammic') return '/assets/cosmos_948956014.jpeg'
   if (slug === 'hardware-journeys-starting-from-zero') return '/assets/patent.jpeg'

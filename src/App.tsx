@@ -60,7 +60,8 @@ function LocaleTree({ locale }: { locale: Locale }) {
       <LocaleContext value={locale}>
         {/* landing is a self-contained dark cover with its own nav; header rides every other page */}
         {bare !== '/' && <Header />}
-        <GrainShader />
+        {/* plan-a-ai is a cream page in a dark site, and the grain is tuned for charcoal */}
+        {bare !== '/blog/plan-a-ai' && <GrainShader />}
         <div key={key} className="page-enter">
           {/* nested Routes match against the remainder of the parent path, so these are relative */}
           <Routes>

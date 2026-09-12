@@ -18,6 +18,9 @@ import { BlogInterstitials } from '../../components/blog-interstitial'
 import NotFound from '../not-found'
 import Magnetic from '../../components/react-bits/Magnetic'
 import { PostHero } from './post-hero'
+import { PlanAPage } from './plan-a-page'
+import { GridPage } from './grid-page'
+import { PortalPage } from './portal-page'
 import { useLocalePath } from '../../i18n/use-locale-path'
 import { useLocale } from '../../i18n/context'
 
@@ -71,6 +74,18 @@ export default function BlogPost() {
   if (!post) return <NotFound />
 
   const image = getPostThumbnail(post.slug)
+
+  // Plan A is typeset as the report it argues with, so it replaces the whole
+  // page rather than styling the prose inside the shared shell.
+  if (post.slug === 'plan-a-ai') return <PlanAPage post={post} image={image} />
+
+  // The Finland piece is about infrastructure nobody looks at, so it gets the
+  // functionalist treatment rather than the shared prose shell.
+  if (post.slug === 'googles-13-billion-in-finland') return <GridPage post={post} image={image} />
+
+  // The trends piece argues nobody is in a state to read the signal, so it is
+  // served as an onboarding portal that tracks whether you got to the end.
+  if (post.slug === 'what-did-we-all-miss') return <PortalPage post={post} image={image} />
 
   return (
     <>

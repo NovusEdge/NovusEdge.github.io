@@ -210,3 +210,1384 @@
 @media (prefers-reduced-motion: reduce), (max-width: 768px) {
   .animate-neon { animation: none; filter: drop-shadow(0 0 3px currentColor); }
 }
+
+/* ------------------------------------------------------------------ */
+/* Plan A: the post is typeset as the report it argues with.           */
+/* ET Book + cream ground + margin sidenotes, forced light regardless  */
+/* of site theme. Scoped to .plan-a-paper on <html>.                   */
+/* ------------------------------------------------------------------ */
+@font-face {
+  font-family: 'ET Book';
+  src: url('/fonts/et-book-roman.woff') format('woff');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'ET Book';
+  src: url('/fonts/et-book-italic.woff') format('woff');
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'ET Book';
+  src: url('/fonts/et-book-bold.woff') format('woff');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+.plan-a-paper {
+  color-scheme: light;
+  background-color: #fffff8;
+}
+.plan-a-paper body {
+  background-color: #fffff8;
+  color: #111111;
+}
+/* The site chrome sits on charcoal everywhere else, so both ends of the page
+   have to be repainted or the cream column reads as a floating card. */
+.plan-a-paper .site-footer {
+  background-color: #f7f4e8;
+  color: #111111;
+}
+.plan-a-paper .site-footer .footer-word {
+  color: rgba(17, 17, 17, 0.1);
+}
+.plan-a-paper ::selection {
+  background-color: rgba(147, 57, 42, 0.18);
+}
+
+/* The floating nav keeps the site's own typeface here: it is the chrome around
+   the document, not part of it. Only the palette changes, because the pill is
+   painted for charcoal and this page is cream even when the site is dark. */
+/* Scoped to header.fixed, which is the site's floating nav. A bare `header`
+   would also catch the page's own masthead element and grey out its links. */
+.plan-a-paper header.fixed nav {
+  background-color: rgba(255, 255, 248, 0.85);
+  border-color: rgba(17, 17, 17, 0.14);
+  box-shadow: 0 6px 24px rgba(17, 17, 17, 0.06);
+}
+.plan-a-paper header.fixed a,
+.plan-a-paper header.fixed button,
+.plan-a-paper header.fixed span:not(.sr-only) {
+  color: rgba(17, 17, 17, 0.62);
+}
+.plan-a-paper header.fixed a:hover,
+.plan-a-paper header.fixed button:hover {
+  color: #93392a;
+}
+/* The active-route link and the hamburger bars are painted from the gold and
+   charcoal tokens, which both read as foreign objects on the paper. */
+.plan-a-paper header.fixed a[aria-current],
+.plan-a-paper header.fixed .text-gold {
+  color: #93392a;
+}
+.plan-a-paper header.fixed .bg-charcoal,
+.plan-a-paper header.fixed .dark\:bg-bone {
+  background-color: #111111;
+}
+/* The nav is fixed at top-5 and about 44px tall, so the masthead starts below it. */
+.plan-a-paper .pa-masthead {
+  padding-top: 4.5rem;
+}
+
+.pa {
+  --pa-ink: #111111;
+  --pa-ground: #fffff8;
+  --pa-ox: #93392a;
+  --pa-ox-mark: #c0522f;
+  --pa-rule: rgba(17, 17, 17, 0.22);
+  font-family: 'ET Book', Palatino, 'Palatino Linotype', 'Book Antiqua', Georgia, serif;
+  color: var(--pa-ink);
+  font-size: 1.35rem;
+  line-height: 1.45;
+  font-kerning: normal;
+  font-variant-ligatures: common-ligatures;
+}
+.pa-shell {
+  max-width: 1500px;
+  margin: 0 auto;
+  padding-inline: max(1.5rem, 4vw);
+}
+/* 55% text measure leaves the right 45% free for sidenotes to float into.
+   Every width below is tied to that split; changing one breaks the others. */
+.pa-col {
+  width: 55%;
+}
+.pa p,
+.pa li {
+  font-size: 1em;
+  line-height: 1.45;
+}
+.pa p {
+  margin-block: 0 1.05em;
+}
+.pa h1 {
+  font-size: 3.4em;
+  font-weight: 400;
+  line-height: 1;
+  margin-block: 0 0.3em;
+  letter-spacing: -0.01em;
+}
+.pa h2 {
+  font-size: 1.7em;
+  font-weight: 400;
+  font-style: italic;
+  line-height: 1.15;
+  margin-block: 2.1em 0.6em;
+}
+.pa h3 {
+  font-size: 1.25em;
+  font-weight: 400;
+  font-style: italic;
+  margin-block: 1.6em 0.4em;
+}
+.pa a {
+  color: inherit;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.16em;
+  text-decoration-color: rgba(17, 17, 17, 0.42);
+}
+.pa a:hover {
+  text-decoration-color: var(--pa-ox);
+  color: var(--pa-ox);
+}
+.pa blockquote {
+  margin-inline: 1.4em 0;
+  padding-left: 1.1em;
+  border-left: 1px solid var(--pa-rule);
+  font-style: italic;
+}
+.pa blockquote p {
+  margin-bottom: 0.5em;
+}
+.pa strong {
+  font-weight: 700;
+}
+.pa code {
+  font-family: var(--font-mono);
+  font-size: 0.8em;
+  background: rgba(17, 17, 17, 0.05);
+  padding: 0.1em 0.3em;
+  border-radius: 2px;
+}
+.pa hr {
+  border: 0;
+  border-top: 1px solid var(--pa-rule);
+  margin-block: 2.5em;
+}
+
+.pa-masthead {
+  display: flex;
+  justify-content: space-between;
+  gap: 1.5rem;
+  font-size: 0.78em;
+  letter-spacing: 0.04em;
+  padding-bottom: 2.5rem;
+}
+/* Both masthead links were the size of their own glyphs, with nothing but the
+   default underline to aim at. A 44px box gives them something to hit. */
+.pa-masthead a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding-inline: 0.1rem;
+  font-size: 1.05em;
+  color: var(--pa-ink);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 0.22em;
+  text-decoration-color: var(--pa-ox);
+}
+.pa-masthead a:hover {
+  color: var(--pa-ox);
+}
+.pa-head {
+  display: flex;
+  align-items: flex-end;
+  gap: 3rem;
+}
+.pa-byline {
+  font-size: 0.85em;
+  color: rgba(17, 17, 17, 0.62);
+  margin-bottom: 0.9em;
+}
+.pa-byline-sep {
+  padding-inline: 0.5em;
+}
+.pa-standfirst {
+  font-size: 1.08em;
+  font-style: italic;
+  line-height: 1.4;
+  max-width: 34ch;
+  margin-bottom: 0;
+}
+.pa-runway {
+  flex: 1;
+  min-width: 0;
+  margin: 0;
+  padding-bottom: 0.4rem;
+}
+.pa-runway figcaption,
+.pa-fig figcaption,
+.pa-fence figcaption {
+  font-size: 0.74em;
+  line-height: 1.45;
+  color: rgba(17, 17, 17, 0.68);
+  padding-top: 0.9rem;
+}
+.pa-runway-n {
+  color: var(--pa-ox);
+  font-size: 1.15em;
+}
+.pa-contents {
+  padding-bottom: 2.5rem;
+}
+.pa-contents h2 {
+  font-size: 0.82em;
+  font-style: normal;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(17, 17, 17, 0.55);
+  margin-block: 0 0.9em;
+}
+.pa-contents ol {
+  list-style: none;
+  columns: 2;
+  column-gap: 2.5rem;
+  padding: 0;
+  margin: 0;
+}
+.pa-contents li {
+  font-size: 0.86em;
+  line-height: 1.5;
+  margin-bottom: 0.35em;
+  break-inside: avoid;
+}
+.pa-contents-n {
+  color: var(--pa-ox);
+  font-size: 0.8em;
+  padding-right: 0.6em;
+}
+.pa-contents a {
+  text-decoration-color: transparent;
+}
+.pa-contents a:hover {
+  text-decoration-color: var(--pa-ox);
+}
+.pa-end {
+  font-size: 0.84em;
+  color: rgba(17, 17, 17, 0.62);
+}
+.pa-end p {
+  font-style: italic;
+  margin-bottom: 0.8em;
+}
+
+/* Plan A is the name of a work here, so prose mentions take quote marks and the
+   page accent. nowrap keeps the closing quote off the next line. */
+.pa-q {
+  color: var(--pa-ox);
+  white-space: nowrap;
+}
+
+/* Sidenotes. The mark stays in the text flow; the note floats out past the
+   column's right edge into the empty 45%. -60% is measured against the note's
+   own 50% width, which is why both numbers move together. */
+.pa-sn-mark {
+  font-size: 0.72em;
+  vertical-align: super;
+  line-height: 0;
+  color: var(--pa-ox);
+  font-feature-settings: 'sups';
+  padding-inline: 0.12em;
+}
+.pa-sn-toggle {
+  display: none;
+}
+.pa-sn {
+  float: right;
+  clear: right;
+  width: 50%;
+  margin-right: -60%;
+  margin-top: 0.35rem;
+  margin-bottom: 1.1rem;
+  font-size: 0.76em;
+  line-height: 1.4;
+  position: relative;
+  text-align: left;
+  color: rgba(17, 17, 17, 0.78);
+}
+.pa-sn .pa-sn-num {
+  color: var(--pa-ox);
+  font-size: 0.85em;
+  vertical-align: super;
+  line-height: 0;
+  padding-right: 0.35em;
+}
+.pa-sn a {
+  text-decoration-color: rgba(17, 17, 17, 0.3);
+  overflow-wrap: anywhere;
+}
+
+/* Body figures stay inside the text column. A note floats from 50% to 110% of
+   that column, so a figure that broke wider would land under one; clear: right
+   also drops it below any note still floating beside the paragraph above. */
+.pa-fig {
+  clear: right;
+  width: 100%;
+  margin: 2.2em 0 1.8em;
+}
+.pa-fig img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border: 1px solid var(--pa-rule);
+}
+
+/* The fence figure. Sidenotes own the right margin until the shell is wide
+   enough for both; the note widths shift with .pa-col so a note ends at 71%
+   of the shell and the rail starts at 76%. */
+.pa-rail {
+  display: none;
+}
+.pa-fence {
+  margin: 0;
+  width: 100%;
+}
+.pa-fence-canvas {
+  width: 100%;
+  aspect-ratio: 1;
+  pointer-events: none;
+}
+.pa-fence figcaption {
+  min-height: 1.45em;
+}
+.pa .pa-fence-head {
+  font-size: 0.82em;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(17, 17, 17, 0.55);
+  margin: 0 0 0.6em;
+}
+.pa-fence-legend {
+  list-style: none;
+  padding: 0;
+  margin: 0.9em 0 0;
+  font-size: 0.7em;
+  color: rgba(17, 17, 17, 0.68);
+}
+.pa .pa-fence-legend li {
+  display: flex;
+  gap: 0.6em;
+  align-items: baseline;
+  line-height: 1.4;
+  margin-bottom: 0.4em;
+}
+.pa-fence-swatch {
+  flex: none;
+  width: 0.6em;
+  height: 0.6em;
+  border-radius: 50%;
+  position: relative;
+  top: -0.05em;
+}
+.pa-fence-swatch-ink {
+  background: var(--pa-ink);
+}
+.pa-fence-swatch-ox {
+  background: var(--pa-ox-mark);
+}
+@media (min-width: 1700px) {
+  .pa-shell {
+    max-width: 1760px;
+  }
+  .pa-col {
+    width: 48%;
+  }
+  .pa-sn {
+    width: 44%;
+    margin-right: -48%;
+  }
+  .pa-spread {
+    display: flex;
+  }
+  /* Full viewport tall so the figure sits at the viewport centre both before
+     and after it sticks; a translateY(-50%) offset would push it up over the
+     contents list at its unstuck position. */
+  .pa-rail {
+    display: flex;
+    align-items: center;
+    align-self: flex-start;
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    width: 24%;
+    margin-left: auto;
+  }
+}
+
+/* Below the split the margin no longer exists, so the note stops floating and
+   becomes a disclosure hanging off its own mark. */
+@media (max-width: 1100px) {
+  .pa-col {
+    width: 100%;
+    max-width: 34rem;
+  }
+  .pa-head {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 2.5rem;
+  }
+  .pa-runway {
+    max-width: 34rem;
+  }
+  .pa-contents ol {
+    columns: 1;
+  }
+  .pa-sn-mark {
+    display: none;
+  }
+  .pa-sn-toggle {
+    display: inline;
+    font-size: 0.72em;
+    vertical-align: super;
+    line-height: 0;
+    color: var(--pa-ox);
+    background: none;
+    border: 0;
+    padding-inline: 0.12em;
+    cursor: pointer;
+    font-family: inherit;
+  }
+  .pa-sn {
+    display: none;
+  }
+  .pa-sn.pa-sn-open {
+    display: block;
+    float: none;
+    width: 100%;
+    margin-right: 0;
+    margin-block: 0.8rem;
+    padding-left: 0.9em;
+    border-left: 2px solid var(--pa-ox);
+  }
+}
+@media (max-width: 640px) {
+  .pa {
+    font-size: 1.15rem;
+  }
+  .pa h1 {
+    font-size: 2.5em;
+  }
+}
+
+/* ------------------------------------------------------------------ */
+/* Orientation portal: the essay served as corporate onboarding.      */
+/* Forced light on an office-grey ground regardless of site theme.    */
+/* Scoped to .op-portal on <html>.                                     */
+/* ------------------------------------------------------------------ */
+.op-portal {
+  color-scheme: light;
+  background-color: #eceee9;
+}
+.op-portal body {
+  background-color: #eceee9;
+  color: #1b2a33;
+}
+/* Both ends of the page have to be repainted or the grey column reads as a
+   card floating on the site's charcoal. */
+.op-portal .site-footer {
+  background-color: #e3e6e0;
+  color: #1b2a33;
+  border-top: 1px solid rgba(27, 42, 51, 0.18);
+}
+.op-portal .site-footer .footer-word {
+  color: rgba(27, 42, 51, 0.07);
+}
+.op-portal ::selection {
+  background-color: rgba(47, 107, 99, 0.22);
+}
+
+/* header.fixed is the floating site nav. The page has its own <header> for the
+   hero, so an unqualified `header` here would repaint that too. The desktop
+   pill is a <nav>; the phone one is a plain div inside the md:hidden wrapper. */
+.op-portal header.fixed nav,
+.op-portal header.fixed > div > div {
+  background-color: rgba(246, 247, 244, 0.92);
+  border-color: rgba(27, 42, 51, 0.18);
+  box-shadow: 0 6px 24px rgba(27, 42, 51, 0.07);
+}
+.op-portal header.fixed a,
+.op-portal header.fixed button,
+.op-portal header.fixed span:not(.sr-only) {
+  color: rgba(27, 42, 51, 0.66);
+}
+.op-portal header.fixed a:hover,
+.op-portal header.fixed button:hover {
+  color: #2f6b63;
+}
+.op-portal header.fixed a[aria-current],
+.op-portal header.fixed .text-gold {
+  color: #2f6b63;
+}
+.op-portal header.fixed .bg-charcoal,
+.op-portal header.fixed .dark\:bg-bone {
+  background-color: #1b2a33;
+}
+
+.op {
+  --op-ground: #eceee9;
+  --op-panel: #f6f7f4;
+  --op-ink: #1b2a33;
+  --op-teal: #2f6b63;
+  --op-rule: rgba(27, 42, 51, 0.18);
+  --op-alarm: #b4401f;
+  --op-dim: rgba(27, 42, 51, 0.6);
+  --op-faint: rgba(27, 42, 51, 0.44);
+  font-family: var(--font-prose);
+  color: var(--op-ink);
+  font-size: 1.2rem;
+  line-height: 1.7;
+}
+.op-shell {
+  width: calc(100% - 2 * max(1.25rem, 4vw));
+  max-width: 50rem;
+  margin-inline: auto;
+  /* Top clears the fixed nav (top-5, about 44px tall); bottom clears the
+     fixed progress strip. */
+  padding-block: 6.5rem 7rem;
+}
+
+/* Every label, reference, number and percentage shares one mono voice. The
+   prose stays in Supreme; the coldness lives in the furniture around it. */
+.op-k,
+.op-strip,
+.op-eyebrow,
+.op-mod-ref,
+.op-progress,
+.op-contents-head,
+.op-contents-n,
+.op-contents-v,
+.op-end {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  line-height: 1.5;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  font-variant-numeric: tabular-nums;
+}
+.op-k {
+  color: var(--op-faint);
+}
+
+.op-strip {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem 1.5rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 2px solid var(--op-ink);
+  color: var(--op-dim);
+}
+/* The strip is set small and tinted, which would leave the back link with a
+   hit target the size of its own glyphs. */
+.op-strip a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  color: var(--op-teal);
+  border-bottom: 1px solid transparent;
+  transition: border-color 150ms ease;
+}
+.op-strip a:hover {
+  border-bottom-color: var(--op-teal);
+}
+.op-hero {
+  padding-block: 4.5rem 3.5rem;
+}
+.op-eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  color: var(--op-teal);
+  margin: 0 0 1.6rem;
+}
+.op-eyebrow-sep {
+  display: inline-block;
+  width: 2.5rem;
+  height: 1px;
+  background: var(--op-teal);
+}
+.op h1 {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: clamp(2.6rem, 6.4vw, 5rem);
+  line-height: 0.96;
+  letter-spacing: -0.03em;
+  margin: 0 0 1.6rem;
+}
+.op-sub {
+  max-width: 38rem;
+  font-size: 1.12rem;
+  line-height: 1.6;
+  color: var(--op-dim);
+  margin: 0;
+}
+.op-progress-track {
+  display: block;
+  height: 4px;
+  background: rgba(27, 42, 51, 0.12);
+}
+.op-progress-fill {
+  display: block;
+  height: 100%;
+  background: var(--op-teal);
+  transform-origin: left center;
+}
+
+.op-body :where(p) {
+  margin: 0 0 1.5rem;
+}
+.op-body a {
+  color: inherit;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.2em;
+  text-decoration-color: rgba(47, 107, 99, 0.5);
+}
+.op-body a:hover {
+  color: var(--op-teal);
+  text-decoration-color: var(--op-teal);
+}
+.op-body ul,
+.op-body ol {
+  margin: 0 0 1.5rem;
+  padding-left: 1.2rem;
+}
+.op-body li {
+  margin-block: 0.3rem;
+}
+.op-body blockquote {
+  margin: 0 0 1.5rem;
+  padding-left: 1.2rem;
+  border-left: 2px solid var(--op-teal);
+  color: var(--op-dim);
+}
+.op-body code {
+  font-family: var(--font-mono);
+  font-size: 0.85em;
+}
+.op-body hr {
+  border: 0;
+  border-top: 1px solid var(--op-rule);
+  margin-block: 3rem;
+}
+.op-body h3 {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 1.25rem;
+  margin: 2.2rem 0 0.8rem;
+}
+
+.op-mod {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  column-gap: 1.5rem;
+  align-items: baseline;
+  margin: 5rem 0 2rem;
+  padding-top: 1rem;
+  border-top: 2px solid var(--op-ink);
+}
+.op-mod:first-child {
+  margin-top: 0;
+}
+.op-mod-ref {
+  grid-column: 1 / -1;
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  margin: 0 0 1.4rem;
+  color: var(--op-teal);
+}
+.op-mod-doc {
+  color: var(--op-faint);
+}
+.op-mod-num {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: clamp(1.8rem, 3.4vw, 2.6rem);
+  line-height: 1;
+  letter-spacing: -0.02em;
+  color: var(--op-teal);
+  font-variant-numeric: tabular-nums;
+}
+/* Spans both tracks. Left in column 1, which is auto-sized, its text width
+   would set that column and crush the title in column 2. */
+.op-mod-line {
+  grid-column: 1 / -1;
+  margin: 0.9rem 0 0;
+  max-width: 46rem;
+  font-size: 0.98rem;
+  line-height: 1.5;
+  color: var(--op-dim);
+}
+.op h2 {
+  /* Clears the fixed nav when the contents control jumps to a section. */
+  scroll-margin-top: 7rem;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: clamp(1.8rem, 3.4vw, 2.6rem);
+  line-height: 1.04;
+  letter-spacing: -0.025em;
+  margin: 0;
+}
+
+.op-progress {
+  position: fixed;
+  inset: auto 0 0 0;
+  z-index: 40;
+  display: grid;
+  grid-template-columns: auto auto 1fr auto;
+  align-items: center;
+  gap: 1.25rem;
+  padding: 0.7rem max(1.25rem, 4vw);
+  /* The accessibility button is fixed at bottom-6 left-6, 48px wide, and sits
+     on top of the strip. The label starts past it. */
+  padding-left: max(5.5rem, 4vw);
+  background: rgba(246, 247, 244, 0.94);
+  border-top: 1px solid var(--op-rule);
+  color: var(--op-faint);
+  backdrop-filter: blur(8px);
+}
+.op-progress-v,
+.op-progress-mod {
+  color: var(--op-ink);
+}
+/* Negative margin keeps the strip at its own height while the hit area runs
+   the strip's full height. */
+.op-progress-btn {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  gap: 1rem;
+  margin-block: -0.7rem;
+  padding: 0.7rem 0 0.7rem 1.25rem;
+  border: 0;
+  border-left: 1px solid var(--op-rule);
+  background: none;
+  font: inherit;
+  letter-spacing: inherit;
+  text-transform: inherit;
+  color: var(--op-ink);
+  cursor: pointer;
+}
+.op-progress-btn-l {
+  color: var(--op-teal);
+}
+.op-progress-btn:hover .op-progress-btn-l,
+.op-progress-btn[aria-expanded='true'] .op-progress-btn-l {
+  color: var(--op-ink);
+}
+.op-progress-caret {
+  width: 0;
+  height: 0;
+  border-left: 4px solid transparent;
+  border-right: 4px solid transparent;
+  border-bottom: 5px solid var(--op-teal);
+}
+.op-progress-btn[aria-expanded='true'] .op-progress-caret {
+  transform: rotate(180deg);
+  border-bottom-color: var(--op-ink);
+}
+
+/* The panel opens upward from the button's end of the strip. --op-strip is
+   the strip's rendered height, restated per breakpoint. */
+.op-contents {
+  --op-strip: 2.75rem;
+  position: fixed;
+  right: max(1.25rem, 4vw);
+  bottom: calc(var(--op-strip) + 0.5rem);
+  z-index: 41;
+  width: min(24rem, calc(100vw - 2 * max(1.25rem, 4vw)));
+  max-height: calc(100vh - var(--op-strip) - 6rem);
+  overflow-y: auto;
+  background: var(--op-panel);
+  border: 1px solid var(--op-ink);
+  box-shadow: 0 8px 28px rgba(27, 42, 51, 0.1);
+}
+.op-contents-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  margin: 0;
+  padding: 0.7rem 1rem;
+  border-bottom: 2px solid var(--op-ink);
+}
+.op-contents ol {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.op-contents li + li {
+  border-top: 1px solid var(--op-rule);
+}
+.op-contents a {
+  display: grid;
+  grid-template-columns: 1.75rem 1fr auto;
+  gap: 0.75rem;
+  align-items: baseline;
+  padding: 0.65rem 1rem;
+  font-size: 0.95rem;
+  line-height: 1.3;
+  color: var(--op-ink);
+  text-decoration: none;
+}
+.op-contents a:hover {
+  background: var(--op-ground);
+}
+.op-contents a[aria-current] {
+  background: var(--op-ground);
+  box-shadow: inset 3px 0 0 var(--op-teal);
+}
+.op-contents-n {
+  color: var(--op-teal);
+}
+.op-contents-v {
+  color: var(--op-faint);
+}
+@keyframes op-contents-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+/* Applied only when prefersReducedMotion() was false at open time. */
+.op-contents-in {
+  animation: op-contents-in 180ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.op-end {
+  display: grid;
+  gap: 2rem;
+  margin-top: 6rem;
+  padding-top: 1.25rem;
+  border-top: 2px solid var(--op-ink);
+  color: var(--op-dim);
+}
+.op-end-status {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.5rem 2rem;
+  margin: 0;
+}
+.op-next {
+  display: block;
+  border: 1px solid var(--op-ink);
+  background: var(--op-panel);
+  padding: 1.25rem 1.5rem;
+  color: inherit;
+  text-decoration: none;
+  transition: border-color 150ms ease;
+}
+.op-next:hover {
+  border-color: var(--op-teal);
+}
+.op-next .op-k {
+  display: block;
+  margin-bottom: 0.6rem;
+}
+.op-next-t {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 1.5rem;
+  line-height: 1.15;
+  letter-spacing: -0.015em;
+  text-transform: none;
+  color: var(--op-ink);
+}
+.op-next-mark {
+  flex: none;
+  width: 0.75rem;
+  height: 0.75rem;
+  background: var(--op-alarm);
+}
+/* The strip's back link already carries a 44px box. This one is the same
+   control at the foot of the page and needs the same target. */
+.op-end-back {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  color: var(--op-teal);
+  justify-self: start;
+}
+.op-end-back:hover {
+  color: var(--op-ink);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .op-progress-fill {
+    transition: transform 260ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+}
+
+@media (max-width: 720px) {
+  .op {
+    font-size: 1.1rem;
+  }
+  .op-shell {
+    padding-top: 6rem;
+    padding-bottom: 6rem;
+  }
+  .op-hero {
+    padding-block: 3rem 2.5rem;
+  }
+  .op-mod {
+    grid-template-columns: 1fr;
+    row-gap: 0.5rem;
+  }
+  .op-mod-ref {
+    flex-wrap: wrap;
+    gap: 0.25rem 1rem;
+  }
+  .op-progress {
+    gap: 0.75rem;
+    padding-block: 0.55rem;
+    font-size: 0.6rem;
+    letter-spacing: 0.12em;
+  }
+  .op-progress-mod {
+    display: none;
+  }
+  .op-progress-btn {
+    gap: 0.6rem;
+    margin-block: -0.55rem;
+    padding-block: 0.55rem;
+    padding-left: 0.75rem;
+  }
+  /* The accessibility button (bottom-6 left-6, 48px) would cover the panel's
+     lower-left corner at full width, so the panel sits above it instead. */
+  .op-contents {
+    --op-strip: 2.4rem;
+    bottom: 5.25rem;
+    max-height: calc(100vh - 12rem);
+  }
+  .op-contents a {
+    font-size: 0.9rem;
+  }
+  .op-next-t {
+    font-size: 1.25rem;
+  }
+}
+
+/* ------------------------------------------------------------------ */
+/* Finland grid: Aalto-era functionalism on a cold ground. Forced      */
+/* light regardless of site theme. Scoped to .fg-frost on <html>.      */
+/* ------------------------------------------------------------------ */
+.fg-frost {
+  color-scheme: light;
+  background-color: #e6ebef;
+}
+.fg-frost body {
+  background-color: #e6ebef;
+  color: #16232e;
+}
+/* Both ends of the page have to be repainted or the cold column reads as a
+   card floating on the site's charcoal. */
+.fg-frost .site-footer {
+  background-color: #e6ebef;
+  color: #16232e;
+}
+.fg-frost .site-footer .footer-word {
+  color: rgba(27, 74, 107, 0.09);
+}
+.fg-frost ::selection {
+  background-color: rgba(27, 74, 107, 0.16);
+}
+
+/* The floating nav is painted for charcoal and this page is pale even when the
+   site is dark, so the pill needs its own palette. */
+/* header.fixed is the floating site nav. The page has its own <header> for the
+   masthead, so an unqualified `header` here would repaint that too. */
+/* The desktop pill is a <nav>; the phone one is a plain div inside the
+   md:hidden wrapper, and it carries the same dark-mode background. */
+.fg-frost header.fixed nav,
+.fg-frost header.fixed > div > div {
+  background-color: rgba(230, 235, 239, 0.92);
+  border-color: rgba(27, 74, 107, 0.18);
+  box-shadow: 0 6px 24px rgba(22, 35, 46, 0.07);
+}
+.fg-frost header.fixed a,
+.fg-frost header.fixed button,
+.fg-frost header.fixed span:not(.sr-only) {
+  color: rgba(22, 35, 46, 0.66);
+}
+.fg-frost header.fixed a:hover,
+.fg-frost header.fixed button:hover {
+  color: #1b4a6b;
+}
+.fg-frost header.fixed a[aria-current],
+.fg-frost header.fixed .text-gold {
+  color: #1b4a6b;
+}
+.fg-frost header.fixed .bg-charcoal,
+.fg-frost header.fixed .dark\:bg-bone {
+  background-color: #16232e;
+}
+
+.fg {
+  --fg-ink: #16232e;
+  --fg-lake: #1b4a6b;
+  --fg-signal: #9a5a05;
+  --fg-rule: rgba(27, 74, 107, 0.2);
+  /* Left margin the conductor line and its pylons live in. Zero below the
+     breakpoint, where there is no margin to draw furniture in. */
+  --fg-gutter: 0rem;
+  font-family: var(--font-prose);
+  color: var(--fg-ink);
+  font-size: 1.2rem;
+  line-height: 1.72;
+}
+/* The shell cap, its padding and the gutter all subtract from the same width,
+   so they are tuned together. At 1920 this leaves the column about 66
+   characters wide, which is the measure the type was already set for. */
+.fg-shell {
+  max-width: 1160px;
+  margin-inline: auto;
+  padding-inline: max(1.5rem, 4vw);
+}
+.fg-masthead,
+.fg-head,
+.fg-index,
+.fg-body,
+.fg-end {
+  max-width: 42rem;
+  margin-left: var(--fg-gutter);
+}
+
+.fg-masthead {
+  display: flex;
+  justify-content: space-between;
+  gap: 1.5rem;
+  /* The nav is fixed at top-5 and about 44px tall. */
+  padding-top: 6.5rem;
+  padding-bottom: 6rem;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: rgba(22, 35, 46, 0.55);
+}
+/* The masthead text is set small and tinted, which left the back link with a
+   hit target the size of its own glyphs. The link opts out of both. */
+.fg-masthead a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding-inline: 0.1rem;
+  font-size: 0.78rem;
+  color: var(--fg-lake);
+  border-bottom: 2px solid var(--fg-lake);
+  transition: border-color 150ms ease, color 150ms ease;
+}
+.fg-masthead a:hover {
+  color: var(--fg-signal);
+  border-bottom-color: var(--fg-signal);
+}
+
+.fg h1 {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: clamp(2.5rem, 6.2vw, 4.6rem);
+  line-height: 0.98;
+  letter-spacing: -0.025em;
+  color: var(--fg-lake);
+  margin-block: 0.6rem 2rem;
+}
+.fg-standfirst {
+  font-size: 1.2rem;
+  line-height: 1.6;
+  color: rgba(22, 35, 46, 0.78);
+  margin-bottom: 2.5rem;
+}
+.fg-byline {
+  display: flex;
+  gap: 1.5rem;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  color: rgba(22, 35, 46, 0.5);
+  padding-bottom: 5rem;
+}
+
+.fg-chip {
+  display: flex;
+  align-items: baseline;
+  gap: 0.7rem;
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  color: rgba(27, 74, 107, 0.62);
+  margin: 0;
+}
+.fg-chip-n {
+  color: rgba(27, 74, 107, 0.38);
+}
+
+.fg-index {
+  border-top: 1px solid var(--fg-rule);
+  border-bottom: 1px solid var(--fg-rule);
+  padding-block: 1.6rem;
+  margin-bottom: 6rem;
+}
+.fg-index ol {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.fg-index a {
+  display: flex;
+  align-items: baseline;
+  gap: 1rem;
+  padding-block: 0.28rem;
+  font-size: 0.95rem;
+  color: rgba(22, 35, 46, 0.72);
+  text-decoration: none;
+}
+.fg-index a:hover,
+.fg-index a[aria-current] {
+  color: var(--fg-lake);
+}
+/* Both only exist in the rail presentation below. */
+.fg-index-head,
+.fg-index-tick {
+  display: none;
+}
+.fg-index-n {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.1em;
+  color: rgba(27, 74, 107, 0.42);
+}
+.fg-index-t {
+  flex: 1;
+}
+.fg-index-l {
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  color: rgba(27, 74, 107, 0.4);
+}
+
+.fg-body {
+  position: relative;
+}
+/* The conductor. Pylons in .fg-sec straddle this same x. */
+.fg-body::before {
+  content: '';
+  position: absolute;
+  left: -6rem;
+  top: 0.6rem;
+  bottom: 4rem;
+  width: 1px;
+  background: rgba(27, 74, 107, 0.16);
+  display: none;
+}
+.fg-body p {
+  margin-block: 0 1.5rem;
+}
+.fg-body a {
+  color: inherit;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.2em;
+  text-decoration-color: rgba(27, 74, 107, 0.4);
+}
+.fg-body a:hover {
+  color: var(--fg-lake);
+  text-decoration-color: var(--fg-lake);
+}
+.fg-body ul,
+.fg-body ol {
+  margin-block: 0 1.5rem;
+  padding-left: 1.2rem;
+}
+.fg-body li {
+  margin-block: 0.3rem;
+}
+.fg-body blockquote {
+  margin: 0 0 1.5rem;
+  padding-left: 1.2rem;
+  border-left: 1px solid var(--fg-rule);
+  color: rgba(22, 35, 46, 0.74);
+}
+.fg-body code {
+  font-family: var(--font-mono);
+  font-size: 0.85em;
+}
+.fg-body hr {
+  border: 0;
+  border-top: 1px solid var(--fg-rule);
+  margin-block: 3rem;
+}
+
+.fg-sec {
+  position: relative;
+  margin-block: 5rem 1.5rem;
+}
+.fg-sec:first-child {
+  margin-top: 0;
+}
+.fg h2 {
+  /* Clears the fixed nav when the index jumps to a section. */
+  scroll-margin-top: 7rem;
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: clamp(1.7rem, 3.2vw, 2.4rem);
+  line-height: 1.06;
+  letter-spacing: -0.018em;
+  color: var(--fg-lake);
+  margin-block: 0.9rem 0;
+}
+.fg h3 {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: 1.2rem;
+  color: var(--fg-lake);
+  margin-block: 2.2rem 0.8rem;
+}
+.fg-node {
+  position: absolute;
+  left: -6rem;
+  top: 0;
+  width: 16px;
+  height: 27px;
+  transform: translateX(-50%);
+  fill: none;
+  stroke: var(--fg-lake);
+  stroke-width: 1;
+  opacity: 0.32;
+  display: none;
+}
+
+.fg-fig {
+  color: var(--fg-signal);
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+}
+
+.fg-end {
+  border-top: 1px solid var(--fg-rule);
+  padding-top: 2rem;
+  margin-top: 6rem;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: rgba(22, 35, 46, 0.55);
+}
+.fg-end a:hover {
+  color: var(--fg-lake);
+}
+
+@media (min-width: 1024px) {
+  .fg {
+    --fg-gutter: 9rem;
+    font-size: 1.26rem;
+  }
+  .fg-body::before,
+  .fg-node {
+    display: block;
+  }
+}
+
+/* The index leaves the flow and becomes a fixed rail beside the column. 1280 is
+   the narrowest viewport where the rail clears the text: below it the computed
+   left plus 16rem runs past the right edge. */
+@media (min-width: 1280px) {
+  .fg {
+    /* Left edge of .fg-shell's content box, restated so the fixed rail can
+       track the column instead of the viewport. Both terms must match the
+       max-width and padding-inline on .fg-shell. */
+    --fg-pad: max(1.5rem, 4vw);
+    --fg-edge: max(var(--fg-pad), calc(50% - 580px + var(--fg-pad)));
+  }
+  .fg-index {
+    position: fixed;
+    top: 9rem;
+    /* Column is --fg-gutter + 42rem wide; the rail starts 3rem past it. */
+    left: calc(var(--fg-edge) + var(--fg-gutter) + 45rem);
+    z-index: 20;
+    width: 16rem;
+    max-width: none;
+    max-height: calc(100vh - 13rem);
+    overflow-y: auto;
+    margin: 0;
+    padding-block: 0;
+    border: 0;
+  }
+  .fg-index-head {
+    display: block;
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    color: rgba(27, 74, 107, 0.42);
+    margin: 0 0 1.1rem;
+  }
+  .fg-index a {
+    gap: 0.6rem;
+    padding-block: 0.34rem;
+    font-size: 0.82rem;
+    line-height: 1.4;
+    color: rgba(22, 35, 46, 0.5);
+  }
+  /* A tap off the conductor, drawn at the entry's first baseline. Width stays
+     at its full 22px and the bar is scaled down at rest: the tick is flex: none
+     in the row, so animating width would both thrash layout and shove the
+     entry's text sideways each time the active section changes. */
+  .fg-index-tick {
+    display: block;
+    position: relative;
+    top: -0.3em;
+    flex: none;
+    width: 22px;
+    height: 1px;
+    background: currentColor;
+    opacity: 0.4;
+    transform: scaleX(0.4545);
+    transform-origin: left center;
+  }
+  .fg-index a[aria-current] .fg-index-tick {
+    transform: scaleX(1);
+    opacity: 1;
+  }
+  .fg-index-n {
+    font-size: 0.6rem;
+  }
+  /* No room for a second column at 16rem, and wrapping the labels under the
+     headings would double the rail's height. */
+  .fg-index-l {
+    display: none;
+  }
+}
+@media (min-width: 1280px) and (prefers-reduced-motion: no-preference) {
+  .fg-index-tick {
+    transition: transform 220ms cubic-bezier(0.22, 1, 0.36, 1), opacity 220ms ease;
+  }
+}

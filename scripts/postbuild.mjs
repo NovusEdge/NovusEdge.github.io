@@ -16,9 +16,17 @@ function fm(raw) {
 }
 
 // Translations live in blog/translations/<code>/, so every .md here is a post.
-const posts = readdirSync('src/content/blog')
+// Drafts drop out here for the same reason src/lib/posts.ts drops them: this
+// list feeds the redirect stubs, the RSS items and the sitemap, and an
+// unfinished post has no business in any of the three.
+const allPosts = readdirSync('src/content/blog')
   .filter((f) => f.endsWith('.md'))
   .map((f) => ({ slug: f.replace(/\.md$/, ''), ...fm(readFileSync(`src/content/blog/${f}`, 'utf8')) }))
+
+const draftPaths = new Set(allPosts.filter((p) => p.draft === 'true').map((p) => `/blog/${p.slug}`))
+
+const posts = allPosts
+  .filter((p) => !draftPaths.has(`/blog/${p.slug}`))
   .sort((a, b) => (b.date || '').localeCompare(a.date || ''))
 
 // 1) 404.html for GitHub Pages
@@ -93,8 +101,12 @@ function split(route) {
   return { locale: locales.find((l) => l.default), bare: route }
 }
 
+// vite.config builds the route list from the blog directory, so a draft still
+// gets prerendered and still serves the not-found page. Listing those URLs in
+// the sitemap would advertise pages that answer with nothing.
 const shippedRoutes = findPageDirs(dist)
   .filter((r) => !r.startsWith('/posts/') && !r.endsWith('/404'))
+  .filter((r) => !draftPaths.has(split(r).bare))
   .sort()
 
 // group by bare path so every URL in a cluster links to every other, which hreflang requires
