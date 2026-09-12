@@ -3,7 +3,7 @@ import { filterPosts, groupByYear, fuzzyMatch } from './blog-list'
 import type { Post } from './posts'
 
 const p = (slug: string, date: string, title = slug, tags: string[] = [], description = ''): Post => ({
-  slug, date, title, tags, description, content: '',
+  slug, date, title, tags, description, content: '', contentLocale: 'en',
 })
 
 describe('fuzzyMatch', () => {

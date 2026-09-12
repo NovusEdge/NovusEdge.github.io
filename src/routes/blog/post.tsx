@@ -91,11 +91,11 @@ export default function BlogPost() {
     <>
       <Meta title={post.title} description={post.description || post.title} image={image} />
 
-      <PostHero variant={POST_HERO[post.slug] ?? DEFAULT_HERO} post={post} image={image} lang={locale.default ? undefined : 'en'} />
+      <PostHero variant={POST_HERO[post.slug] ?? DEFAULT_HERO} post={post} image={image} lang={post.contentLocale} />
 
       {!HIDE_SIDE_FLOURISH.includes(slug || '') && <SideFlourish variant={2} heroGate />}
 
-      {post.toc && <TableOfContents content={post.content} lang={locale.default ? undefined : 'en'} />}
+      {post.toc && <TableOfContents content={post.content} lang={post.contentLocale} />}
 
       {slug && POST_DECORATIONS[slug] && <BlogDecorations decorations={POST_DECORATIONS[slug]} />}
       {slug && POST_INTERSTITIALS[slug] && <BlogInterstitials interstitials={POST_INTERSTITIALS[slug]} />}
@@ -116,7 +116,7 @@ export default function BlogPost() {
 
         <div
           ref={proseRef}
-          lang={locale.default ? undefined : 'en'}
+          lang={post.contentLocale}
           className="prose prose-neutral prose-blog max-w-none leading-relaxed text-charcoal/80 dark:prose-invert dark:text-bone/85 prose-headings:mt-12 prose-headings:mb-6 prose-headings:font-display prose-p:my-6 prose-h2:text-4xl prose-h3:text-2xl"
         >
           <Markdown>{post.content}</Markdown>

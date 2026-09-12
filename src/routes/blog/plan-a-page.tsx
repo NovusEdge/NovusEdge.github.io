@@ -1,3 +1,4 @@
+import { blogHeadings } from '../../lib/blog-headings'
 import { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { TLink } from '../../components/page-transition'
@@ -11,20 +12,6 @@ const PUBLISHED = '2026-07-09'
 const PROOF = '2026-09-08'
 const MILESTONE = '2029-01-01'
 
-function slugify(text: string): string {
-  return text
-    .toLowerCase()
-    .replace(/[^\w\s-]/g, '')
-    .replace(/\s+/g, '-')
-}
-
-function headings(content: string): { id: string; text: string }[] {
-  return [...content.matchAll(/^## (.+)$/gm)].map((m) => ({
-    id: slugify(m[1]),
-    text: m[1],
-  }))
-}
-
 function days(from: string, to: string): number {
   return (Date.parse(to) - Date.parse(from)) / 86_400_000
 }
@@ -35,34 +22,34 @@ function days(from: string, to: string): number {
  * 907. At true scale the first two marks nearly collide, which is the argument.
  */
 function Runway() {
+  const { t, i18n } = useTranslation()
   const span = days(PUBLISHED, MILESTONE)
   const proofAt = (days(PUBLISHED, PROOF) / span) * 100
 
   return (
     <figure className="pa-runway">
-      <svg viewBox="-2 0 104 26" className="w-full" role="img" aria-label="Plan A published July 9 2026, Navier-Stokes proof 61 days later, first negotiating milestone 2029">
+      <svg viewBox="-2 0 104 26" className="w-full" role="img" aria-label={t('blog.planA.runwayLabel')}>
         <line x1="0.4" y1="13" x2="99.6" y2="13" stroke="color-mix(in srgb, var(--pa-ink) 30%, transparent)" strokeWidth="0.3" />
         <line x1="0.4" y1="13" x2={proofAt} y2="13" stroke="var(--pa-ox)" strokeWidth="1.1" />
         <circle cx="0.4" cy="13" r="1.1" fill="var(--pa-ox)" />
         <circle cx={proofAt} cy="13" r="1.1" fill="var(--pa-ox)" />
         <circle cx="99.6" cy="13" r="1.1" fill="none" stroke="color-mix(in srgb, var(--pa-ink) 45%, transparent)" strokeWidth="0.35" />
-        <text x="0.4" y="7.6" fontSize="3.1" fill="var(--pa-ink)" textAnchor="start">9 Jul 2026</text>
-        <text x="0.4" y="21.5" fontSize="2.7" fill="color-mix(in srgb, var(--pa-ink) 60%, transparent)" textAnchor="start">Plan A published</text>
+        <text x="0.4" y="7.6" fontSize="3.1" fill="var(--pa-ink)" textAnchor="start">{new Date(PUBLISHED).toLocaleDateString(i18n.language, { day: 'numeric', month: 'short', year: 'numeric', timeZone: 'UTC' })}</text>
+        <text x="0.4" y="21.5" fontSize="2.7" fill="color-mix(in srgb, var(--pa-ink) 60%, transparent)" textAnchor="start">{t('blog.planA.published')}</text>
         <text x="99.6" y="7.6" fontSize="3.1" fill="var(--pa-ink)" textAnchor="end">2029</text>
-        <text x="99.6" y="21.5" fontSize="2.7" fill="color-mix(in srgb, var(--pa-ink) 60%, transparent)" textAnchor="end">negotiate, declare, pause</text>
+        <text x="99.6" y="21.5" fontSize="2.7" fill="color-mix(in srgb, var(--pa-ink) 60%, transparent)" textAnchor="end">{t('blog.planA.milestone')}</text>
       </svg>
       <figcaption>
-        <span className="pa-runway-n">61</span> days from publication to a Lean-checked proof of a Millennium Prize
-        problem. <span className="pa-runway-n">907</span> to the first thing the plan asks anyone to do.
+        <span className="pa-runway-n">61</span> {t('blog.planA.runwayFirst')} <span className="pa-runway-n">907</span> {t('blog.planA.runwayLast')}
       </figcaption>
     </figure>
   )
 }
 
 export function PlanAPage({ post, image }: { post: Post; image?: string | null }) {
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
   const lp = useLocalePath()
-  const toc = headings(post.content)
+  const toc = blogHeadings(post.content, post.slug)
 
   useEffect(() => {
     document.documentElement.classList.add('plan-a-paper')
@@ -70,14 +57,14 @@ export function PlanAPage({ post, image }: { post: Post; image?: string | null }
   }, [])
 
   return (
-    <div className="pa">
+    <div className="pa" lang={post.contentLocale}>
       <Meta title={post.title} description={post.description || post.title} image={image} />
 
       <div className="pa-shell pb-24 pt-8">
         <nav className="pa-masthead">
           <TLink to={lp('/blog')}>{t('blog.backToBlog')}</TLink>
           <a href="https://ai-2040.com/" target="_blank" rel="noreferrer noopener">
-            the document in question
+            {t('blog.planA.document')}
           </a>
         </nav>
 
@@ -88,7 +75,7 @@ export function PlanAPage({ post, image }: { post: Post; image?: string | null }
               NovusEdge
               <span className="pa-byline-sep">·</span>
               <time dateTime={post.date}>
-                {new Date(post.date).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}
+                {new Date(post.date).toLocaleDateString(i18n.language, { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' })}
               </time>
             </p>
             <p className="pa-standfirst">{post.description}</p>
@@ -98,8 +85,8 @@ export function PlanAPage({ post, image }: { post: Post; image?: string | null }
 
         <hr />
 
-        <nav className="pa-col pa-contents" aria-label="Contents">
-          <h2>Contents</h2>
+        <nav className="pa-col pa-contents" aria-label={t('blog.contents')}>
+          <h2>{t('blog.contents')}</h2>
           <ol>
             {toc.map((h, i) => (
               <li key={h.id}>
@@ -123,7 +110,7 @@ export function PlanAPage({ post, image }: { post: Post; image?: string | null }
 
         <footer className="pa-col pa-end">
           <p>
-            Typeset in ET Book, because the argument is partly about how much work a document's clothes do for it.
+            {t('blog.planA.typeset')}
           </p>
           <TLink to={lp('/blog')}>{t('blog.backToBlog')}</TLink>
         </footer>

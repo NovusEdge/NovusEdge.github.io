@@ -1,15 +1,11 @@
+import { useTranslation } from 'react-i18next'
+import type { TFunction } from 'i18next'
+import { blogHeadings, headingId as slugify } from '../lib/blog-headings'
 import ReactMarkdown, { type Components } from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 
 /** Document reference the whole page hangs off. Modules are DOC/NN. */
 export const PORTAL_DOC = 'OP-2609'
-
-function slugify(text: string): string {
-  return text
-    .toLowerCase()
-    .replace(/[^\w\s-]/g, '')
-    .replace(/\s+/g, '-')
-}
 
 /**
  * Editorial, not derived: each line summarises its section without engaging
@@ -35,30 +31,30 @@ const MODULE_LINES: Record<string, string> = {
     'Restates the preceding findings and closes with one suggested action.',
 }
 
-export type PortalModule = { id: string; text: string; line?: string; n: string; ref: string }
+export type PortalModule = { id: string; text: string; sourceLine: number; line?: string; n: string; ref: string }
 
 /**
  * Numbering comes from a scan of the raw markdown. react-markdown gives no
  * guarantee about the order its `h2` components run in, so a render-time
  * counter would number the modules at random.
  */
-export function portalModules(markdown: string): PortalModule[] {
-  return [...markdown.matchAll(/^## (.+)$/gm)].map((m, i) => {
-    const id = slugify(m[1])
+export function portalModules(markdown: string, t?: TFunction): PortalModule[] {
+  return blogHeadings(markdown, 'what-did-we-all-miss').map((head, i) => {
+    const { id, text, line: sourceLine } = head
     const n = String(i + 1).padStart(2, '0')
-    return { id, text: m[1], line: MODULE_LINES[id], n, ref: `${PORTAL_DOC}/${n}` }
+    return { id, text, sourceLine, line: MODULE_LINES[id] ? t?.(`blog.portal.section.${id}`) ?? MODULE_LINES[id] : undefined, n, ref: `${PORTAL_DOC}/${n}` }
   })
 }
 
-function buildComponents(mods: Map<string, PortalModule>): Components {
+function buildComponents(mods: Map<number, PortalModule>, t: TFunction): Components {
   return {
-    h2({ children, ...props }) {
-      const id = slugify(String(children))
-      const mod = mods.get(id)
+    h2({ children, node, ...props }) {
+      const mod = mods.get(node?.position?.start.line ?? 0)
+      const id = mod?.id ?? slugify(String(children))
       return (
         <div className="op-mod">
           <p className="op-mod-ref">
-            <span>Module {mod?.n}</span>
+            <span>{t('blog.portal.module', { number: mod?.n })}</span>
             {mod && <span className="op-mod-doc">{mod.ref}</span>}
           </p>
           <span className="op-mod-num" aria-hidden="true">
@@ -90,9 +86,10 @@ function buildComponents(mods: Map<string, PortalModule>): Components {
 }
 
 export function PortalMarkdown({ children }: { children: string }) {
-  const mods = new Map(portalModules(children).map((m) => [m.id, m]))
+  const { t } = useTranslation()
+  const mods = new Map(portalModules(children, t).map((m) => [m.sourceLine, m]))
   return (
-    <ReactMarkdown remarkPlugins={[remarkGfm]} components={buildComponents(mods)}>
+    <ReactMarkdown remarkPlugins={[remarkGfm]} components={buildComponents(mods, t)}>
       {children}
     </ReactMarkdown>
   )

@@ -68,6 +68,7 @@ async function translateStrings(locale, strings) {
     '- Preserve markdown syntax exactly (links, headings, emphasis, inline code spans).',
     '- Preserve any {{placeholder}} tokens exactly as written, including their spelling.',
     '- Keep the register casual and match the tone of the original.',
+    '- Keep em dashes and parenthetical dashes sparse. Prefer natural commas, parentheses, or sentence breaks; do not add dashes where the original uses none.',
     '- Leave proper nouns, brand names, and technology names untranslated.',
     '- An empty string stays an empty string.',
     '',

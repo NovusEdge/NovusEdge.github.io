@@ -1,3 +1,5 @@
+import { useTranslation } from 'react-i18next'
+import type { TFunction } from 'i18next'
 import { useEffect, useMemo, useRef, useState, type RefObject } from 'react'
 import * as THREE from 'three'
 import { Canvas, useFrame, useThree } from '@react-three/fiber'
@@ -80,8 +82,8 @@ const CAPTIONS: Record<number, string> = {
   9: 'The boundary still holds. It has stopped meaning anything.',
 }
 
-function captionFor(state: number): string {
-  for (let k = state; k >= 0; k--) if (CAPTIONS[k]) return CAPTIONS[k]
+function captionFor(state: number, t: TFunction): string {
+  for (let k = state; k >= 0; k--) if (CAPTIONS[k]) return t(`blog.planA.caption.${k}`)
   return ''
 }
 
@@ -498,6 +500,7 @@ function stateAtScroll(): number {
 }
 
 function Figure({ palette }: { palette: Palette }) {
+  const { t } = useTranslation()
   const sim = useRef<Sim>(null!)
   if (sim.current === null) sim.current = createSim(palette)
   const figure = useRef<HTMLElement>(null)
@@ -528,13 +531,13 @@ function Figure({ palette }: { palette: Palette }) {
       const initial = reduced ? LAST_STATE : stateAtScroll()
       sim.current.index = initial
       sim.current.snap = true
-      if (cap) cap.textContent = captionFor(initial)
+      if (cap) cap.textContent = captionFor(initial, t)
       if (reduced) return
 
       const show = (k: number) => {
         sim.current.index = k
         sim.current.invalidate()
-        const text = captionFor(k)
+        const text = captionFor(k, t)
         if (!cap || cap.textContent === text) return
         gsap.to(cap, {
           opacity: 0,
@@ -559,12 +562,12 @@ function Figure({ palette }: { palette: Palette }) {
         })
       })
     },
-    { dependencies: [reduced] },
+    { dependencies: [reduced, t], revertOnUpdate: true },
   )
 
   return (
     <figure ref={figure} className="pa-fence">
-      <p className="pa-fence-head">What gets counted</p>
+      <p className="pa-fence-head">{t('blog.planA.counted')}</p>
       <div className="pa-fence-canvas" aria-hidden="true">
         <Canvas
           flat
@@ -584,17 +587,15 @@ function Figure({ palette }: { palette: Palette }) {
       <ul className="pa-fence-legend">
         <li>
           <span className="pa-fence-swatch pa-fence-swatch-ox" aria-hidden="true" />
-          Declared chips. Counted under the deal, in buildings inspectors can visit.
+          {t('blog.planA.declared')}
         </li>
         <li>
           <span className="pa-fence-swatch pa-fence-swatch-ink" aria-hidden="true" />
-          Capability that needs no new chips: better methods, software shipped anywhere. Nothing counts it.
+          {t('blog.planA.uncounted')}
         </li>
       </ul>
       <p className="sr-only">
-        This figure shows the compute a deal can count: 220 declared chips inside a drawn boundary. As the essay goes
-        on, 320 more marks appear outside it. They stand for capability that arrives without new chips, which nothing
-        declares and nothing counts. The boundary stays intact and stops meaning anything.
+        {t('blog.planA.figureDescription')}
       </p>
     </figure>
   )

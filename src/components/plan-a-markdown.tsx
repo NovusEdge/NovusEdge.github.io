@@ -1,13 +1,8 @@
+import { useTranslation } from 'react-i18next'
+import { blogHeadings, headingId as slugify } from '../lib/blog-headings'
 import { Children, useState, type ReactNode } from 'react'
 import ReactMarkdown, { type Components } from 'react-markdown'
 import remarkGfm from 'remark-gfm'
-
-function slugify(text: string): string {
-  return text
-    .toLowerCase()
-    .replace(/[^\w\s-]/g, '')
-    .replace(/\s+/g, '-')
-}
 
 function isExternal(href: string): boolean {
   return /^https?:\/\//.test(href)
@@ -59,6 +54,7 @@ function citationIndex(markdown: string): Map<string, number> {
 }
 
 function SideNote({ num, href, label }: { num: number; href: string; label: string }) {
+  const { t } = useTranslation()
   const [open, setOpen] = useState(false)
   return (
     <>
@@ -67,7 +63,7 @@ function SideNote({ num, href, label }: { num: number; href: string; label: stri
         type="button"
         className="pa-sn-toggle"
         aria-expanded={open}
-        aria-label={`Note ${num}: ${hostOf(href)}`}
+        aria-label={t('blog.planA.note', { number: num, host: hostOf(href) })}
         onClick={() => setOpen((v) => !v)}
       >
         {num}
@@ -136,7 +132,7 @@ export function markPlanA(children: ReactNode): ReactNode {
   })
 }
 
-function buildComponents(cites: Map<string, number>): Components {
+function buildComponents(cites: Map<string, number>, heads: Map<number, string>): Components {
   return {
     img({ src, alt, title }) {
       return <Figure src={typeof src === 'string' ? src : undefined} alt={alt} title={title} />
@@ -152,8 +148,8 @@ function buildComponents(cites: Map<string, number>): Components {
     li({ children, ...props }) {
       return <li {...props}>{markPlanA(children)}</li>
     },
-    h2({ children, ...props }) {
-      const id = slugify(String(children))
+    h2({ children, node, ...props }) {
+      const id = heads.get(node?.position?.start.line ?? 0) ?? slugify(String(children))
       return <h2 id={id} {...props}>{markPlanA(children)}</h2>
     },
     h3({ children, ...props }) {
@@ -180,8 +176,9 @@ function buildComponents(cites: Map<string, number>): Components {
 
 export function PlanAMarkdown({ children }: { children: string }) {
   const md = smarten(children)
+  const heads = new Map(blogHeadings(md, 'plan-a-ai').map((head) => [head.line, head.id]))
   return (
-    <ReactMarkdown remarkPlugins={[remarkGfm]} components={buildComponents(citationIndex(md))}>
+    <ReactMarkdown remarkPlugins={[remarkGfm]} components={buildComponents(citationIndex(md), heads)}>
       {md}
     </ReactMarkdown>
   )

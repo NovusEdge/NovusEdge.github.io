@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next'
 import { useEffect, useRef, useState, type MouseEvent } from 'react'
 import { createPortal } from 'react-dom'
 import { prefersReducedMotion } from '../lib/motion'
@@ -86,6 +87,7 @@ const pct = (n: number | undefined) => `${String(n ?? 0).padStart(3, '0')}%`
  * the page subtree.
  */
 export function PortalProgress({ progress, mods }: { progress: ReadingProgress; mods: PortalModule[] }) {
+  const { t } = useTranslation()
   const [mounted, setMounted] = useState(false)
   const [open, setOpen] = useState(false)
   // Decided at open time so the panel honours a setting changed mid-page.
@@ -134,11 +136,11 @@ export function PortalProgress({ progress, mods }: { progress: ReadingProgress; 
   return createPortal(
     <div className="op">
       <div className="op-progress">
-        <span className="op-progress-k">Position</span>
+        <span className="op-progress-k">{t('blog.portal.position')}</span>
         <span
           className="op-progress-v"
           role="progressbar"
-          aria-label="Reading position"
+          aria-label={t('blog.portal.readingPosition')}
           aria-valuemin={0}
           aria-valuemax={100}
           aria-valuenow={progress.total}
@@ -157,9 +159,9 @@ export function PortalProgress({ progress, mods }: { progress: ReadingProgress; 
           onClick={toggle}
         >
           <span className="op-progress-mod">
-            Module {String(mod).padStart(2, '0')} of {String(mods.length).padStart(2, '0')}
+            {t('blog.portal.moduleCount', { current: String(mod).padStart(2, '0'), total: String(mods.length).padStart(2, '0') })}
           </span>
-          <span className="op-progress-btn-l">Contents</span>
+          <span className="op-progress-btn-l">{t('blog.contents')}</span>
           <span className="op-progress-caret" aria-hidden="true" />
         </button>
       </div>
@@ -169,10 +171,10 @@ export function PortalProgress({ progress, mods }: { progress: ReadingProgress; 
           id="op-contents"
           className={animate ? 'op-contents op-contents-in' : 'op-contents'}
           role="region"
-          aria-label="Modules"
+          aria-label={t('blog.portal.modules')}
         >
           <p className="op-contents-head">
-            <span>Modules</span>
+            <span>{t('blog.portal.modules')}</span>
             <span className="op-k">{PORTAL_DOC}</span>
           </p>
           <ol>

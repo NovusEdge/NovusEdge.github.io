@@ -1,13 +1,9 @@
+import { useTranslation } from 'react-i18next'
+import type { TFunction } from 'i18next'
+import { blogHeadings, headingId as slugify } from '../lib/blog-headings'
 import { Children, type ReactNode } from 'react'
 import ReactMarkdown, { type Components } from 'react-markdown'
 import remarkGfm from 'remark-gfm'
-
-function slugify(text: string): string {
-  return text
-    .toLowerCase()
-    .replace(/[^\w\s-]/g, '')
-    .replace(/\s+/g, '-')
-}
 
 /**
  * Editorial, not derived: the chip names what the section does to the argument,
@@ -30,17 +26,16 @@ const SECTION_LABELS: Record<string, string> = {
   'where-that-leaves-me': 'Open',
 }
 
-export type GridHeading = { id: string; text: string; label?: string; n: string }
+export type GridHeading = { id: string; text: string; line: number; label?: string; n: string }
 
 /**
  * Numbering comes from a scan of the raw markdown. react-markdown gives no
  * guarantee about the order its `h2` components run in, so a render-time
  * counter numbers the sections at random.
  */
-export function gridHeadings(markdown: string): GridHeading[] {
-  return [...markdown.matchAll(/^## (.+)$/gm)].map((m, i) => {
-    const id = slugify(m[1])
-    return { id, text: m[1], label: SECTION_LABELS[id], n: String(i + 1).padStart(2, '0') }
+export function gridHeadings(markdown: string, t?: TFunction): GridHeading[] {
+  return blogHeadings(markdown, 'googles-13-billion-in-finland').map((head, i) => {
+    return { ...head, label: SECTION_LABELS[head.id] ? t?.(`blog.grid.section.${head.id}`) ?? SECTION_LABELS[head.id] : undefined, n: String(i + 1).padStart(2, '0') }
   })
 }
 
@@ -67,11 +62,11 @@ function Pylon() {
   )
 }
 
-function buildComponents(heads: Map<string, GridHeading>): Components {
+function buildComponents(heads: Map<number, GridHeading>): Components {
   return {
-    h2({ children, ...props }) {
-      const id = slugify(String(children))
-      const head = heads.get(id)
+    h2({ children, node, ...props }) {
+      const head = heads.get(node?.position?.start.line ?? 0)
+      const id = head?.id ?? slugify(String(children))
       return (
         <div className="fg-sec">
           <Pylon />
@@ -112,7 +107,8 @@ function buildComponents(heads: Map<string, GridHeading>): Components {
 }
 
 export function GridMarkdown({ children }: { children: string }) {
-  const heads = new Map(gridHeadings(children).map((h) => [h.id, h]))
+  const { t } = useTranslation()
+  const heads = new Map(gridHeadings(children, t).map((h) => [h.line, h]))
   return (
     <ReactMarkdown remarkPlugins={[remarkGfm]} components={buildComponents(heads)}>
       {children}

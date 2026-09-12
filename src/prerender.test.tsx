@@ -3,6 +3,28 @@ import { prerender } from './main'
 import { getPost } from './lib/posts'
 
 describe('blog prerendering', () => {
+  it.each(['plan-a-ai', 'googles-13-billion-in-finland', 'what-did-we-all-miss'])('publishes article metadata for %s', async (slug) => {
+    const page = await prerender({ url: `/blog/${slug}/` })
+    const post = await getPost(slug, 'en')
+    const elements = [...page.head.elements]
+    const canonical = `https://novusedge.github.io/blog/${slug}/`
+
+    expect(elements).toContainEqual({ type: 'link', props: { rel: 'canonical', href: canonical } })
+    expect(elements).toContainEqual({ type: 'meta', props: { property: 'og:url', content: canonical } })
+    expect(elements).toContainEqual({ type: 'meta', props: { property: 'og:type', content: 'article' } })
+    expect(elements).toContainEqual({ type: 'meta', props: { name: 'twitter:title', content: page.head.title } })
+    const article = JSON.parse(elements.find((element) => element.type === 'script')!.children!)
+    expect(article).toMatchObject({ '@type': 'BlogPosting', headline: post!.title, url: canonical, inLanguage: 'en' })
+  })
+
+  it('uses translated article metadata and canonical URLs', async () => {
+    const page = await prerender({ url: '/fi/blog/hello-world/' })
+    const elements = [...page.head.elements]
+    expect(elements).toContainEqual({ type: 'link', props: { rel: 'canonical', href: 'https://novusedge.github.io/fi/blog/hello-world/' } })
+    const article = JSON.parse(elements.find((element) => element.type === 'script')!.children!)
+    expect(article).toMatchObject({ inLanguage: 'fi', headline: 'hei, maailma!' })
+  })
+
   it('renders the same Plan A overlays with or without a trailing slash', async () => {
     const canonical = await prerender({ url: '/blog/plan-a-ai' })
     const trailing = await prerender({ url: '/blog/plan-a-ai/' })

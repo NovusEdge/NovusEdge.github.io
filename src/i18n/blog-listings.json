@@ -1,9 +1,5 @@
 {
   "fi": {
-    "ai-industry-trends": {
-      "title": "Tekoälyalan trendit",
-      "description": "TODO"
-    },
     "building-vs-creating": {
       "title": "Rakentaminen vs. luominen",
       "description": "Kunhan pyörittelen yhtä satunnaista ajatusta, joka heräsi hiljattain"
@@ -31,6 +27,10 @@
     "going-forward": {
       "title": "Tästä eteenpäin",
       "description": "Kiitokset kouralliselle varhaisia lukijoita ja katsaus tulevaan aikatauluttomaan julkaisutahtiin (postauksia tulee aina kun ne ovat valmiita)."
+    },
+    "googles-13-billion-in-finland": {
+      "title": "Googlen 13 miljardia euroa Suomessa",
+      "description": "Huoneellinen sijoittajia käytti aamupäivän pohtimalla, mihin energiaan kannattaisi laittaa rahaa. He käsittelivät tuotantoa ja sääntelyä. Varastointi nousi esiin ehkä kahdesti, ja kantaverkkoyhtiöllä on ollut moratorio sen liittämiselle viime vuodesta lähtien."
     },
     "hardware-journeys-starting-from-zero": {
       "title": "Hardware Journeys: Aloitus absoluuttisesta nollasta",
@@ -61,8 +61,8 @@
       "description": "Ensifiiliksiä ongelmasta, joka toi minut tähän pisteeseen. Miksi agenttien muistia kohdellaan hakuongelmana, vaikka kyse on todellisuudessa uskomuksista – ja mitä ulkoistetun epistemologian rakentaminen oikein tarkoittaa."
     },
     "plan-a-ai": {
-      "title": "Suunnitelma A",
-      "description": "TODO"
+      "title": "Puhutaan Plan A:sta",
+      "description": "AI Futures Project haluaa Yhdysvaltojen ja Kiinan laittavan superälyn tauolle vuoteen 2040 asti. Se on hyvä suunnitelma. Kuusikymmentä päivää sen julkaisun jälkeen kymmenentuhatta agenttia ratkaisi Navier–Stokesin."
     },
     "post-labour-post-learning": {
       "title": "Tarvitseeko ihmisten edes tehdä enää näin paljon töitä?",
@@ -100,16 +100,16 @@
       "title": "Yliopisto!!",
       "description": "Ensivaikutelmia ulkomaille muuttamisesta ja opintojen aloittamisesta LUT Universityn Lahden kampuksella Suomessa."
     },
+    "what-did-we-all-miss": {
+      "title": "Mitä meiltä kaikilta meni ohi?",
+      "description": "Vitsi siitä, että OpenAI käytti enemmän laskentatehoa kuin palkinto oli arvokas, kiersi viikon päivät, ja sen varjossa kymmenentuhatta agenttia oli juuri tehnyt uutta matematiikkaa, jota tuskin kukaan oli sellaisessa tilassa että olisi huomannut."
+    },
     "what-do-i-want": {
       "title": "Mitä minä haluan?",
       "description": "Polveileva pohdinta siitä, miten unohdin miksi hakkeroiminen ja asioiden rakentelu oli ennen hauskaa, ja uravalinnan kyseenalaistamista, kun se tuli valittua enemmänkin kelkasta putoamisen ahdistuksesta kuin aidosta kiinnostuksesta."
     }
   },
   "de": {
-    "ai-industry-trends": {
-      "title": "Trends in der KI-Branche",
-      "description": "TODO"
-    },
     "building-vs-creating": {
       "title": "Bauen vs. Erschaffen",
       "description": "Einfach mal ein zufälliger Gedanke, der mir neulich durch den Kopf ging"
@@ -137,6 +137,10 @@
     "going-forward": {
       "title": "Wie es weitergeht",
       "description": "Ein Dank an die Handvoll früher Leser und der Plan für einen unregelmäßigen „fertig, wenn es fertig ist“-Posting-Rhythmus für die Zukunft."
+    },
+    "googles-13-billion-in-finland": {
+      "title": "Googles 13 Milliarden Euro in Finnland",
+      "description": "Ein Raum voller Investoren verbrachte einen Vormittag damit auszutüfteln, wohin das Geld im Energiebereich fließen soll. Es ging um Erzeugung und Regulierung. Speicher kamen etwa zweimal zur Sprache – und der Netzbetreiber hat seit letztem Jahr ein Moratorium für deren Anschluss verhängt."
     },
     "hardware-journeys-starting-from-zero": {
       "title": "Hardware Journeys: Bei absolut Null anfangen",
@@ -167,8 +171,8 @@
       "description": "Erste Gedanken zu dem Problem, das mich hierher gebracht hat. Warum das Gedächtnis von Agenten als Retrieval-Problem behandelt wird, obwohl es eigentlich eine Frage von Überzeugungen ist, und was es bedeutet, externalisierte Epistemik zu bauen."
     },
     "plan-a-ai": {
-      "title": "Plan A",
-      "description": "TODO"
+      "title": "Reden wir über Plan A",
+      "description": "Das AI Futures Project will, dass die USA und China Superintelligenz bis 2040 pausieren. Es ist ein guter Plan. Sechzig Tage nach der Veröffentlichung haben zehntausend Agenten Navier-Stokes gelöst."
     },
     "post-labour-post-learning": {
       "title": "Müssen die Leute überhaupt noch so viel arbeiten?",
@@ -206,16 +210,16 @@
       "title": "Universität!!",
       "description": "Erste Eindrücke vom Umzug ins Ausland, um mein Studium am Campus Lahti der LUT University in Finnland zu beginnen."
     },
+    "what-did-we-all-miss": {
+      "title": "Was haben wir alle verpasst?",
+      "description": "Der Witz darüber, dass OpenAI mehr Compute verbrannt hat, als das Preisgeld wert war, machte eine Woche lang die Runde – und darunter hatten zehntausend Agenten gerade originäre mathematische Forschung betrieben, die kaum jemand in der Verfassung war überhaupt wahrzunehmen."
+    },
     "what-do-i-want": {
       "title": "Was will ich?",
       "description": "Eine ausschweifende Reflexion darüber, warum Hacking und das Bauen von Dingen mal Spaß gemacht haben, und das Hinterfragen eines Karrierewegs, der eher aus Angst vor Irrelevanz als aus echtem Interesse gewählt wurde."
     }
   },
   "ja": {
-    "ai-industry-trends": {
-      "title": "AI業界のトレンド",
-      "description": "TODO"
-    },
     "building-vs-creating": {
       "title": "Building vs. Creating",
       "description": "最近ふと考えたことについての雑記"
@@ -243,6 +247,10 @@
     "going-forward": {
       "title": "今後について",
       "description": "初期の数少ない読者への感謝と、今後の不定期・でき次第更新という投稿ペースについて。"
+    },
+    "googles-13-billion-in-finland": {
+      "title": "Googleのフィンランドにおける130億ユーロ",
+      "description": "エネルギー分野のどこに資金を投じるべきか、投資家たちが一室に集まって午前中ずっと議論していた。発電や規制の話題は網羅されたが、蓄電（ストレージ）の話が出たのは2回ほど。しかも送電事業者は昨年からストレージの系統連系を一時停止しているというのに。"
     },
     "hardware-journeys-starting-from-zero": {
       "title": "Hardware Journeys: 完全なゼロからのスタート",
@@ -273,8 +281,8 @@
       "description": "ここに至るきっかけとなった問題についての最初の考察。なぜエージェントのメモリは本質的に信念の問題であるにもかかわらず検索の問題として扱われてしまうのか、そして「外在化された認識論」を構築することが何を意味するのか。"
     },
     "plan-a-ai": {
-      "title": "プランA",
-      "description": "TODO"
+      "title": "プランAについて話そう",
+      "description": "AI Futures Projectは、米中が超知能（superintelligence）の開発を2040年まで一時停止することを望んでいる。筋のいい計画だ。彼らがそれを公開してから60日後、1万のエージェントがNavier-Stokes方程式を解いてしまった。"
     },
     "post-labour-post-learning": {
       "title": "人間ってもうこんなに働く必要あるんだっけ？",
@@ -312,16 +320,16 @@
       "title": "大学！！",
       "description": "フィンランドにあるLUT UniversityのLahtiキャンパスで留学生活をスタートさせた第一印象。"
     },
+    "what-did-we-all-miss": {
+      "title": "僕たちは何を見逃してしまったのか？",
+      "description": "OpenAIが賞金以上の計算リソースを費やしたというジョークが1週間ネット上を駆け巡っていたが、その陰で1万ものエージェントが、ほぼ誰も気づけないような状況でオリジナルの数学的成果を成し遂げていた。"
+    },
     "what-do-i-want": {
       "title": "自分は何がしたいのか？",
       "description": "ハッキングやモノづくりの何が楽しかったのかを見失い、純粋な興味からではなく「取り残されるかもしれない」という不安から選んだキャリアパスに疑問を抱く、とりとめのない振り返り。"
     }
   },
   "zh": {
-    "ai-industry-trends": {
-      "title": "AI 行业趋势",
-      "description": "TODO"
-    },
     "building-vs-creating": {
       "title": "Building vs. Creating（构建与创造）",
       "description": "随笔聊聊最近脑子里冒出的一个碎碎念"
@@ -349,6 +357,10 @@
     "going-forward": {
       "title": "后续规划",
       "description": "感谢少数早期读者，并说明后续随缘更新、写好就发的节奏。"
+    },
+    "googles-13-billion-in-finland": {
+      "title": "Google 在芬兰的 130 亿欧元投资",
+      "description": "一屋子投资人花了一整个上午琢磨该把钱投到能源领域的哪些地方。他们聊到了发电和监管。储能大概只被提及了两次，而电网运营商自去年起就暂停了储能并网。"
     },
     "hardware-journeys-starting-from-zero": {
       "title": "硬件之旅：从绝对零点起步",
@@ -379,8 +391,8 @@
       "description": "关于引我走到这一步的问题的初步思考。为什么 Agent 记忆被当作一个检索问题对待，而它本质上却是一个信念（belief）问题；以及构建外置认识论（externalized epistemics）究竟意味着什么。"
     },
     "plan-a-ai": {
-      "title": "计划 A",
-      "description": "待办"
+      "title": "聊聊 Plan A",
+      "description": "AI Futures Project 希望中美两国将超级智能的研发暂停至 2040 年。这是个好计划。但在他们发布该计划 60 天后，一万个智能体解出了 Navier-Stokes 方程。"
     },
     "post-labour-post-learning": {
       "title": "我们真的还需要大家干这么多活吗？",
@@ -417,6 +429,10 @@
     "university": {
       "title": "上大学啦！！",
       "description": "远赴芬兰 LUT University 的 Lahti 校区开启留学生活的第一印象。"
+    },
+    "what-did-we-all-miss": {
+      "title": "我们都错过了什么？",
+      "description": "关于 OpenAI 烧的算力比奖金还多的梗在网上传了一整周，而在其掩盖之下，上万个 agent 刚刚完成了一项原创数学突破，却几乎没有人处于能注意到它的状态。"
     },
     "what-do-i-want": {
       "title": "我到底想要什么？",

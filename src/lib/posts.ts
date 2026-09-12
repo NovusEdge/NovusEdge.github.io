@@ -7,6 +7,7 @@ export type Post = {
   tags: string[]
   description: string
   content: string
+  contentLocale: string
   toc?: boolean
   draft?: boolean
 }
@@ -22,7 +23,7 @@ const localeFiles = import.meta.glob('../content/blog/translations/*/*.md', {
   import: 'default',
 }) as Record<string, () => Promise<string>>
 
-function parsePost(slug: string, raw: string): Post {
+function parsePost(slug: string, raw: string, contentLocale = 'en'): Post {
   const { data, content } = parseFrontmatter(raw)
   return {
     slug,
@@ -31,6 +32,7 @@ function parsePost(slug: string, raw: string): Post {
     tags: Array.isArray(data.tags) ? data.tags : [],
     description: (data.description as string) || '',
     content,
+    contentLocale,
     toc: data.toc === 'true',
     draft: data.draft === 'true',
   }
@@ -53,7 +55,7 @@ async function loadPost(slug: string, locale: string): Promise<Post | undefined>
   const loader = localeFiles[key]
   if (!loader) return en
   const raw = await loader()
-  return parsePost(slug, raw)
+  return parsePost(slug, raw, locale)
 }
 
 // React discards useMemo state when an initial render suspends. Keep each

@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next'
 import { useEffect, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { prefersReducedMotion } from '../lib/motion'
@@ -17,6 +18,7 @@ const RAIL = '(min-width: 1280px)'
  * inside it and pins the rail to the document instead of the viewport.
  */
 export function GridIndex({ heads }: { heads: GridHeading[] }) {
+  const { t } = useTranslation()
   const [active, setActive] = useState<string | null>(null)
   const [past, setPast] = useState(false)
   const [rail, setRail] = useState(false)
@@ -52,9 +54,9 @@ export function GridIndex({ heads }: { heads: GridHeading[] }) {
   }, [heads])
 
   const nav = (
-    <nav className="fg-index" aria-label="Contents">
+    <nav className="fg-index" aria-label={t('blog.contents')}>
       <p className="fg-index-head" aria-hidden="true">
-        Contents
+        {t('blog.contents')}
       </p>
       <ol>
         {heads.map((h) => (

@@ -2,6 +2,7 @@ import { readFileSync, readdirSync, writeFileSync, mkdirSync, cpSync, existsSync
 import { join } from 'node:path'
 
 const ORIGIN = 'https://novusedge.github.io'
+const pageUrl = (route) => `${ORIGIN}${route === '/' ? '/' : `${route.replace(/\/+$/, '')}/`}`
 const dist = 'dist'
 
 // ponytail: 15-line frontmatter re-parse — shared TS module isn't importable from a plain .mjs build script
@@ -34,7 +35,7 @@ cpSync(`${dist}/404/index.html`, `${dist}/404.html`)
 
 // 2) redirect stubs for old chirpy URLs /posts/<slug>/ -> /blog/<slug>
 for (const { slug } of posts) {
-  const to = `/blog/${slug}`
+  const to = `/blog/${slug}/`
   mkdirSync(`${dist}/posts/${slug}`, { recursive: true })
   writeFileSync(
     `${dist}/posts/${slug}/index.html`,
@@ -48,7 +49,7 @@ const items = posts
   .map(
     (p) => `  <item>
     <title>${esc(p.title)}</title>
-    <link>${ORIGIN}/blog/${p.slug}</link>
+    <link>${pageUrl(`/blog/${p.slug}`)}</link>
     <guid>${ORIGIN}/blog/${p.slug}</guid>
     <pubDate>${(() => {
       const d = new Date(p.date)
@@ -107,6 +108,11 @@ function split(route) {
 const shippedRoutes = findPageDirs(dist)
   .filter((r) => !r.startsWith('/posts/') && !r.endsWith('/404'))
   .filter((r) => !draftPaths.has(split(r).bare))
+  .filter((r) => {
+    const { locale, bare } = split(r)
+    const slug = /^\/blog\/([^/]+)$/.exec(bare)?.[1]
+    return !slug || locale.default || existsSync(`src/content/blog/translations/${locale.code}/${slug}.md`)
+  })
   .sort()
 
 // group by bare path so every URL in a cluster links to every other, which hreflang requires
@@ -124,14 +130,14 @@ const urls = shippedRoutes
     const alternates = [...cluster.entries()]
       .map(([code, url]) => {
         const l = locales.find((x) => x.code === code)
-        return `    <xhtml:link rel="alternate" hreflang="${l.htmlLang}" href="${ORIGIN}${url}"/>`
+        return `    <xhtml:link rel="alternate" hreflang="${l.htmlLang}" href="${pageUrl(url)}"/>`
       })
       .join('\n')
     const xDefault = cluster.get(locales.find((l) => l.default).code)
     const fallback = xDefault
-      ? `\n    <xhtml:link rel="alternate" hreflang="x-default" href="${ORIGIN}${xDefault}"/>`
+      ? `\n    <xhtml:link rel="alternate" hreflang="x-default" href="${pageUrl(xDefault)}"/>`
       : ''
-    return `  <url>\n    <loc>${ORIGIN}${route}</loc>\n${alternates}${fallback}\n  </url>`
+    return `  <url>\n    <loc>${pageUrl(route)}</loc>\n${alternates}${fallback}\n  </url>`
   })
   .join('\n')
 

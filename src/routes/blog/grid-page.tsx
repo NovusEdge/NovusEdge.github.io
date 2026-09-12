@@ -8,10 +8,10 @@ import { useLocalePath } from '../../i18n/use-locale-path'
 import type { Post } from '../../lib/posts'
 
 export function GridPage({ post, image }: { post: Post; image?: string | null }) {
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
   const lp = useLocalePath()
   // Stable identity: GridIndex keys its scroll listener off this array.
-  const heads = useMemo(() => gridHeadings(post.content), [post.content])
+  const heads = useMemo(() => gridHeadings(post.content, t), [post.content, t])
 
   useEffect(() => {
     document.documentElement.classList.add('fg-frost')
@@ -19,7 +19,7 @@ export function GridPage({ post, image }: { post: Post; image?: string | null })
   }, [])
 
   return (
-    <div className="fg">
+    <div className="fg" lang={post.contentLocale}>
       <Meta title={post.title} description={post.description || post.title} image={image} />
 
       <div className="fg-shell pb-24">
@@ -27,20 +27,20 @@ export function GridPage({ post, image }: { post: Post; image?: string | null })
           <TLink to={lp('/blog')}>{t('blog.backToBlog')}</TLink>
           {/* The essay never names the city. A masthead location would assert a
               fact the reporting does not have. */}
-          <span>Finland</span>
+          <span>{t('blog.grid.location')}</span>
         </nav>
 
         <header className="fg-head">
           <p className="fg-chip">
             <span className="fg-chip-n">00</span>
-            Essay
+            {t('blog.grid.essay')}
           </p>
           <h1>{markMoney(post.title)}</h1>
           <p className="fg-standfirst">{post.description}</p>
           <p className="fg-byline">
             NovusEdge
             <time dateTime={post.date}>
-              {new Date(post.date).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}
+              {new Date(post.date).toLocaleDateString(i18n.language, { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' })}
             </time>
           </p>
         </header>
