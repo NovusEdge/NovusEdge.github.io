@@ -41,6 +41,7 @@ export const projects: Project[] = [
   // ---- building now ----
   {
     slug: 'docket',
+    image: '/assets/portfolio/docket.webp',
     title: 'docket',
     jp: '決',
     year: '2026',
@@ -48,6 +49,7 @@ export const projects: Project[] = [
     group: 'now',
     phase: 'building',
     kind: 'ai',
+    featured: true,
     description: 'Decision tracking for complex agent reasoning. Keep settled choices, rejected paths, and open questions available to later steps.',
     tech: ['Python', 'Agent tooling'],
     links: [{ label: 'github', href: 'https://github.com/NovusEdge/docket' }],
