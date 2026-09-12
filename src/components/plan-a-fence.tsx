@@ -535,6 +535,7 @@ function Figure({ palette }: { palette: Palette }) {
       if (reduced) return
 
       const show = (k: number) => {
+        if (sim.current.index === k) return
         sim.current.index = k
         sim.current.invalidate()
         const text = captionFor(k, t)
@@ -550,16 +551,14 @@ function Figure({ palette }: { palette: Palette }) {
         })
       }
 
-      SECTIONS.forEach(([id, k], n) => {
-        const next = SECTIONS[n + 1]?.[0]
-        ScrollTrigger.create({
-          trigger: `#${id}`,
-          start: 'top 60%',
-          endTrigger: next ? `#${next}` : '.pa-body',
-          end: next ? 'top 60%' : 'bottom 60%',
-          onEnter: () => show(k),
-          onEnterBack: () => show(k),
-        })
+      // A responsive reflow can cross several headings in one update. Read
+      // the current section instead of relying on callback registration order.
+      ScrollTrigger.create({
+        trigger: '.pa-body',
+        start: 'top bottom',
+        end: 'bottom top',
+        onUpdate: () => show(stateAtScroll()),
+        onRefresh: () => show(stateAtScroll()),
       })
     },
     { dependencies: [reduced, t], revertOnUpdate: true },
@@ -616,9 +615,9 @@ export function PlanAFence() {
   }, [])
 
   // Read at mount rather than at render: the route is prerendered in Node,
-  // and below 1700px no WebGL context should ever exist.
+  // and below the desktop split no WebGL context should exist.
   useEffect(() => {
-    const mq = matchMedia('(min-width: 1700px)')
+    const mq = matchMedia('(min-width: 1024px)')
     const sync = () => setEnabled(mq.matches)
     sync()
     mq.addEventListener('change', sync)

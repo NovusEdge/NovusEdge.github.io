@@ -40,6 +40,22 @@ export const projects: Project[] = [
 
   // ---- building now ----
   {
+    slug: 'docket',
+    image: '/assets/portfolio/docket.webp',
+    title: 'docket',
+    jp: '決',
+    year: '2026',
+    lang: 'Python',
+    group: 'now',
+    phase: 'building',
+    kind: 'ai',
+    featured: true,
+    description: 'Decision tracking for complex agent reasoning. Keep settled choices, rejected paths, and open questions available to later steps.',
+    tech: ['Python', 'Agent tooling'],
+    links: [{ label: 'github', href: 'https://github.com/NovusEdge/docket' }],
+    body: 'Docket records decisions outside the conversation and makes current entries available when an agent starts or resumes. Entries can cite supporting decisions and supersede earlier choices while preserving their history.',
+  },
+  {
     slug: 'stoat',
     image: '/assets/portfolio/stoat.webp',
     title: 'stoat',
