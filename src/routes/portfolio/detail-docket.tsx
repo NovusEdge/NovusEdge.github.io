@@ -93,7 +93,7 @@ function DependencyExample() {
       <div className="dk-support" aria-hidden="true"><span />because<span /></div>
       <div className="dk-dependent-row" aria-live="polite">
         <span className={`dk-status ${provisional ? '' : 'dk-status-open'}`}>{provisional ? 'Settled' : 'Worth revisiting'}</span>
-        <h3>Only consider refundable bookings.</h3>
+        <h3>Refundable bookings only.</h3>
         <p>{provisional ? 'The team needs to be able to change the trip without losing its booking costs.' : 'Flexibility might still be worth paying for. The agent can now reconsider it instead of treating the old reason as permanent.'}</p>
       </div>
       <p className="dk-demo-note">Docket keeps the reasons and earlier choices. The agent checks what needs another look; Docket does not automatically cancel related decisions.</p>
@@ -118,7 +118,7 @@ function ProjectDrift() {
   return (
     <section id="decision-drift" className="dk-drift">
       <div className="dk-drift-intro">
-        <h2>Three agents find a good deal. The trip still goes wrong.</h2>
+        <h2>Where plans go wrong</h2>
         <p>You ask an AI assistant to plan a trip for six people: €3,000 total, everyone there for dinner, and refundable bookings because the dates may change. It splits the search between travel, hotel, and venue agents. Do those decisions reach all three?</p>
       </div>
       <div className="dk-drift-controls" aria-label="Compare decision availability">
@@ -131,7 +131,7 @@ function ProjectDrift() {
       </figure>
 
       <div className="dk-drift-aftermath">
-        <h3>The forgotten decision becomes everybody’s problem.</h3>
+        <h3>Fixing the fallout</h3>
         <div>
           <p>If someone catches the mistake before booking, the agents have to redo their searches. If the bookings have already been made, changing the dates can mean losing money. One forgotten choice now affects the whole trip.</p>
           <p>The same pattern appears in larger projects. One agent makes a decision, another continues without the reason, and later tasks build on a different assumption. A long conversation may contain the answer somewhere. That does not mean the next agent will find it or recognise that it still applies.</p>
@@ -145,7 +145,7 @@ function ProjectDrift() {
 function DecisionHandoff() {
   return (
     <section className="dk-handoff">
-      <h2>Leave enough for the next agent to disagree intelligently.</h2>
+      <h2>What to record</h2>
       <p className="dk-handoff-lede">A useful record carries the question, the current answer, and the reason. It also leaves room for the part nobody has solved yet.</p>
       <div className="dk-handoff-layout">
         <dl className="dk-example-record">
@@ -156,7 +156,7 @@ function DecisionHandoff() {
           <div><dt>Still open</dt><dd>Which dates work for everyone?</dd></div>
         </dl>
         <div className="dk-handoff-reading">
-          <h3>The next task starts with something to inspect.</h3>
+          <h3>Picking up the work</h3>
           <p>The hotel agent can find refundable rooms without pretending the dates are final. The coordinating agent can check all three proposals against the same rule. A later agent can revisit that rule once everybody confirms their availability.</p>
           <p>Different tasks, one recorded decision. Each agent can work on its own part while keeping track of what is settled, what was rejected, and what still needs an answer.</p>
           <p className="dk-demo-note">Illustrative record. The entries must be written and maintained by the agent; Docket does not infer the right decisions from the conversation.</p>
@@ -178,8 +178,7 @@ export default function Docket({ p, c }: LayoutProps) {
         </nav>
 
         <header className="dk-hero">
-          <p className="dk-label">Decision tracking for agents</p>
-          <h1>Reasoning branches.<br /><span>Keep the decisions.</span></h1>
+          <h1>Decision tracking<br /><span>for agents.</span></h1>
           <div className="dk-hero-bottom">
             <p>{c.lede}</p>
             <a href="#reasoning" className="dk-text-button">Follow the idea <span aria-hidden="true">↓</span></a>
@@ -189,9 +188,9 @@ export default function Docket({ p, c }: LayoutProps) {
         <ReasoningSequence />
 
         <section id="reasoning" className="dk-editorial">
-          <div className="dk-section-marker"><span>01</span><p>Exploration creates commitments</p></div>
+          <div className="dk-section-marker"><span>01</span><p>The decisions so far</p></div>
           <div className="dk-editorial-body">
-            <h2>A complex task has more than one kind of unfinished business.</h2>
+            <h2>Decided or still open?</h2>
             <p>An agent working through a hard problem tries ideas, discovers constraints, rules things out, and changes its mind. Some questions get answers. Others need to stay open while the work moves elsewhere.</p>
             <p>Those distinctions matter to the next step. Reopening a rejected path can undo useful work. Treating an open question as settled can build the rest of the task on a guess.</p>
             <p>Docket gives the agent a place to record that structure as it reasons.</p>
@@ -207,9 +206,9 @@ export default function Docket({ p, c }: LayoutProps) {
         <ProjectDrift />
 
         <section className="dk-editorial dk-editorial-dependency">
-          <div className="dk-section-marker"><span>02</span><p>The reason travels with the choice</p></div>
+          <div className="dk-section-marker"><span>02</span><p>Why it was decided</p></div>
           <div className="dk-editorial-body">
-            <h2>When the premise changes, know what to revisit.</h2>
+            <h2>When things change</h2>
             <p>“Refundable only” is a choice. “Refundable only because the dates might change” tells the next agent when that choice needs another look.</p>
             <p>A decision can link to the decisions that support it. When something changes, the agent can follow those links, check what still applies, and record a new choice without erasing the old reasoning.</p>
             <DependencyExample />
@@ -220,7 +219,7 @@ export default function Docket({ p, c }: LayoutProps) {
 
         <section className="dk-continuity">
           <p className="dk-label">Across the life of an agent task</p>
-          <h2>The work can continue<br />from what was decided.</h2>
+          <h2>Across sessions</h2>
           <div className="dk-continuity-line" aria-hidden="true"><span>Explore</span><i /><span>Decide</span><i /><span>Resume</span><i /><span>Reconsider</span></div>
           <p>A conversation can be compacted or a session can end. The recorded decisions remain available. When the agent starts or resumes, Docket loads the current choices so reasoning can continue with those commitments in view.</p>
           <p className="dk-continuity-aside">A ledger preserves what the agent recorded. The agent still has to make a good decision, record it honestly, and reconsider it when the evidence changes.</p>
