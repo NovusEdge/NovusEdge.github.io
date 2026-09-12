@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next'
 import { blogHeadings, headingId as slugify } from '../lib/blog-headings'
-import { Children, useState, type ReactNode } from 'react'
+import { Children, useEffect, useId, useRef, useState, type ReactNode } from 'react'
 import ReactMarkdown, { type Components } from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 
@@ -56,6 +56,44 @@ function citationIndex(markdown: string): Map<string, number> {
 function SideNote({ num, href, label }: { num: number; href: string; label: string }) {
   const { t } = useTranslation()
   const [open, setOpen] = useState(false)
+  const [preview, setPreview] = useState(false)
+  const [below, setBelow] = useState(false)
+  const note = useRef<HTMLSpanElement>(null)
+  const id = useId()
+  const compact = () => matchMedia('(min-width: 1024px) and (max-width: 1699px)').matches
+  const expanded = open || preview
+  const description = t('blog.planA.note', { number: num, host: hostOf(href) })
+
+  useEffect(() => {
+    if (!expanded) return
+    const dismiss = (event: PointerEvent) => {
+      const toggle = event.target instanceof Element && event.target.closest('button')?.getAttribute('aria-controls') === id
+      if (event.target instanceof Node && !note.current?.contains(event.target) && !toggle) {
+        setOpen(false)
+        setPreview(false)
+      }
+    }
+    const position = () => {
+      if (!compact()) {
+        setPreview(false)
+        return
+      }
+      const content = note.current?.querySelector<HTMLElement>('.pa-sn-content')
+      if (content && note.current) {
+        setBelow(note.current.getBoundingClientRect().top < content.offsetHeight + 90)
+      }
+    }
+    position()
+    document.addEventListener('pointerdown', dismiss)
+    window.addEventListener('scroll', position, { passive: true })
+    window.addEventListener('resize', position)
+    return () => {
+      document.removeEventListener('pointerdown', dismiss)
+      window.removeEventListener('scroll', position)
+      window.removeEventListener('resize', position)
+    }
+  }, [expanded, id])
+
   return (
     <>
       <sup className="pa-sn-mark">{num}</sup>
@@ -63,18 +101,64 @@ function SideNote({ num, href, label }: { num: number; href: string; label: stri
         type="button"
         className="pa-sn-toggle"
         aria-expanded={open}
-        aria-label={t('blog.planA.note', { number: num, host: hostOf(href) })}
+        aria-controls={id}
+        aria-label={description}
         onClick={() => setOpen((v) => !v)}
+        onKeyDown={(event) => {
+          if (event.key === 'Escape') setOpen(false)
+        }}
       >
         {num}
       </button>
-      <span className={open ? 'pa-sn pa-sn-open' : 'pa-sn'}>
-        <span className="pa-sn-num">{num}</span>
-        {label}
-        {', '}
-        <a href={href} target="_blank" rel="noreferrer noopener">
-          {hostOf(href)}
-        </a>
+      <span
+        ref={note}
+        className={`pa-sn${expanded ? ' pa-sn-open' : ''}`}
+        data-side={below ? 'below' : 'above'}
+        onPointerEnter={(event) => {
+          if (event.pointerType === 'mouse' && compact()) setPreview(true)
+        }}
+        onPointerLeave={() => {
+          if (!note.current?.contains(document.activeElement)) setPreview(false)
+        }}
+        onFocus={(event) => {
+          if (compact() && event.target.matches(':focus-visible')) setPreview(true)
+        }}
+        onBlur={(event) => {
+          if (!event.currentTarget.contains(event.relatedTarget)) {
+            setOpen(false)
+            setPreview(false)
+          }
+        }}
+        onKeyDown={(event) => {
+          if (event.key === 'Escape') {
+            event.preventDefault()
+            if (compact()) note.current?.querySelector<HTMLButtonElement>('.pa-sn-peek')?.focus()
+            setOpen(false)
+            setPreview(false)
+          }
+        }}
+      >
+        <button
+          type="button"
+          className="pa-sn-peek"
+          aria-expanded={expanded}
+          aria-controls={id}
+          aria-label={description}
+          onClick={() => {
+            setOpen(!expanded)
+            setPreview(false)
+          }}
+        >
+          {String(num).padStart(2, '0')}
+        </button>
+        <span id={id} className="pa-sn-content" role="note" aria-label={description}>
+          <span className="pa-sn-num">{num}</span>
+          {label}
+          {', '}
+          <a href={href} target="_blank" rel="noreferrer noopener">
+            {hostOf(href)}
+          </a>
+        </span>
       </span>
     </>
   )
