@@ -1,4 +1,4 @@
-import { use, useMemo, useRef } from 'react'
+import { use, useRef } from 'react'
 import { useParams } from 'react-router'
 import { useTranslation } from 'react-i18next'
 import { TLink } from '../../components/page-transition'
@@ -60,7 +60,7 @@ export default function BlogPost() {
   const proseRef = useRef<HTMLDivElement>(null)
   const lp = useLocalePath()
   const locale = useLocale()
-  const postPromise = useMemo(() => (slug ? getPost(slug, locale.code) : undefined), [slug, locale.code])
+  const postPromise = slug ? getPost(slug, locale.code) : undefined
   const post = postPromise ? use(postPromise) : undefined
 
   useGSAP(

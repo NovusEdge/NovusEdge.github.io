@@ -86,11 +86,16 @@ const pct = (n: number | undefined) => `${String(n ?? 0).padStart(3, '0')}%`
  * the page subtree.
  */
 export function PortalProgress({ progress, mods }: { progress: ReadingProgress; mods: PortalModule[] }) {
+  const [mounted, setMounted] = useState(false)
   const [open, setOpen] = useState(false)
   // Decided at open time so the panel honours a setting changed mid-page.
   const [animate, setAnimate] = useState(false)
   const button = useRef<HTMLButtonElement>(null)
   const panel = useRef<HTMLDivElement>(null)
+
+  // The server cannot render portals. Match its empty output during hydration
+  // before attaching the viewport controls to document.body.
+  useEffect(() => setMounted(true), [])
 
   useEffect(() => {
     if (!open) return
@@ -112,7 +117,7 @@ export function PortalProgress({ progress, mods }: { progress: ReadingProgress; 
     }
   }, [open])
 
-  if (typeof document === 'undefined') return null
+  if (!mounted || typeof document === 'undefined') return null
 
   const toggle = () => {
     setAnimate(!prefersReducedMotion())

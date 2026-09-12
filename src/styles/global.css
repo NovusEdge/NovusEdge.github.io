@@ -686,29 +686,49 @@
 
 /* ------------------------------------------------------------------ */
 /* Orientation portal: the essay served as corporate onboarding.      */
-/* Forced light on an office-grey ground regardless of site theme.    */
+/* Office-grey and deep teal palettes follow the site theme.         */
 /* Scoped to .op-portal on <html>.                                     */
 /* ------------------------------------------------------------------ */
-.op-portal {
+.op-portal,
+.op {
+  --op-ground: #eceee9;
+  --op-panel: #f6f7f4;
+  --op-footer: #e3e6e0;
+  --op-ink: #1b2a33;
+  --op-teal: #2f6b63;
+  --op-rule: color-mix(in srgb, var(--op-ink) 18%, transparent);
+  --op-alarm: #b4401f;
+  --op-dim: color-mix(in srgb, var(--op-ink) 68%, transparent);
+  --op-faint: color-mix(in srgb, var(--op-ink) 60%, transparent);
   color-scheme: light;
-  background-color: #eceee9;
 }
+.op-portal.dark,
+.dark .op {
+  --op-ground: #192226;
+  --op-panel: #202c30;
+  --op-footer: #151d21;
+  --op-ink: #e0e7e2;
+  --op-teal: #94c1b1;
+  --op-alarm: #e88d6c;
+  color-scheme: dark;
+}
+.op-portal,
 .op-portal body {
-  background-color: #eceee9;
-  color: #1b2a33;
+  background-color: var(--op-ground);
+  color: var(--op-ink);
 }
 /* Both ends of the page have to be repainted or the grey column reads as a
    card floating on the site's charcoal. */
 .op-portal .site-footer {
-  background-color: #e3e6e0;
-  color: #1b2a33;
-  border-top: 1px solid rgba(27, 42, 51, 0.18);
+  background-color: var(--op-footer);
+  color: var(--op-ink);
+  border-top: 1px solid var(--op-rule);
 }
 .op-portal .site-footer .footer-word {
-  color: rgba(27, 42, 51, 0.07);
+  color: color-mix(in srgb, var(--op-ink) 7%, transparent);
 }
 .op-portal ::selection {
-  background-color: rgba(47, 107, 99, 0.22);
+  background-color: color-mix(in srgb, var(--op-teal) 22%, transparent);
 }
 
 /* header.fixed is the floating site nav. The page has its own <header> for the
@@ -716,37 +736,29 @@
    pill is a <nav>; the phone one is a plain div inside the md:hidden wrapper. */
 .op-portal header.fixed nav,
 .op-portal header.fixed > div > div {
-  background-color: rgba(246, 247, 244, 0.92);
-  border-color: rgba(27, 42, 51, 0.18);
-  box-shadow: 0 6px 24px rgba(27, 42, 51, 0.07);
+  background-color: color-mix(in srgb, var(--op-panel) 92%, transparent);
+  border-color: var(--op-rule);
+  box-shadow: 0 6px 24px rgb(0 0 0 / 7%);
 }
 .op-portal header.fixed a,
 .op-portal header.fixed button,
 .op-portal header.fixed span:not(.sr-only) {
-  color: rgba(27, 42, 51, 0.66);
+  color: var(--op-dim);
 }
 .op-portal header.fixed a:hover,
 .op-portal header.fixed button:hover {
-  color: #2f6b63;
+  color: var(--op-teal);
 }
 .op-portal header.fixed a[aria-current],
 .op-portal header.fixed .text-gold {
-  color: #2f6b63;
+  color: var(--op-teal);
 }
 .op-portal header.fixed .bg-charcoal,
 .op-portal header.fixed .dark\:bg-bone {
-  background-color: #1b2a33;
+  background-color: var(--op-ink);
 }
 
 .op {
-  --op-ground: #eceee9;
-  --op-panel: #f6f7f4;
-  --op-ink: #1b2a33;
-  --op-teal: #2f6b63;
-  --op-rule: rgba(27, 42, 51, 0.18);
-  --op-alarm: #b4401f;
-  --op-dim: rgba(27, 42, 51, 0.6);
-  --op-faint: rgba(27, 42, 51, 0.44);
   font-family: var(--font-prose);
   color: var(--op-ink);
   font-size: 1.2rem;
@@ -840,7 +852,7 @@
 .op-progress-track {
   display: block;
   height: 4px;
-  background: rgba(27, 42, 51, 0.12);
+  background: color-mix(in srgb, var(--op-ink) 12%, transparent);
 }
 .op-progress-fill {
   display: block;
@@ -857,7 +869,7 @@
   text-decoration: underline;
   text-decoration-thickness: 1px;
   text-underline-offset: 0.2em;
-  text-decoration-color: rgba(47, 107, 99, 0.5);
+  text-decoration-color: color-mix(in srgb, var(--op-teal) 50%, transparent);
 }
 .op-body a:hover {
   color: var(--op-teal);
@@ -958,7 +970,7 @@
   /* The accessibility button is fixed at bottom-6 left-6, 48px wide, and sits
      on top of the strip. The label starts past it. */
   padding-left: max(5.5rem, 4vw);
-  background: rgba(246, 247, 244, 0.94);
+  background: color-mix(in srgb, var(--op-panel) 94%, transparent);
   border-top: 1px solid var(--op-rule);
   color: var(--op-faint);
   backdrop-filter: blur(8px);
@@ -1017,7 +1029,7 @@
   overflow-y: auto;
   background: var(--op-panel);
   border: 1px solid var(--op-ink);
-  box-shadow: 0 8px 28px rgba(27, 42, 51, 0.1);
+  box-shadow: 0 8px 28px rgb(0 0 0 / 10%);
 }
 .op-contents-head {
   display: flex;

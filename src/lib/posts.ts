@@ -45,7 +45,7 @@ export const posts: Post[] = Object.entries(files)
   .filter((p) => !p.draft || import.meta.env.DEV)
   .sort((a, b) => b.date.localeCompare(a.date))
 
-export async function getPost(slug: string, locale: string): Promise<Post | undefined> {
+async function loadPost(slug: string, locale: string): Promise<Post | undefined> {
   const en = posts.find((p) => p.slug === slug)
   if (!en) return undefined
   if (locale === 'en') return en
@@ -54,4 +54,18 @@ export async function getPost(slug: string, locale: string): Promise<Post | unde
   if (!loader) return en
   const raw = await loader()
   return parsePost(slug, raw)
+}
+
+// React discards useMemo state when an initial render suspends. Keep each
+// request outside the component so retries read the same promise.
+const postRequests = new Map<string, Promise<Post | undefined>>()
+
+export function getPost(slug: string, locale: string): Promise<Post | undefined> {
+  const key = `${locale}/${slug}`
+  let request = postRequests.get(key)
+  if (!request) {
+    request = loadPost(slug, locale)
+    postRequests.set(key, request)
+  }
+  return request
 }

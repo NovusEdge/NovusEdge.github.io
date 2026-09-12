@@ -20,14 +20,18 @@ if (typeof window !== 'undefined') {
 }
 
 export async function prerender(data: { url: string }) {
-  const { renderToString } = await import('react-dom/server')
+  const { prerender: renderStatic } = await import('react-dom/static')
   const { StaticRouter } = await import('react-router')
   const { headState } = await import('./lib/meta')
-  const html = renderToString(
+  // Blog routes suspend while loading a post, so metadata is only final once
+  // the complete tree has rendered. renderToString only emits the fallback.
+  const { prelude } = await renderStatic(
     <StaticRouter location={data.url}>
       <App />
     </StaticRouter>,
+    { onError(error) { throw error } },
   )
+  const html = await new Response(prelude).text()
   const elements: { type: string; props: Record<string, string> }[] = [
     { type: 'meta', props: { name: 'description', content: headState.description } },
     { type: 'meta', props: { property: 'og:title', content: headState.title } },
