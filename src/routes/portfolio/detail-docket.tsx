@@ -1,15 +1,27 @@
-import { useState } from 'react'
+import { useRef, useState } from 'react'
+import gsap from 'gsap'
+import { useGSAP } from '@gsap/react'
+import { prefersReducedMotion } from '../../lib/motion'
 import { TLink } from '../../components/page-transition'
 import { useLocalePath } from '../../i18n/use-locale-path'
 import type { LayoutProps } from './layouts'
+import { DecisionFlow } from './docket-flow'
 import './docket.css'
 
 const stages = ['Explore', 'Commit', 'Continue'] as const
 
 function ReasoningSequence() {
   const [stage, setStage] = useState(1)
+  const scope = useRef<HTMLElement>(null)
+  useGSAP(() => {
+    if (prefersReducedMotion()) return
+    const flow = gsap.timeline()
+    flow.fromTo('.dk-branch-line', { scaleX: 0 }, { scaleX: 1, duration: 0.55, stagger: 0.12, ease: 'power2.out' })
+    flow.fromTo('.dk-branch-mark', { opacity: 0.25 }, { opacity: 1, duration: 0.3, stagger: 0.12 }, 0.3)
+    flow.fromTo('.dk-record-line', { clipPath: 'inset(0 100% 0 0)' }, { clipPath: 'inset(0 0% 0 0)', duration: 0.6, ease: 'power2.out' }, 0.55)
+  }, { scope, dependencies: [stage], revertOnUpdate: true })
   return (
-    <section className="dk-sequence" aria-label="Illustrative agent reasoning sequence">
+    <section ref={scope} className="dk-sequence" aria-label="Illustrative agent reasoning sequence">
       <div className="dk-sequence-top">
         <p className="dk-label">One problem. Several possible directions.</p>
         <div className="dk-stage-control" aria-label="Reasoning stage">
@@ -24,38 +36,41 @@ function ReasoningSequence() {
       <div className={`dk-flow dk-flow-${stage}`}>
         <div className="dk-problem">
           <span className="dk-label">Agent task</span>
-          <p>Design a research assistant that works offline.</p>
+          <p>Plan a team trip</p>
           <span className="dk-flow-arrow" aria-hidden="true">→</span>
         </div>
         <div className="dk-branches">
           <div className={`dk-branch ${stage > 0 ? 'dk-branch-rejected' : ''}`}>
+            <i className="dk-branch-line" aria-hidden="true" />
             <span className="dk-branch-mark" aria-hidden="true">{stage > 0 ? '×' : '·'}</span>
-            <span>Hosted retrieval</span>
-            <small>{stage > 0 ? 'Ruled out: needs a connection' : 'An option to investigate'}</small>
+            <span className="dk-branch-label">Fixed bookings</span>
+            <small>{stage > 0 ? 'Ruled out' : 'Explore'}</small>
           </div>
           <div className={`dk-branch ${stage > 0 ? 'dk-branch-settled' : ''}`}>
+            <i className="dk-branch-line" aria-hidden="true" />
             <span className="dk-branch-mark" aria-hidden="true">{stage > 0 ? '↳' : '·'}</span>
-            <span>A local index</span>
-            <small>{stage > 0 ? 'Settled: retrieval stays offline' : 'An option to investigate'}</small>
+            <span className="dk-branch-label">Refundable bookings</span>
+            <small>{stage > 0 ? 'Settled' : 'Explore'}</small>
           </div>
           <div className="dk-branch dk-branch-open">
+            <i className="dk-branch-line" aria-hidden="true" />
             <span className="dk-branch-mark" aria-hidden="true">?</span>
-            <span>Optional synchronisation</span>
-            <small>{stage > 0 ? 'Open: decide what may leave the device' : 'An option to investigate'}</small>
+            <span className="dk-branch-label">Final dates</span>
+            <small>{stage > 0 ? 'Still open' : 'Explore'}</small>
           </div>
         </div>
         <div className="dk-next-step" aria-live="polite">
           <span className="dk-label">{stage === 2 ? 'Next step' : 'The decision record'}</span>
-          <p>{stage === 0 ? 'Possibilities are still possibilities.' : stage === 1 ? 'Commitments become explicit.' : 'Plan ingestion for the local index.'}</p>
-          <span className="dk-next-note">
-            {stage === 0 ? 'Nothing has been settled yet.' : stage === 1 ? 'The choice, its reason, and the unresolved question stay together.' : 'The agent continues with a decision it can cite, and a question it still has to answer.'}
+          <p>{stage === 0 ? 'Compare the options.' : stage === 1 ? 'Keep bookings refundable.' : 'Find flexible travel and rooms.'}</p>
+          <span className="sr-only">
+            {stage === 0 ? 'Nothing has been settled yet.' : stage === 1 ? 'The dates are not confirmed, so fixed bookings have been ruled out.' : 'The next agent knows to find refundable options while the final dates remain open.'}
           </span>
         </div>
       </div>
 
       <div className="dk-record-line">
         <span className="dk-label">{stage === 0 ? 'No commitment yet' : 'Carried forward'}</span>
-        <p>{stage === 0 ? 'Explore before committing.' : 'Local retrieval. Offline is a requirement. Sync remains open.'}</p>
+        <p>{stage === 0 ? 'Explore before committing.' : 'Refundable only. Dates may change.'}</p>
       </div>
       <p className="dk-demo-note">Illustrative agent task. Step through an example of exploration, commitment, and continuation.</p>
     </section>
@@ -63,25 +78,25 @@ function ReasoningSequence() {
 }
 
 function DependencyExample() {
-  const [offline, setOffline] = useState(true)
+  const [provisional, setProvisional] = useState(true)
   return (
     <div className="dk-dependency">
       <div className="dk-premise-row">
         <div>
           <span className="dk-label">The premise</span>
-          <p>{offline ? 'The assistant must work offline.' : 'A connection is now guaranteed.'}</p>
+          <p>{provisional ? 'The trip dates are not confirmed.' : 'Everyone has confirmed the dates.'}</p>
         </div>
-        <button className="dk-text-button" type="button" onClick={() => setOffline((value) => !value)}>
-          {offline ? 'Change the premise' : 'Restore the premise'} <span aria-hidden="true">↗</span>
+        <button className="dk-text-button" type="button" onClick={() => setProvisional((value) => !value)}>
+          {provisional ? 'Confirm the dates' : 'Make dates provisional'} <span aria-hidden="true">↗</span>
         </button>
       </div>
       <div className="dk-support" aria-hidden="true"><span />because<span /></div>
       <div className="dk-dependent-row" aria-live="polite">
-        <span className={`dk-status ${offline ? '' : 'dk-status-open'}`}>{offline ? 'Settled' : 'Needs review'}</span>
-        <h3>Keep retrieval local.</h3>
-        <p>{offline ? 'This choice follows from the offline requirement.' : 'The choice might still be good. Its original justification is no longer enough.'}</p>
+        <span className={`dk-status ${provisional ? '' : 'dk-status-open'}`}>{provisional ? 'Settled' : 'Worth revisiting'}</span>
+        <h3>Only consider refundable bookings.</h3>
+        <p>{provisional ? 'The team needs to be able to change the trip without losing its booking costs.' : 'Flexibility might still be worth paying for. The agent can now reconsider it instead of treating the old reason as permanent.'}</p>
       </div>
-      <p className="dk-demo-note">Docket records support and supersession. Dependent decisions are reviewed by the agent; the current tool does not automatically retire them.</p>
+      <p className="dk-demo-note">Docket keeps the reasons and earlier choices. The agent checks what needs another look; Docket does not automatically cancel related decisions.</p>
     </div>
   )
 }
@@ -90,57 +105,37 @@ function ProjectDrift() {
   const [tracked, setTracked] = useState(false)
   const consequences = tracked
     ? [
-        ['Identity', 'Local access', 'Opening the assistant does not require a remote session.'],
-        ['Retrieval', 'On-device queries', 'The search interface reads from the local index.'],
-        ['Validation', 'Disconnected tests', 'The test agent checks the offline requirement explicitly.'],
+        ['Travel', 'Six tickets', 'The travel agent finds refundable tickets for all six people, arriving before dinner.'],
+        ['Stay', 'Refundable rooms', 'The hotel agent filters for refundable reservations.'],
+        ['Venue', 'Venue on hold', 'The venue agent proposes a hold that fits within the remaining trip budget.'],
       ]
     : [
-        ['Identity', 'Remote login', 'An authentication agent adds a session with the hosted service.'],
-        ['Retrieval', 'Cloud queries', 'A UI agent builds the search flow around network responses.'],
-        ['Validation', 'Connected tests', 'A test agent verifies the implementation with the network available.'],
+        ['Travel', 'Four tickets', 'The travel agent picks a deal with only four available seats and an arrival after dinner.'],
+        ['Stay', 'Prepaid rooms', 'The hotel agent recommends a cheaper, non-refundable room rate.'],
+        ['Venue', 'Venue deposit', 'The venue agent selects an option whose deposit pushes the combined trip cost over the total budget.'],
       ]
 
   return (
     <section id="decision-drift" className="dk-drift">
       <div className="dk-drift-intro">
-        <h2>The project can drift while every individual task looks fine.</h2>
-        <p>Take the offline research assistant a few steps further. Planning, retrieval, interface work, and testing now happen in separate agent tasks. The original constraint is still true. The question is whether it reaches the agent making the next choice.</p>
+        <h2>Three agents find a good deal. The trip still goes wrong.</h2>
+        <p>You ask an AI assistant to plan a trip for six people: €3,000 total, everyone there for dinner, and refundable bookings because the dates may change. It splits the search between travel, hotel, and venue agents. Do those decisions reach all three?</p>
       </div>
       <div className="dk-drift-controls" aria-label="Compare decision availability">
         <button type="button" aria-pressed={!tracked} onClick={() => setTracked(false)}>Decision missing</button>
         <button type="button" aria-pressed={tracked} onClick={() => setTracked(true)}>Decision available</button>
       </div>
       <figure className={`dk-impact-map ${tracked ? 'dk-impact-tracked' : ''}`}>
-        <div className="dk-impact-premise">
-          <span className="dk-label">The requirement has not changed</span>
-          <h3>It must work offline.</h3>
-        </div>
-        <div className="dk-impact-handoff" aria-live="polite">
-          <span>{tracked ? 'The next agent reads the decision and its reason.' : 'The requirement stays behind in an earlier conversation.'}</span>
-        </div>
-        <div className="dk-impact-choice" aria-live="polite">
-          <span className="dk-label">Retrieval agent</span>
-          <h3>{tracked ? 'Continue with the local index.' : 'Use the hosted search service.'}</h3>
-          <p>{tracked ? 'Hosted retrieval is already ruled out because it requires a connection.' : 'A convenient choice, if the offline constraint is absent from the task.'}</p>
-        </div>
-        <div className="dk-impact-dependents" aria-live="polite">
-          {consequences.map(([area, title, detail]) => (
-            <div className="dk-impact-leaf" key={area}>
-              <span className="dk-label">{area}</span>
-              <h4>{title}</h4>
-              <p>{detail}</p>
-            </div>
-          ))}
-        </div>
-        <figcaption>{tracked ? 'The record gives each agent a constraint to check before extending the design. It still has to read and follow it.' : 'The pieces can agree with each other and still violate the original requirement. The mistake has acquired dependencies.'} <span>Illustrative project, not a benchmark or a recorded Docket run.</span></figcaption>
+        <DecisionFlow tracked={tracked} consequences={consequences} />
+        <figcaption>{tracked ? 'Travel includes everyone. Rooms stay refundable. The venue fits the shared budget.' : 'A flight deal leaves two people behind. The rooms lock in the dates. The venue pushes the trip over budget.'} <span>Illustrative planning example. No real bookings or measured outcomes.</span></figcaption>
       </figure>
 
       <div className="dk-drift-aftermath">
-        <h3>By the time somebody notices, it is an integration problem.</h3>
+        <h3>The forgotten decision becomes everybody’s problem.</h3>
         <div>
-          <p>Fixing the first choice may now mean changing an API, unwinding authentication, rewriting tests, and telling several agents that the assumptions in their tasks have changed. The expensive part is finding everything that quietly came to depend on it.</p>
-          <p>A longer transcript contains more history, but the next agent still has to find the relevant choice, work out whether it is current, and recover why it was made. A summary can preserve the answer while dropping the condition that made it valid.</p>
-          <p>A decision record makes that condition available directly. “Use a local index” travels with “because this must work offline,” and the rejected hosted option remains visible as an examined path.</p>
+          <p>If someone catches the mistake before booking, the agents have to redo their searches. If the bookings have already been made, changing the dates can mean losing money. One forgotten choice now affects the whole trip.</p>
+          <p>The same pattern appears in larger projects. One agent makes a decision, another continues without the reason, and later tasks build on a different assumption. A long conversation may contain the answer somewhere. That does not mean the next agent will find it or recognise that it still applies.</p>
+          <p>Docket gives the agent a specific decision to carry forward: “Refundable bookings only, because the dates are provisional.” It also keeps the rejected fixed-price options and the unanswered date question visible.</p>
         </div>
       </div>
     </section>
@@ -154,16 +149,16 @@ function DecisionHandoff() {
       <p className="dk-handoff-lede">A useful record carries the question, the current answer, and the reason. It also leaves room for the part nobody has solved yet.</p>
       <div className="dk-handoff-layout">
         <dl className="dk-example-record">
-          <div><dt>Question</dt><dd>Where does retrieval run?</dd></div>
-          <div><dt>Settled</dt><dd>On the device, using a local index.</dd></div>
-          <div><dt>Because</dt><dd>The assistant must work without a connection.</dd></div>
-          <div><dt>Ruled out</dt><dd>Hosted retrieval as the primary search path.</dd></div>
-          <div><dt>Still open</dt><dd>Whether optional sync may send any data off the device.</dd></div>
+          <div><dt>Question</dt><dd>Which bookings should the agents consider?</dd></div>
+          <div><dt>Settled</dt><dd>Refundable options only.</dd></div>
+          <div><dt>Because</dt><dd>The team has not confirmed the dates.</dd></div>
+          <div><dt>Ruled out</dt><dd>Cheaper options that cannot be refunded.</dd></div>
+          <div><dt>Still open</dt><dd>Which dates work for everyone?</dd></div>
         </dl>
         <div className="dk-handoff-reading">
           <h3>The next task starts with something to inspect.</h3>
-          <p>The implementation agent can follow the settled retrieval choice without pretending that sync has been decided. The review agent can check the implementation against the offline requirement. A later agent can revisit the choice if that requirement changes.</p>
-          <p>These are different jobs using the same recorded reasoning. Keeping the distinction between settled, rejected, and open is what lets them move independently without silently inventing different versions of the project.</p>
+          <p>The hotel agent can find refundable rooms without pretending the dates are final. The coordinating agent can check all three proposals against the same rule. A later agent can revisit that rule once everybody confirms their availability.</p>
+          <p>Different tasks, one recorded decision. Each agent can work on its own part while keeping track of what is settled, what was rejected, and what still needs an answer.</p>
           <p className="dk-demo-note">Illustrative record. The entries must be written and maintained by the agent; Docket does not infer the right decisions from the conversation.</p>
         </div>
       </div>
@@ -204,9 +199,9 @@ export default function Docket({ p, c }: LayoutProps) {
         </section>
 
         <section className="dk-states" aria-label="Three decision states">
-          <div><span className="dk-state-symbol" aria-hidden="true">●</span><h3>Settled</h3><p>A commitment the next step can use.</p><blockquote>“Retrieval runs locally, because offline operation is required.”</blockquote></div>
-          <div><span className="dk-state-symbol" aria-hidden="true">×</span><h3>Ruled out</h3><p>A path the agent has already examined.</p><blockquote>“Hosted retrieval would break the offline requirement.”</blockquote></div>
-          <div><span className="dk-state-symbol" aria-hidden="true">?</span><h3>Open</h3><p>A question that still needs an answer.</p><blockquote>“Which data, if any, may be synchronised?”</blockquote></div>
+          <div><span className="dk-state-symbol" aria-hidden="true">●</span><h3>Settled</h3><p>A commitment the next step can use.</p><blockquote>“Refundable bookings only. The dates might change.”</blockquote></div>
+          <div><span className="dk-state-symbol" aria-hidden="true">×</span><h3>Ruled out</h3><p>A path the agent has already examined.</p><blockquote>“The cheaper fixed bookings would lock us into a date.”</blockquote></div>
+          <div><span className="dk-state-symbol" aria-hidden="true">?</span><h3>Open</h3><p>A question that still needs an answer.</p><blockquote>“Which dates work for everyone?”</blockquote></div>
         </section>
 
         <ProjectDrift />
@@ -215,8 +210,8 @@ export default function Docket({ p, c }: LayoutProps) {
           <div className="dk-section-marker"><span>02</span><p>The reason travels with the choice</p></div>
           <div className="dk-editorial-body">
             <h2>When the premise changes, know what to revisit.</h2>
-            <p>“Use a local index” is an answer. “Use a local index because this must work offline” preserves something more useful: the condition that made the answer make sense.</p>
-            <p>A decision can cite the decisions supporting it. Later reasoning can follow those links, check what still holds, and replace a commitment without erasing how it was reached.</p>
+            <p>“Refundable only” is a choice. “Refundable only because the dates might change” tells the next agent when that choice needs another look.</p>
+            <p>A decision can link to the decisions that support it. When something changes, the agent can follow those links, check what still applies, and record a new choice without erasing the old reasoning.</p>
             <DependencyExample />
           </div>
         </section>
