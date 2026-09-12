@@ -1,4 +1,4 @@
-import { useRef, useEffect, useCallback, type ReactNode } from 'react'
+import { useRef, useEffect, useCallback, useState, type ReactNode } from 'react'
 import { isMobile, prefersReducedMotion } from '../../lib/motion'
 
 type Spark = { x: number; y: number; angle: number; startTime: number }
@@ -28,7 +28,26 @@ export default function ClickSpark({
 }: Props) {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const sparksRef = useRef<Spark[]>([])
-  const enabled = !isMobile() && !prefersReducedMotion()
+  const [enabled, setEnabled] = useState(false)
+
+  // Browser capabilities are unknown during prerendering. Keep the canvas out
+  // of both initial trees, then enable it after hydration when appropriate.
+  useEffect(() => {
+    const media = ['(max-width: 768px)', '(pointer: coarse)', '(prefers-reduced-motion: reduce)'].map(query => matchMedia(query))
+    const sync = () => {
+      const next = !isMobile() && !prefersReducedMotion()
+      if (!next) sparksRef.current = []
+      setEnabled(next)
+    }
+    sync()
+    media.forEach(query => query.addEventListener('change', sync))
+    const observer = new MutationObserver(sync)
+    observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] })
+    return () => {
+      media.forEach(query => query.removeEventListener('change', sync))
+      observer.disconnect()
+    }
+  }, [])
 
   useEffect(() => {
     if (!enabled) return
