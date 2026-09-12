@@ -86,6 +86,91 @@ function DependencyExample() {
   )
 }
 
+function ProjectDrift() {
+  const [tracked, setTracked] = useState(false)
+  const consequences = tracked
+    ? [
+        ['Identity', 'Local access', 'Opening the assistant does not require a remote session.'],
+        ['Retrieval', 'On-device queries', 'The search interface reads from the local index.'],
+        ['Validation', 'Disconnected tests', 'The test agent checks the offline requirement explicitly.'],
+      ]
+    : [
+        ['Identity', 'Remote login', 'An authentication agent adds a session with the hosted service.'],
+        ['Retrieval', 'Cloud queries', 'A UI agent builds the search flow around network responses.'],
+        ['Validation', 'Connected tests', 'A test agent verifies the implementation with the network available.'],
+      ]
+
+  return (
+    <section id="decision-drift" className="dk-drift">
+      <div className="dk-drift-intro">
+        <h2>The project can drift while every individual task looks fine.</h2>
+        <p>Take the offline research assistant a few steps further. Planning, retrieval, interface work, and testing now happen in separate agent tasks. The original constraint is still true. The question is whether it reaches the agent making the next choice.</p>
+      </div>
+      <div className="dk-drift-controls" aria-label="Compare decision availability">
+        <button type="button" aria-pressed={!tracked} onClick={() => setTracked(false)}>Decision missing</button>
+        <button type="button" aria-pressed={tracked} onClick={() => setTracked(true)}>Decision available</button>
+      </div>
+      <figure className={`dk-impact-map ${tracked ? 'dk-impact-tracked' : ''}`}>
+        <div className="dk-impact-premise">
+          <span className="dk-label">The requirement has not changed</span>
+          <h3>It must work offline.</h3>
+        </div>
+        <div className="dk-impact-handoff" aria-live="polite">
+          <span>{tracked ? 'The next agent reads the decision and its reason.' : 'The requirement stays behind in an earlier conversation.'}</span>
+        </div>
+        <div className="dk-impact-choice" aria-live="polite">
+          <span className="dk-label">Retrieval agent</span>
+          <h3>{tracked ? 'Continue with the local index.' : 'Use the hosted search service.'}</h3>
+          <p>{tracked ? 'Hosted retrieval is already ruled out because it requires a connection.' : 'A convenient choice, if the offline constraint is absent from the task.'}</p>
+        </div>
+        <div className="dk-impact-dependents" aria-live="polite">
+          {consequences.map(([area, title, detail]) => (
+            <div className="dk-impact-leaf" key={area}>
+              <span className="dk-label">{area}</span>
+              <h4>{title}</h4>
+              <p>{detail}</p>
+            </div>
+          ))}
+        </div>
+        <figcaption>{tracked ? 'The record gives each agent a constraint to check before extending the design. It still has to read and follow it.' : 'The pieces can agree with each other and still violate the original requirement. The mistake has acquired dependencies.'} <span>Illustrative project, not a benchmark or a recorded Docket run.</span></figcaption>
+      </figure>
+
+      <div className="dk-drift-aftermath">
+        <h3>By the time somebody notices, it is an integration problem.</h3>
+        <div>
+          <p>Fixing the first choice may now mean changing an API, unwinding authentication, rewriting tests, and telling several agents that the assumptions in their tasks have changed. The expensive part is finding everything that quietly came to depend on it.</p>
+          <p>A longer transcript contains more history, but the next agent still has to find the relevant choice, work out whether it is current, and recover why it was made. A summary can preserve the answer while dropping the condition that made it valid.</p>
+          <p>A decision record makes that condition available directly. “Use a local index” travels with “because this must work offline,” and the rejected hosted option remains visible as an examined path.</p>
+        </div>
+      </div>
+    </section>
+  )
+}
+
+function DecisionHandoff() {
+  return (
+    <section className="dk-handoff">
+      <h2>Leave enough for the next agent to disagree intelligently.</h2>
+      <p className="dk-handoff-lede">A useful record carries the question, the current answer, and the reason. It also leaves room for the part nobody has solved yet.</p>
+      <div className="dk-handoff-layout">
+        <dl className="dk-example-record">
+          <div><dt>Question</dt><dd>Where does retrieval run?</dd></div>
+          <div><dt>Settled</dt><dd>On the device, using a local index.</dd></div>
+          <div><dt>Because</dt><dd>The assistant must work without a connection.</dd></div>
+          <div><dt>Ruled out</dt><dd>Hosted retrieval as the primary search path.</dd></div>
+          <div><dt>Still open</dt><dd>Whether optional sync may send any data off the device.</dd></div>
+        </dl>
+        <div className="dk-handoff-reading">
+          <h3>The next task starts with something to inspect.</h3>
+          <p>The implementation agent can follow the settled retrieval choice without pretending that sync has been decided. The review agent can check the implementation against the offline requirement. A later agent can revisit the choice if that requirement changes.</p>
+          <p>These are different jobs using the same recorded reasoning. Keeping the distinction between settled, rejected, and open is what lets them move independently without silently inventing different versions of the project.</p>
+          <p className="dk-demo-note">Illustrative record. The entries must be written and maintained by the agent; Docket does not infer the right decisions from the conversation.</p>
+        </div>
+      </div>
+    </section>
+  )
+}
+
 export default function Docket({ p, c }: LayoutProps) {
   const lp = useLocalePath()
   return (
@@ -124,6 +209,8 @@ export default function Docket({ p, c }: LayoutProps) {
           <div><span className="dk-state-symbol" aria-hidden="true">?</span><h3>Open</h3><p>A question that still needs an answer.</p><blockquote>“Which data, if any, may be synchronised?”</blockquote></div>
         </section>
 
+        <ProjectDrift />
+
         <section className="dk-editorial dk-editorial-dependency">
           <div className="dk-section-marker"><span>02</span><p>The reason travels with the choice</p></div>
           <div className="dk-editorial-body">
@@ -133,6 +220,8 @@ export default function Docket({ p, c }: LayoutProps) {
             <DependencyExample />
           </div>
         </section>
+
+        <DecisionHandoff />
 
         <section className="dk-continuity">
           <p className="dk-label">Across the life of an agent task</p>
