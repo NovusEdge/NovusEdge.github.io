@@ -36,3 +36,5 @@ TONE.md
 *.log
 .superpowers/
 .claude/
+
+.env
