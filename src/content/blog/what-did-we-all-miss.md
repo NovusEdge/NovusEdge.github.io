@@ -51,25 +51,23 @@ PS: I kinda forgot what point I was gonna make here but this is important contex
 
 ## The Robots
 
-If you want a measure of how badly attention is currently allocated, look at robotics.
+You want a measure of how badly attention is allocated right now? Look at robotics.
 
 [AMI Labs](https://techcrunch.com/2026/03/09/yann-lecuns-ami-labs-raises-1-03-billion-to-build-world-models/) raised \$1.03 B in a seed round, the largest in European history, with Yann LeCun leaving Meta in November to chair it, and they are building world models on the `JEPA` approach, which is a genuinely different bet from scaling language models and one that physical intelligence probably requires. [Generalist AI](https://techcrunch.com/2026/08/25/robotics-startup-generalist-reaches-3b-valuation-sources-say/) was founded in 2024 by people out of Google DeepMind robotics and Boston Dynamics, and their [GEN-1.5 model](https://generalistai.com/blog/gen-1.5) [learns a new physical task in seconds from a single demonstration](https://youtu.be/1cllCVK-9lo) with no gradient updates and no fine tuning, off the back of \$400M raised in June and reported talks at a $3B valuation in August.
 
-I had assumed these places were starved next to OpenAI and Anthropic, and they are not, because the capital is obviously there. What is missing is attention, since a billion dollar seed round and a robot that learns from watching once are both absent from common discourse anywhere.
+I'd assumed these places were starved next to OpenAI and Anthropic. They're not, the capital is obviously there. What's missing is attention, because a billion dollar seed round and a robot that learns from watching once are both basically absent from the discourse anywhere.
 
-Some of that is just structural: robotics is hard to follow when it isn't your field, and these companies don't spend much on explaining themselves, partly because the money is better spent on the actual work and partly because nobody chases public attention until they have something to sell. The discourse is also _really_ geographically lopsided in a way I think people underrate; SF runs current while Europe, Asia and India sit months behind on the same information, and nobody involved thinks of themselves as behind. I'm behind too btw. There is simply too much of it, and if you genuinely tried to read everything you'd lose your mind, so I keep up by consuming an unhealthy amount of media and still missing most of it.
+Some of that is just structural. Robotics is hard to follow when it isn't your field, and these companies don't spend much on explaining themselves, partly because the money is better spent on the actual work and partly because nobody chases public attention until they have something to sell. It's also _really_ geographically lopsided in a way I think people underrate: SF runs current while Europe, Asia and India sit months behind on the same information, and nobody involved thinks of themselves as behind. I'm behind too btw. There's just too much of it, and if you genuinely tried to read everything you'd lose your mind, so I keep up by consuming an unhealthy amount of media and still missing most of it.
 
-The bit I actually care about: if physical labour starts going the way cognitive labour has been going, we get the industrial revolution question again with a lot less warning. Do we end up reserving certain work for humans by sanction, like therapy or medicine or the trades? I genuinely do not know if that's a good idea or a deeply stupid one, and I can't argue myself out of it either. What I'm fairly sure of is that the social contract and the economics under it were not built for any of this, and nobody is rewriting them at the speed the robots are improving.
+The bit I actually care about: if physical labour starts going the way cognitive labour has been going, we get the industrial revolution question again with a lot less warning. Do we end up reserving certain work for humans by sanction, like therapy or medicine or the trades? I genuinely don't know if that's a good idea or a deeply stupid one, and I can't argue myself out of it either. What I am fairly sure of is that the social contract and the economics under it were not built for any of this, and nobody is rewriting them at the speed the robots are improving.
 
 It's gonna be scary, it's gonna be wild, and some of it is going to be genuinely fun.
 
 ## Half the Internet
 
-And the room you'd be having this conversation in is steadily filling up with things that are not people.
+And the room you'd be having this conversation in is steadily filling up with things that are not people. [Imperva's 2026 report](https://www.imperva.com/blog/bad-bot-report-2026-bots-agentic-age/) puts automated traffic above 53% of the web, up from 51% the year before, humans down to 47%. Bad bots alone are 40% of everything, seventh year straight that number has climbed, and AI enabled bot attacks are up 12.5x year over year. So dead internet theory is measurably the majority case now, not just a vibe you reach for when your feed feels fake.
 
-[Imperva's 2026 report](https://www.imperva.com/blog/bad-bot-report-2026-bots-agentic-age/) puts automated traffic above 53% of the web, up from 51% the year before, humans down to 47%. Bad bots alone are 40% of everything, the seventh year straight that number has climbed, and AI enabled bot attacks are up 12.5x year over year. So dead internet theory is measurably the majority case now, not just a vibe you reach for when your feed feels fake.
-
-The tooling for it got much better too. Jones and Bergen published a study in PNAS where GPT-4.5, prompted to adopt a human persona, [was judged to be the human 73% of the time](https://arxiv.org/abs/2503.23674) in three party Turing tests, i.e. picked as the human _more often than the actual human_ in the conversation. LLaMA-3.1 managed 56%, and the unprompted ELIZA and GPT-4o baselines came in below chance at 23 and 21.
+The tooling for it got much better too. Jones and Bergen published a study in PNAS where GPT-4.5, prompted to adopt a human persona, [was judged to be the human 73% of the time](https://arxiv.org/abs/2503.23674) in three party Turing tests. Read that again: picked as the human _more often than the actual human_ in the conversation. LLaMA-3.1 managed 56%, and the unprompted ELIZA and GPT-4o baselines came in below chance at 23 and 21.
 
 There's still a smell to AI generated text and AI generated code and I can usually catch it, but I don't expect that to last and I shouldn't be building anything on the assumption that it will. Stack that on the fatigue and it gets genuinely bleak: people are tired of the conversation, and a growing share of the conversation isn't with people anyway.
 
@@ -77,7 +75,7 @@ There's still a smell to AI generated text and AI generated code and I can usual
 
 So what do you actually do? Telling a tired person to think harder is useless, so not that.
 
-Entertain the idea. Hold it for a minute without deciding whether you're for it or against it and just play with it in your head, which is a thing I think a lot of people have quietly stopped doing. Have a stupid idea on purpose, build a thing nobody asked for, make some ridiculous piece of software to annoy your uni professor, follow the dumb thought about what would happen if X. Not because it's going to become a company, but because thinking is supposed to be one of the genuinely fun parts of being a person and a lot of people seem to have stopped doing it for fun.
+Entertain the idea instead. Hold it for a minute without deciding whether you're for it or against it, and just play with it in your head, which is a thing I think a lot of people have quietly stopped doing. Have a stupid idea on purpose. Build a thing nobody asked for, make some ridiculous piece of software to annoy your uni professor, follow the dumb thought about what would happen if X. Not because it's going to become a company, but because thinking is supposed to be one of the genuinely fun parts of being a person and a lot of people seem to have stopped doing it for fun.
 
 I notice this even among people in tech, which surprises me more than the rest of it, where perfectly capable people won't try something because the attempt might not go anywhere. I suspect the polarisation in most media has something to do with it since every topic now arrives pre-sorted into a side you're meant to pick, and I suspect short form video has more to do with it than anyone wants to admit. Guessing on both counts though.
 
@@ -85,12 +83,10 @@ The other half of this is where you put the anger, because there's plenty worth 
 
 ## Where I'm At
 
-I'm not writing this for anyone in particular, this is my place and these are my thoughts, and if I'm talking to anybody it's other devs and other people generally.
+I'm not writing this for anyone in particular, this is my place and these are my thoughts, and if I'm talking to anybody it's other devs and other people generally. So here's what I'm fairly confident of.
 
-What I'm fairly confident of: a machine did research grade mathematics while the discourse spent that week on a compute bill. Two of the most powerful people in this industry declared general intelligence using definitions they wrote themselves. More than half of web traffic is no longer human, and a model prompted to seem human now beats actual humans at seeming human. A billion dollar robotics seed round went by almost unremarked. And the people who most need to be part of these decisions are too worn down to want to hear about any of it.
+A machine did research grade mathematics while the discourse spent that week on a compute bill. Two of the most powerful people in this industry declared general intelligence using definitions they wrote themselves. More than half of web traffic is no longer human, and a model prompted to seem human now beats actual humans at seeming human. A billion dollar robotics seed round went by almost unremarked. And the people who most need to be part of these decisions are too worn down to want to hear about any of it.
 
-I don't have the fix. Just a small and slightly embarrassing suggestion, which is to go be curious about one specific thing this week instead of holding a position about all of it. Pick something, sit with it for ten minutes, build something stupid with it.
-
-That's not a policy but it's about the size of what I've got.
+I don't have the fix. Just a small and slightly embarrassing suggestion: go be curious about one specific thing this week instead of holding a position about all of it. Pick something, sit with it for ten minutes, build something stupid with it. That's not a policy but it's about the size of what I've got.
 
 ~ A.

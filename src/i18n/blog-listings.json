@@ -30,7 +30,7 @@
     },
     "googles-13-billion-in-finland": {
       "title": "Googlen 13 miljardia euroa Suomessa",
-      "description": "Huoneellinen sijoittajia vietti aamupäivän pohtimassa, mihin energia-alalla kannattaisi laittaa rahaa. Puhetta riitti tuotannosta ja sääntelystä. Varastointi mainittiin ehkä kahdesti, ja kantaverkkoyhtiöllä on ollut moratorio sen liittämiselle viime vuodesta asti."
+      "description": "Huoneellinen sijoittajia käytti aamupäivän pohtimalla, minne sijoittaa rahaa energia-alalla. He käsittelivät tuotantoa ja sääntelyä. Sähkön varastointi mainittiin ehkä kahdesti, ja kantaverkkoyhtiöllä on ollut voimassa liittämiskielto sen osalta jo viime vuodesta asti."
     },
     "hardware-journeys-starting-from-zero": {
       "title": "Hardware Journeys: Aloitus absoluuttisesta nollasta",
@@ -106,7 +106,7 @@
     },
     "what-did-we-all-miss": {
       "title": "Mitä meiltä kaikilta meni ohi?",
-      "description": "Ne sit meni ja teki sen pojat, it's jover ToT"
+      "description": "Ne meni ja teki sen pojat, it's jover ToT"
     },
     "what-do-i-want": {
       "title": "Mitä minä haluan?",
@@ -144,7 +144,7 @@
     },
     "googles-13-billion-in-finland": {
       "title": "Googles 13 Milliarden Euro in Finnland",
-      "description": "Ein Raum voller Investoren verbrachte einen Vormittag damit auszutüfteln, wo man Geld im Energiesektor anlegen sollte. Es ging um Erzeugung und Regulierung. Speicher kamen etwa zweimal zur Sprache, und der Netzbetreiber hat seit letztem Jahr ein Moratorium für deren Anschluss verhängt."
+      "description": "Ein Raum voller Investoren verbrachte einen Vormittag damit auszutüfteln, wo man im Energiebereich Geld investieren sollte. Es ging um Erzeugung und Regulierung. Speicherung kam ungefähr zweimal zur Sprache, und der Netzbetreiber hat seit letztem Jahr ein Moratorium für den Anschluss verhängt."
     },
     "hardware-journeys-starting-from-zero": {
       "title": "Hardware Journeys: Bei absolut Null anfangen",
@@ -220,7 +220,7 @@
     },
     "what-did-we-all-miss": {
       "title": "Was haben wir alle verpasst?",
-      "description": "Sie haben's echt getan Leute, it's jover ToT"
+      "description": "Sie haben's echt getan, Leute, it's jover ToT"
     },
     "what-do-i-want": {
       "title": "Was will ich?",
@@ -257,8 +257,8 @@
       "description": "初期の数少ない読者への感謝と、今後の不定期・でき次第更新という投稿ペースについて。"
     },
     "googles-13-billion-in-finland": {
-      "title": "Googleがフィンランドに投じる130億ユーロ",
-      "description": "エネルギー分野のどこにお金を投じるべきか、投資家たちが集まって午前中ずっと議論していた。発電や規制の話題は出たものの、蓄電についてはせいぜい2回触れられた程度。そして送電事業者は昨年から蓄電設備の系統接続を一時停止している。"
+      "title": "Googleのフィンランドへの130億ユーロ投資",
+      "description": "ある部屋に集まった投資家たちが、エネルギー分野のどこにお金を投じるべきかを午前中ずっと議論していた。発電や規制についての話は出たものの、ストレージ（蓄電）が話題に上がったのはせいぜい2回ほど。しかも送電事業者は、昨年からストレージの系統連系を一時停止している。"
     },
     "hardware-journeys-starting-from-zero": {
       "title": "Hardware Journeys: 完全なゼロからのスタート",
@@ -334,7 +334,7 @@
     },
     "what-did-we-all-miss": {
       "title": "僕らは何を見落としていたのか？",
-      "description": "あいつらついにやりやがったよ、もう全部おしまいだ（jover）お前ら ToT"
+      "description": "あいつらやりやがった、もう終わりだよ ToT"
     },
     "what-do-i-want": {
       "title": "自分は何がしたいのか？",
@@ -372,7 +372,7 @@
     },
     "googles-13-billion-in-finland": {
       "title": "Google 在芬兰的 130 亿欧元投资",
-      "description": "一屋子投资人花了一整个上午琢磨该把能源领域的钱投到哪里。他们聊到了发电和监管。储能大概只被提及了两次，而电网运营商自去年起就暂停了储能设施的并网。"
+      "description": "一屋子投资者花了一上午琢磨把钱投到能源领域的哪里。他们聊了发电和监管。储能大概只被提到了两次，而电网运营商自去年起就已经暂停了储能设施的并网接入。"
     },
     "hardware-journeys-starting-from-zero": {
       "title": "硬件之旅：从绝对零点起步",
@@ -447,8 +447,8 @@
       "description": "远赴芬兰 LUT University 的 Lahti 校区开启留学生活的第一印象。"
     },
     "what-did-we-all-miss": {
-      "title": "我们都错过了什么？",
-      "description": "兄弟们，他们真搞出来了，彻底完蛋了家人们 ToT"
+      "title": "我们到底错过了什么？",
+      "description": "兄弟们，他们真搞出来了，这下彻底完蛋了 ToT"
     },
     "what-do-i-want": {
       "title": "我到底想要什么？",
