@@ -56,11 +56,11 @@ If Google is putting €13 billion into buildings here then it seems reasonable 
 
 ## Hamina
 
-This next bit annoys me to write, but Google already does the thing I keep asking for. At Hamina. They bought a former paper mill in 2009, they cool the site with seawater, and the heat recovery there is designed to cover up to 80% of the annual heat demand of the town's district heating network. Which is exactly what I've been arguing for, including in the Plan A piece: build compute as a participant in the grid instead of an island sitting on top of it, put the heat into the district network, let the water and power flows go both ways, and the externality stops being an externality.
+Credit where it's due though, because Google already does the thing I keep asking for. At Hamina. They bought a former paper mill in 2009, they cool the site with seawater, and the heat recovery there is designed to cover up to 80% of the annual heat demand of the town's district heating network. Which is exactly what I've been arguing for, including in the Plan A piece: build compute as a participant in the grid instead of an island sitting on top of it, put the heat into the district network, let the water and power flows go both ways, and the externality stops being an externality.
 
-So the model I want exists, the company I'm being suspicious of built it, it's in this country, and it works. Cool. Great. Thanks.
+So the model I want exists, the company I'm being suspicious of built it, it's in this country, and it works. I was pleasantly surprised honestly, and I'll take it.
 
-Which changes what I'm actually arguing about here. It's which sites get built as participants and which get built as islands, who decides that, and whether anybody is checking. Hamina is a twenty year old site with a paper mill's worth of existing infrastructure and a coastline attached. Muhos and Vaala are not Hamina. So what I'd want to know before anyone celebrates is whether the other three get the same treatment, or whether Hamina is just the one you get shown.
+Where I'm still skeptical is everything after the ribbon cutting. Which sites get built as participants and which get built as islands, who decides that, and whether anybody is checking in 2031 when the announcement has stopped being news. Hamina is a twenty year old site with a paper mill's worth of existing infrastructure and a coastline attached. Muhos and Vaala are not Hamina. So what I'd want to know before anyone celebrates is whether the other three get the same treatment, or whether Hamina is just the one you get shown.
 
 ## The Heat Doesn't Come Back
 
