@@ -5,8 +5,8 @@ describe('translated blog headings', () => {
   it('keeps distinct canonical anchors for CJK headings and their source lines', () => {
     const headings = blogHeadings('## 数学の話\n\n本文\n\n## 定義の話', 'what-did-we-all-miss')
     expect(headings).toEqual([
-      { id: 'the-joke-about-the-million-dollars', text: '数学の話', line: 1 },
-      { id: 'what-a-definition-buys-you', text: '定義の話', line: 5 },
+      { id: 'the-million-dollar-joke', text: '数学の話', line: 1 },
+      { id: 'whose-definition', text: '定義の話', line: 5 },
     ])
   })
 

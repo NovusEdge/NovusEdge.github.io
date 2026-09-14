@@ -45,7 +45,7 @@ describe('blog prerendering', () => {
     const page = await prerender({ url: '/blog/what-did-we-all-miss' })
 
     expect(page.head.title).toBe('What Did We All Miss? · NovusEdge')
-    expect(page.html).toContain('The Joke About the Million Dollars')
+    expect(page.html).toContain('The Million Dollar Joke')
     expect(page.html).not.toContain('<!--$!-->')
     expect([...page.head.elements]).toContainEqual({
       type: 'meta',

@@ -13,21 +13,21 @@ export const PORTAL_DOC = 'OP-2609'
  * with a guessed one.
  */
 const MODULE_LINES: Record<string, string> = {
-  'the-joke-about-the-million-dollars':
+  'the-million-dollar-joke':
     'Reviews a widely circulated remark about compute expenditure and the result it accompanied.',
-  'what-a-definition-buys-you':
+  'whose-definition':
     'Examines two public statements on general intelligence and the definitions each relies on.',
-  'everybody-is-just-tired':
+  'everyone-is-tired':
     'Describes reduced engagement with the subject area and attributes it to sustained exposure.',
-  'the-two-kinds-of-company':
+  'two-kinds-of-company':
     'Distinguishes organisations that produce new capability from organisations that resell it.',
-  'the-robots-nobody-is-watching':
+  'the-robots':
     'Summarises recent funding activity in physical intelligence and its coverage to date.',
-  'more-than-half-the-internet':
+  'half-the-internet':
     'Reports current figures on automated web traffic and machine performance in conversational tests.',
   'play-with-it':
     'Recommends practices for maintaining curiosity and identifies appropriate targets for frustration.',
-  'where-this-leaves-me':
+  'where-im-at':
     'Restates the preceding findings and closes with one suggested action.',
 }
 
