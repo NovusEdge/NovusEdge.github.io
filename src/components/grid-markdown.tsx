@@ -12,18 +12,18 @@ import remarkGfm from 'remark-gfm'
  */
 const SECTION_LABELS: Record<string, string> = {
   'the-room': 'Field note',
-  'where-i-stand-on-the-buildout': 'Position',
+  'where-i-stand': 'Position',
   'the-jobs-number': 'Figures',
   storage: 'Constraint',
-  'how-much-power-this-needs': 'Scale',
-  'who-pays-for-the-price-rise': 'Cost',
+  'how-much-power': 'Scale',
+  'who-pays': 'Cost',
   hamina: 'Counter-example',
-  'why-the-heat-cannot-be-turned-back-into-electricity': 'Correction',
-  'the-regulation-part': 'Friction',
-  'lumi-is-already-in-kajaani': 'Precedent',
-  'my-own-position': 'Interest',
-  'water-where-i-am-least-sure': 'Uncertainty',
-  'where-that-leaves-me': 'Open',
+  'the-heat-doesnt-come-back': 'Correction',
+  regulation: 'Friction',
+  'lumi-is-right-there': 'Precedent',
+  'my-stake': 'Interest',
+  water: 'Uncertainty',
+  'what-ive-got': 'Open',
 }
 
 export type GridHeading = { id: string; text: string; line: number; label?: string; n: string }
