@@ -30,7 +30,7 @@
     },
     "googles-13-billion-in-finland": {
       "title": "Googlen 13 miljardia euroa Suomessa",
-      "description": "Huoneellinen sijoittajia käytti aamupäivän pohtimalla, mihin energiaan kannattaisi laittaa rahaa. He käsittelivät tuotantoa ja sääntelyä. Varastointi nousi esiin ehkä kahdesti, ja kantaverkkoyhtiöllä on ollut moratorio sen liittämiselle viime vuodesta lähtien."
+      "description": "Huoneellinen sijoittajia vietti aamupäivän pohtimassa, mihin energia-alalla kannattaisi laittaa rahaa. Puhetta riitti tuotannosta ja sääntelystä. Varastointi mainittiin ehkä kahdesti, ja kantaverkkoyhtiöllä on ollut moratorio sen liittämiselle viime vuodesta asti."
     },
     "hardware-journeys-starting-from-zero": {
       "title": "Hardware Journeys: Aloitus absoluuttisesta nollasta",
@@ -59,6 +59,10 @@
     "on-building-something-engrammic": {
       "title": "Jonkin... Engrammisen rakentamisesta",
       "description": "Ensifiiliksiä ongelmasta, joka toi minut tähän pisteeseen. Miksi agenttien muistia kohdellaan hakuongelmana, vaikka kyse on todellisuudessa uskomuksista – ja mitä ulkoistetun epistemologian rakentaminen oikein tarkoittaa."
+    },
+    "one-in-fifty": {
+      "title": "Avautuminen koulusta",
+      "description": "Ajatuksia koulusta, opettamisesta ja siitä, tarkoittavatko hyvät arvosanat oikeasti sitä, että opimme jotain."
     },
     "plan-a-ai": {
       "title": "Puhutaan Plan A:sta",
@@ -102,7 +106,7 @@
     },
     "what-did-we-all-miss": {
       "title": "Mitä meiltä kaikilta meni ohi?",
-      "description": "Vitsi siitä, että OpenAI käytti enemmän laskentatehoa kuin palkinto oli arvokas, kiersi viikon päivät, ja sen varjossa kymmenentuhatta agenttia oli juuri tehnyt uutta matematiikkaa, jota tuskin kukaan oli sellaisessa tilassa että olisi huomannut."
+      "description": "Ne sit meni ja teki sen pojat, it's jover ToT"
     },
     "what-do-i-want": {
       "title": "Mitä minä haluan?",
@@ -140,7 +144,7 @@
     },
     "googles-13-billion-in-finland": {
       "title": "Googles 13 Milliarden Euro in Finnland",
-      "description": "Ein Raum voller Investoren verbrachte einen Vormittag damit auszutüfteln, wohin das Geld im Energiebereich fließen soll. Es ging um Erzeugung und Regulierung. Speicher kamen etwa zweimal zur Sprache – und der Netzbetreiber hat seit letztem Jahr ein Moratorium für deren Anschluss verhängt."
+      "description": "Ein Raum voller Investoren verbrachte einen Vormittag damit auszutüfteln, wo man Geld im Energiesektor anlegen sollte. Es ging um Erzeugung und Regulierung. Speicher kamen etwa zweimal zur Sprache, und der Netzbetreiber hat seit letztem Jahr ein Moratorium für deren Anschluss verhängt."
     },
     "hardware-journeys-starting-from-zero": {
       "title": "Hardware Journeys: Bei absolut Null anfangen",
@@ -169,6 +173,10 @@
     "on-building-something-engrammic": {
       "title": "Über das Bauen von etwas... Engrammischem",
       "description": "Erste Gedanken zu dem Problem, das mich hierher gebracht hat. Warum das Gedächtnis von Agenten als Retrieval-Problem behandelt wird, obwohl es eigentlich eine Frage von Überzeugungen ist, und was es bedeutet, externalisierte Epistemik zu bauen."
+    },
+    "one-in-fifty": {
+      "title": "Ein Rant über die Schule",
+      "description": "Einige Gedanken über Schule, Unterrichten und die Frage, ob gute Noten wirklich bedeuten, dass wir etwas lernen."
     },
     "plan-a-ai": {
       "title": "Reden wir über Plan A",
@@ -212,7 +220,7 @@
     },
     "what-did-we-all-miss": {
       "title": "Was haben wir alle verpasst?",
-      "description": "Der Witz darüber, dass OpenAI mehr Compute verbrannt hat, als das Preisgeld wert war, machte eine Woche lang die Runde – und darunter hatten zehntausend Agenten gerade originäre mathematische Forschung betrieben, die kaum jemand in der Verfassung war überhaupt wahrzunehmen."
+      "description": "Sie haben's echt getan Leute, it's jover ToT"
     },
     "what-do-i-want": {
       "title": "Was will ich?",
@@ -249,8 +257,8 @@
       "description": "初期の数少ない読者への感謝と、今後の不定期・でき次第更新という投稿ペースについて。"
     },
     "googles-13-billion-in-finland": {
-      "title": "Googleのフィンランドにおける130億ユーロ",
-      "description": "エネルギー分野のどこに資金を投じるべきか、投資家たちが一室に集まって午前中ずっと議論していた。発電や規制の話題は網羅されたが、蓄電（ストレージ）の話が出たのは2回ほど。しかも送電事業者は昨年からストレージの系統連系を一時停止しているというのに。"
+      "title": "Googleがフィンランドに投じる130億ユーロ",
+      "description": "エネルギー分野のどこにお金を投じるべきか、投資家たちが集まって午前中ずっと議論していた。発電や規制の話題は出たものの、蓄電についてはせいぜい2回触れられた程度。そして送電事業者は昨年から蓄電設備の系統接続を一時停止している。"
     },
     "hardware-journeys-starting-from-zero": {
       "title": "Hardware Journeys: 完全なゼロからのスタート",
@@ -279,6 +287,10 @@
     "on-building-something-engrammic": {
       "title": "何か…Engrammicなものを作ることについて",
       "description": "ここに至るきっかけとなった問題についての最初の考察。なぜエージェントのメモリは本質的に信念の問題であるにもかかわらず検索の問題として扱われてしまうのか、そして「外在化された認識論」を構築することが何を意味するのか。"
+    },
+    "one-in-fifty": {
+      "title": "学校についての愚痴",
+      "description": "学校や人に教えること、そして良い成績を取ることが本当に何かを学んでいることを意味するのかについての雑感。"
     },
     "plan-a-ai": {
       "title": "プランAについて話そう",
@@ -321,8 +333,8 @@
       "description": "フィンランドにあるLUT UniversityのLahtiキャンパスで留学生活をスタートさせた第一印象。"
     },
     "what-did-we-all-miss": {
-      "title": "僕たちは何を見逃してしまったのか？",
-      "description": "OpenAIが賞金以上の計算リソースを費やしたというジョークが1週間ネット上を駆け巡っていたが、その陰で1万ものエージェントが、ほぼ誰も気づけないような状況でオリジナルの数学的成果を成し遂げていた。"
+      "title": "僕らは何を見落としていたのか？",
+      "description": "あいつらついにやりやがったよ、もう全部おしまいだ（jover）お前ら ToT"
     },
     "what-do-i-want": {
       "title": "自分は何がしたいのか？",
@@ -360,7 +372,7 @@
     },
     "googles-13-billion-in-finland": {
       "title": "Google 在芬兰的 130 亿欧元投资",
-      "description": "一屋子投资人花了一整个上午琢磨该把钱投到能源领域的哪些地方。他们聊到了发电和监管。储能大概只被提及了两次，而电网运营商自去年起就暂停了储能并网。"
+      "description": "一屋子投资人花了一整个上午琢磨该把能源领域的钱投到哪里。他们聊到了发电和监管。储能大概只被提及了两次，而电网运营商自去年起就暂停了储能设施的并网。"
     },
     "hardware-journeys-starting-from-zero": {
       "title": "硬件之旅：从绝对零点起步",
@@ -389,6 +401,10 @@
     "on-building-something-engrammic": {
       "title": "论构建某种……Engrammic之物",
       "description": "关于引我走到这一步的问题的初步思考。为什么 Agent 记忆被当作一个检索问题对待，而它本质上却是一个信念（belief）问题；以及构建外置认识论（externalized epistemics）究竟意味着什么。"
+    },
+    "one-in-fifty": {
+      "title": "关于学校的吐槽",
+      "description": "关于学校、教学，以及好成绩是否真的代表我们学到了东西的一些想法。"
     },
     "plan-a-ai": {
       "title": "聊聊 Plan A",
@@ -432,7 +448,7 @@
     },
     "what-did-we-all-miss": {
       "title": "我们都错过了什么？",
-      "description": "关于 OpenAI 烧的算力比奖金还多的梗在网上传了一整周，而在其掩盖之下，上万个 agent 刚刚完成了一项原创数学突破，却几乎没有人处于能注意到它的状态。"
+      "description": "兄弟们，他们真搞出来了，彻底完蛋了家人们 ToT"
     },
     "what-do-i-want": {
       "title": "我到底想要什么？",
