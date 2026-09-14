@@ -56,9 +56,7 @@ If Google is putting €13 billion into buildings here then it seems reasonable 
 
 ## Hamina
 
-This next bit annoys me to write.
-
-Google already does the thing I keep asking for. At Hamina. They bought a former paper mill in 2009, they cool the site with seawater, and the heat recovery there is designed to cover up to 80% of the annual heat demand of the town's district heating network. Which is exactly what I've been arguing for, including in the Plan A piece: build compute as a participant in the grid instead of an island sitting on top of it, put the heat into the district network, let the water and power flows go both ways, and the externality stops being an externality.
+This next bit annoys me to write, but Google already does the thing I keep asking for. At Hamina. They bought a former paper mill in 2009, they cool the site with seawater, and the heat recovery there is designed to cover up to 80% of the annual heat demand of the town's district heating network. Which is exactly what I've been arguing for, including in the Plan A piece: build compute as a participant in the grid instead of an island sitting on top of it, put the heat into the district network, let the water and power flows go both ways, and the externality stops being an externality.
 
 So the model I want exists, the company I'm being suspicious of built it, it's in this country, and it works. Cool. Great. Thanks.
 
