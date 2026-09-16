@@ -102,7 +102,15 @@ function ExpandedCard({
         {mediaSrc && (
           <div className="mb-4 overflow-hidden">
             {isVideo(blip.media!) ? (
-              <video src={mediaSrc} controls autoPlay muted className="w-full rounded" />
+              <video
+                src={mediaSrc}
+                controls
+                autoPlay
+                loop
+                muted
+                playsInline
+                className="w-full rounded"
+              />
             ) : (
               <img src={mediaSrc} alt="" className="w-full rounded object-contain" />
             )}
@@ -164,7 +172,15 @@ function BlipCard({
         {hasMedia && (
           <div className="mb-3 overflow-hidden border border-charcoal/10 dark:border-bone/10">
             {isVideo(blip.media!) ? (
-              <video src={mediaSrc!} muted className="aspect-video w-full object-cover" />
+              <video
+                src={mediaSrc!}
+                autoPlay
+                loop
+                muted
+                playsInline
+                preload="metadata"
+                className="aspect-video w-full object-cover"
+              />
             ) : (
               <img src={mediaSrc!} alt="" className="aspect-video w-full object-cover" />
             )}
