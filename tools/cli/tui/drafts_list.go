@@ -15,11 +15,11 @@ func newDraftsScreen(p actions.Paths) tea.Model {
 		return NewInfoScreen("Drafts", errStyle.Render(err.Error()))
 	}
 	if len(slugs) == 0 {
-		return NewInfoScreen("Drafts", "no drafts — HIDDEN array in src/lib/posts.ts is empty")
+		return NewInfoScreen("Drafts", "no drafts — no post has draft: true")
 	}
 	var b strings.Builder
 	for _, s := range slugs {
 		fmt.Fprintf(&b, "  • %s\n", s)
 	}
-	return NewInfoScreen("Drafts (HIDDEN in src/lib/posts.ts)", b.String())
+	return NewInfoScreen("Drafts (draft: true in frontmatter)", b.String())
 }

@@ -12,13 +12,12 @@ import (
 // Paths bundles the repo-relative locations the CLI needs to touch, resolved
 // to absolute paths against a discovered repo root.
 type Paths struct {
-	Root            string
-	BlogDir         string
-	BlipsYAML       string
-	BlipsAssetsDir  string
-	PapersFile      string
-	ThumbnailsFile  string
-	PostsFile       string
+	Root           string
+	BlogDir        string
+	BlipsYAML      string
+	BlipsAssetsDir string
+	PapersFile     string
+	ThumbnailsFile string
 }
 
 // FindRepoRoot walks up from the current working directory looking for the
@@ -50,6 +49,5 @@ func NewPaths(root string) Paths {
 		BlipsAssetsDir: filepath.Join(root, "src", "content", "blips", "assets"),
 		PapersFile:     filepath.Join(root, "src", "content", "papers.ts"),
 		ThumbnailsFile: filepath.Join(root, "src", "lib", "thumbnails.ts"),
-		PostsFile:      filepath.Join(root, "src", "lib", "posts.ts"),
 	}
 }

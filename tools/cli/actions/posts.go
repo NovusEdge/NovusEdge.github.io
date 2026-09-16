@@ -6,6 +6,7 @@ import (
 	"path/filepath"
 	"regexp"
 	"sort"
+	"strconv"
 	"strings"
 	"time"
 )
@@ -48,12 +49,13 @@ title: %s
 date: %s
 tags: %s
 description: %s
+draft: true
 ---
 
 `
 
-// NewBlog creates src/content/blog/{slug}.md from a minimal template and
-// marks the post as hidden (draft) until it's explicitly published.
+// NewBlog creates src/content/blog/{slug}.md from a minimal template with
+// draft: true set, so the post stays out of the build until it's published.
 func NewBlog(p Paths, in BlogInput) error {
 	if err := ValidateSlug(in.Slug); err != nil {
 		return err
@@ -75,27 +77,15 @@ func NewBlog(p Paths, in BlogInput) error {
 	if err := os.MkdirAll(p.BlogDir, 0o755); err != nil {
 		return err
 	}
-	if err := os.WriteFile(path, []byte(content), 0o644); err != nil {
-		return err
-	}
-
-	return SetHidden(p, in.Slug, true)
+	return os.WriteFile(path, []byte(content), 0o644)
 }
 
-// ListPosts reads every markdown file in the blog dir and cross-references
-// the HIDDEN array to report each post's title, date, tags, and draft status.
+// ListPosts reads every markdown file in the blog dir and reports each post's
+// title, date, tags, and draft status.
 func ListPosts(p Paths) ([]PostMeta, error) {
 	entries, err := os.ReadDir(p.BlogDir)
 	if err != nil {
 		return nil, err
-	}
-	hidden, err := ReadHidden(p)
-	if err != nil {
-		return nil, err
-	}
-	hiddenSet := make(map[string]bool, len(hidden))
-	for _, h := range hidden {
-		hiddenSet[h] = true
 	}
 
 	var posts []PostMeta
@@ -109,8 +99,9 @@ func ListPosts(p Paths) ([]PostMeta, error) {
 			return nil, err
 		}
 		fm, ok := ParseFrontmatter(string(raw))
-		meta := PostMeta{Slug: slug, Hidden: hiddenSet[slug]}
+		meta := PostMeta{Slug: slug}
 		if ok {
+			meta.Hidden = isDraft(fm)
 			if title, ok := fm.Get("title"); ok {
 				meta.Title = title
 			}
@@ -164,79 +155,39 @@ func EditTags(p Paths, slug string, tags []string) error {
 	return os.WriteFile(path, []byte(fm.String()), 0o644)
 }
 
-var hiddenArrayRe = regexp.MustCompile(`(?s)(const HIDDEN = \[)(.*?)(\])`)
+// src/lib/posts.ts compares the raw frontmatter string, so only the literal
+// "true" hides a post.
+func isDraft(fm Frontmatter) bool {
+	v, _ := fm.Get("draft")
+	return strings.TrimSpace(v) == "true"
+}
 
-// ReadHidden extracts the slugs currently listed in posts.ts's HIDDEN array.
+// ReadHidden returns the slugs of every post marked draft: true.
 func ReadHidden(p Paths) ([]string, error) {
-	raw, err := os.ReadFile(p.PostsFile)
+	posts, err := ListPosts(p)
 	if err != nil {
 		return nil, err
 	}
-	m := hiddenArrayRe.FindStringSubmatch(string(raw))
-	if m == nil {
-		return nil, fmt.Errorf("could not find HIDDEN array in %s", p.PostsFile)
+	var slugs []string
+	for _, post := range posts {
+		if post.Hidden {
+			slugs = append(slugs, post.Slug)
+		}
 	}
-	return parseStringArray(m[2]), nil
+	return slugs, nil
 }
 
-// WriteHidden replaces the contents of the HIDDEN array in posts.ts.
-func WriteHidden(p Paths, slugs []string) error {
-	raw, err := os.ReadFile(p.PostsFile)
-	if err != nil {
-		return err
-	}
-	if !hiddenArrayRe.Match(raw) {
-		return fmt.Errorf("could not find HIDDEN array in %s", p.PostsFile)
-	}
-	replacement := "${1}" + formatStringArray(slugs) + "${3}"
-	updated := hiddenArrayRe.ReplaceAllString(string(raw), replacement)
-	return os.WriteFile(p.PostsFile, []byte(updated), 0o644)
-}
-
-// SetHidden adds or removes a slug from the HIDDEN array (dedupes, no-op if
-// already in the desired state).
+// SetHidden sets or clears draft: true in a post's frontmatter.
 func SetHidden(p Paths, slug string, hidden bool) error {
-	current, err := ReadHidden(p)
+	path := PostFilePath(p, slug)
+	raw, err := os.ReadFile(path)
 	if err != nil {
 		return err
 	}
-	has := false
-	var next []string
-	for _, s := range current {
-		if s == slug {
-			has = true
-			if hidden {
-				next = append(next, s) // keep, avoid duplicate below
-			}
-			continue
-		}
-		next = append(next, s)
+	fm, ok := ParseFrontmatter(string(raw))
+	if !ok {
+		return fmt.Errorf("%s has no frontmatter block", slug)
 	}
-	if hidden && !has {
-		next = append(next, slug)
-	}
-	return WriteHidden(p, next)
-}
-
-var stringLitRe = regexp.MustCompile(`'([^']*)'|"([^"]*)"`)
-
-func parseStringArray(s string) []string {
-	matches := stringLitRe.FindAllStringSubmatch(s, -1)
-	out := make([]string, 0, len(matches))
-	for _, m := range matches {
-		if m[1] != "" {
-			out = append(out, m[1])
-		} else {
-			out = append(out, m[2])
-		}
-	}
-	return out
-}
-
-func formatStringArray(slugs []string) string {
-	quoted := make([]string, len(slugs))
-	for i, s := range slugs {
-		quoted[i] = "'" + s + "'"
-	}
-	return strings.Join(quoted, ", ")
+	fm.Set("draft", strconv.FormatBool(hidden))
+	return os.WriteFile(path, []byte(fm.String()), 0o644)
 }

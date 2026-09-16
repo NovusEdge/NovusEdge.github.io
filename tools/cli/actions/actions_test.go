@@ -26,17 +26,8 @@ func setupFixture(t *testing.T) Paths {
 	must(os.WriteFile(filepath.Join(root, "src", "content", "blog", "hello-world.md"),
 		[]byte("---\ntitle: Hello World\ndate: 2020-01-01\ntags: [personal]\ndescription: first post\n---\n\nbody\n"), 0o644))
 
-	postsTS := `import { parseFrontmatter } from './frontmatter'
-
-export type Post = {
-  slug: string
-}
-
-const HIDDEN = ['ai-industry-trends', 'plan-a-ai']
-
-export const posts: Post[] = []
-`
-	must(os.WriteFile(filepath.Join(root, "src", "lib", "posts.ts"), []byte(postsTS), 0o644))
+	must(os.WriteFile(filepath.Join(root, "src", "content", "blog", "ai-industry-trends.md"),
+		[]byte("---\ntitle: AI Industry Trends\ndate: 2026-01-01\ntags: [ai]\ndescription: draft post\ndraft: true\n---\n\nbody\n"), 0o644))
 
 	thumbsTS := `export function getListThumbnail(slug: string): string | null {
   return getPostThumbnail(slug)
@@ -85,7 +76,7 @@ func TestNewBlogAndHidden(t *testing.T) {
 		t.Fatal(err)
 	}
 	got := string(raw)
-	want := "---\ntitle: My Post\ndate: 2026-07-18\ntags: [a, b]\ndescription: desc\n---\n\n"
+	want := "---\ntitle: My Post\ndate: 2026-07-18\ntags: [a, b]\ndescription: desc\ndraft: true\n---\n\n"
 	if got != want {
 		t.Fatalf("unexpected content:\n%q\nwant:\n%q", got, want)
 	}

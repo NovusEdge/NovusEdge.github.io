@@ -30,7 +30,7 @@ func newBlogForm(p actions.Paths) tea.Model {
 		if err := actions.NewBlog(p, in); err != nil {
 			return "", err
 		}
-		return fmt.Sprintf("created src/content/blog/%s.md (added to HIDDEN as a draft)", in.Slug), nil
+		return fmt.Sprintf("created src/content/blog/%s.md (draft: true)", in.Slug), nil
 	}
 	f := NewForm("New blog post", fields, onSubmit)
 	return f
