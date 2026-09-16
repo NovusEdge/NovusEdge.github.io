@@ -4,9 +4,12 @@ import { TLink } from './page-transition'
 import { blips } from '../lib/blips'
 import { useLocalePath } from '../i18n/use-locale-path'
 
-// Get count of blips between two dates
+// The lower bound is inclusive: posts published on consecutive days leave no
+// date strictly between them, so a blip sharing the older post's date would
+// render in no gap at all. The upper bound stays exclusive, which keeps that
+// blip out of the gap below.
 export function countBlipsBetween(after: string, before: string) {
-  return blips.filter((b) => b.date < before && b.date > after).length
+  return blips.filter((b) => b.date < before && b.date >= after).length
 }
 
 // Inline blip indicator — bracket style with scramble effect
