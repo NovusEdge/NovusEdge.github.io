@@ -1,5 +1,5 @@
 ---
-title: Fine-tuning OpenJev; 0.544 → 0.812 on real A/B data
+title: Fine-tuning OpenJev; +17.4% more clicks from the same subject lines
 date: 2026-09-23
 tags: [ml, decision-models, calibration, open-weights, benchmarks]
 draft: true
