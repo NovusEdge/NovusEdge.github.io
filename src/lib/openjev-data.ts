@@ -19,8 +19,10 @@ export const ROWS = {
   moreData: { label: 'MSE, more data', value: 0.724, display: '0.724', mark: 'ours' },
   rank: { label: 'Bradley-Terry', value: 0.775, display: '0.775', mark: 'ours' },
   rankMore: { label: 'Bradley-Terry, more data', value: 0.787, display: '0.787', mark: 'ours' },
-  deberta: { label: 'VERA', value: 0.812, display: '0.812', mark: 'ours' },
+  deberta: { label: 'VERA, best-vs-worst', value: 0.812, display: '0.812', mark: 'ours' },
+  allPairs: { label: 'VERA, every pair', value: 0.689, display: '0.689', mark: 'ours' },
   sota: { label: 'Linguistic features', value: 0.544, display: '0.544', mark: 'ink' },
+  gemini: { label: 'Gemini 3.1 Pro', value: 0.751, display: '0.751', mark: 'ink' },
   humans: { labelKey: 'blog.openjev.humans', value: 0.5, displayKey: 'blog.openjev.nearChance', mark: 'tick' },
   llama: { label: 'Llama-3-8B LoRA', value: 0.469, display: '0.469', mark: 'ink' },
   email: { labelKey: 'blog.openjev.email', value: null, displayKey: 'blog.openjev.noData', mark: 'empty' },
@@ -31,14 +33,14 @@ export const ROW_IDS = Object.keys(ROWS) as RowId[]
 
 export type State = { rows: RowId[]; bands?: true; loss?: true; big?: true }
 
-const FINAL: RowId[] = ['deberta', 'sota', 'humans', 'llama']
+const FINAL: RowId[] = ['deberta', 'gemini', 'allPairs', 'sota', 'humans']
 
 export const STATES: State[] = [
-  { rows: ['claim', 'sota', 'humans', 'llama'] },
-  { rows: ['withdrawn', 'holdout', 'exploratory', 'sota', 'humans', 'llama'] },
+  { rows: ['claim', 'sota', 'humans'] },
+  { rows: ['withdrawn', 'holdout', 'exploratory', 'sota', 'humans'] },
   { rows: [], bands: true },
-  { rows: ['withdrawn', 'holdout', 'sota', 'humans', 'llama'] },
-  { rows: ['deberta', 'rankMore', 'rank', 'moreData', 'phase0', 'sota', 'humans', 'llama'], loss: true },
+  { rows: ['withdrawn', 'holdout', 'sota', 'humans'] },
+  { rows: ['deberta', 'rankMore', 'rank', 'moreData', 'phase0', 'sota', 'humans'], loss: true },
   { rows: FINAL, big: true },
   { rows: [...FINAL, 'email'], big: true },
 ]
@@ -67,13 +69,13 @@ export const BIG = { display: '90.3%' } as const
 // Ids are headingId() of the post's ## headings. Renaming a heading drops its
 // state, so openjev-data.test.ts reads them back from the post.
 export const STATE_HEADINGS: [id: string, state: number][] = [
-  ['the-setup', 0],
-  ['and-yet', 1],
-  ['the-time-machine-that-only-travels-sideways', 2],
-  ['two-hypotheses-both-backwards', 3],
-  ['the-part-that-actually-mattered', 4],
-  ['but-what-does-0812-actually-mean', 5],
-  ['okay-heres-where-i-ruin-it', 6],
+  ['data-and-method', 0],
+  ['cross-split-evaluation', 1],
+  ['split-structure', 2],
+  ['leakage-and-label-noise', 3],
+  ['ablations', 4],
+  ['calibration-and-realised-lift', 5],
+  ['domain-transfer', 6],
 ]
 
 export function stateAt(tops: Map<string, number>, line: number): number {

@@ -58,7 +58,7 @@ describe('openjev board data', () => {
   })
 
   it('picks the last heading above the line', () => {
-    const tops = new Map([['the-setup', -400], ['and-yet', 200], ['the-time-machine-that-only-travels-sideways', 900]])
+    const tops = new Map([['data-and-method', -400], ['cross-split-evaluation', 200], ['split-structure', 900]])
     expect(stateAt(tops, 480)).toBe(1)
     expect(stateAt(new Map(), 480)).toBe(0)
   })

@@ -897,25 +897,13 @@
   }
 }
 
-/* The margin contents list needs 12rem left of the body, which exists from
-   1280px up. Below that the inline list above the body takes its place. */
-.oj-margin,
+/* The contents sit above the body at every width, two columns wide, the way
+   the Plan A page does it. A sticky list in the left margin cost 14.5rem of
+   horizontal space for the whole article and squeezed the measure. */
 .oj-contents-rail {
   display: none;
 }
 @media (min-width: 1280px) {
-  .oj-contents-inline {
-    display: none;
-  }
-  .oj-margin {
-    display: block;
-    flex: none;
-    align-self: flex-start;
-    position: sticky;
-    top: 6.5rem;
-    width: 12rem;
-    margin-right: 2.5rem;
-  }
   .oj-contents-rail {
     display: block;
     padding-bottom: 0;
@@ -940,7 +928,7 @@
     width: auto;
     flex: 1 1 0;
     min-width: 0;
-    max-width: 40rem;
+    max-width: 46rem;
   }
 }
 

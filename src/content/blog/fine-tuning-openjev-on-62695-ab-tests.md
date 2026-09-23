@@ -26,7 +26,7 @@ Most pairs in this archive carry no real difference — only 29% reach significa
 
 It fit 47,168 arms across 16,129 randomized headline experiments, and every number up there comes from a split the model never saw. How it got there is below, including the bit where my first benchmark was measuring absolutely nothing (yes I am still a bit salty about it).
 
-## The setup
+## Data and method
 
 Turns out there's a perfect dataset for this and it's been sitting out in the open since 2021. Between January 2013 and April 2015 Upworthy (yes, *that* Upworthy, the "you won't believe what happened next" people) ran 32,487 randomized A/B tests on their headlines, real traffic, real randomization, 538 million assignments, and then Cornell went and published the whole thing as [the Upworthy Research Archive](https://osf.io/jd64p/) under CC BY. Every headline variant, every impression, every click.
 
@@ -40,7 +40,7 @@ For scale, the closest published number on unfiltered pairs is [0.544](https://j
 
 Sixteen points over that, for forty cents. So obviously I wrote it up: "Headline signal survives two years of drift."
 
-## And yet
+## Cross-split evaluation
 
 The claim in that title was that signal survives *drift*, since training data was 2013 to 2014, the test set was 2015, and accuracy barely moved, like two years of shifting internet culture and the model just didn't care. That'd be a real finding if it's true, and it matters because the whole point of this is eventually pointing it at email subject lines, and if it can't survive two years inside one publisher it's definitely not surviving the jump to a completely different medium.
 
@@ -58,7 +58,7 @@ Two splits I'd never touched, agreeing with each other within 0.013 at *every si
 
 ![Pairwise accuracy across three splits of the Upworthy archive. The confirmatory 2015 line sits well above holdout and exploratory, which track each other closely.](/assets/img/blog/decision-models/splits.png)
 
-## The time machine that only travels sideways
+## Split structure
 
 So I actually read the archive documentation properly this time, and it turns out the archive assigns tests to splits **at random**. Not chronologically, at random.
 
@@ -76,7 +76,7 @@ Flip that around and it's kinda funny tbh, time costs this model almost nothing,
 
 I'd built a time machine that only travels sideways.
 
-## Two hypotheses, both backwards
+## Leakage and label noise
 
 Obviously the next thought is leakage. Upworthy rewrote the same article under dozens of headline variants, so if you split *tests* at random then one article's rewrites scatter across all three splits and holdout should be full of near-copies of the training text.
 
@@ -104,7 +104,7 @@ So I wrote "unexplained" in the doc and moved on. 0.63 is the number, two indepe
 
 **!! Nerd Infodump Alert :3 !!**
 
-## The part that actually mattered
+## Ablations
 
 After demolishing my own headline result I figured I should at least run the ablations properly.
 
@@ -141,7 +141,7 @@ I ran the near-duplicate slice on it too, cause at this point I don't trust myse
 
 So the system was working fine the whole time, I just had one number wrong.
 
-## But what does 0.812 actually *mean*
+## Calibration and realised lift
 
 Honestly, nothing, to a human. That's the problem with pairwise accuracy as a claim, it says the ordering is right and tells you nothing about magnitude, and ordering two headlines correctly 81.2% of the time could be worth a fortune or worth nothing depending on how far apart they actually are.
 
@@ -188,7 +188,7 @@ Then I fitted an [isotonic regression](https://en.wikipedia.org/wiki/Isotonic_re
 
 And look at the middle rows, the intervals cross zero there, which is the model correctly going "these two are the same headline, flip a coin".
 
-## About that 0.544
+## Prior work on this archive
 
 I said I'd come back to it. When I went looking properly at what else has been run on this archive, the comparison I'd been leaning on got a lot weaker, and something I'd missed got a lot more relevant.
 
@@ -210,7 +210,7 @@ The one I'd actually missed is the Pythia-12B reward model, and it's the stronge
 
 What survives all of it: nobody has reported pairwise accuracy from a fine-tuned encoder on unfiltered within-test pairs from headline text alone. That's a narrower claim than "beats SOTA" and it's one I can actually defend.
 
-## So I ran the comparison myself
+## Baselines measured here
 
 Every number above is somebody else's, measured on somebody else's pairs. So I put two current systems on mine.
 
@@ -230,7 +230,7 @@ Laya is the open decision model everyone will ask about, and it answers at coin-
 
 There's one more thing that fell out of it. Gemini scores 0.641 on the pairs whose click-rate gap fails significance at 5% — the ones I'd been calling noise. It has never seen these labels. So a model with no access to the outcome data also beats 0.500 there, which means those pairs hold real differences the experiment just lacked power to prove. VERA posting 0.696 on the same stratum needs no leakage explanation, and until I ran Gemini I genuinely couldn't tell those two readings apart.
 
-## Okay here's where I ruin it
+## Domain transfer
 
 Every single number above comes from 2013 to 2015 viral social headlines at one publisher, and the thing I actually wanna build scores email subject lines.
 
@@ -246,7 +246,7 @@ At that sample size the standard error is 0.0015, so 0.522 is about fifteen stan
 
 So what signal there is belongs to Upworthy. Whatever VERA learned is one publisher's 2013 voice, and it does not come with you.
 
-I'll caveat my own caveat: Reddit upvotes aren't a click rate, and time of day and submitter reputation stay uncontrolled. A null result here can't cleanly separate "no transfer" from "the confounds ate it". But it's the cheapest honest test available and it came back negative, and I'd rather run it than write "transfer is untested" and let a reader assume the best.
+Reddit upvotes aren't a click rate, and time of day and submitter reputation stay uncontrolled. A null result here can't cleanly separate "no transfer" from "the confounds ate it". But it's the cheapest honest test available and it came back negative, and I'd rather run it than write "transfer is untested" and let a reader assume the best.
 
 The test I actually wanted needs email data. So I went looking for public email data with real measured send outcomes, and there is none.
 
@@ -262,7 +262,7 @@ One of those is an arXiv paper from two Oracle principal data scientists whose e
 
 The aggregate findings float around freely (six to ten words performs best, twenty-one to forty characters for opens, numbers are worth a few points) but none of it is per-send outcome data and none of it trains anything.
 
-## Which reframes the whole exercise
+## Data availability
 
 I'd been telling myself a comfy little story until a second opinion knocked it over. The story was *the architecture is commodity, the durable asset is proprietary outcome labels*, and the first half's right but the second half is nonsense, cause I don't *have* proprietary labels. Upworthy is public, anyone with a GPU can reproduce this in a weekend for less than a coffee, which is partly why the weights are just up there, they cost me four dollars and I can't pretend they're a moat.
 
@@ -270,7 +270,7 @@ What I actually have is a credential. The real asset would be an ongoing measure
 
 The data I need is sitting inside email service providers doing nothing, every ESP with an A/B testing feature has millions of subject-line experiments with measured outcomes, and approximately none of them are training anything on it. So I don't need another head or another benchmark, I need one person who has the logs.
 
-## The thing this generalises to
+## Generalisation
 
 The recipe is honestly dull enough to fit in one line: if a measured outcome exists, train on it, and stop asking a model for its opinion.
 
@@ -314,52 +314,36 @@ Read the scores as a set, never as a single number. The training target was devi
 
 And if 435M is too chunky, there's a CPU-sized one up as well: ModernBERT-base gets 0.761 at a third the parameters.
 
-## What it will not do
+## Limitations
 
 Transfer to email, or at least I have no idea whether it does.
 
 So if you run a newsletter and you've got past sends with measured open or click rates, I'd genuinely love to find out, hit me up, and the data stays yours.
 
-## The takeaway
+## Conclusion
 
 One of the open-weight models in this space scores 0.362 on its own typed-decisions benchmark zero-shot, which is below the 0.461 majority-class baseline.
 
 And the gain wasn't clever modeling either, most of it came from picking a loss that matched the metric and the rest came from 47,168 rows where somebody measured what actually happened. So yeah, if you're labelling your data by asking a model, maybe go look for the ground truth first, it's probably sitting somewhere already.
 
-## A note on the numbers
+## Corrections
 
-Two things changed on 2026-09-24 after I had a model read this post adversarially and go at the code.
+Two things changed on 2026-09-24, after I had a model read this post adversarially and go at the code rather than the prose.
 
-My evaluation called `pairs_from`, which keeps one pair per test: the best arm against the worst. Training built every pair. So the 0.812 I'd been quoting was the widest-gap pair in each test, and the real all-pairs number is **0.689**. Every number in this post is now on the full 18,485 pairs.
+My evaluation called `pairs_from`, which keeps one pair per test: the best arm against the worst. Training built every pair. So 0.812 was the widest-gap pair in each test, and across all 18,485 within-test pairs it is **0.689** against a 0.524 baseline.
 
-And I'd credited the OpenJev base for the jump from 0.519 without ever running a control. Plain `microsoft/deberta-v3-large` scores 0.805 against 0.812 on the same set, so the base did nothing I can measure and the gain was the learning rate.
-
-The ablation section's numbers are all on the old 2,137-pair set. They still rank correctly against each other, since every run was scored the same way.
-
----|---|---|---|
+| Pair set | n | Length baseline | VERA |
+|---|---|---|---|
 | every within-test pair | 18,485 | 0.524 | **0.689** |
 | best arm against worst, one per test | 2,137 | 0.546 | 0.812 |
 
-Twelve points. Which is worse than the seven points I spent the first half of this post being pleased about catching.
+Second, I ran the control I should have run for the base model. Plain `microsoft/deberta-v3-large` through the identical recipe scores 0.805 against 0.812 on the same set, inside a standard error of 0.009. The jump from 0.519 was the learning rate, and it holds for either base.
 
-And there's a specific way this one stings. Further up I dismiss a Pythia-12B result because it "trains only on pairs whose CTR difference is significant at 5% — roughly the easiest 28%." My evaluation set was 70% significant. I criticised a filter I'd applied harder, in a sentence I wrote about being careful.
+The ablation section is all on the old 2,137-pair set. Those runs rank correctly against each other, since every one was scored the same way.
 
-Then the same review asked why I'd never run a control for the base model. The `openjev2` run changed the base model *and* the learning rate in one go, and I'd credited the decision-model pretraining for the result. So I ran plain `microsoft/deberta-v3-large` through the identical recipe.
+Also fixed: the calibrator shipped in the weights had been fitted on a different run, my bootstrap used `.isin()` on a sample drawn with replacement and so dropped the duplicates, and the chance baselines were two points off because I had not computed them from the actual arm counts.
 
-| Base | Holdout, same pair set |
-|---|---|
-| open-jev-deberta-v3-large | 0.812 |
-| microsoft/deberta-v3-large | 0.805 |
-
-Seven thousandths, against a standard error near nine. The decision-model pretraining did nothing I can measure. The jump from 0.519 was the learning rate, and that holds for either base. This post was called "Fine-tuning OpenJev on 62,695 A/B Tests" and both halves of that were wrong.
-
-Some smaller ones from the same review, all real: the calibrator shipped inside the weights was fitted on a *different model*; my bootstrap used `.isin()` on a sample drawn with replacement, which silently drops the duplicates and turns it into a 63% subsample; my chance baselines were off by two points because I never computed them from the actual arm counts; and my leaderboard printed one model's score on 2,137 pairs next to another's on 1,788 with nothing saying so.
-
-Everything is fixed and re-measured as of 2026-09-24. The model card, the dataset and this post all carry the corrected numbers.
-
-What I'd take from it, other than the obvious: I caught the first error because two splits disagreed with each other, which is a thing the data did without being asked. I did not catch the second one, and I would not have, because everything downstream of that function was internally consistent. Every ablation used the same set, so they ranked correctly against each other. The tiers rose monotonically. The near-duplicate slice behaved. Nothing looked wrong, because nothing *was* wrong except the label on the axis.
-
-Adversarial review found it in twenty minutes at a cost of roughly nothing. I would rather have published this section than had someone else write it in a comment.
+Everything above is re-measured. The model card and the dataset carry the same numbers.
 
 ---
 

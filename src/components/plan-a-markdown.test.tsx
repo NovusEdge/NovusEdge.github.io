@@ -16,7 +16,7 @@ function render(md: string, slug?: string) {
 
 describe('PlanAMarkdown', () => {
   it('takes heading ids from the post it is given', () => {
-    expect(render('## The setup\n\ntext\n\n## And yet', SLUG)).toContain('id="and-yet"')
+    expect(render('## Data and method\n\ntext\n\n## Cross-split evaluation', SLUG)).toContain('id="cross-split-evaluation"')
   })
 
   it('keeps Plan A ids by default', () => {

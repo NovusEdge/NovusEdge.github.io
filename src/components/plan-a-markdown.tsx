@@ -1,9 +1,17 @@
 import { useTranslation } from 'react-i18next'
 import { blogHeadings, headingId as slugify } from '../lib/blog-headings'
-import { Children, useEffect, useId, useRef, useState, type ReactNode } from 'react'
+import { Children, isValidElement, useEffect, useId, useRef, useState, type ReactNode } from 'react'
 import ReactMarkdown, { type Components } from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import rehypeHighlight from 'rehype-highlight'
+
+function flattenText(node: ReactNode): string {
+  if (node === null || node === undefined || typeof node === 'boolean') return ''
+  if (typeof node === 'string' || typeof node === 'number') return String(node)
+  if (Array.isArray(node)) return node.map(flattenText).join('')
+  if (isValidElement(node)) return flattenText((node.props as { children?: ReactNode }).children)
+  return ''
+}
 
 function isExternal(href: string): boolean {
   return /^https?:\/\//.test(href)
@@ -315,7 +323,9 @@ function buildComponents(cites: Map<string, number>, heads: Map<number, string>,
         return <a href={href} {...props}>{children}</a>
       }
       const num = cites.get(href)
-      const label = typeof children === 'string' ? children : String(children)
+      // A link whose text carries markup arrives as React nodes, and
+      // String() on those prints [object Object] into the sidenote.
+      const label = flattenText(children) || hostOf(href)
       return (
         <>
           <a href={href} target="_blank" rel="noreferrer noopener" {...props}>

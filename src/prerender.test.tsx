@@ -59,7 +59,7 @@ describe('blog prerendering', () => {
 
     expect(page.html).toContain('class="oj-board"')
     expect(page.html).toContain('~chance')
-    expect(page.html).toContain('id="the-part-that-actually-mattered"')
+    expect(page.html).toContain('id="ablations"')
     expect(page.html).toContain('pa-body')
     expect(page.html).not.toMatch(/<canvas\b/)
   })
