@@ -21,8 +21,8 @@
       "description": "Luominen on nykyään ilmaista. Todentaminen maksaa edelleen saman kuin aina ennenkin. Tämä epäsymmetria rikkoo kaiken."
     },
     "fine-tuning-openjev-on-62695-ab-tests": {
-      "title": "OpenJevin hienosäätö 62 695 A/B-testillä",
-      "description": "Koulutin päätöksentekomallin A/B-testeillä, joita ihmiset oikeasti ajoivat, sen sijaan että kysyisin toiselta mallilta mielipidettä. Se väistää huonoimman varianttisi 90 % ajasta, ja ensimmäinen suorituskykytestini mittasi kirjaimellisesti ei yhtikäs mitään lol"
+      "title": "Munasin oman benchmarkini kahdesti",
+      "description": "Koulutin päätöksentekomallin A/B-testeillä, joita ihmiset oikeasti ajoivat, sen sijaan että olisin kysynyt toiselta mallilta sen mielipidettä. Sitten huomasin paisutelleeni lukuja, korjasin asian, julkaisin sen ja tajusin tehneeni saman virheen uudestaan vielä pahemmassa paikassa."
     },
     "game-zone-writeup": {
       "title": "Game Zone Writeup",
@@ -143,8 +143,8 @@
       "description": "Generierung kostet mittlerweile nichts mehr. Verifikation kostet immer noch so viel wie eh und je. Diese Asymmetrie macht alles kaputt."
     },
     "fine-tuning-openjev-on-62695-ab-tests": {
-      "title": "Fine-Tuning von OpenJev auf 62.695 A/B-Tests",
-      "description": "Ich habe ein Decision-Model auf echten A/B-Tests trainiert, statt einfach ein anderes Modell nach seiner Meinung zu fragen. Es weicht deiner schlechtesten Variante in 90 % der Fälle aus, und mein erster Benchmark hat buchstäblich gar nichts gemessen lol"
+      "title": "Ich habe meinen eigenen Benchmark zweimal verbockt",
+      "description": "Ich habe ein Decision-Modell auf echten A/B-Tests trainiert, die tatsächlich gelaufen sind, statt einfach ein anderes Modell nach seiner Meinung zu fragen. Dann habe ich mich dabei ertappt, wie ich die Werte künstlich aufgebläht habe, habe es korrigiert, veröffentlicht und festgestellt, dass ich an einer noch schlimmeren Stelle genau denselben Fehler wieder gemacht hatte."
     },
     "game-zone-writeup": {
       "title": "Game Zone Writeup",
@@ -265,8 +265,8 @@
       "description": "生成は今やタダになった。だが検証にはこれまで通りのコストがかかり続ける。この非対称性が、すべてをぶち壊している。"
     },
     "fine-tuning-openjev-on-62695-ab-tests": {
-      "title": "62,695件のA/BテストでOpenJevをファインチューニングする",
-      "description": "別のモデルに意見を聞く代わりに、実際に人間が実施したA/Bテストで意思決定モデルをトレーニングした。最悪のバリアントを90%の確率で回避できるし、最初のベンチマークは文字通り何も測定していなかった（笑）"
+      "title": "自作のベンチマークで2回もやらかした話",
+      "description": "別のモデルに意見を聞く代わりに、実際に人間が実施したA/Bテストを使って意思決定モデルを学習させた。そのあと数値を盛ってしまっていたことに気づいて修正し、公開したところ、もっとひどい場所で同じことをやらかしていたのが発覚した。"
     },
     "game-zone-writeup": {
       "title": "Game Zone Writeup",
@@ -387,8 +387,8 @@
       "description": "如今生成是免费的。而验证依然保留着原有的成本。这种不对称性打破了一切。"
     },
     "fine-tuning-openjev-on-62695-ab-tests": {
-      "title": "在 62,695 次 A/B 测试上微调 OpenJev",
-      "description": "我用大家实际跑过的真实 A/B 测试训练了一个决策模型，而不是去问另一个模型怎么看；它有 90% 的概率能帮你避开最差的变体，而且我最初那个基准测试测出来的东西其实纯属寂寞，笑死"
+      "title": "我把自己的基准测错两次的经历",
+      "description": "我用人们实际跑过的 A/B 测试数据训练了一个决策模型，而不是去问另一个模型“你怎么看”。后来我发现自己把数据虚标了，修好并发布后，却发现自己在更严重的地方又犯了同样的错误。"
     },
     "game-zone-writeup": {
       "title": "Game Zone Writeup",
