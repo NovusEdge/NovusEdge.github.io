@@ -23,6 +23,7 @@ export function getPostThumbnail(slug: string): string | null {
   if (slug === 'plan-a-ai') return '/assets/blog/plan-a-thumb.jpeg'
   if (slug === 'googles-13-billion-in-finland') return '/assets/blog/google-finland-thumb.webp'
   if (slug === 'what-did-we-all-miss') return '/assets/blog/fatigue-thumb.webp'
+  if (slug === 'fine-tuning-openjev-on-62695-ab-tests') return '/assets/blog/openjev-thumb.gif'
   // AI / founder-log posts -> art assets
   if (slug === 'on-building-something-engrammic') return '/assets/cosmos_948956014.jpeg'
   if (slug === 'hardware-journeys-starting-from-zero') return '/assets/patent.jpeg'
