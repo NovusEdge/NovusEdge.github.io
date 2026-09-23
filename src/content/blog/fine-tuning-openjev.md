@@ -1,5 +1,5 @@
 ---
-title: I Fine-Tuned Open-Jev on 62,695 A/B Tests
+title: Fine-tuning OpenJev; 0.544 → 0.812 on real A/B data
 date: 2026-09-23
 tags: [ml, decision-models, calibration, open-weights, benchmarks]
 draft: true
