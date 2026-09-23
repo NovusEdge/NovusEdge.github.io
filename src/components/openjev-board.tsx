@@ -1,8 +1,12 @@
-import { useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import gsap from 'gsap'
 import { useGSAP } from '@gsap/react'
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import { prefersReducedMotion } from '../lib/motion'
 import {
+  STATE_HEADINGS,
+  stateAt,
   AXIS,
   BANDS,
   BIG,
@@ -17,6 +21,8 @@ import {
   rowLayout,
   type RowId,
 } from '../lib/openjev-data'
+
+gsap.registerPlugin(ScrollTrigger)
 
 const W = 380
 const BAR_X = 168
@@ -211,4 +217,66 @@ export function OpenJevStatic() {
       <OpenJevTable />
     </figure>
   )
+}
+
+function headingTops(): Map<string, number> {
+  return new Map(STATE_HEADINGS.map(([id]) => [id, document.getElementById(id)?.getBoundingClientRect().top ?? Infinity]))
+}
+
+const readState = () => stateAt(headingTops(), window.innerHeight * 0.6)
+
+function RailFigure() {
+  const { t } = useTranslation()
+  const [reduced] = useState(prefersReducedMotion)
+  // Mounts client-side only, so the headings exist and the first state snaps
+  // instead of animating up from state 0 on a mid-page load.
+  const [state, setState] = useState(() => (reduced ? STATIC_STATE : readState()))
+  const caption = useRef<HTMLElement>(null)
+
+  useGSAP(
+    () => {
+      if (reduced) return
+      // A reflow can cross several headings in one update, so read the current
+      // section instead of counting callbacks.
+      ScrollTrigger.create({
+        trigger: '.pa-body',
+        start: 'top bottom',
+        end: 'bottom top',
+        onUpdate: () => setState(readState()),
+        onRefresh: () => setState(readState()),
+      })
+    },
+    { dependencies: [reduced], revertOnUpdate: true },
+  )
+
+  useGSAP(
+    () => {
+      if (!reduced && caption.current) gsap.fromTo(caption.current, { opacity: 0 }, { opacity: 1, duration: 0.4, overwrite: 'auto' })
+    },
+    { dependencies: [state] },
+  )
+
+  return (
+    <figure className="oj-figure">
+      <p className="pa-fence-head">{t('blog.openjev.board')}</p>
+      <OpenJevBoard state={state} animate={!reduced} />
+      <figcaption ref={caption}>{t(`blog.openjev.caption.${reduced ? STATIC_CAPTION : state}`)}</figcaption>
+      <OpenJevTable />
+    </figure>
+  )
+}
+
+export function OpenJevRail() {
+  const [enabled, setEnabled] = useState(false)
+
+  // Read at mount rather than at render: the route is prerendered in Node.
+  useEffect(() => {
+    const mq = matchMedia('(min-width: 1024px)')
+    const sync = () => setEnabled(mq.matches)
+    sync()
+    mq.addEventListener('change', sync)
+    return () => mq.removeEventListener('change', sync)
+  }, [])
+
+  return enabled ? <RailFigure /> : null
 }
