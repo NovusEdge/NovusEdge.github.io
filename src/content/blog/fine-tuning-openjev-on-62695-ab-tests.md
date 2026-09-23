@@ -14,7 +14,7 @@ That is not data. That is a model's opinion with a number attached to it, and th
 
 So here are open weights for one trained on outcomes somebody actually measured.
 
-**[`NovusEdge/ctr-rank-deberta-v3-large`](https://huggingface.co/NovusEdge/ctr-rank-deberta-v3-large)** — Apache 2.0, 435M params, one forward pass, scores short persuasive text. Base is [`com-kotobalabs/open-jev-deberta-v3-large`](https://huggingface.co/com-kotobalabs/open-jev-deberta-v3-large), itself DeBERTa-v3-large pretrained on typed decisions.
+**[`NovusEdge/vera-deberta-v3-large`](https://huggingface.co/NovusEdge/vera-deberta-v3-large)** — Apache 2.0, 435M params, one forward pass, scores short persuasive text. Base is [`com-kotobalabs/open-jev-deberta-v3-large`](https://huggingface.co/com-kotobalabs/open-jev-deberta-v3-large), itself DeBERTa-v3-large pretrained on typed decisions.
 
 | Measure | This model | Published SOTA | Humans |
 |---|---|---|---|
@@ -265,16 +265,18 @@ That last row is the interesting one for anybody building agents. Jev's three pr
 
 One honest limit on all of this: I have exactly one data point. Outcome-training beat zero-shot judgment by a lot *on one task*. Whether that margin holds anywhere else is untested, and I would not bet the number, only the direction.
 
-## The weights
+## VERA
 
-**[`NovusEdge/ctr-rank-deberta-v3-large`](https://huggingface.co/NovusEdge/ctr-rank-deberta-v3-large)** — Apache 2.0.
+**V**ariant **E**valuation from **R**eal **A**nalytics.
+
+**[`NovusEdge/vera-deberta-v3-large`](https://huggingface.co/NovusEdge/vera-deberta-v3-large)** — Apache 2.0.
 
 ```python
 from transformers import AutoModelForSequenceClassification, AutoTokenizer
 
-tok = AutoTokenizer.from_pretrained("NovusEdge/ctr-rank-deberta-v3-large")
+tok = AutoTokenizer.from_pretrained("NovusEdge/vera-deberta-v3-large")
 model = AutoModelForSequenceClassification.from_pretrained(
-    "NovusEdge/ctr-rank-deberta-v3-large")
+    "NovusEdge/vera-deberta-v3-large")
 
 # Score a set of candidates for ONE piece of content. Higher wins.
 enc = tok(candidates, padding=True, truncation=True, max_length=64,
