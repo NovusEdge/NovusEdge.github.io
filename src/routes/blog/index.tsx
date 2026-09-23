@@ -12,6 +12,7 @@ import { SurveillanceCard } from '../../components/surveillance-card'
 import { CRTCard } from '../../components/crt-card'
 import { AttritionCard } from '../../components/attrition-card'
 import { PlanACard } from '../../components/plan-a-card'
+import { OPENJEV_SLUG } from '../../lib/openjev-data'
 import { useReveal } from '../../lib/motion'
 import { revealBlogList } from '../../lib/reveals'
 import { SideFlourish } from '../../components/side-flourish'
@@ -123,6 +124,14 @@ export default function BlogIndex() {
                   return (
                     <div key={post.slug}>
                       <PlanACard post={post} img={img} dayOf={dayOf} monthOf={monthOf} />
+                      <InlineBlipCount count={blipCount} />
+                    </div>
+                  )
+                }
+                if (post.slug === OPENJEV_SLUG && img) {
+                  return (
+                    <div key={post.slug}>
+                      <PlanACard post={post} img={img} clip="/assets/blog/openjev-thumb.mp4" dayOf={dayOf} monthOf={monthOf} />
                       <InlineBlipCount count={blipCount} />
                     </div>
                   )

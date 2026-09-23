@@ -34,11 +34,12 @@ function Perimeter() {
 type Props = {
   post: Post
   img: string
+  clip?: string
   dayOf: (date: string) => string
   monthOf: (date: string) => string
 }
 
-export function PlanACard({ post, img, dayOf, monthOf }: Props) {
+export function PlanACard({ post, img, clip = CLIP, dayOf, monthOf }: Props) {
   const [hovered, setHovered] = useState(false)
   const [animated, setAnimated] = useState(false)
   // The clip is 330KB for a hover flourish, so it only gets a src once the
@@ -103,7 +104,7 @@ export function PlanACard({ post, img, dayOf, monthOf }: Props) {
             {armed && (
               <video
                 ref={video}
-                src={CLIP}
+                src={clip}
                 loop
                 muted
                 playsInline

@@ -3,6 +3,8 @@ export function getListThumbnail(slug: string): string | null {
   if (slug === 'chat-control-eu') return '/assets/blog/chat-control-featured.jpeg'
   if (slug === 'epistemic-collapse') return '/assets/blog/truth-power.jpeg'
   if (slug === 'shader-journeys-part-1') return '/assets/blog/shader-journeys-thumb.gif'
+  // The featured card plays the grid as an mp4 on hover; at rest it shows this frame.
+  if (slug === 'fine-tuning-openjev-on-62695-ab-tests') return '/assets/blog/openjev-still.webp'
   return getPostThumbnail(slug)
 }
 

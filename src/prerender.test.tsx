@@ -64,6 +64,13 @@ describe('blog prerendering', () => {
     expect(page.html).not.toMatch(/<canvas\b/)
   })
 
+  it('features the OpenJev post on the blog index with a still frame', async () => {
+    const page = await prerender({ url: '/blog' })
+
+    expect(page.html).toContain('/assets/blog/openjev-still.webp')
+    expect(page.html).not.toContain('/assets/blog/openjev-thumb.gif')
+  })
+
   it('keeps missing posts as not found after rendering an article', async () => {
     await prerender({ url: '/blog/what-did-we-all-miss' })
     const page = await prerender({ url: '/blog/missing-post' })
