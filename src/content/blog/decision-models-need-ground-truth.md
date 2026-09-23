@@ -1,20 +1,30 @@
 ---
-title: My Benchmark Was Measuring Nothing
+title: Decision Models Need Ground Truth
 date: 2026-09-23
-tags: [ml, decision-models, calibration, benchmarks, founder-log]
+tags: [ml, decision-models, calibration, open-weights, benchmarks]
 draft: true
-description: Trained a decision model on 62,695 real A/B tests. Beat published state of the art by 16 points. Then found out the benchmark I'd built was measuring nothing. What actually mattered was the loss function, and a learning rate I nearly wrote off as a dead model.
+description: Open weights for a decision model trained on 62,695 measured A/B outcomes instead of another model's opinion. 0.812 pairwise accuracy against a published 0.544, and +17.4% realised click rate. Plus the part where my first benchmark was measuring nothing.
 ---
 
-The number was 0.704 and I was extremely pleased with myself.
+There are roughly 300 public projects built on the new decision models. I went through the "scoring and ranking" category — 26 of them — and every single one scores things by asking the model what it thinks.
 
-Some context. There's a new category of model going around — the "System One" thing, decision models, whatever you want to call them. The pitch is that you take the classification head off an LLM, calibrate it, and serve typed questions in a single forward pass instead of paying for autoregressive generation to answer a yes/no. Pick one of these 255 options. Score this thing. Is this true. Seventy milliseconds instead of two seconds.
+Score this article on eight quality axes. Rate this copy for taste. Judge whether this document is relevant.
 
-Fine. Good, even. But here's what I noticed poking around the ecosystem that's sprung up around it: something like 300 projects, and every single one in the "scoring and ranking" category is using the model's own zero-shot judgment as the score. Score this article on eight quality axes. Rate this copy for taste. Judge whether this document is relevant.
+That is not data. That is a model's opinion with a number attached to it, and the entire category is built on it.
 
-Which is... asking a model what it thinks and calling the answer data.
+So here are open weights for one trained on outcomes somebody actually measured.
 
-So I wondered what happens if you train one of these on outcomes somebody actually measured.
+**[`NovusEdge/ctr-rank-deberta-v3-large`](https://huggingface.co/NovusEdge/ctr-rank-deberta-v3-large)** — Apache 2.0, 435M params, one forward pass, scores short persuasive text.
+
+| Measure | This model | Published SOTA | Humans |
+|---|---|---|---|
+| Pairwise accuracy, unseen split | **0.812** | 0.544 | ~chance |
+| Clean pairs only | **0.797** | — | — |
+| Realised click-rate lift | **+17.4%** | — | — |
+
+Trained on 62,695 real A/B arms from 32,487 randomized headline experiments. Every number above comes from a split the model never saw.
+
+Below is how it got there, including the part where my first benchmark was measuring nothing at all.
 
 ## The setup
 
@@ -149,9 +159,9 @@ Ran the near-duplicate slice on it too, because at this point I don't trust myse
 
 The system is functioning as designed. The system was functioning as designed the entire time. I just had one number wrong.
 
-## But what does 0.787 actually *mean*
+## But what does 0.812 actually *mean*
 
-Nothing, to a human. That's the problem with pairwise accuracy as a product claim: it tells you the ordering is right and carries zero information about magnitude. Ordering two headlines correctly 78.7% of the time could be worth a fortune or worth nothing depending on how far apart they actually are.
+Nothing, to a human. That's the problem with pairwise accuracy as a product claim: it tells you the ordering is right and carries zero information about magnitude. Ordering two headlines correctly 81.2% of the time could be worth a fortune or worth nothing depending on how far apart they actually are.
 
 So I measured the thing an operator would actually experience. For each test, take the model's top-scored arm and compare its real click rate against the mean of all arms in that test — because without a model you have no reason to prefer any particular variant, so the mean of what you might have sent is the honest counterfactual.
 
@@ -206,7 +216,7 @@ The aggregate findings float around freely. Six to ten words performs best. Twen
 
 ## Which reframes the whole exercise
 
-I had been telling myself a comforting story. An adversarial second opinion knocked it over. The story was: *the architecture is commodity, the durable asset is proprietary outcome labels.* First half's right. Second half is nonsense, because I don't *have* proprietary labels. Upworthy is public. Anyone with a GPU reproduces my 0.787 in a weekend for less than a coffee.
+I had been telling myself a comforting story. An adversarial second opinion knocked it over. The story was: *the architecture is commodity, the durable asset is proprietary outcome labels.* First half's right. Second half is nonsense, because I don't *have* proprietary labels. Upworthy is public. Anyone with a GPU reproduces my 0.812 in a weekend for less than a coffee. Which is part of why the weights are up there — they cost me four dollars and I cannot pretend they are a moat.
 
 What I have is a credential. The asset would be an ongoing measurement loop on live traffic, and that doesn't exist yet.
 
@@ -214,13 +224,40 @@ That is clarifying, because it says where the real thing is: the data I need is 
 
 That's the move. Not another head, not another benchmark. One relationship with somebody who has the logs.
 
-## The takeaway, if you want one
+## The weights
 
-If you're building on decision models: the entire ecosystem is training on synthetic decision tasks and using the model's own judgment as the label. One of the open-weight models in this space scores 0.362 on its own typed-decisions benchmark zero-shot, which is *below* the 0.461 majority-class baseline. It needs task-specific fine-tuning to get anywhere. The architecture without ground truth doesn't do much.
+**[`NovusEdge/ctr-rank-deberta-v3-large`](https://huggingface.co/NovusEdge/ctr-rank-deberta-v3-large)** — Apache 2.0.
 
-The gap between 0.544 and 0.812 was not clever modeling. Two-thirds of it came from picking a loss function that matched the metric, and the rest from 62,695 rows where somebody measured what actually happened.
+```python
+from transformers import AutoModelForSequenceClassification, AutoTokenizer
 
-Go find some ground truth.
+tok = AutoTokenizer.from_pretrained("NovusEdge/ctr-rank-deberta-v3-large")
+model = AutoModelForSequenceClassification.from_pretrained(
+    "NovusEdge/ctr-rank-deberta-v3-large")
+
+# Score a set of candidates for ONE piece of content. Higher wins.
+enc = tok(candidates, padding=True, truncation=True, max_length=64,
+          return_tensors="pt")
+scores = model(**enc).logits.squeeze(-1)
+```
+
+Read it as a set, never as a single number. The training target was deviation from a test's own mean, so a lone score in isolation means nothing. Give it the 3–6 variants you wrote for one send and it ranks them. A calibrator mapping score to expected lift ships alongside.
+
+A CPU-sized version is up too if 435M is too much: ModernBERT-base gets 0.761 at a third the parameters.
+
+## What it will not do
+
+Transfer to email. I have no idea whether it does. Everything here is 2013–2015 viral social headlines at one publisher, and a B2B newsletter shares close to nothing with "This Kid Just Destroyed The Entire Argument Against Vaccines In One Sentence."
+
+If you run a newsletter and you have past sends with measured open or click rates, I would very much like to find out. That is an open offer and the data stays yours.
+
+## The takeaway
+
+One of the open-weight models in this space scores 0.362 on its own typed-decisions benchmark zero-shot, below the 0.461 majority-class baseline. It needs task-specific fine-tuning to get anywhere. The architecture on its own does very little.
+
+The gap between 0.544 and 0.812 was not clever modeling. Two-thirds came from picking a loss that matched the metric. The rest came from 62,695 rows where somebody measured what actually happened.
+
+Stop labelling your data with a model. Go find some ground truth.
 
 ---
 
