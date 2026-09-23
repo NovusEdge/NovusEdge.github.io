@@ -24,13 +24,13 @@ It's trained on 62,695 real A/B arms from 32,487 randomized headline experiments
 
 Turns out there's a perfect dataset for this and it's been sitting out in the open since 2021. Between January 2013 and April 2015 Upworthy (yes, *that* Upworthy, the "you won't believe what happened next" people) ran 32,487 randomized A/B tests on their headlines, real traffic, real randomization, 538 million assignments, and then Cornell went and published the whole thing as [the Upworthy Research Archive](https://osf.io/jd64p/) under CC BY. Every headline variant, every impression, every click.
 
-That's about as close to ground truth as short persuasive text gets, cause you've got the thing that was written, you've got what happened when real humans saw it, and the assignment was random so comparing them actually means something.
+That's about as close to ground truth as short persuasive text gets.
 
 So: ModernBERT-large with a regression head, and the target is the shrunk logit click rate centred on each test's own mean. The centring matters btw, the *article* drives most of the click-rate variance and a headline can't explain that, so what you actually wanna predict is how far an arm sits from the mean of the test it ran in. Then beta-binomial shrinkage toward that mean, so an arm with 600 impressions counts as mostly prior and one with 20,000 counts as mostly evidence.
 
 Twenty-five minutes on a single L4, about forty cents. I held out everything after January 2015, tested there, and got **0.704 pairwise accuracy.**
 
-For scale, the published state of the art on this exact dataset is [0.544](https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0281682), from a Toronto group using hand-crafted linguistic features on 24,333 pairs, and their paper concludes the problem is "inherently hard, not merely a sample size issue." Humans given the same task score at chance, and there's a LoRA'd Llama-3-8B in the literature that gets 0.469, which is *below* chance lmao.
+For scale, the published state of the art on this exact dataset is [0.544](https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0281682), from a Toronto group using hand-crafted linguistic features on 24,333 pairs, and their paper concludes the problem is "inherently hard, not merely a sample size issue." Humans given the same task score at chance, and there's a LoRA'd Llama-3-8B in the literature that gets 0.469 lmao.
 
 Sixteen points over the published number, for forty cents. So obviously I wrote it up: "Headline signal survives two years of drift."
 
@@ -51,8 +51,6 @@ Cool.
 Two splits I'd never touched, agreeing with each other within 0.013 at *every single effect-size tier*, and both of them telling me my headline number was inflated by seven points.
 
 ![Pairwise accuracy across three splits of the Upworthy archive. The confirmatory 2015 line sits well above holdout and exploratory, which track each other closely.](/assets/img/blog/decision-models/splits.png)
-
-The red line is the one I posted about, and the two underneath it are the truth.
 
 ## The time machine that only travels sideways
 
@@ -87,14 +85,14 @@ Thirty percent, sixty times more contaminated than the 2015 tail, and it scored 
 
 So leakage doesn't explain the gap, it runs the complete wrong direction, if anything it means the honest holdout number should be *worse* than 0.637 once you strip the near-copies out. I checked that too by dumping per-pair scores and slicing them, and on genuinely clean pairs the model got 0.646, slightly *better*, so the near-duplicates were buying it nothing at all.
 
-Fine, label noise then? If holdout pairs have fewer impressions, the observed winner is more often not the true winner, and that caps how well anything can score.
+Fine, label noise then? Maybe holdout pairs just have fewer impressions.
 
 | Evaluation set | median impressions | median z | median CTR ratio |
 |---|---|---|---|
 | confirmatory 2015 | 2,462 | 2.37 | 2.24 |
 | holdout | 3,096 | 2.64 | 1.99 |
 
-Also backwards lol. Holdout pairs carry *more* impressions and *higher* z-scores, so their labels are the more trustworthy ones. The 2015 set does have a wider median CTR ratio (2.24 against 1.99) so its pairs are genuinely easier to separate, which is real, but it's nowhere near seven points' worth.
+Also backwards lol. Holdout pairs carry *more* impressions and *higher* z-scores. The 2015 set does have a wider median CTR ratio (2.24 against 1.99) so its pairs are genuinely easier to separate, which is real, but it's nowhere near seven points' worth.
 
 So I wrote "unexplained" in the doc and moved on. 0.63 is the number, two independent splits agree on it, the one that disagrees is the outlier, and I cannot tell you why.
 
@@ -119,7 +117,7 @@ Twenty-eight percent more training data got **+0.053**, and changing the loss fu
 
 Which is obvious in hindsight, the worst kind of obvious. The benchmark is *pairwise accuracy*, given two headlines pick the winner, and I was regressing on click rate, so I was optimizing a proxy for the metric and then grading myself on the metric.
 
-[Bradley-Terry](https://en.wikipedia.org/wiki/Bradley%E2%80%93Terry_model) optimizes the actual thing. For every pair of arms inside one test you maximize `logsigmoid(score_winner - score_loser)`, weighted by the thinner arm's log impressions, cause the comparison is only as trustworthy as the side with fewer impressions. My 38,950 training arms turned into 63,597 within-test pairs.
+[Bradley-Terry](https://en.wikipedia.org/wiki/Bradley%E2%80%93Terry_model) optimizes the actual thing. For every pair of arms inside one test you maximize `logsigmoid(score_winner - score_loser)`, weighted by the thinner arm's log impressions. My 38,950 training arms turned into 63,597 within-test pairs.
 
 Same model. Same data. Different objective. Fourteen points.
 
@@ -127,11 +125,11 @@ I also ran ModernBERT-*base* out of curiosity (a third the parameters) and it hi
 
 Then there's the one that nearly got away. I tried a DeBERTa-v3-large variant pretrained on decision tasks, and it sat at exactly `-log(0.5)` for all 4,804 steps and scored 0.519, which is chance, dead flat.
 
-It's easy to read that as "DeBERTa is worse" and move on, and I almost did, but a loss curve that's *perfectly* flat at the exact value that means "I'm guessing" is a really specific signature, and it's not what a model that's learning badly looks like. The encoder had loaded fine too, only the classifier and pooler were freshly initialized, which is what you'd expect.
+It's easy to read that as "DeBERTa is worse" and move on, and I almost did, but a loss curve that's *perfectly* flat at the exact value that means "I'm guessing" is a really specific signature, and it's not what a model that's learning badly looks like. The encoder had loaded fine too, only the classifier and pooler were freshly initialized.
 
 It was the learning rate. DeBERTa-v3-large is [notoriously unstable](https://github.com/microsoft/DeBERTa/issues/77) at the 2e-5 that ModernBERT is happy with and it wants something closer to 6e-6, and I'd used one config for both cause why wouldn't you.
 
-Reran it at 6e-6, the loss went 0.709 → 0.682 → 0.620 → 0.360, and it finished at **0.812**, the best number in the whole project, two and a half points over ModernBERT, and 0.913 on the highest-confidence tier.
+Reran it at 6e-6, the loss went 0.709 → 0.682 → 0.620 → 0.360, and it finished at **0.812**, two and a half points over ModernBERT, and 0.913 on the highest-confidence tier.
 
 I ran the near-duplicate slice on it too, cause at this point I don't trust myself, and on genuinely clean pairs (nothing resembling anything in training) it gets **0.797** against ModernBERT's 0.769. Its memorization gap is also *smaller* than ModernBERT's while scoring higher, which is the opposite of what a model winning by recall looks like.
 
@@ -167,7 +165,7 @@ What *does* travel is anything that's a ratio inside a single test:
 
 **90.3% is the one I'd actually stand behind.** It almost never lets you send the worst thing you wrote, and that survives a change of base rate, audience and medium in a way "+18.3%" just doesn't. And 47.7% top-1 against usually four or five arms is about 2.2× chance.
 
-One of those is being a little sneaky tho. Median headroom captured is 89.2%, with an interquartile range of 5% to 100%, and pooled across all tests it's 55.4%. The model's bimodal, on most tests it grabs nearly all the available gain and on a minority it grabs almost none, and those drag the aggregate down, so quoting just the median would flatter it and quoting just the pooled number would undersell the typical case.
+One of those is being a little sneaky tho. Median headroom captured is 89.2%, with an interquartile range of 5% to 100%, and pooled across all tests it's 55.4%. The model's bimodal, on most tests it grabs nearly all the available gain and on a minority it grabs almost none, and those drag the aggregate down.
 
 Then I fitted an [isotonic regression](https://en.wikipedia.org/wiki/Isotonic_regression) on top so the score has units instead of vibes. Isotonic fits here cause it only assumes monotonicity (higher score, higher click rate), which is exactly what Bradley-Terry guarantees and literally all it guarantees, anything parametric would be inventing structure the model never promised. The intervals come from bootstrapping over *tests* rather than arms, since arms inside one test share an article and aren't independent.
 
@@ -182,13 +180,13 @@ Then I fitted an [isotonic regression](https://en.wikipedia.org/wiki/Isotonic_re
 
 ![Calibration curve. Click rate versus baseline rises monotonically with model score, with 90% intervals that cross zero only near the middle.](/assets/img/blog/decision-models/calibration.png)
 
-That's forty-one points of spread between the worst and best subject line you might send. And look at the middle rows, the intervals cross zero there, which is the model correctly going "these two are the same headline, flip a coin", and a scorer that can say *I don't know* is worth way more than one that can't.
+And look at the middle rows, the intervals cross zero there, which is the model correctly going "these two are the same headline, flip a coin".
 
 ## Okay here's where I ruin it
 
 Every single number above comes from 2013 to 2015 viral social headlines at one publisher, and the thing I actually wanna build scores email subject lines.
 
-These are not the same thing at all. A B2B newsletter going to 4,000 people who opted in shares almost nothing with "This Kid Just Destroyed The Entire Argument Against Vaccines In One Sentence", different medium, different audience, different decade, different everything.
+A B2B newsletter going to 4,000 people who opted in shares almost nothing with "This Kid Just Destroyed The Entire Argument Against Vaccines In One Sentence".
 
 So I went looking for public email data with real measured send outcomes, and there is none.
 
@@ -210,13 +208,13 @@ I'd been telling myself a comfy little story until a second opinion knocked it o
 
 What I actually have is a credential. The real asset would be an ongoing measurement loop on live traffic, and that doesn't exist yet.
 
-Which is kinda clarifying, cause it tells me where the real thing is. The data I need is sitting inside email service providers doing nothing, every ESP with an A/B testing feature has millions of subject-line experiments with measured outcomes, and approximately none of them are training anything on it. So I don't need another head or another benchmark, I need one person who has the logs.
+The data I need is sitting inside email service providers doing nothing, every ESP with an A/B testing feature has millions of subject-line experiments with measured outcomes, and approximately none of them are training anything on it. So I don't need another head or another benchmark, I need one person who has the logs.
 
 ## The thing this generalises to
 
 The recipe is honestly dull enough to fit in one line: if a measured outcome exists, train on it, and stop asking a model for its opinion.
 
-The part worth saying is where those outcomes already live. Every A/B test your company has ever run is sitting in some experimentation platform, labelled, result attached, doing nothing. Optimizely, Statsig, LaunchDarkly, whatever you use, it's years of "we tried these five and this one won" and nobody's trained anything on it.
+Every A/B test your company has ever run is sitting in some experimentation platform, labelled, result attached, doing nothing. Optimizely, Statsig, LaunchDarkly, whatever you use, it's years of "we tried these five and this one won" and nobody's trained anything on it.
 
 Anywhere you've got a candidate set and a number that shows up downstream, the same thing applies:
 
@@ -235,7 +233,7 @@ One honest limit on all of this tho: I've got exactly one data point. Outcome-tr
 
 ## VERA
 
-**V**ariant **E**valuation from **R**eal **A**nalytics, cause every model needs a silly backronym.
+**V**ariant **E**valuation from **R**eal **A**nalytics.
 
 **[`NovusEdge/vera-deberta-v3-large`](https://huggingface.co/NovusEdge/vera-deberta-v3-large)**, Apache 2.0.
 
@@ -258,13 +256,13 @@ And if 435M is too chunky, there's a CPU-sized one up as well: ModernBERT-base g
 
 ## What it will not do
 
-Transfer to email, or at least I have no idea whether it does. Everything here is 2013 to 2015 viral social headlines at one publisher, and your newsletter probably has very little in common with "This Kid Just Destroyed The Entire Argument Against Vaccines In One Sentence."
+Transfer to email, or at least I have no idea whether it does.
 
 So if you run a newsletter and you've got past sends with measured open or click rates, I'd genuinely love to find out, hit me up, and the data stays yours.
 
 ## The takeaway
 
-One of the open-weight models in this space scores 0.362 on its own typed-decisions benchmark zero-shot, which is below the 0.461 majority-class baseline, so it needs task-specific fine-tuning to get anywhere, the architecture on its own does very little.
+One of the open-weight models in this space scores 0.362 on its own typed-decisions benchmark zero-shot, which is below the 0.461 majority-class baseline.
 
 And the gap between 0.544 and 0.812 wasn't clever modeling either, two-thirds of it came from picking a loss that matched the metric and the rest came from 62,695 rows where somebody measured what actually happened. So yeah, if you're labelling your data by asking a model, maybe go look for the ground truth first, it's probably sitting somewhere already.
 
