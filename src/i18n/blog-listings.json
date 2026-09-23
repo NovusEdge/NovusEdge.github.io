@@ -20,6 +20,10 @@
       "title": "Mistä tiedät, mikä on totta?",
       "description": "Luominen on nykyään ilmaista. Todentaminen maksaa edelleen saman kuin aina ennenkin. Tämä epäsymmetria rikkoo kaiken."
     },
+    "fine-tuning-openjev-on-62695-ab-tests": {
+      "title": "OpenJevin hienosäätö 62 695 A/B-testillä",
+      "description": "Koulutin päätöksentekomallin oikeasti ajetuilla A/B-testeillä sen sijaan, että olisin kysynyt toiselta mallilta sen mielipidettä; se väistää huonoimman variantin 90 % ajasta, ja eka benchmarkkini mittasi kirjaimellisesti ei yhtään mitään lol"
+    },
     "game-zone-writeup": {
       "title": "Game Zone Writeup",
       "description": "Haavoittuvan verkkofoorumin skannaus ja hyväksikäyttö TryHackMen Game Zone -huoneessa shellin saamiseksi ja käyttöoikeuksien korottamiseksi."
@@ -48,6 +52,10 @@
       "title": "Oon takas! (Osa 2)",
       "description": "Kakkososa, ja se vaikea sellainen. Kesä 2025 vei kaiken, olin vähällä olla selviämättä, ja olin vähällä lähteä sotimaan. Näin mä putosin aivan pohjalle ja raavin tieni takaisin ylös, ja nämä ovat ne ihmiset, jotka eivät antaneet mun jäädä maahan."
     },
+    "in-search-of-meaning-01": {
+      "title": "Merkitystä etsimässä #1",
+      "description": "Lyhyt pohdinta merkityksestä ja tarkoituksesta"
+    },
     "linux-journeys-customizing-the-bootsplash": {
       "title": "Linux Journeys – Bootsplashin kustomointi",
       "description": "Tensuran inspiroima kaninkolo Linux-tuunaukseen (ricing), joka päättyy plymouthin asentamiseen ja teemoittamiseen kustomoidun bootsplashin luomiseksi."
@@ -66,7 +74,7 @@
     },
     "plan-a-ai": {
       "title": "Puhutaan Plan A:sta",
-      "description": "AI Futures Project haluaa Yhdysvaltojen ja Kiinan laittavan superälyn tauolle vuoteen 2040 asti. Se on hyvä suunnitelma. Kuusikymmentä päivää sen julkaisun jälkeen kymmenentuhatta agenttia ratkaisi Navier–Stokesin."
+      "description": "AI Futures Project haluaa Yhdysvaltojen ja Kiinan laittavan superälyn tauolle vuoteen 2040 asti. Se on hyvä suunnitelma. Kuusikymmentä päivää sen julkaisemisen jälkeen kymmenentuhatta agenttia ratkaisi Navier–Stokesin yhtälöt."
     },
     "post-labour-post-learning": {
       "title": "Tarvitseeko ihmisten edes tehdä enää näin paljon töitä?",
@@ -134,6 +142,10 @@
       "title": "Woher weißt du, was wahr ist?",
       "description": "Generierung kostet mittlerweile nichts mehr. Verifikation kostet immer noch so viel wie eh und je. Diese Asymmetrie macht alles kaputt."
     },
+    "fine-tuning-openjev-on-62695-ab-tests": {
+      "title": "Fine-Tuning von OpenJev auf 62.695 A/B-Tests",
+      "description": "Ich habe ein Entscheidungsmodell auf A/B-Tests trainiert, die tatsächlich durchgeführt wurden, anstatt ein anderes Modell nach seiner Meinung zu fragen; es umgeht deine schlechteste Variante in 90 % der Fälle, und mein erster Benchmark hat ungelogen absolut gar nichts gemessen lol"
+    },
     "game-zone-writeup": {
       "title": "Game Zone Writeup",
       "description": "Scannen und Exploit eines verwundbaren Webforums im TryHackMe-Raum Game Zone, um eine Shell zu bekommen und Rechte zu eskalieren."
@@ -162,6 +174,10 @@
       "title": "Ich bin zurück! (Teil 2)",
       "description": "Teil zwei, und der schwere Teil. Der Sommer 2025 hat mir alles genommen, ich hätte es fast nicht geschafft und wäre fast in den Krieg gezogen. So bin ich ganz nach unten gestürzt und habe mich wieder hochgekämpft – und das sind die Leute, die mich nicht am Boden liegen ließen."
     },
+    "in-search-of-meaning-01": {
+      "title": "Auf der Suche nach Sinn #1",
+      "description": "Eine kurze Notiz zu Sinn und Zweck"
+    },
     "linux-journeys-customizing-the-bootsplash": {
       "title": "Linux Journeys – Bootsplash anpassen",
       "description": "Ein von Tensura inspiriertes Rabbit-Hole ins Linux-Ricing, das mit der Installation und Anpassung von plymouth für einen eigenen Boot-Splash endet."
@@ -179,8 +195,8 @@
       "description": "Einige Gedanken über Schule, Unterrichten und die Frage, ob gute Noten wirklich bedeuten, dass wir etwas lernen."
     },
     "plan-a-ai": {
-      "title": "Reden wir über Plan A",
-      "description": "Das AI Futures Project will, dass die USA und China Superintelligenz bis 2040 pausieren. Es ist ein guter Plan. Sechzig Tage nach der Veröffentlichung haben zehntausend Agenten Navier-Stokes gelöst."
+      "title": "Lass uns über Plan A reden",
+      "description": "Das AI Futures Project möchte, dass die USA und China die Superintelligenz bis 2040 pausieren. Es ist ein guter Plan. Sechzig Tage nach der Veröffentlichung lösten zehntausend Agenten Navier-Stokes."
     },
     "post-labour-post-learning": {
       "title": "Müssen die Leute überhaupt noch so viel arbeiten?",
@@ -248,6 +264,10 @@
       "title": "何が本当かなんて、どうやって見分ければいいんだ？",
       "description": "生成は今やタダになった。だが検証にはこれまで通りのコストがかかり続ける。この非対称性が、すべてをぶち壊している。"
     },
+    "fine-tuning-openjev-on-62695-ab-tests": {
+      "title": "62,695件のA/BテストでOpenJevをファインチューニングする",
+      "description": "別のモデルに意見を聞くのではなく、実際に実施されたA/Bテストで意思決定モデルを訓練した。最悪のバリアントを90%の確率で回避できるし、最初のベンチマークは文字通り何も測定していなかった（笑）。"
+    },
     "game-zone-writeup": {
       "title": "Game Zone Writeup",
       "description": "TryHackMeのGame Zoneルームにある脆弱なWebフォーラムをスキャン・攻略して、シェルを取得し権限昇格を行う。"
@@ -276,6 +296,10 @@
       "title": "復活！（Part 2）",
       "description": "パート2、そして一番キツかった話。2025年の夏はすべてを奪っていった。死にかけたし、戦争に行きそうにすらなった。これは、俺がどん底まで落ちてどうやって這い上がってきたか、そして俺を見捨てずにいてくれた人たちの話。"
     },
+    "in-search-of-meaning-01": {
+      "title": "意味を求めて #1",
+      "description": "意味と目的についての短いメモ"
+    },
     "linux-journeys-customizing-the-bootsplash": {
       "title": "Linux Journeys - ブートスプラッシュのカスタマイズ",
       "description": "転スラに影響されてLinuxのricing（外観カスタマイズ）の沼にハマり、最終的にplymouthを導入・テーマ設定してカスタムブートスプラッシュを作ることになった話。"
@@ -293,8 +317,8 @@
       "description": "学校や人に教えること、そして良い成績を取ることが本当に何かを学んでいることを意味するのかについての雑感。"
     },
     "plan-a-ai": {
-      "title": "プランAについて話そう",
-      "description": "AI Futures Projectは、米中が超知能（superintelligence）の開発を2040年まで一時停止することを望んでいる。筋のいい計画だ。彼らがそれを公開してから60日後、1万のエージェントがNavier-Stokes方程式を解いてしまった。"
+      "title": "Plan Aについて話そう",
+      "description": "AI Futures Projectは、米中が超知能の開発を2040年まで一時停止（ポーズ）することを求めている。筋のいい計画だ。だが、彼らがそれを公開してから60日後、1万のエージェントがNavier-Stokes方程式を解いてしまった。"
     },
     "post-labour-post-learning": {
       "title": "人間ってもうこんなに働く必要あるんだっけ？",
@@ -362,6 +386,10 @@
       "title": "你怎么知道什么是真的？",
       "description": "如今生成是免费的。而验证依然保留着原有的成本。这种不对称性打破了一切。"
     },
+    "fine-tuning-openjev-on-62695-ab-tests": {
+      "title": "基于 62,695 次 A/B 测试微调 OpenJev",
+      "description": "我用人们实际跑过的 A/B 测试数据训练了一个决策模型，而不是去问另一个模型“你怎么看”。它有 90% 的概率帮你避开最差的分支，而且我最初测出来的 benchmark 测了个寂寞 lol"
+    },
     "game-zone-writeup": {
       "title": "Game Zone Writeup",
       "description": "在 TryHackMe 的 Game Zone 房间中扫描并利用一个存在漏洞的 Web 论坛，成功拿到 shell 并完成提权。"
@@ -390,6 +418,10 @@
       "title": "我回来了！（Part 2）",
       "description": "第二部分，也是最难熬的那段。2025 年的夏天夺走了一切，我差点没撑过去，甚至差点跑去参战。这就是我如何跌落谷底又拼命爬上来的过程，以及那些不愿看着我就此沉沦的人们。"
     },
+    "in-search-of-meaning-01": {
+      "title": "寻找意义 #1",
+      "description": "关于意义与目标的小记"
+    },
     "linux-journeys-customizing-the-bootsplash": {
       "title": "Linux 之旅 - 自定义 bootsplash 开机画面",
       "description": "一次受《关于我转生变成史莱姆这档事》（Tensura）启发的 Linux 桌面美化（ricing）折腾之旅，最终通过安装和配置 plymouth 主题实现了自定义开机动画。"
@@ -408,7 +440,7 @@
     },
     "plan-a-ai": {
       "title": "聊聊 Plan A",
-      "description": "AI Futures Project 希望中美两国将超级智能的研发暂停至 2040 年。这是个好计划。但在他们发布该计划 60 天后，一万个智能体解出了 Navier-Stokes 方程。"
+      "description": "AI Futures Project 希望美中两国将超级智能的研发暂停到 2040 年。这是个好计划。而在他们发布该计划的 60 天后，一万个智能体解出了 Navier-Stokes 方程。"
     },
     "post-labour-post-learning": {
       "title": "我们真的还需要大家干这么多活吗？",
