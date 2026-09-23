@@ -20,6 +20,7 @@ import { DEFAULT_LOCALE, PREFIXED_LOCALES, stripLocale, type Locale } from './i1
 import { LocaleContext } from './i18n/context'
 import { i18nFor } from './i18n'
 import { headState } from './lib/meta'
+import { OPENJEV_SLUG } from './lib/openjev-data'
 
 function LocaleTree({ locale }: { locale: Locale }) {
   const { pathname } = useLocation()
@@ -60,8 +61,8 @@ function LocaleTree({ locale }: { locale: Locale }) {
       <LocaleContext value={locale}>
         {/* landing is a self-contained dark cover with its own nav; header rides every other page */}
         {bare !== '/' && <Header />}
-        {/* Plan A keeps its paper surface free of the site's grain overlay. */}
-        {bare !== '/blog/plan-a-ai' && <GrainShader />}
+        {/* The paper pages keep their surface free of the site's grain overlay. */}
+        {bare !== '/blog/plan-a-ai' && bare !== `/blog/${OPENJEV_SLUG}` && <GrainShader />}
         <div key={key} className="page-enter">
           {/* nested Routes match against the remainder of the parent path, so these are relative */}
           <Routes>

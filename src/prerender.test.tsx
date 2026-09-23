@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import { prerender } from './main'
 import { getPost } from './lib/posts'
+import { OPENJEV_SLUG } from './lib/openjev-data'
 
 describe('blog prerendering', () => {
   it.each(['plan-a-ai', 'googles-13-billion-in-finland', 'what-did-we-all-miss'])('publishes article metadata for %s', async (slug) => {
@@ -51,6 +52,16 @@ describe('blog prerendering', () => {
       type: 'meta',
       props: { property: 'og:image', content: 'https://novusedge.github.io/assets/blog/fatigue-thumb.webp' },
     })
+  })
+
+  it('renders the OpenJev board inline for readers without the rail', async () => {
+    const page = await prerender({ url: `/blog/${OPENJEV_SLUG}` })
+
+    expect(page.html).toContain('class="oj-board"')
+    expect(page.html).toContain('~chance')
+    expect(page.html).toContain('id="the-part-that-actually-mattered"')
+    expect(page.html).toContain('pa-body')
+    expect(page.html).not.toMatch(/<canvas\b/)
   })
 
   it('keeps missing posts as not found after rendering an article', async () => {

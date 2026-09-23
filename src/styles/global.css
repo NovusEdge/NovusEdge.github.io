@@ -886,6 +886,51 @@
   }
 }
 
+/* Plan A has no tables or code blocks. The OpenJev post has both. */
+.pa table {
+  width: 100%;
+  margin: 1.6em 0;
+  border-collapse: collapse;
+  font-size: 0.85em;
+  font-variant-numeric: tabular-nums;
+}
+.pa th,
+.pa td {
+  padding: 0.45em 0.8em 0.45em 0;
+  border-bottom: 1px solid var(--pa-rule);
+  text-align: left;
+}
+.pa td:not(:first-child),
+.pa th:not(:first-child) {
+  text-align: right;
+}
+.pa th {
+  font-weight: 400;
+  font-size: 0.82em;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--pa-ink) 60%, transparent);
+  border-bottom-color: var(--pa-ink);
+}
+.pa pre {
+  margin: 1.6em 0;
+  padding: 0.9em 1.1em;
+  border-left: 2px solid var(--pa-ox-mark);
+  overflow-x: auto;
+  font-size: 0.78em;
+  line-height: 1.55;
+}
+.pa pre code {
+  background: none;
+  padding: 0;
+}
+@media (max-width: 640px) {
+  .pa table {
+    display: block;
+    overflow-x: auto;
+  }
+}
+
 /* ------------------------------------------------------------------ */
 /* Orientation portal: the essay served as corporate onboarding.      */
 /* Office-grey and deep teal palettes follow the site theme.         */

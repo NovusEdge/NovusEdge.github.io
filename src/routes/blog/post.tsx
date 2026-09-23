@@ -21,6 +21,8 @@ import { PostHero } from './post-hero'
 import { PlanAPage } from './plan-a-page'
 import { GridPage } from './grid-page'
 import { PortalPage } from './portal-page'
+import { OpenJevPage } from './openjev-page'
+import { OPENJEV_SLUG } from '../../lib/openjev-data'
 import { useLocalePath } from '../../i18n/use-locale-path'
 import { useLocale } from '../../i18n/context'
 
@@ -78,6 +80,10 @@ export default function BlogPost() {
   // Plan A is typeset as the report it argues with, so it replaces the whole
   // page rather than styling the prose inside the shared shell.
   if (post.slug === 'plan-a-ai') return <PlanAPage post={post} image={image} />
+
+  // The OpenJev release sits on Plan A's paper with a leaderboard that gets
+  // revised as the post corrects its own first number.
+  if (post.slug === OPENJEV_SLUG) return <OpenJevPage post={post} image={image} />
 
   // The Finland piece is about infrastructure nobody looks at, so it gets the
   // functionalist treatment rather than the shared prose shell.
