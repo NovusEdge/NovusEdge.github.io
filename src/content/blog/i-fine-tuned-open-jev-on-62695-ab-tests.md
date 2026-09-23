@@ -1,5 +1,5 @@
 ---
-title: I Made a Headline Ranker
+title: I Fine-Tuned Open-Jev on 62,695 A/B Tests
 date: 2026-09-23
 tags: [ml, decision-models, calibration, open-weights, benchmarks]
 draft: true
@@ -14,7 +14,7 @@ That is not data. That is a model's opinion with a number attached to it, and th
 
 So here are open weights for one trained on outcomes somebody actually measured.
 
-**[`NovusEdge/ctr-rank-deberta-v3-large`](https://huggingface.co/NovusEdge/ctr-rank-deberta-v3-large)** — Apache 2.0, 435M params, one forward pass, scores short persuasive text.
+**[`NovusEdge/ctr-rank-deberta-v3-large`](https://huggingface.co/NovusEdge/ctr-rank-deberta-v3-large)** — Apache 2.0, 435M params, one forward pass, scores short persuasive text. Base is [`com-kotobalabs/open-jev-deberta-v3-large`](https://huggingface.co/com-kotobalabs/open-jev-deberta-v3-large), itself DeBERTa-v3-large pretrained on typed decisions.
 
 | Measure | This model | Published SOTA | Humans |
 |---|---|---|---|
