@@ -796,6 +796,96 @@
   }
 }
 
+/* OpenJev: Plan A's paper, with a leaderboard in the rail. Colours come from
+   the --pa tokens only, so the site theme toggle repaints the board. */
+.oj-figure {
+  margin: 0;
+  width: 100%;
+}
+.oj-figure figcaption {
+  min-height: 1.45em;
+  margin-top: 0.6em;
+  font-size: 0.85em;
+  color: color-mix(in srgb, var(--pa-ink) 75%, transparent);
+}
+.oj-board {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+}
+.oj-board text {
+  fill: var(--pa-ink);
+}
+.oj-board .oj-label,
+.oj-board .oj-axis {
+  fill: color-mix(in srgb, var(--pa-ink) 70%, transparent);
+}
+.oj-ours rect {
+  fill: var(--pa-ox-mark);
+}
+.oj-board .oj-ours .oj-value {
+  fill: var(--pa-ox);
+}
+.oj-ink rect {
+  fill: color-mix(in srgb, var(--pa-ink) 55%, var(--pa-ground));
+}
+.oj-struck rect {
+  fill: color-mix(in srgb, var(--pa-ink) 18%, var(--pa-ground));
+}
+.oj-board .oj-struck text {
+  text-decoration: line-through;
+  fill: color-mix(in srgb, var(--pa-ink) 50%, transparent);
+}
+.oj-tick line {
+  stroke: var(--pa-ink);
+  stroke-width: 1.5;
+}
+.oj-empty line {
+  stroke: var(--pa-rule);
+  stroke-dasharray: 3 3;
+}
+.oj-board .oj-empty text {
+  font-style: italic;
+}
+.oj-chance {
+  stroke: color-mix(in srgb, var(--pa-ink) 45%, transparent);
+  stroke-dasharray: 2 3;
+}
+.oj-band-bg {
+  fill: color-mix(in srgb, var(--pa-ink) 10%, var(--pa-ground));
+}
+.oj-band {
+  fill: var(--pa-ox-mark);
+}
+.oj-dead {
+  stroke: color-mix(in srgb, var(--pa-ink) 55%, transparent);
+  stroke-width: 1.5;
+}
+.oj-live {
+  fill: none;
+  stroke: var(--pa-ox-mark);
+  stroke-width: 1.5;
+}
+.oj-live-pt {
+  fill: var(--pa-ox-mark);
+}
+.oj-board .oj-big {
+  font-family: 'ET Book', Georgia, serif;
+  font-size: 44px;
+  fill: var(--pa-ox);
+}
+.oj-inline {
+  margin: 2.5rem 0;
+}
+@media (min-width: 1024px) {
+  .oj-inline {
+    display: none;
+  }
+}
+
 /* ------------------------------------------------------------------ */
 /* Orientation portal: the essay served as corporate onboarding.      */
 /* Office-grey and deep teal palettes follow the site theme.         */
