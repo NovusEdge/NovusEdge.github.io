@@ -2,6 +2,7 @@
 title: I Spent $4 on GPUs to Find Out My Model Was Worse Than I Said
 date: 2026-09-23
 tags: [ml, decision-models, calibration, benchmarks, founder-log]
+draft: true
 description: I trained a decision model on 62,695 real A/B tests, got a number that beat published state of the art by 16 points, wrote it up, and then discovered the benchmark I'd built was measuring nothing. What actually mattered turned out to be the loss function, and a learning rate I nearly wrote off as a dead model.
 ---
 
@@ -140,7 +141,9 @@ Easy to read that as "DeBERTa is worse" and move on, which is what I almost did.
 
 It was the learning rate. DeBERTa-v3-large is [notoriously unstable](https://github.com/microsoft/DeBERTa/issues/77) at the 2e-5 that ModernBERT is happy with; it wants something nearer 6e-6. I'd used one config for both because why wouldn't you.
 
-Reran it at 6e-6. Loss went 0.709 → 0.682 → 0.620 → 0.360 and it finished at **0.812**, which is the best number in the whole project. It beat ModernBERT by two and a half points, and 0.913 on the highest-confidence tier.
+Reran it at 6e-6. Loss went 0.709 → 0.682 → 0.620 → 0.360 and it finished at **0.812**, which is the best number in the whole project. It beat ModernBERT by two and a half points, and hit 0.913 on the highest-confidence tier.
+
+Ran the near-duplicate slice on it too, because at this point I don't trust myself. On genuinely clean pairs — nothing resembling anything in training — it gets **0.797**, against ModernBERT's 0.769. And its memorization gap is *smaller* than ModernBERT's while scoring higher, which is the opposite of what a model winning by recall looks like.
 
 The system is functioning as designed. The system was functioning as designed the entire time. I just had one number wrong.
 
