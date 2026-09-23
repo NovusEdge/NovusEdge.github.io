@@ -1,9 +1,9 @@
 ---
-title: Decision Models Need Ground Truth
+title: I Made a Headline Ranker
 date: 2026-09-23
 tags: [ml, decision-models, calibration, open-weights, benchmarks]
 draft: true
-description: Open weights for a decision model trained on 62,695 measured A/B outcomes instead of another model's opinion. 0.812 pairwise accuracy against a published 0.544, and +17.4% realised click rate. Plus the part where my first benchmark was measuring nothing.
+description: Open weights. Trained on 62,695 measured A/B outcomes instead of another model's opinion. 0.812 pairwise accuracy against a published 0.544, and +17.4% realised click rate.
 ---
 
 There are roughly 300 public projects built on the new decision models. I went through the "scoring and ranking" category — 26 of them — and every single one scores things by asking the model what it thinks.
