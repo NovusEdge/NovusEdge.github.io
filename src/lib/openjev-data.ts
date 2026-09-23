@@ -1,5 +1,7 @@
 export const OPENJEV_SLUG = 'fine-tuning-openjev-on-62695-ab-tests'
-export const REPO_URL = 'https://huggingface.co/NovusEdge/ctr-rank-deberta-v3-large'
+export const REPO_URL = 'https://huggingface.co/NovusEdge/vera-deberta-v3-large'
+export const DOI = '10.57967/hf/10573'
+export const DOI_URL = `https://doi.org/${DOI}`
 
 // Pairwise accuracy on held-out Upworthy pairs. Chance is 0.5.
 export const AXIS = { min: 0.4, max: 0.85, chance: 0.5 } as const
@@ -17,7 +19,7 @@ export const ROWS = {
   moreData: { label: 'MSE, more data', value: 0.724, display: '0.724', mark: 'ours' },
   rank: { label: 'Bradley-Terry', value: 0.775, display: '0.775', mark: 'ours' },
   rankMore: { label: 'Bradley-Terry, more data', value: 0.787, display: '0.787', mark: 'ours' },
-  deberta: { label: 'OpenJev DeBERTa', value: 0.812, display: '0.812', mark: 'ours' },
+  deberta: { label: 'VERA', value: 0.812, display: '0.812', mark: 'ours' },
   sota: { label: 'Linguistic features', value: 0.544, display: '0.544', mark: 'ink' },
   humans: { labelKey: 'blog.openjev.humans', value: 0.5, displayKey: 'blog.openjev.nearChance', mark: 'tick' },
   llama: { label: 'Llama-3-8B LoRA', value: 0.469, display: '0.469', mark: 'ink' },

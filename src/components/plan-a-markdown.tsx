@@ -3,6 +3,7 @@ import { blogHeadings, headingId as slugify } from '../lib/blog-headings'
 import { Children, useEffect, useId, useRef, useState, type ReactNode } from 'react'
 import ReactMarkdown, { type Components } from 'react-markdown'
 import remarkGfm from 'remark-gfm'
+import rehypeHighlight from 'rehype-highlight'
 
 function isExternal(href: string): boolean {
   return /^https?:\/\//.test(href)
@@ -216,13 +217,74 @@ export function markPlanA(children: ReactNode): ReactNode {
   })
 }
 
-function buildComponents(cites: Map<string, number>, heads: Map<number, string>, figures: Record<string, ReactNode>): Components {
+// Decimals, percentages, signed deltas and comma-grouped counts. Bare integers
+// stay plain so years and small counts do not light up the paragraph.
+const FIGURE = /([+−-]?\d+\.\d+%?|\d{1,3}(?:,\d{3})+|\d+%|[+−]\d+)/g
+
+function markNumbers(children: ReactNode): ReactNode {
+  return Children.map(children, (child) => {
+    if (typeof child !== 'string') return child
+    const parts = child.split(FIGURE)
+    if (parts.length === 1) return child
+    return parts.map((part, i) =>
+      i % 2 ? (
+        <span key={i} className="pa-num">
+          {part}
+        </span>
+      ) : (
+        part
+      ),
+    )
+  })
+}
+
+function CodeBlock({ lang, children }: { lang?: string; children: ReactNode }) {
+  const pre = useRef<HTMLPreElement>(null)
+  const [copied, setCopied] = useState(false)
+  const copy = () => {
+    void navigator.clipboard.writeText(pre.current?.textContent ?? '').then(() => {
+      setCopied(true)
+      setTimeout(() => setCopied(false), 1500)
+    })
+  }
+  return (
+    <div className="pa-code">
+      <div className="pa-code-bar">
+        <span>{lang ?? ''}</span>
+        <button type="button" onClick={copy}>
+          {copied ? 'copied' : 'copy'}
+        </button>
+      </div>
+      <pre ref={pre}>{children}</pre>
+    </div>
+  )
+}
+
+type Options = { figures: Record<string, ReactNode>; numbers: boolean; highlight: boolean }
+
+function buildComponents(cites: Map<string, number>, heads: Map<number, string>, { figures, numbers, highlight }: Options): Components {
+  const mark = numbers ? (c: ReactNode) => markNumbers(markPlanA(c)) : markPlanA
+  const extra: Components = {}
+  if (numbers) {
+    extra.strong = ({ children }) => <strong>{markNumbers(children)}</strong>
+    extra.em = ({ children }) => <em>{markNumbers(children)}</em>
+    extra.td = ({ children, node: _node, ...props }) => <td {...props}>{markNumbers(children)}</td>
+  }
+  if (highlight) {
+    extra.pre = ({ children, node }) => {
+      const code = node?.children[0]
+      const cls = code?.type === 'element' ? code.properties?.className : undefined
+      const lang = Array.isArray(cls) ? cls.map(String).find((c) => c.startsWith('language-'))?.slice(9) : undefined
+      return <CodeBlock lang={lang}>{children}</CodeBlock>
+    }
+  }
   return {
+    ...extra,
     img({ src, alt, title }) {
       const drawn = typeof src === 'string' ? figures[src] : undefined
       if (drawn) {
         return (
-          <figure className="pa-fig oj-chart" role="img" aria-label={alt}>
+          <figure className="pa-fig oj-chart" aria-label={alt}>
             {drawn}
           </figure>
         )
@@ -235,10 +297,10 @@ function buildComponents(cites: Map<string, number>, heads: Map<number, string>,
       if (kids?.length === 1 && kids[0].type === 'element' && kids[0].tagName === 'img') {
         return <>{children}</>
       }
-      return <p {...props}>{markPlanA(children)}</p>
+      return <p {...props}>{mark(children)}</p>
     },
-    li({ children, ...props }) {
-      return <li {...props}>{markPlanA(children)}</li>
+    li({ children, node: _node, ...props }) {
+      return <li {...props}>{mark(children)}</li>
     },
     h2({ children, node, ...props }) {
       const id = heads.get(node?.position?.start.line ?? 0) ?? slugify(String(children))
@@ -266,20 +328,31 @@ function buildComponents(cites: Map<string, number>, heads: Map<number, string>,
   }
 }
 
-/** `figures` swaps an image for a drawn figure, keyed by the image's src. */
+/**
+ * `figures` swaps an image for a drawn figure, keyed by the image's src.
+ * `numbers` sets figures in prose apart; `highlight` colours fenced code.
+ */
 export function PlanAMarkdown({
   children,
   slug = 'plan-a-ai',
   figures = {},
+  numbers = false,
+  highlight = false,
 }: {
   children: string
   slug?: string
   figures?: Record<string, ReactNode>
+  numbers?: boolean
+  highlight?: boolean
 }) {
   const md = smarten(children)
   const heads = new Map(blogHeadings(md, slug).map((head) => [head.line, head.id]))
   return (
-    <ReactMarkdown remarkPlugins={[remarkGfm]} components={buildComponents(citationIndex(md), heads, figures)}>
+    <ReactMarkdown
+      remarkPlugins={[remarkGfm]}
+      rehypePlugins={highlight ? [rehypeHighlight] : []}
+      components={buildComponents(citationIndex(md), heads, { figures, numbers, highlight })}
+    >
       {md}
     </ReactMarkdown>
   )

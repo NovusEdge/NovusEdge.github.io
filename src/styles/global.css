@@ -1042,6 +1042,205 @@
 .oj-err circle {
   fill: var(--pa-ox-mark);
 }
+/* Outranks the .oj-series and .oj-err circle fills, which would paint the
+   enlarged tap target as a visible ring. */
+.oj-plot g circle.oj-hit-area {
+  fill: transparent;
+  stroke: none;
+}
+
+/* Tapping a chart opens it large, with live marks and the numbers behind it. */
+.oj-chart-open {
+  position: relative;
+  display: block;
+  width: 100%;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  text-align: inherit;
+  cursor: zoom-in;
+}
+.oj-chart-open:focus-visible {
+  outline: 1px solid var(--pa-ox);
+  outline-offset: 6px;
+}
+.oj-chart-hint {
+  position: absolute;
+  top: 0;
+  right: 0;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--pa-ink) 50%, transparent);
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+.oj-chart-open:hover .oj-chart-hint,
+.oj-chart-open:focus-visible .oj-chart-hint {
+  opacity: 1;
+}
+@media (hover: none) {
+  .oj-chart-hint {
+    opacity: 1;
+  }
+}
+html:has(.oj-dialog[open]) {
+  overflow: hidden;
+}
+/* Tailwind's preflight zeroes the dialog's auto margin, which is what centres it. */
+.oj-dialog {
+  margin: auto;
+  width: min(1000px, 94vw);
+  max-width: none;
+  max-height: 92dvh;
+  padding: 2rem 2.2rem 1.6rem;
+  border: 1px solid var(--pa-rule);
+  border-radius: 4px;
+  background: var(--pa-ground);
+  color: var(--pa-ink);
+  overflow: auto;
+}
+.oj-dialog::backdrop {
+  background: color-mix(in srgb, var(--pa-ground) 72%, transparent);
+  backdrop-filter: blur(3px);
+}
+.oj-dialog-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1.5rem;
+  margin-bottom: 1.2rem;
+}
+.oj-dialog-close {
+  flex: none;
+  min-height: 44px;
+  margin-top: -0.7rem;
+  padding: 0 0.6rem;
+  border: 0;
+  background: none;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--pa-ink);
+  cursor: pointer;
+  text-decoration: underline;
+  text-decoration-color: var(--pa-ox);
+  text-underline-offset: 0.3em;
+}
+.oj-dialog-close:focus-visible {
+  outline: 1px solid var(--pa-ox);
+}
+.oj-dialog-caption {
+  margin: 0;
+  font-style: italic;
+  font-size: 0.95em;
+  color: color-mix(in srgb, var(--pa-ink) 75%, transparent);
+}
+.oj-dialog .oj-plot {
+  font-size: 12px;
+}
+.oj-hit {
+  cursor: pointer;
+  outline: none;
+}
+.oj-bar rect.oj-hit.is-active,
+.oj-hit.is-active circle:not(.oj-hit-area) {
+  stroke: var(--pa-ink);
+  stroke-width: 2;
+}
+.oj-tip rect {
+  fill: var(--pa-ink);
+}
+.oj-plot .oj-tip text {
+  fill: var(--pa-ground);
+  font-size: 11px;
+}
+@media (max-width: 640px) {
+  .oj-dialog {
+    width: 100vw;
+    height: 100dvh;
+    max-height: 100dvh;
+    margin: 0;
+    border: 0;
+    border-radius: 0;
+    padding: 1.2rem 1rem 1.5rem;
+  }
+}
+
+.oj-masthead-links {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  column-gap: 1.6rem;
+}
+
+/* Figures in prose, set in the table's mono so a number reads as a number. */
+.pa-num {
+  font-family: var(--font-mono);
+  font-size: 0.84em;
+  letter-spacing: -0.01em;
+  color: var(--pa-ox);
+  font-variant-numeric: tabular-nums;
+}
+
+.pa-code {
+  margin: 1.6em 0;
+  border: 1px solid var(--pa-rule);
+  border-left: 2px solid var(--pa-ox-mark);
+}
+.pa-code-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 0.4rem 0 1.1rem;
+  border-bottom: 1px solid var(--pa-rule);
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--pa-ink) 55%, transparent);
+}
+.pa-code-bar button {
+  min-height: 36px;
+  padding: 0 0.7rem;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  letter-spacing: inherit;
+  text-transform: inherit;
+  cursor: pointer;
+}
+.pa-code-bar button:hover {
+  color: var(--pa-ox);
+}
+.pa .pa-code pre {
+  margin: 0;
+  border-left: 0;
+}
+.pa .hljs-keyword,
+.pa .hljs-built_in {
+  color: var(--pa-ox);
+}
+.pa .hljs-string {
+  color: color-mix(in srgb, var(--pa-ox-mark) 70%, var(--pa-ink));
+}
+.pa .hljs-number,
+.pa .hljs-literal {
+  color: var(--pa-ox-mark);
+}
+.pa .hljs-title,
+.pa .hljs-attr,
+.pa .hljs-params {
+  color: var(--pa-ink);
+}
+.pa .hljs-comment {
+  color: color-mix(in srgb, var(--pa-ink) 45%, transparent);
+  font-style: italic;
+}
 
 /* Plan A has no tables or code blocks. The OpenJev post has both. */
 .pa table {

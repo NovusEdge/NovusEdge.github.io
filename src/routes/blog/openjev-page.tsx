@@ -6,7 +6,7 @@ import { blogHeadings } from '../../lib/blog-headings'
 import { PlanAMarkdown } from '../../components/plan-a-markdown'
 import { OpenJevRail, OpenJevStatic } from '../../components/openjev-board'
 import { OPENJEV_FIGURES } from '../../components/openjev-figures'
-import { REPO_URL } from '../../lib/openjev-data'
+import { DOI, DOI_URL, REPO_URL } from '../../lib/openjev-data'
 import { useLocalePath } from '../../i18n/use-locale-path'
 import type { Post } from '../../lib/posts'
 
@@ -29,7 +29,11 @@ function Contents({ toc, current, className }: { toc: Head[]; current: number; c
   )
 }
 
-/** Index of the last heading above 40% of the viewport, or -1 above the first. */
+/**
+ * Index of the last heading above 40% of the viewport, or -1 above the first.
+ * Only the margin list may hold this state: a re-render of the page rebuilds
+ * the markdown and remounts every chart, which closes an open chart dialog.
+ */
 function useCurrentSection(toc: Head[]): number {
   const [current, setCurrent] = useState(-1)
   useEffect(() => {
@@ -57,11 +61,14 @@ function useCurrentSection(toc: Head[]): number {
   return current
 }
 
+function MarginContents({ toc }: { toc: Head[] }) {
+  return <Contents toc={toc} current={useCurrentSection(toc)} className="oj-contents-rail" />
+}
+
 export function OpenJevPage({ post, image }: { post: Post; image?: string | null }) {
   const { t, i18n } = useTranslation()
   const lp = useLocalePath()
   const [toc] = useState(() => blogHeadings(post.content, post.slug))
-  const current = useCurrentSection(toc)
 
   useEffect(() => {
     document.documentElement.classList.add('plan-a-paper')
@@ -75,9 +82,14 @@ export function OpenJevPage({ post, image }: { post: Post; image?: string | null
       <div className="pa-shell pb-24 pt-8">
         <nav className="pa-masthead">
           <TLink to={lp('/blog')}>{t('blog.backToBlog')}</TLink>
-          <a href={REPO_URL} target="_blank" rel="noreferrer noopener">
-            {t('blog.openjev.weights')}
-          </a>
+          <span className="oj-masthead-links">
+            <a href={DOI_URL} target="_blank" rel="noreferrer noopener">
+              doi:{DOI}
+            </a>
+            <a href={REPO_URL} target="_blank" rel="noreferrer noopener">
+              {t('blog.openjev.weights')}
+            </a>
+          </span>
         </nav>
 
         <header className="pa-head">
@@ -104,10 +116,10 @@ export function OpenJevPage({ post, image }: { post: Post; image?: string | null
 
         <div className="pa-spread oj-spread">
           <div className="oj-margin">
-            <Contents toc={toc} current={current} className="oj-contents-rail" />
+            <MarginContents toc={toc} />
           </div>
           <div className="pa-col pa-body">
-            <PlanAMarkdown slug={post.slug} figures={OPENJEV_FIGURES}>
+            <PlanAMarkdown slug={post.slug} figures={OPENJEV_FIGURES} numbers highlight>
               {post.content}
             </PlanAMarkdown>
           </div>
@@ -119,7 +131,6 @@ export function OpenJevPage({ post, image }: { post: Post; image?: string | null
         <hr />
 
         <footer className="pa-col pa-end">
-          <p>{t('blog.openjev.typeset')}</p>
           <TLink to={lp('/blog')}>{t('blog.backToBlog')}</TLink>
         </footer>
       </div>

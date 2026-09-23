@@ -19,6 +19,21 @@ describe('OpenJev figures', () => {
     }
   })
 
+  it('makes every chart expandable', () => {
+    for (const [src, figure] of Object.entries(OPENJEV_FIGURES)) {
+      const html = renderToStaticMarkup(<>{figure}</>)
+      expect(html, src).toMatch(/<button[^>]*aria-label="Expand chart/)
+      expect(html, src).toContain('<dialog')
+    }
+  })
+
+  it('lists the exact values in the expanded view', () => {
+    const splits = renderToStaticMarkup(<>{OPENJEV_FIGURES['/assets/img/blog/decision-models/splits.png']}</>)
+    expect(splits).toMatch(/<table[\s\S]*0\.841[\s\S]*<\/table>/)
+    const calibration = renderToStaticMarkup(<>{OPENJEV_FIGURES['/assets/img/blog/decision-models/calibration.png']}</>)
+    expect(calibration).toMatch(/<table[\s\S]*20\.1 to 23\.8[\s\S]*<\/table>/)
+  })
+
   it('labels the ablation bars with the post numbers', () => {
     const html = renderToStaticMarkup(<>{OPENJEV_FIGURES['/assets/img/blog/decision-models/ablations.png']}</>)
     for (const n of ['0.637', '0.724', '0.775', '0.787', '0.812']) expect(html).toContain(n)
