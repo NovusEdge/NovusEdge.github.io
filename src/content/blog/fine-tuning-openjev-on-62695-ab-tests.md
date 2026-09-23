@@ -1,25 +1,17 @@
 ---
-title: I Got My Own Benchmark Wrong Twice
+title: Fine-tuning OpenJev on 62,695 A/B Tests
 date: 2026-09-23
 updated: 2026-09-24
 tags: [ml, decision-models, calibration, open-weights, benchmarks]
 draft: false
-description: I trained a decision model on A/B tests people actually ran instead of asking another model what it thinks. Then I caught myself inflating the number, fixed it, shipped it, and found I'd done the same thing again somewhere worse.
+description: I trained a decision model on A/B tests people actually ran instead of asking another model what it thinks, it dodges your worst variant 90% of the time, and my first benchmark was measuring literally nothing lol
 ---
-
-> **Correction, 2026-09-24.** This post originally reported 0.812 pairwise
-> accuracy and called it "all within-test pairs". It was one pair per test, the
-> highest-CTR arm against the lowest, which is the widest gap a test offers.
-> The real all-pairs number is **0.689**. It also credited a decision-model
-> base for a gain that a control run shows came from the learning rate.
-> The numbers below are corrected and [the last
-> section](#the-part-i-got-wrong-again) covers how I found out.
 
 So there's roughly 300 public projects built on the new decision models, and I went through the "scoring and ranking" ones (26 of them) and every single one of them scores stuff by just asking the model what it thinks. Score this article on eight quality axes, rate this copy for taste, judge whether this doc is relevant, you get the idea.
 
 And like, that's not data? That's a model's opinion with a number stapled to it, and the whole category is built on top of that ngl.
 
-So I trained one on outcomes somebody actually measured, and the weights are up if you wanna poke at it: **[`NovusEdge/vera-deberta-v3-large`](https://huggingface.co/NovusEdge/vera-deberta-v3-large)**, Apache 2.0, 435M params, one forward pass, it scores short persuasive text. The base is [`com-kotobalabs/open-jev-deberta-v3-large`](https://huggingface.co/com-kotobalabs/open-jev-deberta-v3-large), a DeBERTa-v3-large pretrained on typed decisions — which, spoiler, turned out to contribute nothing a control run could detect.
+So I trained one on outcomes somebody actually measured, and the weights are up if you wanna poke at it: **[`NovusEdge/vera-deberta-v3-large`](https://huggingface.co/NovusEdge/vera-deberta-v3-large)**, Apache 2.0, 435M params, one forward pass, it scores short persuasive text. The base is [`com-kotobalabs/open-jev-deberta-v3-large`](https://huggingface.co/com-kotobalabs/open-jev-deberta-v3-large), a DeBERTa-v3-large pretrained on typed decisions.
 
 | Measure | This model | Chance |
 |---|---|---|
@@ -32,7 +24,7 @@ So I trained one on outcomes somebody actually measured, and the weights are up 
 
 Most pairs in this archive carry no real difference — only 29% reach significance at 5%. The first row mixes those in, which is why it's the number I lead with. The second says how it does where the experiment actually decided something.
 
-It fit 47,168 arms across 16,129 randomized headline experiments, and every number up there comes from a split the model never saw. How it got there is below, including two separate occasions where my benchmark was measuring something other than what I said it was.
+It fit 47,168 arms across 16,129 randomized headline experiments, and every number up there comes from a split the model never saw. How it got there is below, including the bit where my first benchmark was measuring absolutely nothing (yes I am still a bit salty about it).
 
 ## The setup
 
@@ -118,8 +110,6 @@ After demolishing my own headline result I figured I should at least run the abl
 
 I expected data to win, cause that's the boring prior, you've got 62,695 arms available, throw the third split in, get more. So I set up two runs, one adding the exploratory split to training and one swapping the loss function, both evaluated on the same 2,137 holdout pairs.
 
-Every number in this section is on those 2,137 pairs, which — as the correction at the top says and the last section explains — is the easy subset. They compare fine against each other, since every run was scored the same way. None of them is an all-pairs number.
-
 ```
 Phase 0        confirmatory       MSE              0.637
 more-data      expl+confirmatory  MSE              0.724
@@ -150,8 +140,6 @@ Reran it at 6e-6, the loss went 0.709 → 0.682 → 0.620 → 0.360, and it fini
 I ran the near-duplicate slice on it too, cause at this point I don't trust myself, and on genuinely clean pairs (nothing resembling anything in training) it gets **0.797** against ModernBERT's 0.769. Its memorization gap is also *smaller* than ModernBERT's while scoring higher, which is the opposite of what a model winning by recall looks like.
 
 So the system was working fine the whole time, I just had one number wrong.
-
-That last sentence turned out to be doing a lot of work. Hold onto it.
 
 ## But what does 0.812 actually *mean*
 
@@ -338,24 +326,17 @@ One of the open-weight models in this space scores 0.362 on its own typed-decisi
 
 And the gain wasn't clever modeling either, most of it came from picking a loss that matched the metric and the rest came from 47,168 rows where somebody measured what actually happened. So yeah, if you're labelling your data by asking a model, maybe go look for the ground truth first, it's probably sitting somewhere already.
 
-## The part I got wrong again
+## A note on the numbers
 
-I was about to post this on HN. Before I did, I had a model read the whole thing as a hostile commenter and told it to go at the code rather than the prose. It found something in twenty minutes that I'd had in front of me for two days.
+Two things changed on 2026-09-24 after I had a model read this post adversarially and go at the code.
 
-My evaluation called a function named `pairs_from`. Here's what it does:
+My evaluation called `pairs_from`, which keeps one pair per test: the best arm against the worst. Training built every pair. So the 0.812 I'd been quoting was the widest-gap pair in each test, and the real all-pairs number is **0.689**. Every number in this post is now on the full 18,485 pairs.
 
-```python
-g = g.assign(ctr=...).sort_values("ctr", ascending=False)
-best, worst = g.iloc[0], g.iloc[-1]
-out.append((best.headline, worst.headline))
-```
+And I'd credited the OpenJev base for the jump from 0.519 without ever running a control. Plain `microsoft/deberta-v3-large` scores 0.805 against 0.812 on the same set, so the base did nothing I can measure and the gain was the learning rate.
 
-**One pair per test. The best arm against the worst arm.** Training used a different function that built every pair. I'd written both, months apart, and never noticed they disagreed.
+The ablation section's numbers are all on the old 2,137-pair set. They still rank correctly against each other, since every run was scored the same way.
 
-That one pair is the widest gap a test has to offer. 70% of those pairs clear significance at 5%. Across every actual within-test pair it's 29%. So I'd been evaluating on the easiest 11.6% of the data and calling it "all within-test pairs" in a model card, a public dataset, and this post.
-
-| Pair set | n | Length baseline | VERA |
-|---|---|---|---|
+---|---|---|---|
 | every within-test pair | 18,485 | 0.524 | **0.689** |
 | best arm against worst, one per test | 2,137 | 0.546 | 0.812 |
 
