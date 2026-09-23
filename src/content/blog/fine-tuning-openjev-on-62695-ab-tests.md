@@ -12,12 +12,13 @@ And like, that's not data? That's a model's opinion with a number stapled to it,
 
 So I trained one on outcomes somebody actually measured, and the weights are up if you wanna poke at it: **[`NovusEdge/vera-deberta-v3-large`](https://huggingface.co/NovusEdge/vera-deberta-v3-large)**, Apache 2.0, 435M params, one forward pass, it scores short persuasive text. The base is [`com-kotobalabs/open-jev-deberta-v3-large`](https://huggingface.co/com-kotobalabs/open-jev-deberta-v3-large), which is itself DeBERTa-v3-large pretrained on typed decisions.
 
-| Measure | This model | Chance | Humans |
+| Measure | This model | Chance | Gemini 3.1 Pro |
 |---|---|---|---|
-| Pairwise accuracy, unseen split | **0.812** | 0.546 | ~chance |
+| Pairwise accuracy, unseen split | **0.812** | 0.546 | 0.751 |
 | Clean pairs only | **0.797** | 0.546 | - |
-| Picks the best of 4-5 variants | **47.7%** | 23.0% | ~chance |
+| Picks the best of 4-5 variants | **47.7%** | 23.0% | - |
 | Avoids the worst variant | **90.3%** | 77.0% | - |
+| Reddit title pairs, out of domain | 0.522 | 0.500 | - |
 
 It's trained on 62,695 real A/B arms from 32,487 randomized headline experiments, and every number up there comes from a split the model never saw. How it got there is below, including the bit where my first benchmark was measuring absolutely nothing (yes I'm still a bit salty about it).
 
@@ -31,7 +32,7 @@ So: ModernBERT-large with a regression head, and the target is the shrunk logit 
 
 Twenty-five minutes on a single L4, about forty cents. I held out everything after January 2015, tested there, and got **0.704 pairwise accuracy.**
 
-For scale, the closest published number on unfiltered pairs is [0.544](https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0281682), from a Toronto group using hand-crafted linguistic features, and their paper concludes the problem is "inherently hard, not merely a sample size issue." I'll come back to why that 0.544 is a worse comparison than it looks. Humans given the same task score at chance across 4,571 responses, which is the part that actually matters.
+For scale, the closest published number on unfiltered pairs is [0.544](https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0281682), from a Toronto group using hand-crafted linguistic features, and their paper concludes the problem is "inherently hard, not merely a sample size issue." I'll come back to why that 0.544 is a worse comparison than it looks, and later I stop citing other people's numbers and just run the comparison myself.
 
 Sixteen points over that, for forty cents. So obviously I wrote it up: "Headline signal survives two years of drift."
 
@@ -205,7 +206,25 @@ The one I'd actually missed is the Pythia-12B reward model, and it's the stronge
 
 What survives all of it: nobody has reported pairwise accuracy from a fine-tuned encoder on unfiltered within-test pairs from headline text alone. That's a narrower claim than "beats SOTA" and it's one I can actually defend.
 
-The line that holds up best isn't about prior models anyway. It's that 4,571 human responses on this task are indistinguishable from random. Whatever VERA learned, people can't do it by eye.
+## So I ran the comparison myself
+
+Every number above is somebody else's, measured on somebody else's pairs. So I put two current systems on mine.
+
+Each pair gets asked twice, once with the winner placed first and once with it placed second, and it only counts when both orders name the same headline. That protocol matters: models pick slot A more often than chance regardless of content, so a single-order run scores itself on a subset it chose.
+
+| System | Params | Matched pairs | Self-consistent |
+|---|---|---|---|
+| **VERA** | 435M | **0.823** | — |
+| Gemini 3.1 Pro | frontier | 0.751 | 83.7% |
+| Laya typed-decisions | 421M | 0.504 | 52.9% |
+
+And there goes a line I'd been leaning on. I had been saying humans score at chance here, with the implication that the task is hard for models too. It isn't. Gemini gets 0.751. The human result is about humans and says nothing about machines, and I was using it to say something it doesn't.
+
+The honest version is better anyway: a 435M model beats a frontier reasoning model by seven points at roughly a thousandth of the cost per call. $5.60 of Gemini calls to find that out.
+
+Laya is the open decision model everyone will ask about, and it answers at coin-flip consistency here. That reads badly if you leave it there, so: its card covers invoice processing, security incidents, customer service and agent traces. Headline click rate is outside all four. It's a domain-fit number, and I'd expect VERA to look just as stupid on invoice processing.
+
+There's one more thing that fell out of it. Gemini scores 0.641 on the pairs whose click-rate gap fails significance at 5% — the ones I'd been calling noise. It has never seen these labels. So a model with no access to the outcome data also beats 0.500 there, which means those pairs hold real differences the experiment just lacked power to prove. VERA posting 0.696 on the same stratum needs no leakage explanation, and until I ran Gemini I genuinely couldn't tell those two readings apart.
 
 ## Okay here's where I ruin it
 
@@ -213,7 +232,19 @@ Every single number above comes from 2013 to 2015 viral social headlines at one 
 
 A B2B newsletter going to 4,000 people who opted in shares almost nothing with "This Kid Just Destroyed The Entire Argument Against Vaccines In One Sentence".
 
-So I went looking for public email data with real measured send outcomes, and there is none.
+So I tested it. Reddit has the same shape as the archive if you squint at it right: SNAP published 132,308 submissions where the same image got resubmitted under a different title about eight times each. One item, many text variants, a measured outcome. 16,242 images.
+
+Nothing randomised it, so three things had to come out first. Pairs form inside one image *and* one subreddit, so community level cancels. A late repost does worse for being late, so I fit the decay against resubmission index per subreddit and ranked the residual. And a pair only survives if the residual gap is wide enough to call a winner.
+
+117,118 pairs. VERA scores **0.522**. Chance is 0.500. A "longer title wins" rule gets 0.507.
+
+At that sample size the standard error is 0.0015, so 0.522 is about fifteen standard errors above chance — real, and small enough to be useless. The accuracy does climb with the residual gap, 0.508 → 0.531 across quartiles, which says the tiny effect is signal rather than an artifact. It ranges from 0.495 on r/WTF to 0.558 on r/fffffffuuuuuuuuuuuu.
+
+So the 0.812 belongs to Upworthy. Whatever VERA learned is one publisher's 2013 voice, and it does not come with you.
+
+I'll caveat my own caveat: Reddit upvotes aren't a click rate, and time of day and submitter reputation stay uncontrolled. A null result here can't cleanly separate "no transfer" from "the confounds ate it". But it's the cheapest honest test available and it came back negative, and I'd rather run it than write "transfer is untested" and let a reader assume the best.
+
+The test I actually wanted needs email data. So I went looking for public email data with real measured send outcomes, and there is none.
 
 | Source | Size | Availability |
 |---|---|---|
