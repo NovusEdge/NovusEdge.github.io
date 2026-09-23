@@ -1,9 +1,9 @@
 ---
-title: Fine-tuning OpenJev; 17% more clicks
+title: Fine-tuning OpenJev on 62,695 A/B Tests
 date: 2026-09-23
 tags: [ml, decision-models, calibration, open-weights, benchmarks]
 draft: true
-description: Open weights. Trained on 62,695 measured A/B outcomes instead of another model's opinion. 0.812 pairwise accuracy against a published 0.544, and +17.4% realised click rate.
+description: Open weights for a decision model trained on measured A/B outcomes instead of another model's opinion. It avoids the worst of your variants 90% of the time. Plus the part where my first benchmark was measuring nothing.
 ---
 
 There are roughly 300 public projects built on the new decision models. I went through the "scoring and ranking" category — 26 of them — and every single one scores things by asking the model what it thinks.
@@ -20,7 +20,7 @@ So here are open weights for one trained on outcomes somebody actually measured.
 |---|---|---|---|
 | Pairwise accuracy, unseen split | **0.812** | 0.544 | ~chance |
 | Clean pairs only | **0.797** | — | — |
-| Realised click-rate lift | **+17.4%** | — | — |
+| Avoids the worst variant | **90.3%** | — | — |
 
 Trained on 62,695 real A/B arms from 32,487 randomized headline experiments. Every number above comes from a split the model never saw.
 
@@ -161,19 +161,39 @@ The system is functioning as designed. The system was functioning as designed th
 
 ## But what does 0.812 actually *mean*
 
-Nothing, to a human. That's the problem with pairwise accuracy as a product claim: it tells you the ordering is right and carries zero information about magnitude. Ordering two headlines correctly 81.2% of the time could be worth a fortune or worth nothing depending on how far apart they actually are.
+Nothing, to a human. That is the problem with pairwise accuracy as a claim: it says the ordering is right and carries no magnitude. Ordering two headlines correctly 81.2% of the time could be worth a fortune or worth nothing, depending on how far apart they actually are.
 
-So I measured the thing an operator would actually experience. For each test, take the model's top-scored arm and compare its real click rate against the mean of all arms in that test — because without a model you have no reason to prefer any particular variant, so the mean of what you might have sent is the honest counterfactual.
+So I measured what an operator experiences. For each test, take the model's top-scored arm and compare its real click rate against the mean of all arms in that test. Without a model you have no reason to prefer any particular variant, so the mean of what you might have sent is the honest counterfactual.
 
 | | CTR |
 |---|---|
-| Test mean (no model) | 1.20% |
-| Model's pick | 1.41% |
-| Oracle (perfect pick) | 1.60% |
+| Test mean, no model | 1.20% |
+| Model's pick | 1.42% |
+| Oracle, perfect pick | 1.60% |
 
-**+17.4% relative click rate.** Across 2,140 tests. That's 52.6% of the entire headroom between picking blind and picking perfectly.
+**+18.3% relative click rate**, across 2,140 tests.
 
-Concretely, if you're running a 5,000-person newsletter at a 2.5% click rate and sending weekly: 125 clicks per send becomes 147. Call it eleven hundred extra clicks a year, for choosing differently among subject lines you already wrote.
+And now I have to immediately take that number away from you.
+
+### The lift number does not travel
+
+18.3% is a fact about Upworthy. It depends on their 1.20% base rate and on how much spread their writers put between variants. Point this at a B2B newsletter with a 2.5% click rate and tighter variants and the number changes, in a direction I cannot predict.
+
+What *does* travel is anything shaped as a ratio inside a single test:
+
+| Measure | Value |
+|---|---|
+| Avoids the worst variant | **90.3%** |
+| Beats the test average | 76.6% |
+| Picks the actual best variant | 47.7% |
+| Headroom captured, median test | 89.2% |
+| Spearman, score vs click rate | 0.526 |
+
+**90.3% is the claim I would actually make.** It almost never lets you send the worst thing you wrote. That survives a change of base rate, audience and medium in a way that "+18.3%" does not.
+
+47.7% top-1 against typically four or five arms is about 2.2× chance.
+
+One number in there is doing something sneaky and deserves calling out. Median headroom captured is 89.2%, with an interquartile range of 5% to 100%. Pooled across all tests it is 55.4%. The model is bimodal: on most tests it takes nearly all the available gain, and on a minority it takes almost none, and those drag the aggregate down. Quoting the median alone would flatter it. Quoting the pooled figure alone would undersell the typical case.
 
 Then I fitted an [isotonic regression](https://en.wikipedia.org/wiki/Isotonic_regression) on top so the score has units instead of vibes. Isotonic is the right call here specifically because it assumes only monotonicity — higher score means higher click rate — which is exactly what Bradley-Terry guarantees and precisely all it guarantees. Anything parametric would be inventing structure the model never promised. Intervals come from bootstrapping over *tests* rather than arms, since arms inside one test share an article and aren't independent.
 
@@ -223,6 +243,27 @@ What I have is a credential. The asset would be an ongoing measurement loop on l
 That is clarifying, because it says where the real thing is: the data I need is sitting inside email service providers, doing nothing. Every ESP with an A/B testing feature has millions of subject-line experiments with measured outcomes, and approximately none of them are training anything on it.
 
 That's the move. Not another head, not another benchmark. One relationship with somebody who has the logs.
+
+## The thing this generalises to
+
+The recipe here is dull enough to state in one line: if a measured outcome exists, train on it, and stop asking a model for its opinion.
+
+What makes that worth saying is where the outcomes already are. Every A/B test your company has ever run is sitting in an experimentation platform, labelled, with the result attached, doing nothing. Optimizely, Statsig, LaunchDarkly, whatever you use — years of "we tried these five and this one won," and nobody has trained anything on it.
+
+Anywhere you have a candidate set and a downstream number, the same recipe applies:
+
+| Decision | The label you already have |
+|---|---|
+| Subject lines, headlines, push copy | opens, clicks |
+| Support macro selection | resolved without escalation |
+| Retrieval reranking | which result the user accepted |
+| Error message wording | self-served, or filed a ticket |
+| Product listing titles | conversions |
+| Agent tool choice | did the trajectory succeed |
+
+That last row is the interesting one for anybody building agents. Jev's three primitives are choice, score and noul. Everything in this post touches `score`. The same move applies to `choice` wherever somebody logged what happened after the decision — which for most agent routing is nobody, yet.
+
+One honest limit on all of this: I have exactly one data point. Outcome-training beat zero-shot judgment by a lot *on one task*. Whether that margin holds anywhere else is untested, and I would not bet the number, only the direction.
 
 ## The weights
 
