@@ -1,5 +1,5 @@
 ---
-title: Fine-tuning OpenJev; 17% more clicks from copy you already wrote
+title: Fine-tuning OpenJev; 17% more clicks
 date: 2026-09-23
 tags: [ml, decision-models, calibration, open-weights, benchmarks]
 draft: true
