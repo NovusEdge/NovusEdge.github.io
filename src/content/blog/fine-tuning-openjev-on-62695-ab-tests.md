@@ -2,7 +2,7 @@
 title: Fine-tuning OpenJev on 62,695 A/B Tests
 date: 2026-09-23
 tags: [ml, decision-models, calibration, open-weights, benchmarks]
-draft: true
+draft: false
 description: Open weights for a decision model trained on measured A/B outcomes instead of another model's opinion. It avoids the worst of your variants 90% of the time. Plus the part where my first benchmark was measuring nothing.
 ---
 
