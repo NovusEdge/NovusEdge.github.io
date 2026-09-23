@@ -216,9 +216,17 @@ export function markPlanA(children: ReactNode): ReactNode {
   })
 }
 
-function buildComponents(cites: Map<string, number>, heads: Map<number, string>): Components {
+function buildComponents(cites: Map<string, number>, heads: Map<number, string>, figures: Record<string, ReactNode>): Components {
   return {
     img({ src, alt, title }) {
+      const drawn = typeof src === 'string' ? figures[src] : undefined
+      if (drawn) {
+        return (
+          <figure className="pa-fig oj-chart" role="img" aria-label={alt}>
+            {drawn}
+          </figure>
+        )
+      }
       return <Figure src={typeof src === 'string' ? src : undefined} alt={alt} title={title} />
     },
     // A figure cannot live inside the <p> react-markdown wraps a lone image in.
@@ -258,11 +266,20 @@ function buildComponents(cites: Map<string, number>, heads: Map<number, string>)
   }
 }
 
-export function PlanAMarkdown({ children, slug = 'plan-a-ai' }: { children: string; slug?: string }) {
+/** `figures` swaps an image for a drawn figure, keyed by the image's src. */
+export function PlanAMarkdown({
+  children,
+  slug = 'plan-a-ai',
+  figures = {},
+}: {
+  children: string
+  slug?: string
+  figures?: Record<string, ReactNode>
+}) {
   const md = smarten(children)
   const heads = new Map(blogHeadings(md, slug).map((head) => [head.line, head.id]))
   return (
-    <ReactMarkdown remarkPlugins={[remarkGfm]} components={buildComponents(citationIndex(md), heads)}>
+    <ReactMarkdown remarkPlugins={[remarkGfm]} components={buildComponents(citationIndex(md), heads, figures)}>
       {md}
     </ReactMarkdown>
   )

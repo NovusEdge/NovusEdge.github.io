@@ -23,6 +23,20 @@ describe('PlanAMarkdown', () => {
     expect(render('## The Timing')).toContain('id="the-timing"')
   })
 
+  it('swaps an image for the figure registered under its src', () => {
+    const html = renderToStaticMarkup(
+      <I18nextProvider i18n={i18nFor('en')}>
+        <PlanAMarkdown slug={SLUG} figures={{ '/a.png': <svg data-test="drawn" /> }}>
+          {'![Alt text.](/a.png)\n\n![Other.](/b.png)'}
+        </PlanAMarkdown>
+      </I18nextProvider>,
+    )
+    expect(html).toContain('data-test="drawn"')
+    expect(html).toContain('aria-label="Alt text."')
+    expect(html).not.toContain('src="/a.png"')
+    expect(html).toContain('src="/b.png"')
+  })
+
   it('leaves quotes inside fenced code straight', () => {
     const html = render('He said "hi".\n\n```python\ntok("x")\n```', SLUG)
     expect(html).toContain('tok(&quot;x&quot;)')

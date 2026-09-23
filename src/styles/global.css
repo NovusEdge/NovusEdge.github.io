@@ -886,6 +886,152 @@
   }
 }
 
+/* The margin contents list needs 12rem left of the body, which exists from
+   1280px up. Below that the inline list above the body takes its place. */
+.oj-margin,
+.oj-contents-rail {
+  display: none;
+}
+@media (min-width: 1280px) {
+  .oj-contents-inline {
+    display: none;
+  }
+  .oj-margin {
+    display: block;
+    flex: none;
+    align-self: flex-start;
+    position: sticky;
+    top: 6.5rem;
+    width: 12rem;
+    margin-right: 2.5rem;
+  }
+  .oj-contents-rail {
+    display: block;
+    padding-bottom: 0;
+  }
+  .oj-contents-rail ol {
+    columns: 1;
+  }
+  .oj-contents-rail li {
+    font-size: 0.78em;
+    line-height: 1.35;
+    margin-bottom: 0.55em;
+    color: color-mix(in srgb, var(--pa-ink) 55%, transparent);
+    transition: color 0.3s;
+  }
+  .oj-contents-rail li[aria-current] {
+    color: var(--pa-ink);
+  }
+  .oj-contents-rail li[aria-current] .pa-contents-n {
+    font-weight: 700;
+  }
+  .oj-spread .pa-body {
+    width: auto;
+    flex: 1 1 0;
+    min-width: 0;
+    max-width: 40rem;
+  }
+}
+
+/* Drawn replacements for the post's PNG charts, in the page's own ink. */
+.oj-chart {
+  margin: 2em 0;
+}
+.oj-plot {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+  font-family: var(--font-mono);
+  font-size: 11px;
+}
+.oj-plot text {
+  fill: color-mix(in srgb, var(--pa-ink) 70%, transparent);
+}
+.oj-plot .oj-key,
+.oj-plot .oj-val {
+  fill: var(--pa-ink);
+}
+.oj-plot .oj-val {
+  font-size: 13px;
+}
+.oj-plot .oj-note {
+  font-style: italic;
+  fill: color-mix(in srgb, var(--pa-ink) 55%, transparent);
+}
+.oj-grid {
+  stroke: var(--pa-rule);
+  stroke-width: 0.6;
+}
+.oj-ref {
+  stroke: color-mix(in srgb, var(--pa-ink) 45%, transparent);
+  stroke-dasharray: 5 4;
+}
+.oj-ref-dot {
+  stroke-dasharray: 1.5 3;
+}
+.oj-series polyline,
+.oj-series line {
+  fill: none;
+  stroke-width: 2;
+}
+.oj-series.oj-ox polyline,
+.oj-series.oj-ox line {
+  stroke: var(--pa-ox-mark);
+  stroke-width: 2.4;
+}
+.oj-series.oj-ox circle {
+  fill: var(--pa-ox-mark);
+}
+.oj-series.oj-ink polyline,
+.oj-series.oj-ink line {
+  stroke: color-mix(in srgb, var(--pa-ink) 70%, var(--pa-ground));
+}
+.oj-series.oj-ink circle {
+  fill: var(--pa-ground);
+  stroke: color-mix(in srgb, var(--pa-ink) 70%, var(--pa-ground));
+  stroke-width: 1.5;
+}
+.oj-series.oj-dash polyline,
+.oj-series.oj-dash line {
+  stroke-dasharray: 6 4;
+}
+.oj-train {
+  fill: color-mix(in srgb, var(--pa-ink) 22%, var(--pa-ground));
+}
+.oj-test {
+  fill: var(--pa-ox-mark);
+}
+.oj-plot .oj-inbar {
+  fill: var(--pa-ink);
+}
+.oj-bar.oj-muted rect {
+  fill: color-mix(in srgb, var(--pa-ink) 28%, var(--pa-ground));
+}
+.oj-bar.oj-ox rect {
+  fill: var(--pa-ox-mark);
+}
+.oj-bar.oj-ox-deep rect {
+  fill: var(--pa-ox);
+}
+.oj-plot .oj-delta {
+  font-size: 10px;
+  fill: var(--pa-ox);
+}
+.oj-plot .oj-muted .oj-delta {
+  fill: color-mix(in srgb, var(--pa-ink) 55%, transparent);
+}
+.oj-shade {
+  fill: color-mix(in srgb, var(--pa-ink) 7%, transparent);
+}
+.oj-err line {
+  stroke: color-mix(in srgb, var(--pa-ink) 50%, transparent);
+  stroke-width: 1.3;
+}
+.oj-err circle {
+  fill: var(--pa-ox-mark);
+}
+
 /* Plan A has no tables or code blocks. The OpenJev post has both. */
 .pa table {
   width: 100%;

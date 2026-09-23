@@ -1,42 +1,67 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { TLink } from '../../components/page-transition'
 import { Meta } from '../../lib/meta'
 import { blogHeadings } from '../../lib/blog-headings'
 import { PlanAMarkdown } from '../../components/plan-a-markdown'
 import { OpenJevRail, OpenJevStatic } from '../../components/openjev-board'
+import { OPENJEV_FIGURES } from '../../components/openjev-figures'
 import { REPO_URL } from '../../lib/openjev-data'
 import { useLocalePath } from '../../i18n/use-locale-path'
 import type { Post } from '../../lib/posts'
 
-/**
- * The first run cost 40 cents and the project cost 4 dollars, drawn to scale
- * like Plan A's runway. The first mark sits a tenth of the way along.
- */
-function CostStrip() {
+type Head = { id: string; text: string }
+
+function Contents({ toc, current, className }: { toc: Head[]; current: number; className: string }) {
   const { t } = useTranslation()
-  const first = 0.4 + (99.2 * 0.4) / 4
   return (
-    <figure className="pa-runway">
-      <svg viewBox="-2 0 104 26" className="w-full" role="img" aria-label={t('blog.openjev.costLabel')}>
-        <line x1="0.4" y1="13" x2="99.6" y2="13" stroke="color-mix(in srgb, var(--pa-ink) 30%, transparent)" strokeWidth="0.3" />
-        <line x1="0.4" y1="13" x2={first} y2="13" stroke="var(--pa-ox)" strokeWidth="1.1" />
-        <circle cx="0.4" cy="13" r="1.1" fill="var(--pa-ox)" />
-        <circle cx={first} cy="13" r="1.1" fill="var(--pa-ox)" />
-        <circle cx="99.6" cy="13" r="1.1" fill="none" stroke="color-mix(in srgb, var(--pa-ink) 45%, transparent)" strokeWidth="0.35" />
-        <text x={first} y="7.6" fontSize="3.1" fill="var(--pa-ink)" textAnchor="middle">$0.40</text>
-        <text x="0.4" y="21.5" fontSize="2.7" fill="color-mix(in srgb, var(--pa-ink) 60%, transparent)" textAnchor="start">{t('blog.openjev.costFirst')}</text>
-        <text x="99.6" y="7.6" fontSize="3.1" fill="var(--pa-ink)" textAnchor="end">$4</text>
-        <text x="99.6" y="21.5" fontSize="2.7" fill="color-mix(in srgb, var(--pa-ink) 60%, transparent)" textAnchor="end">{t('blog.openjev.costLast')}</text>
-      </svg>
-    </figure>
+    <nav className={`pa-contents ${className}`} aria-label={t('blog.contents')}>
+      <h2>{t('blog.contents')}</h2>
+      <ol>
+        {toc.map((h, i) => (
+          <li key={h.id} aria-current={i === current ? 'location' : undefined}>
+            <span className="pa-contents-n">{String(i + 1).padStart(2, '0')}</span>
+            <a href={`#${h.id}`}>{h.text.replace(/\*/g, '')}</a>
+          </li>
+        ))}
+      </ol>
+    </nav>
   )
+}
+
+/** Index of the last heading above 40% of the viewport, or -1 above the first. */
+function useCurrentSection(toc: Head[]): number {
+  const [current, setCurrent] = useState(-1)
+  useEffect(() => {
+    let frame = 0
+    const read = () => {
+      frame = 0
+      const line = window.innerHeight * 0.4
+      let at = -1
+      toc.forEach((h, i) => {
+        const el = document.getElementById(h.id)
+        if (el && el.getBoundingClientRect().top <= line) at = i
+      })
+      setCurrent(at)
+    }
+    const onScroll = () => {
+      if (!frame) frame = requestAnimationFrame(read)
+    }
+    read()
+    window.addEventListener('scroll', onScroll, { passive: true })
+    return () => {
+      window.removeEventListener('scroll', onScroll)
+      cancelAnimationFrame(frame)
+    }
+  }, [toc])
+  return current
 }
 
 export function OpenJevPage({ post, image }: { post: Post; image?: string | null }) {
   const { t, i18n } = useTranslation()
   const lp = useLocalePath()
-  const toc = blogHeadings(post.content, post.slug)
+  const [toc] = useState(() => blogHeadings(post.content, post.slug))
+  const current = useCurrentSection(toc)
 
   useEffect(() => {
     document.documentElement.classList.add('plan-a-paper')
@@ -44,7 +69,7 @@ export function OpenJevPage({ post, image }: { post: Post; image?: string | null
   }, [])
 
   return (
-    <div className="pa" lang={post.contentLocale}>
+    <div className="pa oj" lang={post.contentLocale}>
       <Meta title={post.title} description={post.description || post.title} image={image} />
 
       <div className="pa-shell pb-24 pt-8">
@@ -67,30 +92,24 @@ export function OpenJevPage({ post, image }: { post: Post; image?: string | null
             </p>
             <p className="pa-standfirst">{post.description}</p>
           </div>
-          <CostStrip />
         </header>
 
         <hr />
 
-        <nav className="pa-col pa-contents" aria-label={t('blog.contents')}>
-          <h2>{t('blog.contents')}</h2>
-          <ol>
-            {toc.map((h, i) => (
-              <li key={h.id}>
-                <span className="pa-contents-n">{String(i + 1).padStart(2, '0')}</span>
-                <a href={`#${h.id}`}>{h.text.replace(/\*/g, '')}</a>
-              </li>
-            ))}
-          </ol>
-        </nav>
+        <Contents toc={toc} current={-1} className="pa-col oj-contents-inline" />
 
         <div className="pa-col oj-inline">
           <OpenJevStatic />
         </div>
 
-        <div className="pa-spread">
+        <div className="pa-spread oj-spread">
+          <div className="oj-margin">
+            <Contents toc={toc} current={current} className="oj-contents-rail" />
+          </div>
           <div className="pa-col pa-body">
-            <PlanAMarkdown slug={post.slug}>{post.content}</PlanAMarkdown>
+            <PlanAMarkdown slug={post.slug} figures={OPENJEV_FIGURES}>
+              {post.content}
+            </PlanAMarkdown>
           </div>
           <div className="pa-rail">
             <OpenJevRail />
