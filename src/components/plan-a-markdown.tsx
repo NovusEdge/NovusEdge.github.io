@@ -258,9 +258,9 @@ function buildComponents(cites: Map<string, number>, heads: Map<number, string>)
   }
 }
 
-export function PlanAMarkdown({ children }: { children: string }) {
+export function PlanAMarkdown({ children, slug = 'plan-a-ai' }: { children: string; slug?: string }) {
   const md = smarten(children)
-  const heads = new Map(blogHeadings(md, 'plan-a-ai').map((head) => [head.line, head.id]))
+  const heads = new Map(blogHeadings(md, slug).map((head) => [head.line, head.id]))
   return (
     <ReactMarkdown remarkPlugins={[remarkGfm]} components={buildComponents(citationIndex(md), heads)}>
       {md}
