@@ -22,7 +22,7 @@
     },
     "fine-tuning-openjev-on-62695-ab-tests": {
       "title": "OpenJevin hienosäätö 62 695 A/B-testillä",
-      "description": "Koulutin päätöksentekomallin oikeasti ajettujen A/B-testien perusteella sen sijaan, että olisin kysynyt toiselta mallilta sen mielipidettä. Se väistää huonoimman variantin 90 % ajasta, ja ensimmäinen vertailutestini ei mitannut kirjaimellisesti yhtään mitään lol"
+      "description": "Koulutin päätöksentekomallin A/B-testeillä, joita ihmiset oikeasti ajoivat, sen sijaan että kysyisin toiselta mallilta mielipidettä. Se väistää huonoimman varianttisi 90 % ajasta, ja ensimmäinen suorituskykytestini mittasi kirjaimellisesti ei yhtikäs mitään lol"
     },
     "game-zone-writeup": {
       "title": "Game Zone Writeup",
@@ -144,7 +144,7 @@
     },
     "fine-tuning-openjev-on-62695-ab-tests": {
       "title": "Fine-Tuning von OpenJev auf 62.695 A/B-Tests",
-      "description": "Ich habe ein Decision-Modell auf A/B-Tests trainiert, die tatsächlich durchgeführt wurden, statt einfach ein anderes Modell nach seiner Meinung zu fragen. Es vermeidet in 90 % der Fälle deine schlechteste Variante, und mein erster Benchmark hat buchstäblich gar nichts gemessen lol"
+      "description": "Ich habe ein Decision-Model auf echten A/B-Tests trainiert, statt einfach ein anderes Modell nach seiner Meinung zu fragen. Es weicht deiner schlechtesten Variante in 90 % der Fälle aus, und mein erster Benchmark hat buchstäblich gar nichts gemessen lol"
     },
     "game-zone-writeup": {
       "title": "Game Zone Writeup",
@@ -266,7 +266,7 @@
     },
     "fine-tuning-openjev-on-62695-ab-tests": {
       "title": "62,695件のA/BテストでOpenJevをファインチューニングする",
-      "description": "別のモデルに意見を聞く代わりに、実際に人間が実施したA/Bテストを使って意思決定モデルを訓練した。最悪のバリアントを90%の確率で回避できるようになったが、最初のベンチマークは文字通り何の意味もないものを測定していた（笑）"
+      "description": "別のモデルに意見を聞く代わりに、実際に人間が実施したA/Bテストで意思決定モデルをトレーニングした。最悪のバリアントを90%の確率で回避できるし、最初のベンチマークは文字通り何も測定していなかった（笑）"
     },
     "game-zone-writeup": {
       "title": "Game Zone Writeup",
@@ -387,8 +387,8 @@
       "description": "如今生成是免费的。而验证依然保留着原有的成本。这种不对称性打破了一切。"
     },
     "fine-tuning-openjev-on-62695-ab-tests": {
-      "title": "基于 62,695 次 A/B 测试微调 OpenJev",
-      "description": "我用人们真实跑过的 A/B 测试数据训练了一个决策模型，而不是去问另一个模型怎么看。它在 90% 的情况下都能避开最差的变体，而且我最初的基准测试完全测了个寂寞，笑死。"
+      "title": "在 62,695 次 A/B 测试上微调 OpenJev",
+      "description": "我用大家实际跑过的真实 A/B 测试训练了一个决策模型，而不是去问另一个模型怎么看；它有 90% 的概率能帮你避开最差的变体，而且我最初那个基准测试测出来的东西其实纯属寂寞，笑死"
     },
     "game-zone-writeup": {
       "title": "Game Zone Writeup",
