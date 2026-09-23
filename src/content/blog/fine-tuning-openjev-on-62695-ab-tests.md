@@ -12,11 +12,12 @@ And like, that's not data? That's a model's opinion with a number stapled to it,
 
 So I trained one on outcomes somebody actually measured, and the weights are up if you wanna poke at it: **[`NovusEdge/vera-deberta-v3-large`](https://huggingface.co/NovusEdge/vera-deberta-v3-large)**, Apache 2.0, 435M params, one forward pass, it scores short persuasive text. The base is [`com-kotobalabs/open-jev-deberta-v3-large`](https://huggingface.co/com-kotobalabs/open-jev-deberta-v3-large), which is itself DeBERTa-v3-large pretrained on typed decisions.
 
-| Measure | This model | Published SOTA | Humans |
+| Measure | This model | Chance | Humans |
 |---|---|---|---|
-| Pairwise accuracy, unseen split | **0.812** | 0.544 | ~chance |
-| Clean pairs only | **0.797** | - | - |
-| Avoids the worst variant | **90.3%** | - | - |
+| Pairwise accuracy, unseen split | **0.812** | 0.546 | ~chance |
+| Clean pairs only | **0.797** | 0.546 | - |
+| Picks the best of 4-5 variants | **47.7%** | 23.0% | ~chance |
+| Avoids the worst variant | **90.3%** | 77.0% | - |
 
 It's trained on 62,695 real A/B arms from 32,487 randomized headline experiments, and every number up there comes from a split the model never saw. How it got there is below, including the bit where my first benchmark was measuring absolutely nothing (yes I'm still a bit salty about it).
 
@@ -30,9 +31,9 @@ So: ModernBERT-large with a regression head, and the target is the shrunk logit 
 
 Twenty-five minutes on a single L4, about forty cents. I held out everything after January 2015, tested there, and got **0.704 pairwise accuracy.**
 
-For scale, the published state of the art on this exact dataset is [0.544](https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0281682), from a Toronto group using hand-crafted linguistic features on 24,333 pairs, and their paper concludes the problem is "inherently hard, not merely a sample size issue." Humans given the same task score at chance, and there's a LoRA'd Llama-3-8B in the literature that gets 0.469 lmao.
+For scale, the closest published number on unfiltered pairs is [0.544](https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0281682), from a Toronto group using hand-crafted linguistic features, and their paper concludes the problem is "inherently hard, not merely a sample size issue." I'll come back to why that 0.544 is a worse comparison than it looks. Humans given the same task score at chance across 4,571 responses, which is the part that actually matters.
 
-Sixteen points over the published number, for forty cents. So obviously I wrote it up: "Headline signal survives two years of drift."
+Sixteen points over that, for forty cents. So obviously I wrote it up: "Headline signal survives two years of drift."
 
 ## And yet
 
@@ -182,6 +183,30 @@ Then I fitted an [isotonic regression](https://en.wikipedia.org/wiki/Isotonic_re
 
 And look at the middle rows, the intervals cross zero there, which is the model correctly going "these two are the same headline, flip a coin".
 
+## About that 0.544
+
+I said I'd come back to it. When I went looking properly at what else has been run on this archive, the comparison I'd been leaning on got a lot weaker, and something I'd missed got a lot more relevant.
+
+| Source | Task | Metric | Value | Chance |
+|---|---|---|---|---|
+| LOLA, humans (n=4,571) | top-1 of k | accuracy | ~chance | 0.330 |
+| LOLA, GPT-4 in-context | top-1 of k | accuracy | 0.400 | 0.330 |
+| LOLA, LoRA Llama-3-8B | top-1 of k | accuracy | 0.469 | 0.330 |
+| LOLA, fine-tuned GPT-4o | top-1 of k | accuracy | 0.488 | 0.330 |
+| [arXiv:2506.00152](https://arxiv.org/abs/2506.00152), Pythia-12B | significant pairs, + lede + timestamp | ROC AUC | 0.82 | 0.50 |
+| [PLOS ONE 0281682](https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0281682) | pairs matched on article+image+week, K≤15 | accuracy | 0.544 | ~0.50 |
+| **VERA** | all within-test pairs, headline only | accuracy | **0.812** | 0.546 |
+
+Not one of those rows is a like-for-like comparison with mine, which is the whole point.
+
+The 0.544 paper matches pairs on article, image *and* testing week, then randomly subsamples any experiment above 15 pairs. It trains on 5,048 pairs. And it's a registered report whose first hypothesis is "can this be predicted better than chance at all" — a significance test. Nobody there was trying to maximise accuracy. Beating it by 27 points with a 435M-parameter model on an order of magnitude more data is not the flex I was treating it as.
+
+The one I'd actually missed is the Pythia-12B reward model, and it's the strongest neural result on this dataset by a distance. ROC AUC 0.82. It trains only on pairs whose CTR difference is significant at 5% — roughly the easiest 28% — and it reads the article lede and the post timestamp alongside the headline. So it's an easier label set with more input on a different metric, and it doesn't beat 0.812. But if you skim the two numbers side by side they look identical, and I'd rather point at that myself than have it pointed at me.
+
+What survives all of it: nobody has reported pairwise accuracy from a fine-tuned encoder on unfiltered within-test pairs from headline text alone. That's a narrower claim than "beats SOTA" and it's one I can actually defend.
+
+The line that holds up best isn't about prior models anyway. It's that 4,571 human responses on this task are indistinguishable from random. Whatever VERA learned, people can't do it by eye.
+
 ## Okay here's where I ruin it
 
 Every single number above comes from 2013 to 2015 viral social headlines at one publisher, and the thing I actually wanna build scores email subject lines.
@@ -264,7 +289,7 @@ So if you run a newsletter and you've got past sends with measured open or click
 
 One of the open-weight models in this space scores 0.362 on its own typed-decisions benchmark zero-shot, which is below the 0.461 majority-class baseline.
 
-And the gap between 0.544 and 0.812 wasn't clever modeling either, two-thirds of it came from picking a loss that matched the metric and the rest came from 62,695 rows where somebody measured what actually happened. So yeah, if you're labelling your data by asking a model, maybe go look for the ground truth first, it's probably sitting somewhere already.
+And 0.637 to 0.812 wasn't clever modeling either, two-thirds of it came from picking a loss that matched the metric and the rest came from 62,695 rows where somebody measured what actually happened. So yeah, if you're labelling your data by asking a model, maybe go look for the ground truth first, it's probably sitting somewhere already.
 
 ---
 
