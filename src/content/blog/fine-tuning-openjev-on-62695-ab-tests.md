@@ -1,26 +1,38 @@
 ---
-title: Fine-tuning OpenJev on 62,695 A/B Tests
+title: I Got My Own Benchmark Wrong Twice
 date: 2026-09-23
+updated: 2026-09-24
 tags: [ml, decision-models, calibration, open-weights, benchmarks]
 draft: false
-description: I trained a decision model on A/B tests people actually ran instead of asking another model what it thinks, it dodges your worst variant 90% of the time, and my first benchmark was measuring literally nothing lol
+description: I trained a decision model on A/B tests people actually ran instead of asking another model what it thinks. Then I caught myself inflating the number, fixed it, shipped it, and found I'd done the same thing again somewhere worse.
 ---
+
+> **Correction, 2026-09-24.** This post originally reported 0.812 pairwise
+> accuracy and called it "all within-test pairs". It was one pair per test, the
+> highest-CTR arm against the lowest, which is the widest gap a test offers.
+> The real all-pairs number is **0.689**. It also credited a decision-model
+> base for a gain that a control run shows came from the learning rate.
+> The numbers below are corrected and [the last
+> section](#the-part-i-got-wrong-again) covers how I found out.
 
 So there's roughly 300 public projects built on the new decision models, and I went through the "scoring and ranking" ones (26 of them) and every single one of them scores stuff by just asking the model what it thinks. Score this article on eight quality axes, rate this copy for taste, judge whether this doc is relevant, you get the idea.
 
 And like, that's not data? That's a model's opinion with a number stapled to it, and the whole category is built on top of that ngl.
 
-So I trained one on outcomes somebody actually measured, and the weights are up if you wanna poke at it: **[`NovusEdge/vera-deberta-v3-large`](https://huggingface.co/NovusEdge/vera-deberta-v3-large)**, Apache 2.0, 435M params, one forward pass, it scores short persuasive text. The base is [`com-kotobalabs/open-jev-deberta-v3-large`](https://huggingface.co/com-kotobalabs/open-jev-deberta-v3-large), which is itself DeBERTa-v3-large pretrained on typed decisions.
+So I trained one on outcomes somebody actually measured, and the weights are up if you wanna poke at it: **[`NovusEdge/vera-deberta-v3-large`](https://huggingface.co/NovusEdge/vera-deberta-v3-large)**, Apache 2.0, 435M params, one forward pass, it scores short persuasive text. The base is [`com-kotobalabs/open-jev-deberta-v3-large`](https://huggingface.co/com-kotobalabs/open-jev-deberta-v3-large), a DeBERTa-v3-large pretrained on typed decisions — which, spoiler, turned out to contribute nothing a control run could detect.
 
-| Measure | This model | Chance | Gemini 3.1 Pro |
-|---|---|---|---|
-| Pairwise accuracy, unseen split | **0.812** | 0.546 | 0.751 |
-| Clean pairs only | **0.797** | 0.546 | - |
-| Picks the best of 4-5 variants | **47.7%** | 23.0% | - |
-| Avoids the worst variant | **90.3%** | 77.0% | - |
-| Reddit title pairs, out of domain | 0.522 | 0.500 | - |
+| Measure | This model | Chance |
+|---|---|---|
+| Every within-test pair, unseen split | **0.689** | 0.524 |
+| Pairs where the test actually resolved (p<0.05) | **0.843** | 0.547 |
+| Clean pairs, nothing resembling training text | **0.671** | 0.524 |
+| Picks the best of 4-5 variants | **47.7%** | 24.9% |
+| Avoids the worst variant | 90.3% | 75.1% |
+| Reddit title pairs, out of domain | 0.522 | 0.500 |
 
-It's trained on 62,695 real A/B arms from 32,487 randomized headline experiments, and every number up there comes from a split the model never saw. How it got there is below, including the bit where my first benchmark was measuring absolutely nothing (yes I'm still a bit salty about it).
+Most pairs in this archive carry no real difference — only 29% reach significance at 5%. The first row mixes those in, which is why it's the number I lead with. The second says how it does where the experiment actually decided something.
+
+It fit 47,168 arms across 16,129 randomized headline experiments, and every number up there comes from a split the model never saw. How it got there is below, including two separate occasions where my benchmark was measuring something other than what I said it was.
 
 ## The setup
 
@@ -76,7 +88,7 @@ I'd built a time machine that only travels sideways.
 
 Obviously the next thought is leakage. Upworthy rewrote the same article under dozens of headline variants, so if you split *tests* at random then one article's rewrites scatter across all three splits and holdout should be full of near-copies of the training text.
 
-I wrote a quick inverted-index thing to measure the max Jaccard token overlap between each eval headline and the 38,950 headlines the model actually fit on (exact string matching had found five shared headlines out of 650, and yes, I had called leakage "ruled out" off that).
+I wrote a quick inverted-index thing to measure the max Jaccard token overlap between each eval headline and the 47,168 headlines the model actually fit on (exact string matching had found five shared headlines out of 650, and yes, I had called leakage "ruled out" off that).
 
 | Evaluation set | n | ≥0.9 overlap | median |
 |---|---|---|---|
@@ -104,7 +116,9 @@ So I wrote "unexplained" in the doc and moved on. 0.63 is the number, two indepe
 
 After demolishing my own headline result I figured I should at least run the ablations properly.
 
-I expected data to win, cause that's the boring prior, you've got 62,695 arms, throw the third split in, get more. So I set up two runs, one adding the exploratory split to training and one swapping the loss function, both evaluated on the same 2,137 holdout pairs.
+I expected data to win, cause that's the boring prior, you've got 62,695 arms available, throw the third split in, get more. So I set up two runs, one adding the exploratory split to training and one swapping the loss function, both evaluated on the same 2,137 holdout pairs.
+
+Every number in this section is on those 2,137 pairs, which — as the correction at the top says and the last section explains — is the easy subset. They compare fine against each other, since every run was scored the same way. None of them is an all-pairs number.
 
 ```
 Phase 0        confirmatory       MSE              0.637
@@ -119,7 +133,7 @@ Twenty-eight percent more training data got **+0.053**, and changing the loss fu
 
 Which is obvious in hindsight, the worst kind of obvious. The benchmark is *pairwise accuracy*, given two headlines pick the winner, and I was regressing on click rate, so I was optimizing a proxy for the metric and then grading myself on the metric.
 
-[Bradley-Terry](https://en.wikipedia.org/wiki/Bradley%E2%80%93Terry_model) optimizes the actual thing. For every pair of arms inside one test you maximize `logsigmoid(score_winner - score_loser)`, weighted by the thinner arm's log impressions. My 38,950 training arms turned into 63,597 within-test pairs.
+[Bradley-Terry](https://en.wikipedia.org/wiki/Bradley%E2%80%93Terry_model) optimizes the actual thing. For every pair of arms inside one test you maximize `logsigmoid(score_winner - score_loser)`, weighted by the thinner arm's log impressions. My 47,168 training arms turned into 76,892 within-test pairs.
 
 Same model. Same data. Different objective. Fourteen points.
 
@@ -136,6 +150,8 @@ Reran it at 6e-6, the loss went 0.709 → 0.682 → 0.620 → 0.360, and it fini
 I ran the near-duplicate slice on it too, cause at this point I don't trust myself, and on genuinely clean pairs (nothing resembling anything in training) it gets **0.797** against ModernBERT's 0.769. Its memorization gap is also *smaller* than ModernBERT's while scoring higher, which is the opposite of what a model winning by recall looks like.
 
 So the system was working fine the whole time, I just had one number wrong.
+
+That last sentence turned out to be doing a lot of work. Hold onto it.
 
 ## But what does 0.812 actually *mean*
 
@@ -196,7 +212,7 @@ I said I'd come back to it. When I went looking properly at what else has been r
 | LOLA, fine-tuned GPT-4o | top-1 of k | accuracy | 0.488 | 0.330 |
 | [arXiv:2506.00152](https://arxiv.org/abs/2506.00152), Pythia-12B | significant pairs, + lede + timestamp | ROC AUC | 0.82 | 0.50 |
 | [PLOS ONE 0281682](https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0281682) | pairs matched on article+image+week, K≤15 | accuracy | 0.544 | ~0.50 |
-| **VERA** | all within-test pairs, headline only | accuracy | **0.812** | 0.546 |
+| **VERA** | every within-test pair, headline only | accuracy | **0.689** | 0.524 |
 
 Not one of those rows is a like-for-like comparison with mine, which is the whole point.
 
@@ -240,7 +256,7 @@ Nothing randomised it, so three things had to come out first. Pairs form inside 
 
 At that sample size the standard error is 0.0015, so 0.522 is about fifteen standard errors above chance — real, and small enough to be useless. The accuracy does climb with the residual gap, 0.508 → 0.531 across quartiles, which says the tiny effect is signal rather than an artifact. It ranges from 0.495 on r/WTF to 0.558 on r/fffffffuuuuuuuuuuuu.
 
-So the 0.812 belongs to Upworthy. Whatever VERA learned is one publisher's 2013 voice, and it does not come with you.
+So what signal there is belongs to Upworthy. Whatever VERA learned is one publisher's 2013 voice, and it does not come with you.
 
 I'll caveat my own caveat: Reddit upvotes aren't a click rate, and time of day and submitter reputation stay uncontrolled. A null result here can't cleanly separate "no transfer" from "the confounds ate it". But it's the cheapest honest test available and it came back negative, and I'd rather run it than write "transfer is untested" and let a reader assume the best.
 
@@ -260,7 +276,7 @@ The aggregate findings float around freely (six to ten words performs best, twen
 
 ## Which reframes the whole exercise
 
-I'd been telling myself a comfy little story until a second opinion knocked it over. The story was *the architecture is commodity, the durable asset is proprietary outcome labels*, and the first half's right but the second half is nonsense, cause I don't *have* proprietary labels. Upworthy is public, anyone with a GPU can reproduce my 0.812 in a weekend for less than a coffee, which is partly why the weights are just up there, they cost me four dollars and I can't pretend they're a moat.
+I'd been telling myself a comfy little story until a second opinion knocked it over. The story was *the architecture is commodity, the durable asset is proprietary outcome labels*, and the first half's right but the second half is nonsense, cause I don't *have* proprietary labels. Upworthy is public, anyone with a GPU can reproduce this in a weekend for less than a coffee, which is partly why the weights are just up there, they cost me four dollars and I can't pretend they're a moat.
 
 What I actually have is a credential. The real asset would be an ongoing measurement loop on live traffic, and that doesn't exist yet.
 
@@ -320,7 +336,49 @@ So if you run a newsletter and you've got past sends with measured open or click
 
 One of the open-weight models in this space scores 0.362 on its own typed-decisions benchmark zero-shot, which is below the 0.461 majority-class baseline.
 
-And 0.637 to 0.812 wasn't clever modeling either, two-thirds of it came from picking a loss that matched the metric and the rest came from 62,695 rows where somebody measured what actually happened. So yeah, if you're labelling your data by asking a model, maybe go look for the ground truth first, it's probably sitting somewhere already.
+And the gain wasn't clever modeling either, most of it came from picking a loss that matched the metric and the rest came from 47,168 rows where somebody measured what actually happened. So yeah, if you're labelling your data by asking a model, maybe go look for the ground truth first, it's probably sitting somewhere already.
+
+## The part I got wrong again
+
+I was about to post this on HN. Before I did, I had a model read the whole thing as a hostile commenter and told it to go at the code rather than the prose. It found something in twenty minutes that I'd had in front of me for two days.
+
+My evaluation called a function named `pairs_from`. Here's what it does:
+
+```python
+g = g.assign(ctr=...).sort_values("ctr", ascending=False)
+best, worst = g.iloc[0], g.iloc[-1]
+out.append((best.headline, worst.headline))
+```
+
+**One pair per test. The best arm against the worst arm.** Training used a different function that built every pair. I'd written both, months apart, and never noticed they disagreed.
+
+That one pair is the widest gap a test has to offer. 70% of those pairs clear significance at 5%. Across every actual within-test pair it's 29%. So I'd been evaluating on the easiest 11.6% of the data and calling it "all within-test pairs" in a model card, a public dataset, and this post.
+
+| Pair set | n | Length baseline | VERA |
+|---|---|---|---|
+| every within-test pair | 18,485 | 0.524 | **0.689** |
+| best arm against worst, one per test | 2,137 | 0.546 | 0.812 |
+
+Twelve points. Which is worse than the seven points I spent the first half of this post being pleased about catching.
+
+And there's a specific way this one stings. Further up I dismiss a Pythia-12B result because it "trains only on pairs whose CTR difference is significant at 5% — roughly the easiest 28%." My evaluation set was 70% significant. I criticised a filter I'd applied harder, in a sentence I wrote about being careful.
+
+Then the same review asked why I'd never run a control for the base model. The `openjev2` run changed the base model *and* the learning rate in one go, and I'd credited the decision-model pretraining for the result. So I ran plain `microsoft/deberta-v3-large` through the identical recipe.
+
+| Base | Holdout, same pair set |
+|---|---|
+| open-jev-deberta-v3-large | 0.812 |
+| microsoft/deberta-v3-large | 0.805 |
+
+Seven thousandths, against a standard error near nine. The decision-model pretraining did nothing I can measure. The jump from 0.519 was the learning rate, and that holds for either base. This post was called "Fine-tuning OpenJev on 62,695 A/B Tests" and both halves of that were wrong.
+
+Some smaller ones from the same review, all real: the calibrator shipped inside the weights was fitted on a *different model*; my bootstrap used `.isin()` on a sample drawn with replacement, which silently drops the duplicates and turns it into a 63% subsample; my chance baselines were off by two points because I never computed them from the actual arm counts; and my leaderboard printed one model's score on 2,137 pairs next to another's on 1,788 with nothing saying so.
+
+Everything is fixed and re-measured as of 2026-09-24. The model card, the dataset and this post all carry the corrected numbers.
+
+What I'd take from it, other than the obvious: I caught the first error because two splits disagreed with each other, which is a thing the data did without being asked. I did not catch the second one, and I would not have, because everything downstream of that function was internally consistent. Every ablation used the same set, so they ranked correctly against each other. The tiers rose monotonically. The near-duplicate slice behaved. Nothing looked wrong, because nothing *was* wrong except the label on the axis.
+
+Adversarial review found it in twenty minutes at a cost of roughly nothing. I would rather have published this section than had someone else write it in a comment.
 
 ---
 
