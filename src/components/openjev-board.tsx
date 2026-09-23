@@ -30,10 +30,12 @@ const BAR_X = 168
 export const BAR_W = 160
 const ROWS_END = ROWS_TOP + 8 * ROW_H
 const PARTS_Y = ROWS_END + 16
-const H = PARTS_Y + 104
+const H = PARTS_Y + 124
 const xAt = (v: number) => BAR_X + ((v - AXIS.min) / (AXIS.max - AXIS.min)) * BAR_W
-const lossY = (l: number) => PARTS_Y + 18 + ((0.75 - l) / 0.45) * 64
-const lossX = (i: number) => 24 + (i * (W - 48)) / 3
+const LOSS_TOP = PARTS_Y + 16
+const LOSS_BOTTOM = PARTS_Y + 100
+const lossY = (l: number) => LOSS_TOP + ((0.75 - l) / 0.45) * (LOSS_BOTTOM - LOSS_TOP)
+const lossX = (i: number) => 36 + (i * (W - 44)) / 3
 
 const PARTS = ['axis', 'bands', 'loss', 'big'] as const
 type Part = (typeof PARTS)[number]
@@ -148,21 +150,32 @@ export function OpenJevBoard({ state, animate }: { state: number; animate: boole
         })}
       </g>
 
+      {/* The dead run sits at ln 2 = 0.693, between the live run's first two
+          checkpoints, so only the live run's ends carry values. */}
       <g data-part="loss" opacity={parts.loss ? 1 : 0}>
-        <line className="oj-dead" x1={0} x2={W} y1={lossY(LOSS.dead)} y2={lossY(LOSS.dead)} />
-        <text className="oj-axis" x={0} y={lossY(LOSS.dead) - 6}>
+        {[0.6, 0.4].map((v) => (
+          <g key={v}>
+            <line className="oj-loss-grid" x1={lossX(0)} x2={W} y1={lossY(v)} y2={lossY(v)} />
+            <text className="oj-axis" x={0} y={lossY(v)} dominantBaseline="middle">
+              {v.toFixed(1)}
+            </text>
+          </g>
+        ))}
+        <line className="oj-dead" x1={lossX(0)} x2={W} y1={lossY(LOSS.dead)} y2={lossY(LOSS.dead)} />
+        <text className="oj-axis" x={W} y={lossY(LOSS.dead) - 7} textAnchor="end">
           {t('blog.openjev.lossDead')}
         </text>
         <polyline className="oj-live" points={LOSS.live.map((l, i) => `${lossX(i)},${lossY(l)}`).join(' ')} />
         {LOSS.live.map((l, i) => (
-          <g key={i}>
-            <circle className="oj-live-pt" cx={lossX(i)} cy={lossY(l)} r={2.5} />
-            <text className="oj-axis" x={lossX(i)} y={lossY(l) + 13} textAnchor="middle">
-              {LOSS.liveDisplay[i]}
-            </text>
-          </g>
+          <circle key={i} className="oj-live-pt" cx={lossX(i)} cy={lossY(l)} r={2.5} />
         ))}
-        <text className="oj-axis" x={W} y={H - 4} textAnchor="end">
+        <text className="oj-value oj-live-val" x={lossX(0)} y={lossY(LOSS.live[0]) - 7}>
+          {LOSS.liveDisplay[0]}
+        </text>
+        <text className="oj-value oj-live-val" x={lossX(3) - 12} y={lossY(LOSS.live[3])} textAnchor="end" dominantBaseline="middle">
+          {LOSS.liveDisplay[3]}
+        </text>
+        <text className="oj-axis oj-live-key" x={lossX(0)} y={LOSS_BOTTOM + 18}>
           {t('blog.openjev.lossLive')}
         </text>
       </g>

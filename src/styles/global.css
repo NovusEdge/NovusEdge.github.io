@@ -872,6 +872,17 @@
 .oj-live-pt {
   fill: var(--pa-ox-mark);
 }
+.oj-loss-grid {
+  stroke: var(--pa-rule);
+  stroke-width: 0.5;
+}
+.oj-dead {
+  stroke-dasharray: 4 3;
+}
+.oj-board .oj-live-val,
+.oj-board .oj-live-key {
+  fill: var(--pa-ox);
+}
 .oj-board .oj-big {
   font-family: 'ET Book', Georgia, serif;
   font-size: 44px;
