@@ -100,3 +100,21 @@ export function rowLayout(k: number): Record<RowId, { shown: boolean; y: number;
   }
   return out
 }
+
+export type RowOp = { opacity: 0 } | { opacity: 1; y: number; frac: number; snap: boolean }
+
+/**
+ * Targets for a transition into state k, judged against what is on screen now
+ * and not against the previous state: a transition cut short by the next one
+ * leaves rows the previous state never showed. A row that is not visible yet
+ * snaps to its slot before it fades in, so it never slides in from elsewhere.
+ */
+export function transitionOps(k: number, visible: (id: RowId) => boolean): Record<RowId, RowOp> {
+  const lay = rowLayout(k)
+  const out = {} as Record<RowId, RowOp>
+  for (const id of ROW_IDS) {
+    const { shown, y, frac } = lay[id]
+    out[id] = shown ? { opacity: 1, y, frac, snap: !visible(id) } : { opacity: 0 }
+  }
+  return out
+}

@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import { posts } from './posts'
 import { blogHeadings } from './blog-headings'
-import { BANDS, BIG, LOSS, OPENJEV_SLUG, ROWS, STATES, STATE_HEADINGS, rowLayout, stateAt } from './openjev-data'
+import { BANDS, BIG, LOSS, OPENJEV_SLUG, ROWS, STATES, STATE_HEADINGS, rowLayout, stateAt, transitionOps } from './openjev-data'
 
 const post = posts.find((p) => p.slug === OPENJEV_SLUG)!
 
@@ -47,6 +47,14 @@ describe('openjev board data', () => {
     expect(lay.claim).toMatchObject({ shown: true, y: 30 })
     expect(lay.sota).toMatchObject({ shown: true, y: 58 })
     expect(lay.email.shown).toBe(false)
+  })
+
+  it('fades out a row left visible by an interrupted transition', () => {
+    const stale = new Set(['exploratory', 'sota', 'humans', 'llama'])
+    const ops = transitionOps(4, (id) => stale.has(id))
+    expect(ops.exploratory).toMatchObject({ opacity: 0 })
+    expect(ops.rank).toMatchObject({ opacity: 1, y: 86, snap: true })
+    expect(ops.sota).toMatchObject({ opacity: 1, y: 170, snap: false })
   })
 
   it('picks the last heading above the line', () => {

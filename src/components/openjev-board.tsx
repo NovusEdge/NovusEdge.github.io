@@ -19,6 +19,7 @@ import {
   STATIC_CAPTION,
   STATIC_STATE,
   rowLayout,
+  transitionOps,
   type RowId,
 } from '../lib/openjev-data'
 
@@ -76,7 +77,7 @@ export function OpenJevBoard({ state, animate }: { state: number; animate: boole
   const { t } = useTranslation()
   const svg = useRef<SVGSVGElement>(null)
   const mounted = useRef(state)
-  const prev = useRef(state)
+  const running = useRef<gsap.core.Timeline | null>(null)
   const drawn = animate ? mounted.current : state
   const lay = rowLayout(drawn)
   const parts = partsOf(drawn)
@@ -84,34 +85,31 @@ export function OpenJevBoard({ state, animate }: { state: number; animate: boole
   useGSAP(
     () => {
       const el = svg.current
-      if (!animate || !el || prev.current === state) return
-      const from = rowLayout(prev.current)
-      const to = rowLayout(state)
-      const tl = gsap.timeline({ defaults: { duration: 0.6, ease: 'power2.out', overwrite: 'auto' } })
+      if (!animate || !el || (running.current === null && state === mounted.current)) return
+      running.current?.kill()
+      const rowOf = (id: RowId) => el.querySelector<SVGGElement>(`[data-row="${id}"]`)!
+      const ops = transitionOps(state, (id) => Number(gsap.getProperty(rowOf(id), 'opacity')) > 0.01)
+      const tl = gsap.timeline({ defaults: { duration: 0.6, ease: 'power2.out' } })
       ROW_IDS.forEach((id, i) => {
-        const g = el.querySelector<SVGGElement>(`[data-row="${id}"]`)!
+        const g = rowOf(id)
         const bar = g.querySelector('[data-bar]')
-        const at = i * 0.05
-        const width = to[id].frac * BAR_W
-        if (to[id].shown && !from[id].shown) {
-          tl.set(g, { y: to[id].y }, 0)
-          if (bar) tl.set(bar, { attr: { width: 0 } }, 0)
-          tl.to(g, { opacity: 1 }, at)
-          if (bar) tl.to(bar, { attr: { width } }, at)
-        } else if (!to[id].shown && from[id].shown) {
+        const op = ops[id]
+        if (op.opacity === 0) {
           tl.to(g, { opacity: 0, duration: 0.3 }, 0)
-        } else if (to[id].shown) {
-          tl.to(g, { y: to[id].y }, at)
-          if (bar) tl.to(bar, { attr: { width } }, at)
+          return
         }
+        if (op.snap) {
+          tl.set(g, { y: op.y }, 0)
+          if (bar) tl.set(bar, { attr: { width: 0 } }, 0)
+        }
+        tl.to(g, { y: op.y, opacity: 1 }, i * 0.05)
+        if (bar) tl.to(bar, { attr: { width: op.frac * BAR_W } }, i * 0.05)
       })
-      const a = partsOf(prev.current)
-      const b = partsOf(state)
+      const target = partsOf(state)
       for (const part of PARTS) {
-        if (a[part] === b[part]) continue
-        tl.to(el.querySelector(`[data-part="${part}"]`), { opacity: b[part] ? 1 : 0, duration: 0.4 }, b[part] ? 0.2 : 0)
+        tl.to(el.querySelector(`[data-part="${part}"]`), { opacity: target[part] ? 1 : 0, duration: 0.4 }, target[part] ? 0.2 : 0)
       }
-      prev.current = state
+      running.current = tl
     },
     { dependencies: [state, animate], scope: svg },
   )
