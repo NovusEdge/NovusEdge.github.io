@@ -1,9 +1,9 @@
 ---
-title: I Spent $4 on GPUs to Find Out My Model Was Worse Than I Said
+title: My Benchmark Was Measuring Nothing
 date: 2026-09-23
 tags: [ml, decision-models, calibration, benchmarks, founder-log]
 draft: true
-description: I trained a decision model on 62,695 real A/B tests, got a number that beat published state of the art by 16 points, wrote it up, and then discovered the benchmark I'd built was measuring nothing. What actually mattered turned out to be the loss function, and a learning rate I nearly wrote off as a dead model.
+description: Trained a decision model on 62,695 real A/B tests. Beat published state of the art by 16 points. Then found out the benchmark I'd built was measuring nothing. What actually mattered was the loss function, and a learning rate I nearly wrote off as a dead model.
 ---
 
 The number was 0.704 and I was extremely pleased with myself.
@@ -32,7 +32,7 @@ Held out everything after January 2015, tested there. **0.704 pairwise accuracy.
 
 For scale: the published state of the art on this exact dataset is [0.544](https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0281682), from a Toronto group using hand-crafted linguistic features on 24,333 pairs. Their paper concludes the problem is "inherently hard, not merely a sample size issue." Humans given the same task score at chance. There's a LoRA'd Llama-3-8B in the literature that gets 0.469, which is *below* chance.
 
-I beat the published number by sixteen points for the price of a sandwich. I wrote it up. "Headline signal survives two years of drift." I was insufferable about it for approximately ninety minutes.
+Sixteen points over the published number, for forty cents. I wrote it up: "Headline signal survives two years of drift."
 
 ## And yet
 
@@ -46,7 +46,7 @@ holdout:            0.637
 exploratory:        0.624
 ```
 
-Cool. Cool cool cool.
+Cool.
 
 Two splits I'd never touched, agreeing with each other within 0.013 at *every single effect-size tier*, and both of them saying my headline number was inflated by seven points.
 
@@ -56,9 +56,11 @@ That red line is the one I posted about. The two underneath it are the truth.
 
 ## The time machine that only travels sideways
 
-So I went and actually read the archive documentation instead of skimming it, which, you know. Should have been step one.
+So I read the archive documentation properly.
 
 The archive assigns tests to splits **at random**. Not chronologically. At random.
+
+![Two bars. The first shows a clean chronological split, train then test. The second shows the real structure: train and test blocks interleaved across the whole period.](/assets/img/blog/decision-models/split-structure.png)
 
 | Split | Arms | Date range | Share before 2015 |
 |---|---|---|---|
@@ -70,7 +72,7 @@ All three splits cover the same dates in the same proportions. Which means when 
 
 And it scored *worse* there than on the 2015 tail.
 
-Flip that around and it's genuinely interesting: time costs this model almost nothing. Unseen tests from the same period cost it seven points. My carefully constructed drift test had been measuring test identity the whole time, dressed up as temporal generalization.
+Flip that around. Time costs this model almost nothing. Unseen tests from the same period cost it seven points. My carefully constructed drift test had been measuring test identity the whole time, dressed up as temporal generalization.
 
 I'd built a time machine that only travels sideways.
 
@@ -78,7 +80,7 @@ I'd built a time machine that only travels sideways.
 
 Obviously the next thought is leakage. Upworthy rewrote the same article under dozens of headline variants, and if you're splitting *tests* at random then one article's rewrites scatter across all three splits. So holdout should be full of near-copies of the training text.
 
-I wrote a quick inverted-index thing to measure maximum Jaccard token overlap between each evaluation headline and the 38,950 headlines the model actually fit on. Exact string matching had found five shared headlines out of 650 and I'd called leakage "ruled out," which in retrospect was adorable.
+I wrote a quick inverted-index thing to measure maximum Jaccard token overlap between each evaluation headline and the 38,950 headlines the model actually fit on. Exact string matching had found five shared headlines out of 650. I had called leakage "ruled out" on that basis.
 
 | Evaluation set | n | ≥0.9 overlap | median |
 |---|---|---|---|
@@ -102,15 +104,15 @@ Also backwards. Holdout pairs carry *more* impressions and *higher* z-scores. Th
 
 The 2015 set does have a wider median CTR ratio — 2.24 against 1.99 — so its pairs are genuinely easier to separate. That's real. It is also nowhere near seven points' worth.
 
-So I wrote "unexplained" in the doc and moved on, which felt cowardly and is also just what you do. 0.63 is the number. Two independent splits agree on it. The one that disagrees is the outlier and I can't tell you why.
+I wrote "unexplained" in the doc and moved on. 0.63 is the number. Two independent splits agree on it. The one that disagrees is the outlier, and I cannot tell you why.
 
 **!! Nerd Infodump Alert :3 !!**
 
 ## The part that actually mattered
 
-Right, so. Having demolished my own headline result I figured I'd at least run the ablations properly.
+Having demolished my own headline result, I ran the ablations properly.
 
-I expected data to win. That's the boring prior — you've got 62,695 arms, throw the third split in, get more. I set up two runs: one adding the exploratory split to training, one swapping the loss function. Both evaluated on the same 2,137 holdout pairs.
+I expected data to win. That is the boring prior: 62,695 arms, throw the third split in, get more. I set up two runs: one adding the exploratory split to training, one swapping the loss function. Both evaluated on the same 2,137 holdout pairs.
 
 ```
 Phase 0        confirmatory       MSE              0.637
@@ -127,7 +129,7 @@ Changing the loss function: **+0.107**.
 
 Two epochs instead of three, on the smaller training set, and it still won by double.
 
-And obviously this is the worst kind of obvious in hindsight. The benchmark is *pairwise accuracy* — given two headlines, pick the winner. I was regressing on click rate. Which is to say: I was optimizing a proxy for the metric and then measuring myself on the metric, like a man training for a marathon by getting really good at buying running shoes.
+Obvious in hindsight, which is the worst kind. The benchmark is *pairwise accuracy*: given two headlines, pick the winner. I was regressing on click rate. I optimized a proxy for the metric, then measured myself on the metric.
 
 [Bradley-Terry](https://en.wikipedia.org/wiki/Bradley%E2%80%93Terry_model) optimizes the actual thing. For every pair of arms inside one test, maximize `logsigmoid(score_winner - score_loser)`, weighted by the thinner arm's log impressions because the comparison is only as trustworthy as the side with fewer impressions. My 38,950 training arms expanded into 63,597 within-test pairs.
 
@@ -204,11 +206,11 @@ The aggregate findings float around freely. Six to ten words performs best. Twen
 
 ## Which reframes the whole exercise
 
-I had been telling myself a comforting story, and it took an adversarial second opinion to knock it over. The story was: *the architecture is commodity, the durable asset is proprietary outcome labels.* First half's right. Second half is nonsense, because I don't *have* proprietary labels. Upworthy is public. Anyone with a GPU reproduces my 0.787 in a weekend for less than a coffee.
+I had been telling myself a comforting story. An adversarial second opinion knocked it over. The story was: *the architecture is commodity, the durable asset is proprietary outcome labels.* First half's right. Second half is nonsense, because I don't *have* proprietary labels. Upworthy is public. Anyone with a GPU reproduces my 0.787 in a weekend for less than a coffee.
 
 What I have is a credential. The asset would be an ongoing measurement loop on live traffic, and that doesn't exist yet.
 
-Which is actually clarifying, because it tells you where the real thing is: the data I need is sitting inside email service providers, doing nothing. Every ESP with an A/B testing feature has millions of subject-line experiments with measured outcomes, and approximately none of them are training anything on it.
+That is clarifying, because it says where the real thing is: the data I need is sitting inside email service providers, doing nothing. Every ESP with an A/B testing feature has millions of subject-line experiments with measured outcomes, and approximately none of them are training anything on it.
 
 That's the move. Not another head, not another benchmark. One relationship with somebody who has the logs.
 
