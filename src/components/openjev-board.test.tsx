@@ -32,7 +32,7 @@ describe('OpenJevBoard', () => {
 
   it('renders the final board with the takeaway caption and a data table', () => {
     const html = render(<OpenJevStatic />)
-    expect(html).toContain('It almost never lets you send the worst thing you wrote.')
+    expect(html).toContain('VERA avoided the worst variant in 90.3% of Upworthy tests.')
     expect(html).toContain('no public data')
     expect(html).toContain('<table')
   })
