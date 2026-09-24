@@ -73,7 +73,7 @@ export default function SuperpositionGraph({ className = '' }: { className?: str
       viewBox="0 0 720 244"
       className={className}
       role="img"
-      aria-label="A dense grid of superposed weights resolving into a provenance graph of sources, claims, and facts"
+      aria-label="Illustration comparing model weights with an external provenance graph of sources, claims, and facts"
       fill="none"
     >
       <defs>

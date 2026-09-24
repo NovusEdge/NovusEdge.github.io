@@ -15,7 +15,7 @@ const TUI = `                     ╭──────────────�
 ↵ start/stop • →/l details • s ssh • p provision • / search • n new • q quit`
 
 export const stoat: ProjectContent = {
-  lede: 'Running a throwaway VM on Linux means libvirt, a daemon, and XML, or it means a QEMU command line you re-derive from your shell history every time. stoat is one binary instead.',
+  lede: 'stoat manages local QEMU VMs on Linux through a TUI and CLI. I built it for scratch environments I could start, SSH into, and throw away without reconstructing the command line each time.',
 
   sections: [
     {
@@ -24,13 +24,11 @@ export const stoat: ProjectContent = {
       body: (
         <>
           <p>
-            I wanted a scratch VM to break things in, and everything on offer wanted more from me than the task
-            was worth. libvirt brings a daemon, a permissions model, and XML. Vagrant brings Ruby and a box
-            registry. Raw QEMU works and costs twenty minutes of flag archaeology every time I come back to it.
+            I wanted a scratch VM to break things in. I kept looking up the same QEMU flags and wanted those
+            choices saved, with a list of VMs I could start and stop.
           </p>
           <p>
-            Alpine makes the gap obvious. It boots in about a second, which is exactly what a scratch VM should
-            do. Then it drops you at a login prompt with no network and no sshd, waiting on{' '}
+            With an Alpine live image, I also wanted to avoid setting up networking and SSH through{' '}
             <code>setup-alpine</code>. So stoat builds an <strong>apkovl</strong> overlay fresh at every start and
             hands it to the guest as a fake FAT disk over <code>-virtfs</code>/vvfat. That overlay bakes in stoat's
             own ed25519 keypair. <code>root@127.0.0.1:&lt;port&gt;</code> works the moment sshd comes up, with no
@@ -55,7 +53,7 @@ export const stoat: ProjectContent = {
             nothing on it: no OS, no sshd, no key.
           </p>
           <p>
-            That last part trips people up more than everything else in stoat combined. Until you install the
+            Until you install the
             guest yourself at the console and add stoat's key by hand, there is nothing on the other end of an SSH
             connection. Rather than making you wait out a full connect timeout to fail with a generic "not
             reachable," stoat checks this up front. Press provision on a fresh disk VM and it tells you so
@@ -101,7 +99,7 @@ export const stoat: ProjectContent = {
             The TUI is for browsing: start a VM, ssh in, watch a recipe stream past. The CLI (
             <code>ls</code>, <code>up</code>, <code>down</code>, <code>ssh</code>, <code>provision</code>,{' '}
             <code>rm</code>, <code>recipe</code>, <code>logs</code>, <code>doctor</code>) covers the same ground
-            for scripts, with exit codes that mean something: 0 success, 1 runtime failure, 2 usage error.
+            for scripts. Exit codes are 0 for success, 1 for runtime failure, and 2 for a usage error.
           </p>
           <Term>{`$ stoat ls
 NAME            MODE  STATE    CPUS  RAM    SSH
@@ -125,7 +123,7 @@ ubuntu-dev      cloud running  4     4096   2201`}</Term>
           Pre-1.0 and single-user, stoat assumes it is the only thing managing its <code>~/.stoat</code>. It offers
           no sandboxing past what QEMU/KVM already give a guest. The Alpine live path is the most exercised mode;
           the cloud-init backends and disk-mode installs are newer. <code>vm.toml</code> and the CLI's flags may
-          still move before 1.0. Licensed AGPL-3.0, so it cannot be forked into a proprietary product.
+          still move before 1.0. Licensed AGPL-3.0.
         </p>
       ),
     },

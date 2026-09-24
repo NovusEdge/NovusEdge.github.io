@@ -108,29 +108,29 @@ const SCENARIOS: Scenario[] = [
     id: 'building',
     label: 'Apartment block',
     Icon: Building2,
-    passive: 'The building can see which units are lived in and when people are home.',
-    scrambled: 'The building cannot tell if a unit holds nobody or a dozen people, so its occupancy records are guesswork.',
+    passive: 'A sensing system estimates whether a unit is occupied.',
+    scrambled: 'Decoy activity makes the occupancy estimate less reliable in this example.',
   },
   {
     id: 'store',
     label: 'Storefront',
     Icon: Store,
-    passive: 'The store measures who walks in, how long they linger, and who returns.',
-    scrambled: 'The store counts crowds of shoppers who were never there, so the foot-traffic numbers mean nothing.',
+    passive: 'A store estimates visits and return visits from device signals.',
+    scrambled: 'Decoy signals add false visits to the count in this example.',
   },
   {
     id: 'work',
     label: 'Workplace',
     Icon: Briefcase,
-    passive: 'The office can tell who was at their desk and for how long.',
-    scrambled: 'The office reads people as present who never came in, so it cannot use the data to track anyone.',
+    passive: 'An office uses sensing data to estimate attendance.',
+    scrambled: 'False detections reduce the usefulness of the attendance estimate in this example.',
   },
   {
     id: 'tail',
     label: 'The tail',
     Icon: Footprints,
-    passive: 'Someone can quietly check whether you are home before they act.',
-    scrambled: 'You show up as home and away at the same time, so there is nothing reliable to act on.',
+    passive: 'Someone tries to infer whether a person is home from a sensor.',
+    scrambled: 'Conflicting detections make that inference harder in this example; targeted protection is unproven.',
   },
 ]
 
@@ -346,8 +346,8 @@ export default function TrustCollapse({
     <div className="not-prose overflow-hidden rounded-lg border border-bone/12 bg-charcoal-tint/40">
       <div className="flex flex-wrap items-center justify-between gap-4 border-b border-bone/10 px-5 py-4">
         <div>
-          <p className="font-mono text-[11px] uppercase tracking-[0.22em] text-bone/45">Aggregate trust</p>
-          <p className="mt-1 text-base text-bone/75">What a monitoring authority can still conclude about you</p>
+          <p className="font-mono text-[11px] uppercase tracking-[0.22em] text-bone/45">Illustrative scenario</p>
+          <p className="mt-1 text-base text-bone/75">How decoys might affect a monitoring system</p>
         </div>
         <div className="flex items-center gap-3">
           <button
@@ -413,10 +413,10 @@ export default function TrustCollapse({
       <div className="flex flex-wrap items-center justify-between gap-4 border-t border-bone/10 px-5 py-5">
         <p className="max-w-xl text-lg font-medium leading-snug text-bone">
           {dry
-            ? 'Gathering the data now costs more than it returns, so the authority gives up and stops collecting.'
+            ? 'This scenario assumes that filtering the decoys costs more than the collected data is worth.'
             : scrambled
-              ? 'The authority receives detections it cannot separate from fabrications.'
-              : 'The authority receives detections it can trust and correlate.'}
+              ? 'This scenario assumes that real and decoy detections are difficult to separate.'
+              : 'This scenario assumes that the collector can correlate the detections.'}
         </p>
         <div className="text-right">
           <p
@@ -426,7 +426,7 @@ export default function TrustCollapse({
           >
             94%
           </p>
-          <p className="mt-1 font-mono text-[10px] uppercase tracking-[0.2em] text-bone/40">aggregate confidence</p>
+          <p className="mt-1 font-mono text-[10px] uppercase tracking-[0.2em] text-bone/40">illustrative confidence</p>
         </div>
       </div>
 

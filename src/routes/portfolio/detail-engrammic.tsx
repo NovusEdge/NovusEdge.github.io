@@ -150,13 +150,13 @@ export default function Engrammic({ p }: LayoutProps) {
             </h1>
 
             <p className={`${SERIF} mt-8 max-w-2xl text-2xl leading-[1.4] md:text-[1.9rem]`}>
-              Before intelligence can be <em className="italic text-[#9a6f33]">trusted</em>, it must learn to{' '}
-              <em className="italic text-[#9a6f33]">doubt</em>.
+              Agent memory with <em className="italic text-[#9a6f33]">sources</em> and a record of{' '}
+              <em className="italic text-[#9a6f33]">revisions</em>.
             </p>
 
             <p className="mt-6 max-w-xl text-[17px] leading-relaxed text-[#1c1a17]/70">
-              Epistemic memory for agents. Every observation enters as a sourced claim, and a claim has to survive
-              consensus before it counts as a fact an agent can act on. This page is the architecture; the{' '}
+              Engrammic stores observations separately from claims and records the evidence used to promote or
+              revise them. The{' '}
               <TLink to={lp('/blog/on-building-something-engrammic')} className="underline decoration-[#9a6f33]/40 underline-offset-2 hover:decoration-[#9a6f33]">
                 origin story is on the blog
               </TLink>
@@ -205,29 +205,26 @@ export default function Engrammic({ p }: LayoutProps) {
       <div className="mx-auto max-w-3xl px-6 pb-24 pt-8">
         <Section id="the-shape" title="The shape of the problem">
           <p>
-            Agent memory gets treated as retrieval. Find the nearest chunk, put it in the window, hope it's true.
-            The failure has a shape: an agent records "the API uses OAuth" on Monday and "the API uses API keys" on
-            Tuesday, keeps both, and later serves whichever one embeds closer to the query. Nothing in the store ever
-            asked which is true, or when it stopped being true.
+            Suppose an agent records "the API uses OAuth" on Monday and "the API uses API keys" on Tuesday.
+            Retrieving the closest text match doesn't tell it which statement applies. The API might have changed,
+            the claims might refer to different endpoints, or one might simply be wrong.
           </p>
-          <Manifesto>Engrammic treats memory as epistemics: what an agent holds, why it holds it, and whether it still holds.</Manifesto>
+          <Manifesto>The memory record needs the source, the relevant time, and the reason for a revision.</Manifesto>
           <p>
-            The rest of this page is the machinery that makes that concrete. A data model that separates claims from
-            facts, a gate that runs at write time, and a provenance graph you can walk to answer "why does it believe
-            this?"
+            Engrammic represents those relationships explicitly. An agent can inspect the supporting records and
+            follow revisions instead of relying on the wording of a retrieved sentence.
           </p>
         </Section>
 
         <Section id="the-model" title="The model: observations, claims, facts">
           <p>
-            Four layers stack on top of each other. An <strong>observation</strong> is a raw event bound to the
-            source that produced it. It enters the store as a <strong>claim</strong>, a statement the system holds
-            provisionally, never as ground truth. Claims that corroborate each other accumulate weight, and a claim
-            that survives consensus crystallizes into a <strong>fact</strong>. A fact placed in the context of other
-            facts is a <strong>belief</strong>, which is what an agent actually reasons from.
+            An <strong>observation</strong> records an event. A <strong>claim</strong> adds a statement and its
+            evidence. Promotion rules use confidence and corroboration to decide when a claim becomes a
+            <strong> fact</strong>; synthesis draws on facts to form <strong>beliefs</strong>. These are record
+            types and rules for handling evidence, not a guarantee that an accepted statement is true.
           </p>
           <p>
-            All of it lives as nodes and typed edges in a graph store, because provenance <em>is</em> edges. A claim
+            The records live as nodes and typed edges in a graph store. A claim
             points at its source. A fact points at the claims that promoted it. A superseding fact points at the one
             it replaced. The schema, the edge types, and the scoring functions that decide promotion ship as{' '}
             <code>engrammic-primitives</code>.
@@ -236,51 +233,50 @@ export default function Engrammic({ p }: LayoutProps) {
 
         <Section id="the-gate" title="The write gate">
           <p>
-            Most memory systems resolve conflicts at read time, if at all. Engrammic resolves them on write. When a
-            new claim contradicts an existing fact, the write does not append another row. It stops and forces a
-            decision: supersede the fact, corroborate the claim, or hold both in suspension pending a human.
+            The <code>learn</code> operation accepts a claim, its evidence, and its source. Evidence enforcement can
+            reject a claim without evidence or store it with a warning, depending on configuration. A revision can
+            name the record it supersedes. Contradiction checks and later validation help identify claims that need
+            review.
           </p>
-          <Term>{`$ engrammic write --claim "the API uses API keys" --source session:4f21
-✗ rejected: contradiction
-  existing fact: "the API uses OAuth2" (crystallized 2026-04-02, 3 sources)
-  resolve: supersede the existing fact, or add corroboration to this claim`}</Term>
+          <p>Illustrative records for an API migration:</p>
+          <Term>{`Earlier claim: "The API uses API keys"
+Evidence:      API documentation, version 1
+
+Revised claim: "Version 2 uses OAuth2"
+Evidence:      API documentation, version 2
+Relationship: supersedes the earlier claim for version 2`}</Term>
           <p>
-            The cost lands where it belongs, at write time, on the writes that actually conflict. A quiet pile of
-            contradictions never accumulates to resurface mid-task three weeks later.
+            Recording a source makes a claim inspectable. Deciding whether the source supports it, and whether two
+            claims actually conflict, still requires validation.
           </p>
         </Section>
 
         <Section id="provenance" title="Provenance and time">
           <p>
             Every write carries two timestamps: one for when the thing happened, one for when the system learned it.
-            That bi-temporal record makes "what did the agent believe last Tuesday?" a query with a real answer,
-            rather than a reconstruction.
+            These fields distinguish when a statement applied from when it entered the store.
           </p>
           <p>
-            A stronger claim supersedes a fact instead of overwriting it. A typed edge links the old fact to the one
-            that replaced it, and the old fact stays in the graph marked no longer current. When an enterprise asks
-            why an agent told a customer something, the answer is a walk over the graph from the statement back to
-            the observations it rests on, not a shrug.
+            Supersession keeps the earlier record and links it to its replacement. That history lets an agent trace
+            a stored conclusion back to the observations and revisions it depends on. It can only trace what was
+            actually recorded.
           </p>
         </Section>
 
         <Section id="why-external" title="Why a graph, and why outside the model">
           <p>
-            The obvious question is why not keep beliefs in the model. Weights are a poor store. They hold roughly
-            3.6 bits per parameter, split between generalizing and memorizing, which caps a 70-billion parameter
-            model near 31GB before it reasons at all, and correcting one belief means retraining.
+            I want to inspect and update an individual record without retraining a model. An external store gives
+            each claim an identifier, evidence links, and revision history that an application can query directly.
           </p>
           <Figures
             items={[
-              { value: '3.6', label: 'bits per parameter', note: 'split between generalizing and memorizing' },
-              { value: '31 GB', label: 'memorization ceiling', note: 'a 70B model, before it reasons at all' },
+              { value: 'Source', label: 'evidence links', note: 'what supports the claim' },
+              { value: 'History', label: 'revision links', note: 'what changed and what it replaced' },
             ]}
           />
           <p>
-            Auditing fails too: superposition means one neuron encodes pieces of many features, so "what does the
-            model believe about X" asks about a mixture. A separate graph gives the opposite properties, explicit,
-            queryable, revisable, and shared, so agents writing to it reach consensus rather than diverging the way
-            partitioned distributed systems do.
+            Several agents can use the same store. They still need rules for resolving disagreement; sharing a
+            graph alone doesn't make their conclusions consistent.
           </p>
         </Section>
 
@@ -288,33 +284,29 @@ export default function Engrammic({ p }: LayoutProps) {
           <p>
             <code>engrammic-primitives</code> is the schema, Apache 2.0: the layers, the edge types, the promotion
             scoring. The engine sits over a graph store and exposes an MCP server, so any agent that already speaks
-            MCP reads and writes against it with no bespoke SDK. Manifold, a version of the same engine for latent
-            embeddings instead of text, exists as a design document and waits on a customer who needs multimodal
-            memory.
+            MCP can use its tools without a bespoke SDK. Manifold explores a version for latent embeddings.
           </p>
         </Section>
 
         <Section id="benchmarks" title="What the gate buys">
           <p>
-            Measured over 500 annotated coding-agent sessions, each comparing the write gate against an
-            embedding-only, append-only baseline.
+            An internal evaluation note reports the following results from 500 annotated coding-agent sessions,
+            comparing the CITE write gate with a RAG baseline. The dataset and run configuration are not included
+            on this page, so these figures should be read as reported results for that evaluation.
           </p>
           <Figures
             items={[
               { value: '95%', label: 'contradictions caught', note: 'baseline catches 66%' },
               { value: '87%', label: 'corrections propagated', note: 'baseline reaches 12%' },
               { value: '73%', label: 'contamination blocked', note: 'baseline lets it through' },
-              { value: '165ms', label: 'median gate latency', note: 'and it runs only on writes that need it' },
+              { value: '180ms', label: 'median write latency', note: 'baseline 15ms; increase 165ms' },
             ]}
           />
-          <Manifesto>A belief needs a source. Everything else is output with confidence attached.</Manifesto>
+          <Manifesto>The useful test is whether a correction reaches the next task that depends on it.</Manifesto>
           <p>
-            An agent running on this answers, on demand, what it knows, what it only generated, and which of the two
-            a given conclusion rests on. An agent without the split answers none of them and still sounds equally
-            sure. I think the next decade of AI turns on trust, not capability, and the research is open at{' '}
-            <a href="https://engrammic.ai/research">engrammic.ai/research</a> because the problem is bigger than one
-            company. If you work on agent memory, belief revision, or multi-agent coordination, I want to hear from
-            you.
+            The research is at <a href="https://engrammic.ai/research">engrammic.ai/research</a>.
+            If you work on agent memory, belief revision, or multi-agent coordination, I would like to compare
+            approaches and evaluation methods.
           </p>
         </Section>
 

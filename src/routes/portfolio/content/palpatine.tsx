@@ -11,9 +11,8 @@ export const palpatine: ProjectContent = {
       body: (
         <>
           <p>
-            You type a situation after <code>/palpatine</code>. It names the actual problem, usually the thing you
-            left out of your own description, then gives numbered actions with owners and deadlines. Fifty words,
-            no preamble, no disclaimer, no suggestion that you talk it through with them first.
+            You type a situation after <code>/palpatine</code>. It asks Claude for a diagnosis and numbered actions
+            in fifty words, using the selected material about power and strategy. The advice is deliberately blunt.
           </p>
           <Term>{`/palpatine my boss keeps taking credit for my work in meetings
 
@@ -102,7 +101,7 @@ Append **Power dynamics:** with leverage points and applicable laws.
           It ships under the Sith Public License, which grants permission to do whatever you want with it and
           disclaims responsibility for burned bridges, enemies made, and HR meetings attended. I built it in a
           weekend expecting nobody to notice. It has 105 stars, more than every other project on this site
-          combined. I write earnest tools for months and a joke license beats all of them.
+          combined.
         </p>
       ),
     },

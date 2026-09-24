@@ -1,118 +1,88 @@
 import type { ProjectContent } from './types'
 import { Figures } from '../kit'
 
-// The page renders these sections as one continuous column, no headings. Each
-// entry is a reveal-on-scroll unit and an anchor; its title is internal only.
 export const ocloak: ProjectContent = {
-  lede: 'Your WiFi router can see you breathe through a wall. The standard shipped in 2025; consumer products followed three months later. ØCLOAK is an at-cost detector and a crowdsourced map of where the sensors are.',
-
+  lede: 'I’m researching affordable hardware and software that make surveillance data less reliable. ØCLOAK is still experimental; no hardware has shipped.',
   sections: [
     {
       id: 'through-a-wall',
-      title: 'The through-wall sensor',
+      title: 'The sensing problem',
       body: (
         <>
           <p>
-            <code>802.11bf</code>, the WiFi-sensing amendment, was ratified in September 2025. It reads{' '}
-            <strong>motion, presence, and respiration</strong> through drywall, using the same signal your router{' '}
-            <em>already</em> broadcasts. Vodafone's "Who's Home" shipped that December, and consumer products followed
-            within three months of the standard landing.
+            WiFi sensing infers activity from changes in radio signals. Research systems have demonstrated
+            through-wall motion detection with inexpensive equipment. That interests me because the person being
+            sensed may not own or control the equipment collecting the signal.
           </p>
           <p>
-            <strong>None of this is new physics.</strong> Every WiFi chip computes channel state information to decode
-            traffic, a fine-grained read of how the signal bends on its way between antennas. Sensing keeps that read{' '}
-            <em>instead of discarding it</em>. Enough of it, over time, resolves a body moving behind a wall, a chest
-            rising and falling, a room that sits <em>empty</em> or holds <em>a dozen people</em>. Through-wall presence
-            detection has run on a <strong>$9 ESP32</strong>.
+            The capabilities vary with placement, antennas, frequency, and the surrounding room. Motion detection,
+            breathing estimation, and pose reconstruction are different tasks. A result on one does not establish
+            the others.
           </p>
-          <Figures
-            items={[
-              { value: '$9', label: 'esp32 board', note: 'runs through-wall presence detection' },
-              { value: '$2,000', label: 'cheapest tscm sweep', note: 'priced for corporate clients' },
-            ]}
-          />
           <p>
-            BLE trackers reach the same result from the other direction: a cheap tag, every nearby iPhone relaying its
-            location for free, and <em>no authentication anywhere</em> in the protocol. Countermeasures exist for both,
-            but they carry corporate TSCM price tags. A renter who wants to know whether their unit is being watched has{' '}
-            <strong>nothing they can afford</strong>.
+            The project’s <a href="https://github.com/NovusEdge/ocloak">research notes</a> cover WiFi sensing,
+            Bluetooth trackers, device fingerprinting, and the limits of the proposed defenses.
           </p>
         </>
       ),
     },
     {
       id: 'one-device',
-      title: 'The Guard',
+      title: 'The proposed hardware',
       body: (
         <>
           <p>
-            ØCLOAK Guard answers that with a <strong>single device</strong> on an <code>ESP32-C3</code>. In BLE mode it
-            watches for AirTag, SmartTag, and Tile beacons, including the off-brand clones that skip the anti-stalking
-            key rotation Apple and Samsung added. In WiFi mode it watches for the <code>NDP</code> and <code>NDPA</code>{' '}
-            sounding frames that open an 802.11bf session. Both ride in <em>control-plane traffic</em>, which carries no
-            payload encryption to hide behind, so a passive listener flags a sensing session the moment it starts.
+            The current design has two units. A mains-powered home unit would hold a switched reflector with enough
+            physical area to affect radio paths in a room. A portable unit would carry the functions that need to
+            travel with a person, including experiments with Bluetooth and WiFi decoys.
           </p>
           <p>
-            The Guard <strong>never transmits</strong>. It listens, and it reports what it heard.{' '}
-            <strong>Passive detection is legal</strong> in the US and the EU; active jamming is legal in <em>neither</em>,
-            and the Guard does not jam. It tells you a sensor is in the room and leaves the next move to you: cover it,
-            unplug it, walk away, or flood its read with noise.
+            The reflector experiment asks whether changing those paths can reduce the accuracy of a sensing
+            receiver while leaving ordinary communications usable. That benefit has to be measured at the intended
+            frequency, size, and cost before it can become a product claim.
           </p>
+          <Figures items={[
+            { value: '2.4 GHz', label: 'planned reflector test', note: 'efficacy remains unmeasured' },
+            { value: '4–32', label: 'elements in the sweep', note: 'compare several reflector sizes' },
+          ]} />
           <p>
-            Target price is <strong>$20–25</strong>. The first run ships turnkey boards through Seeed Fusion with
-            3D-printed enclosures; injection molding takes over at a thousand units.
+            The design excludes jamming. Reflection and decoy traffic still need technical testing and a review of
+            the rules that apply to the eventual device.
           </p>
         </>
       ),
     },
     {
       id: 'the-map',
-      title: 'The map',
+      title: 'Software and community reports',
       body: (
         <>
           <p>
-            One Guard tells you about <strong>one room</strong>. The network turns many rooms into <strong>a map</strong>.
-            Guards and manual reports feed sightings in, the map tags each by location, and a picture of where the
-            sensors sit builds the way Waze builds traffic out of drivers.
+            A separate software idea is to generate coherent decoy activity that makes behavioural profiling less
+            reliable. Random noise may be easy to filter, so the question is whether useful decoys can be generated
+            more cheaply than an adversary can remove them.
           </p>
           <p>
-            <strong>A report carries no account.</strong> Each device mints a rotating pseudonymous key, and the
-            location rounds to a grid cell before it ever leaves the device, so a sighting lands in the right
-            neighborhood and stops there. It traces back to <em>no</em> address, and to <em>no</em> person who filed it.
-            A hardware detection from a Guard outweighs a manual report until other users confirm it, which keeps one
-            bad actor from painting the map.
-          </p>
-          <p>
-            The first version is <strong>centralized</strong>: one API, one map, because that is the version that can
-            exist this year. Decentralization is its own infrastructure project, and it waits until the traffic
-            justifies community-run nodes.
+            A community network for sharing observations remains part of the longer-term plan. It would need a way
+            to assess reports without exposing the people submitting them. Rotating identifiers or rounding a
+            location would not, by themselves, establish anonymity.
           </p>
         </>
       ),
     },
     {
       id: 'dual-use',
-      title: 'The dual-use question',
+      title: 'How I want to fund it',
       body: (
         <>
           <p>
-            Underneath both the Guard and the map is <strong>one skill: RF detection</strong>. Channel-state analysis,
-            SDR spectrum work, emitter fingerprinting, sensor fusion. Consumer privacy hardware is one application of
-            it. Counter-drone detection is another, and the work barely changes; a drone is an RF emitter with a control
-            link and a video downlink, and finding it is <em>the same problem</em> as finding a sensing session.
+            The intended model is open hardware sold near manufacturing cost, with grants, crowdfunding, and
+            donations supporting development. I don’t want a subscription or a VC-funded business that depends on
+            collecting data from the people using it.
           </p>
           <p>
-            Defense work pays better, and it kills the open-source model through export control and secrecy. Dual-use
-            founders usually get absorbed by the paying customer, and the privacy side goes <strong>vestigial</strong>.
-          </p>
-          <p>
-            The structure I am testing keeps the two apart <em>on purpose</em>: one detection engine, trained on drone
-            and emitter data I record myself, with two products over it. A networked defense system funds the research;
-            a local-only consumer detector ships with <strong>zero telemetry</strong>. Drone detection needs drone data
-            I gather directly, so the consumer device never has to become a harvesting flywheel to feed the model.
-          </p>
-          <p>
-            If you work in this space, defense or privacy, I would like to hear how you would draw the line.
+            RF work can also have defense applications. The current plan puts consumer privacy first; counter-drone
+            work is a possible later direction, not the funding source for this phase.
           </p>
         </>
       ),
@@ -123,11 +93,13 @@ export const ocloak: ProjectContent = {
       body: (
         <>
           <p>
-            Where it stands: <strong>paper</strong>. The threat model, the bill of materials, and the network
-            architecture are written; <em>no hardware has shipped</em>. Next is five <code>ESP32-C3</code> dev boards,
-            BLE scanning that flags a real AirTag, WiFi monitor mode capturing real sounding frames, and an NLnet grant
-            application before its next deadline. The hardware proves out first, the grant follows, and nothing ships to
-            anyone until both hold.
+            The repository contains research, product plans, bench protocols, and software tools. The hardware
+            still depends on the reflector experiment. A successful result would be followed by prototype work,
+            legal review, and certification before production.
+          </p>
+          <p>
+            An ultrasonic scanning tool is available for experiments with recorded audio. The browser illustration
+            below shows the intended effect of obfuscation; it is not a measurement of ØCLOAK hardware.
           </p>
         </>
       ),

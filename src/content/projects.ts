@@ -35,7 +35,7 @@ export const projects: Project[] = [
       'A "strategic" advisor to "help you achieve your goals." Half a joke, and somehow my most-starred repo by a mile.',
     tech: ['Claude', 'TypeScript', 'JavaScript'],
     links: [{ label: 'github', href: 'https://github.com/NovusEdge/palpatine' }],
-    body: 'A tongue-in-cheek "strategic advisor" that dispenses gloriously unhinged guidance. It was never meant to be serious, which is exactly why it became my most-starred project. The internet rewards the right kind of nonsense.',
+    body: 'A Claude Code plugin for advice about interpersonal situations, written in the style of a Sith advisor. It uses keyword matches to select material from books on power and strategy, then asks Claude for a short diagnosis and actions.',
   },
 
   // ---- building now ----
@@ -70,7 +70,7 @@ export const projects: Project[] = [
       'Local QEMU VMs on Linux from a TUI and a CLI. No libvirt, no daemon, one binary.',
     tech: ['Go', 'QEMU', 'KVM', 'cloud-init', 'Bubble Tea', 'Nix'],
     links: [{ label: 'github', href: 'https://github.com/NovusEdge/stoat' }],
-    body: "Running a throwaway VM on Linux means libvirt, a daemon, and XML, or it means a QEMU command line you re-derive every time. stoat is one binary instead. Alpine live VMs come up networked and ssh-reachable with no `setup-alpine` step, because the apkovl overlay is baked into the boot. Ubuntu, Debian, Fedora, and Arch cloud images provision via cloud-init on first boot, and persistent disk VMs cover everything else. VMs are tracked by pidfile rather than supervised, so stoat can exit and the VM keeps running. The TUI is for poking around; the CLI (`ls`, `up`, `ssh`, `provision`, `recipe`, `doctor`) covers the same ground for scripts.",
+    body: "I built stoat to start and manage local QEMU VMs without reconstructing the command line each time. Alpine live VMs get networking and SSH through a boot overlay. Cloud images use cloud-init, and disk VMs let you install an OS yourself. QEMU keeps running after stoat exits. The TUI handles interactive use; the CLI covers the same operations for scripts.",
   },
   {
     slug: 'engrammic',
@@ -84,7 +84,7 @@ export const projects: Project[] = [
     kind: 'ai',
     featured: true,
     description:
-      'Epistemic memory for AI agents: claims, evidence, and provenance as a first-class graph. Before intelligence can be trusted, it has to learn to doubt.',
+      'Structured memory for AI agents, with evidence attached to claims and a graph that records how those claims change.',
     tech: [
       'TypeScript',
       'Python',
@@ -106,7 +106,7 @@ export const projects: Project[] = [
       { label: 'research', href: 'https://engrammic.ai/research' },
       { label: 'github', href: 'https://github.com/engrammic-ai/engrammic' },
     ],
-    body: 'Engrammic treats agent memory as epistemology: memory that fades without reinforcement, claims that require sources, and an auditable chain from observation to conclusion. A whole ecosystem sits under it (an engine, an MCP server, a modality-agnostic substrate), and the thesis stays simple. An agent should know what it knows versus what it merely generated.',
+    body: 'Engrammic stores observations, claims, facts, and beliefs with their sources and revision history. The schema library defines the types and promotion rules; the backend exposes memory operations through MCP. The records let an agent inspect what supports a claim and what has superseded it.',
   },
   {
     slug: 'veil',
@@ -119,13 +119,13 @@ export const projects: Project[] = [
     phase: 'shipped',
     kind: 'ai',
     featured: true,
-    description: "Your agent forgets. This one doesn't. Persistent, sourced memory for AI agents, shipped as a drop-in npm package.",
+    description: 'A coding agent built on Pi, with local memory, scored context eviction, and records of failed attempts.',
     tech: ['TypeScript', 'Go', 'Pixi', 'npm', 'Docker'],
     links: [
       { label: 'github', href: 'https://github.com/engrammic-ai/veil' },
       { label: 'npm', href: 'https://www.npmjs.com/package/@engrammic/veil' },
     ],
-    body: 'The Engrammic ideas, packaged so any agent can have durable, sourced memory in a couple of lines. `npm install -g @engrammic/veil` and your agent stops starting from zero every session.',
+    body: 'Veil is a fork of the Pi agent harness. It stores context locally, scores items without an LLM call, and moves evicted items out of the prompt so they can be retrieved later. Install with `npm install -g @engrammic/veil`, then run `veil` in a project.',
   },
   {
     slug: 'primitives',
@@ -157,10 +157,10 @@ export const projects: Project[] = [
     kind: 'systems',
     featured: true,
     description:
-      'Crowdsourced privacy infrastructure against mass surveillance: at-cost RF / WiFi-sensing hardware plus a P2P threat-intel network. Offense is shipping; defense is empty.',
+      'Research into affordable privacy hardware and software that make surveillance data less reliable. Hardware prototypes remain unproven.',
     tech: ['ESP32', 'C', 'Rust', 'P2P', 'RF'],
     links: [{ label: 'github', href: 'https://github.com/NovusEdge/ocloak' }],
-    body: 'WiFi sensing ships in routers and sees through walls. A $9 ESP32 does through-wall presence detection. Surveillance is commoditizing fast and defense is basically empty, so ØCLOAK fills the gap: at-cost devices you own outright and an anonymous, location-based threat-intel network. No subscriptions, no VC, open firmware.',
+    body: 'ØCLOAK explores a home reflector, a portable device, and software-generated decoys. The goal is to interfere with sensing and profiling while keeping ordinary communications usable. The current work is research and bench testing; no hardware has shipped. The intended model is open hardware sold near cost, funded without subscriptions or VC.',
   },
   {
     slug: 'money-mesh',
@@ -173,10 +173,10 @@ export const projects: Project[] = [
     phase: 'building',
     kind: 'ai',
     description:
-      'A leaderless mesh of self-replicating earning agents under an immutable core. The spend cap holds by arithmetic, not by good intentions.',
+      'An experimental network of earning agents that share a fixed budget. Spawning a peer transfers part of an existing allocation.',
     tech: ['Python', 'Cedar', 'LiteLLM', 'Pydantic AI', 'SQLite', 'Stripe', 'MCP'],
     links: [],
-    body: "No supervisor, no orchestrator. Every node carries the same capability-locked immutable core (intent, guardrails, alignment), holds a slice of a conserved budget token, invents its own product, and measures its own revenue from real receipts rather than self-report. A node spawns a peer by handing over part of its budget, so recursive self-replication stays bounded: spawning only ever divides an existing pot. Cedar sits at the enforcement point as a real policy engine, so the guardrail is code the node cannot talk its way past.",
+    body: 'Each node has a protected core, a budget allocation, and room to develop its own product. Revenue is recorded from receipts. When a node spawns a peer, it transfers part of its allocation, so spawning does not create more budget. Cedar policies govern permitted actions at the enforcement boundary.',
   },
   {
     slug: 'anti-slop',

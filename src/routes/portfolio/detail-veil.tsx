@@ -379,15 +379,15 @@ const SECTIONS: { id: string; body: ReactNode }[] = [
           explained last week. It retries a fix that already failed.
         </p>
         <p>
-          Compaction does not fix this. The summariser keeps whatever looks important by a fixed heuristic and drops
-          the rest, and the dropped part matters more often than the tool assumes.
+          A conversation summary can omit a detail that becomes useful later. I wanted a way to retain and
+          retrieve individual records as the active context changes.
         </p>
         <div className="my-12">
           <Compaction />
         </div>
         <p>
-          Veil replaces that summariser with an eviction system. Every piece of context carries its own decay
-          schedule, so no single pass wipes a session.
+          Veil scores context items and moves them between the active prompt and local storage. Eviction frees
+          space in the prompt while keeping records available for retrieval.
         </p>
       </>
     ),
@@ -404,8 +404,9 @@ const SECTIONS: { id: string; body: ReactNode }[] = [
 cd your-project
 veil`}</Code>
         <p>
-          Embeddings run through <code>sqlite-vec</code>, with the embedder in-process and Ollama as a fallback, so
-          the store works with the network off.
+          The memory store uses <code>sqlite-vec</code>, with an in-process embedder and Ollama as a fallback.
+          Model files need to be available locally for offline embedding. The coding agent's model provider is
+          configured separately; choosing a remote model can send context to that provider.
         </p>
       </>
     ),
@@ -442,8 +443,8 @@ const config: AgentLoopConfig = {
     body: (
       <>
         <p>
-          Most cache eviction runs a plain age check: old enough, gone. Veil scores memory with FSRS instead, the
-          scheduler behind spaced-repetition flashcard apps. Each item holds a stability in days, and retrievability
+          Veil uses an FSRS-based retrievability score, adapted from spaced-repetition scheduling. Each item holds
+          a stability in days, and retrievability
           falls from it on a power curve, calibrated so an item is still at 0.9 when it reaches its own stability.
         </p>
         <div className="my-12">
@@ -462,8 +463,7 @@ const config: AgentLoopConfig = {
     body: (
       <>
         <p>
-          Deciding what a piece of context is worth never calls the LLM. Five metadata signals combine at fixed
-          weights, and the whole thing is arithmetic.
+          The scorer combines five metadata signals at fixed weights. It does not call a language model.
         </p>
         <div className="my-12">
           <Weights />
@@ -474,7 +474,7 @@ const config: AgentLoopConfig = {
           graph. Cognitive weight tracks whether the item was in context when things went well or badly. Procedural
           items then get a 1.2 multiplier, anything you loaded by hand gets 1.5, and pinned items take a flat boost.
         </p>
-        <p>The same inputs produce the same score on every turn.</p>
+        <p>The same metadata, task tags, and time produce the same score.</p>
       </>
     ),
   },
@@ -483,15 +483,14 @@ const config: AgentLoopConfig = {
     body: (
       <>
         <p>
-          Eviction runs in three stages, and each one has a real predicate rather than a budget someone guessed.
+          Eviction runs in three stages, using age, scores, and context pressure to choose candidates.
         </p>
         <div className="my-12">
           <Cascade />
         </div>
         <p>
-          The threshold that decides what counts as low enough moves on its own, borrowing the AIMD shape from TCP
-          congestion control. Nobody sets an eviction budget by hand; the threshold finds its own level from how the
-          session is going.
+          The controller adjusts the context-pressure threshold within configured limits. It responds to repeated
+          evictions, requests for evicted items, and periods of stability.
         </p>
         <div className="my-12">
           <AimdTrack />
@@ -520,7 +519,7 @@ const config: AgentLoopConfig = {
     body: (
       <>
         <p>
-          Veil keeps a record of every attempt against a goal: what the agent did, the target, the outcome, and a
+          Veil records attempts against a goal: what the agent did, the target, the outcome, and a
           normalised fingerprint of the error. That fingerprint lets the same failure get recognised as the same
           failure even when the message text drifts.
         </p>
@@ -529,7 +528,7 @@ const config: AgentLoopConfig = {
         </div>
         <p>
           A convergence monitor watches the record and escalates in levels. Progress counts as a pass, a partial, a
-          different error pattern, or a different file touched. Anything else is the agent going in circles.
+          different error pattern, or a different file touched. These are heuristics for deciding when to intervene.
         </p>
         <div className="my-12">
           <Spec title="convergence monitor" rows={ESCALATION} />
@@ -542,16 +541,15 @@ const config: AgentLoopConfig = {
     body: (
       <>
         <p>
-          Evicted context is demoted, not dropped. It moves out of the prompt into the warm cache at{' '}
+          Evicted context moves out of the prompt into the warm cache at{' '}
           <code>.veil/context.db</code>, and out of there into cold storage, which hands back a pointer the agent can
-          follow. The durable store underneath is an event log: the tape is the truth and everything else is derived
-          from it.
+          follow. An event log records changes in the durable store, and the current view is derived from that log.
         </p>
         <div className="my-12">
           <Spec title="durable store · schema v2" rows={STORE} />
         </div>
         <p>
-          Contradictions are not resolved quietly. Two beliefs that disagree are stored with their full provenance,
+          Conflicting beliefs are stored with their provenance,
           down to the tool call and the session that produced them, and handed to the model to settle.
         </p>
       </>

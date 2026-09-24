@@ -308,8 +308,8 @@ export default function Ocloak({ p, c }: LayoutProps) {
         />
         <p className="mt-6 text-center text-[15px] leading-relaxed text-bone/55">
           {scrambled
-            ? 'The detections still happen. The data leaving the room is garbage, and the eyes above lost the thread.'
-            : 'Flip it to scrambled. ØCLOAK does not hide you; it floods the read with noise.'}
+            ? 'Illustration: decoys make the inferred activity harder to distinguish. This is not a measured hardware result.'
+            : 'Switch to scrambled to explore the proposed effect of decoys on sensing data.'}
         </p>
       </div>
 

@@ -158,7 +158,6 @@ function DecisionHandoff() {
         <div className="dk-handoff-reading">
           <h3>Picking up the work</h3>
           <p>The hotel agent can find refundable rooms without pretending the dates are final. The coordinating agent can check all three proposals against the same rule. A later agent can revisit that rule once everybody confirms their availability.</p>
-          <p>Different tasks, one recorded decision. Each agent can work on its own part while keeping track of what is settled, what was rejected, and what still needs an answer.</p>
           <p className="dk-demo-note">Illustrative record. The entries must be written and maintained by the agent; Docket does not infer the right decisions from the conversation.</p>
         </div>
       </div>

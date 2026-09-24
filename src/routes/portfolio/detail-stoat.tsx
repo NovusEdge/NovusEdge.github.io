@@ -208,20 +208,18 @@ export default function Stoat({ p, c }: LayoutProps) {
       <div className="mx-auto max-w-2xl px-6 pb-24 pt-20">
         <div data-sec className="space-y-6">
           <P>
-            I wanted a scratch VM I could break and throw away, and every option asked more of me than the job was
-            worth. libvirt drags in a daemon and a permissions model and XML. Vagrant wants Ruby and a box registry.
-            Raw QEMU works but I kept re-deriving the same wall of flags from shell history every single time.
+            I wanted a scratch VM I could break and throw away. I kept looking up the same QEMU flags in shell
+            history, so I built a way to save those choices and manage the VMs together.
           </P>
           <P>
-            So stoat is one static binary instead. No daemon, no config language to learn. It drives QEMU and then
-            gets out of the way.
+            stoat is a Go binary that launches QEMU. It saves VM settings in TOML files and provides a TUI and CLI
+            for managing them.
           </P>
         </div>
 
         <div data-sec className="mt-6 space-y-6">
           <P>
-            Alpine is what made it click. It boots in about a second, which is exactly what a throwaway VM should do.
-            The catch is that a fresh Alpine drops you at a login prompt with no network and no sshd until you run{' '}
+            With an Alpine live image, I also wanted to avoid setting up networking and SSH through{' '}
             <Code>setup-alpine</Code> by hand.
           </P>
           <P>
@@ -231,8 +229,7 @@ export default function Stoat({ p, c }: LayoutProps) {
             survives rebuilds, so your SSH client never complains about a changed fingerprint.
           </P>
           <P>
-            The overlay gets rebuilt from scratch on every start, which makes live VMs genuinely disposable. Nothing
-            you do inside one survives a stop, and that is the point.
+            The overlay is rebuilt on every start. Changes inside the live guest are discarded when it stops.
           </P>
         </div>
 
@@ -275,7 +272,7 @@ export default function Stoat({ p, c }: LayoutProps) {
             everything else.
           </P>
           <P>
-            The disk kind is the one that trips people. It starts empty. Until you install the guest yourself and add
+            A new disk VM starts empty. Until you install the guest yourself and add
             stoat's key, there is nothing on the far end of an SSH connection. Rather than let you sit through a
             connect timeout, stoat checks first and tells you. Once the OS is in you press <Code>i</Code>, it flips{' '}
             <Code>installed</Code> in the <Code>vm.toml</Code>, and the VM boots straight off the disk instead of the
@@ -319,8 +316,8 @@ export default function Stoat({ p, c }: LayoutProps) {
 
         <div data-sec className="space-y-6">
           <P>
-            Day to day I live in the TUI. It lists every VM with its mode and state, and the keys do the obvious
-            things: <Code>↵</Code> starts or stops the highlighted VM, <Code>s</Code> drops into ssh, <Code>p</Code>{' '}
+            Day to day I use the TUI. It lists each VM with its mode and state. <Code>↵</Code> starts or stops the
+            highlighted VM, <Code>s</Code> opens SSH, <Code>p</Code>{' '}
             provisions, <Code>→</Code> opens details, <Code>/</Code> filters the list, <Code>n</Code> builds a new
             one.
           </P>
@@ -364,7 +361,7 @@ export default function Stoat({ p, c }: LayoutProps) {
           <P>
             The CLI covers the same ground for scripts. <Code>ls</Code>, <Code>up</Code>, <Code>down</Code>,{' '}
             <Code>ssh</Code>, <Code>provision</Code>, <Code>rm</Code>, <Code>recipe</Code>, <Code>logs</Code>, and{' '}
-            <Code>doctor</Code> each do one thing, and the exit codes carry weight: <Code>0</Code> for success,{' '}
+            <Code>doctor</Code> return <Code>0</Code> for success,{' '}
             <Code>1</Code> for a runtime failure, <Code>2</Code> for a usage mistake. That is enough to drop stoat
             into a Makefile or a CI job without scraping its output.
           </P>

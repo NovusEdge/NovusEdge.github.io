@@ -2,7 +2,7 @@ import type { ProjectContent } from './types'
 import { Figures, Term } from '../kit'
 
 export const veil: ProjectContent = {
-  lede: 'Every coding agent session starts blank: the codebase gets rediscovered, the fix that failed yesterday gets retried, and compaction throws out whatever the summarizer guessed was unimportant. Veil is an installable memory layer that keeps an LLM out of the memory path entirely, running on FSRS decay, AIMD eviction, and a record of every approach that already failed.',
+  lede: 'Veil is a coding agent built on Pi. It keeps context in a local store, scores what stays in the prompt, and records failed attempts so later work can refer to them.',
 
   sections: [
     {
@@ -15,12 +15,12 @@ export const veil: ProjectContent = {
             explained last week. It retries a fix that already failed.
           </p>
           <p>
-            Compaction does not fix this. The summarizer keeps whatever looks important by a fixed heuristic and
-            drops the rest, and the dropped part matters more often than the tool assumes.
+            A conversation summary can omit a detail that becomes useful later. I wanted a way to retain and
+            retrieve individual records as the active context changes.
           </p>
           <p>
-            Veil replaces that summarizer with an eviction system. Each piece of context decays on its own
-            schedule, so no single pass wipes a session.
+            Veil scores context items and moves them between the active prompt and local storage. Eviction frees
+            space in the prompt while keeping records available for retrieval.
           </p>
         </>
       ),
@@ -34,8 +34,8 @@ export const veil: ProjectContent = {
 cd your-project
 veil`}</Term>
           <p>
-            The package runs local-first on sqlite-vec embeddings. Nothing about your codebase leaves the machine,
-            and it works with the network off.
+            The memory store uses SQLite and sqlite-vec, with local embedding options. The coding agent's model
+            provider is configured separately; choosing a remote model can send context to that provider.
           </p>
         </>
       ),
@@ -46,10 +46,10 @@ veil`}</Term>
       body: (
         <>
           <p>
-            Most cache eviction runs a plain age check: old enough, gone. Veil scores memory with FSRS instead, the
+            Veil uses an FSRS-based retrievability score, adapted from the
             algorithm behind spaced-repetition flashcard apps. Each item gets a stability value in days. Rather than
             decay in a straight line, retrievability drops from that stability on a power curve, so an item that
-            keeps getting recalled stays sharp far longer than one recalled once and left alone.
+            is recalled repeatedly retains a higher score than one left unused.
           </p>
           <p>Stability starts low, and it differs by what kind of item it is.</p>
           <Figures
@@ -73,9 +73,8 @@ veil`}</Term>
       body: (
         <>
           <p>
-            The retrievability threshold that decides what is low enough to evict changes as the session runs. It
-            borrows the AIMD shape from TCP congestion control. Nobody sets an eviction budget by hand; the
-            threshold finds its own level from how the session is going.
+            The controller adjusts the context-pressure threshold within configured limits. It responds to
+            repeated evictions, requests for evicted items, and periods of stability.
           </p>
         </>
       ),
@@ -90,9 +89,8 @@ veil`}</Term>
             five metadata signals, and the weights are fixed. The whole score runs as arithmetic.
           </p>
           <p>
-            That keeps scoring under ten milliseconds on every turn. An eviction pass never becomes the thing the
-            agent waits on. The score comes out the same twice in a row given the same inputs, which a model call
-            cannot promise.
+            Given the same item metadata, task tags, and time, the scorer returns the same result. Scoring does
+            not require a language-model request.
           </p>
         </>
       ),
@@ -103,12 +101,13 @@ veil`}</Term>
       body: (
         <>
           <p>
-            Veil keeps a record of every attempt against a goal: what the agent did, the target, the outcome, and a
+            Veil records attempts against a goal: what the agent did, the target, the outcome, and a
             normalized fingerprint of the error. That fingerprint lets the same failure get recognized as the same
             failure even when the message text drifts.
           </p>
           <p>
-            Veil packages the same memory engine as an installable CLI; Engrammic runs it as infrastructure.
+            Veil integrates memory into the coding-agent loop. Engrammic provides a separate memory backend for
+            agents through MCP.
           </p>
         </>
       ),
