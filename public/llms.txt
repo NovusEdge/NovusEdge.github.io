@@ -2,38 +2,39 @@
 
 > Personal portfolio and writing by a systems architect in Finland. I build AI infrastructure, agent memory and decision-tracking tools, evals, systems software, and hardware projects.
 
-Coding since 2013. My background is offensive security: CTFs, malware development, and pentesting. Much of my current work concerns what agents know, why they believe it, and which decisions should survive a new session.
+Coding since 2013. My background is offensive security: CTFs, malware development, and pentesting. I work on storing agents' claims, supporting evidence, and decisions so later sessions can retrieve and revise them.
 
-Updated: 2026-09-12. These descriptions are an overview; consult the linked pages and repositories for current implementation details.
+Updated: 2026-09-24. Consult the linked project pages and repositories for implementation details.
 
 ## Site directory
 
 - [Home](https://novusedge.github.io/): Introduction and selected work.
 - [About](https://novusedge.github.io/about/): Background, interests, and open-source contributions.
 - [Portfolio](https://novusedge.github.io/portfolio/): Projects, development status, and repository links.
+- [Research](https://novusedge.github.io/research/): Research interests and work.
+- [Stack](https://novusedge.github.io/stack/): Tools and technologies I use.
 - [Blog](https://novusedge.github.io/blog/): Essays on AI, energy, governance, systems, and security, alongside older tutorials and personal posts.
 - [RSS](https://novusedge.github.io/feed.xml): Published posts.
 - [Sitemap](https://novusedge.github.io/sitemap.xml): Public page URLs, including localized routes.
 
-English is the default language. Localized routes use `/fi/` for Finnish, `/de/` for German, `/ja/` for Japanese, and `/zh/` for Simplified Chinese. Translation coverage varies by page. The three recent essays below are available in all five languages; for example, `/zh/blog/what-did-we-all-miss/`.
+English is the default language. Localized routes use `/fi/` for Finnish, `/de/` for German, `/ja/` for Japanese, and `/zh/` for Simplified Chinese; for example, `/zh/blog/what-did-we-all-miss/`. Translation coverage varies by page. Recent English revisions may not yet appear in translations.
 
 ## Selected projects
 
 - [Docket](https://novusedge.github.io/portfolio/docket/): Decision tracking for agents and complex agent workflows. Keeps settled choices, rejected options, and open questions outside the conversation, with supporting reasons and a history of superseded decisions. [Repository](https://github.com/NovusEdge/docket).
 - [Engrammic](https://novusedge.github.io/portfolio/engrammic/): Epistemic memory for AI agents. Models claims, evidence, provenance, and decay so observations and beliefs can be traced to their sources. [Website](https://engrammic.ai), [repository](https://github.com/engrammic-ai/engrammic).
-- [Veil](https://novusedge.github.io/portfolio/veil/): Persistent, sourced memory for agents, with memory decay and failed-approach history. [Repository](https://github.com/engrammic-ai/veil), [npm package](https://www.npmjs.com/package/@engrammic/veil).
+- [Veil](https://novusedge.github.io/portfolio/veil/): A coding agent forked from Pi, with local SQLite memory, scored context eviction, and records of failed attempts. The memory store is local; a configured remote model provider can receive prompt context. [Repository](https://github.com/engrammic-ai/veil), [npm package](https://www.npmjs.com/package/@engrammic/veil).
 - [Primitives](https://github.com/engrammic-ai/primitives): Python schemas and rules for observations, claims, facts, and beliefs. [Repository](https://github.com/engrammic-ai/primitives), [PyPI package](https://pypi.org/project/engrammic-primitives/).
 - [stoat](https://novusedge.github.io/portfolio/stoat/): Local QEMU virtual machines on Linux, managed through a Go TUI and CLI. [Repository](https://github.com/NovusEdge/stoat).
-- [ØCLOAK](https://novusedge.github.io/portfolio/ocloak/): A project exploring privacy infrastructure against mass surveillance, including RF/WiFi-sensing hardware and peer-to-peer threat intelligence. [Repository](https://github.com/NovusEdge/ocloak).
+- [ØCLOAK](https://novusedge.github.io/portfolio/ocloak/): Research into a home reflector, portable devices, and software decoys intended to interfere with sensing and profiling. The planned 2.4 GHz reflector experiment has not established efficacy, and no hardware has shipped. [Repository](https://github.com/NovusEdge/ocloak).
 - [money-mesh](https://novusedge.github.io/portfolio/): An experimental autonomous-agent system with bounded budgets, node-owned business code, and a protected runtime. Self-sustaining operation is a design goal, not a claim of demonstrated profitability.
-- [anti-slop](https://github.com/NovusEdge/anti-slop): A Claude Code plugin with prose rules, session hooks, and a linter for AI-written text. [Repository](https://github.com/NovusEdge/anti-slop).
+- [Curt](https://github.com/NovusEdge/curt): A Claude Code plugin with prose and code review skills, session hooks, and a linter. Writing guidance focuses on clarity, supported claims, and preserving the author's voice. [Repository](https://github.com/NovusEdge/curt).
 - [goob](https://github.com/NovusEdge/goob): A Godot desktop pet that wanders, naps, and comments on desktop activity, with support for custom spritesheets. [Repository](https://github.com/NovusEdge/goob).
 - [Palpatine](https://novusedge.github.io/portfolio/palpatine/): A tongue-in-cheek strategic-advisor plugin for pursuing goals. [Repository](https://github.com/NovusEdge/palpatine).
 
-The portfolio distinguishes projects in development, shipped projects, older security work, and contributions to other projects. These labels do not establish production deployment, a release schedule, or activity in a particular week.
+## Recent posts
 
-## Recent essays
-
+- [Fine-tuning OpenJev on 62,695 A/B Tests](https://novusedge.github.io/blog/fine-tuning-openjev-on-62695-ab-tests/): September 23, 2026. Training a headline ranker on Upworthy's A/B tests, correcting the evaluation, comparing it with Gemini, and testing transfer to Reddit.
 - [What Did We All Miss?](https://novusedge.github.io/blog/what-did-we-all-miss/): September 12, 2026. Reflections on AI progress, research, robotics, and the gap between technical developments and public attention.
 - [Google's €13 Billion in Finland](https://novusedge.github.io/blog/googles-13-billion-in-finland/): September 12, 2026. An essay on energy investment in Finland, grid constraints, and the attention given to generation versus storage.
 - [Let's Talk About Plan A](https://novusedge.github.io/blog/plan-a-ai/): September 11, 2026. A broadly supportive critique of the AI Futures Project's AI 2040: Plan A, examining compute limits, transparency, verification, and constraints on AI systems.

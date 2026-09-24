@@ -151,7 +151,7 @@ export default function AboutPage() {
 
   return (
     <>
-      <Meta title={t('about.title')} description="Aliasgar Khimani - AI alignment researcher, RSI, and the things that happen when systems start building themselves." />
+      <Meta title={t('about.title')} description="Aliasgar Khimani's background in offensive security, research interests in AI alignment and recursive self-improvement, and work on agent memory and systems software." />
       <section ref={scope} className="relative mx-auto max-w-4xl px-6 pb-24 pt-36">
 
         {/* 00 - Header */}

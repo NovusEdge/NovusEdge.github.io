@@ -66,7 +66,7 @@ export default function Landing() {
   const lp = useLocalePath()
   return (
     <>
-      <Meta description="Aliasgar Khimani (NovusEdge): epistemic memory, cognitive infrastructure for AI agents, and whatever I'm building next." />
+      <Meta description="Aliasgar Khimani (NovusEdge): agent memory, decision tracking, systems software, and privacy hardware research. Projects and writing from Finland." />
       <div className="bg-charcoal text-bone">
         {/* hero */}
         <section className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden px-6 text-center">
