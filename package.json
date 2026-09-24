@@ -8,9 +8,9 @@
     "build": "tsc && vite build && node scripts/postbuild.mjs",
     "preview": "vite preview",
     "test": "vitest run",
-    "i18n:translate": "node --env-file=${GEMINI_ENV_FILE:-$HOME/Projects/goob/.env} scripts/translate-ui.mjs",
+    "i18n:translate": "node --env-file=${GEMINI_ENV_FILE:-.env} scripts/translate-ui.mjs",
     "i18n:check": "node scripts/translate-ui.mjs --check",
-    "translate:blog": "node --env-file=${GEMINI_ENV_FILE:-$HOME/Projects/goob/.env} scripts/translate-blog.mjs",
+    "translate:blog": "node --env-file=${GEMINI_ENV_FILE:-.env} scripts/translate-blog.mjs",
     "translate:blog:check": "node scripts/translate-blog.mjs --check"
   },
   "dependencies": {

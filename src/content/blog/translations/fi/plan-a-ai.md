@@ -2,174 +2,152 @@
 title: "Puhutaan Plan A:sta"
 date: 2026-09-11
 tags: [ai, governance, compute, alignment, policy, essay]
-description: "AI Futures Project haluaa Yhdysvaltojen ja Kiinan laittavan superälyn tauolle vuoteen 2040 asti. Se on hyvä suunnitelma. Kuusikymmentä päivää sen julkaisemisen jälkeen kymmenentuhatta agenttia ratkaisi Navier–Stokesin yhtälöt."
+description: "AI Futures Project haluaa Yhdysvaltojen ja Kiinan pysäyttävän superälyn kehityksen vuoteen 2040 asti. Se on hyvä suunnitelma. Kuusikymmentä päivää sen julkaisemisen jälkeen kymmenentuhatta agenttia ratkaisi Navier-Stokesin yhtälöt."
 toc: true
 ---
 
 ## Ajoitus
 
-9. heinäkuuta 2026 AI Futures Project julkaisi raportin [AI 2040: Plan A](https://ai-2040.com/). Sillä on mittaa yhdeksänkymmentä sivua. Ehdotuksena on, että Yhdysvallat ja Kiina neuvottelevat vuoteen 2029 mennessä, ilmoittavat laskentakapasiteettinsa, päästävät toistensa tarkastajat infrastruktuuriinsa, keskeyttävät frontier-koulutuksen ja käyttävät sitten vuosikymmenen avoimeen alignment-tutkimukseen ennen kuin kukaan rakentaa viisainta ihmistä älykkäämpää järjestelmää. Superäly lykkääntyy vuoteen 2040, ja kaikki saavat elää.
+AI Futures Project julkaisi 9. heinäkuuta 2026 raportin [AI 2040: Plan A](https://ai-2040.com/). Sillä on mittaa 90 sivua. Ehdotus on, että Yhdysvallat ja Kiina neuvottelevat vuoteen 2029 mennessä, ilmoittavat laskentakapasiteettinsa, päästävät toistensa tarkastajat infrastruktuuriinsa, keskeyttävät frontier-koulutuksen ja käyttävät sitten vuosikymmenen avoimeen alignment-tutkimukseen ennen kuin kukaan rakentaa viisainta ihmistä älykkäämpää järjestelmää. Superäly lykkääntyy vuoteen 2040 ja kaikki jäävät henkiin.
 
-8. syyskuuta 2026 OpenAI ilmoitti, että [noin kymmenentuhatta keskenään koordinoivaa autonomista agenttia oli löytänyt äärellisen ajan singulariteetin 3D-Navier–Stokes-yhtälöistä](https://openai.com/index/navier-stokes-solution/). Taustalla ollut malli oli talon sisäinen, GPT-6 Astraa kehittyneempi malli. He tuottivat sekä analyyttisen todistuksen että Lean-formalisaation, joten tulos on koneellisesti tarkistettu pelkän väitteen sijaan. He [kieltäytyivät lunastamasta miljoonan dollarin palkkiota](https://www.quantamagazine.org/ai-has-solved-one-of-maths-1-million-millennium-prize-problems-20260908/) ja kehystivät koko jutun raportiksi siitä, miten nopeasti kehitys etenee.
+OpenAI ilmoitti 8. syyskuuta 2026, että [noin kymmenentuhatta keskenään koordinoivaa autonomista agenttia oli löytänyt äärellisen ajan singulariteetin 3D Navier-Stokesin yhtälöistä](https://openai.com/index/navier-stokes-solution/). Taustalla oli GPT-6 Astraa edistyneempi sisäinen malli. He tuottivat sekä analyyttisen todistuksen että Lean-formalisaation, joten tulos on koneellisesti tarkistettu pelkän väitteen sijaan. He [kieltäytyivät lunastamasta miljoonan dollarin palkintoa](https://www.quantamagazine.org/ai-has-solved-one-of-maths-1-million-millennium-prize-problems-20260908/) ja esittivät koko jutun raporttina siitä, kuinka nopeasti kehitys etenee.
 
-Tähän meni kuusikymmentä päivää, ja Plan A:n ensimmäinen virstanpylväs on vuonna 2029.
+Siinä kului kuusikymmentä päivää, ja Plan A:n ensimmäinen virstanpylväs on vuonna 2029.
 
-Haluan tehdä selväksi ennen kuin alan purkaa tätä osiin, että Plan A on mielestäni hyvä suunnitelma. Se on vakavin näkemäni yritys kuvata iskulauseiden sijaan operatiivisella tasolla, miltä kilpajuoksun pysäyttäminen oikeasti näyttäisi, eivätkä sen kirjoittajat todellakaan ole tyhmiä. Mikä tahansa suunnitelma tähän liittyen herättää vastustusta, enkä ole kiinnostunut lyttäämään sitä ainoaa porukkaa, joka teki kotiläksynsä. Mutta lukiessani sitä törmäsin jatkuvasti samaan seinään: lähes kaikki siinä olettaa, että voimme nähdä, mitä tapahtuu.
+Plan A on yksityiskohtaisin lukemani ehdotus siitä, miten valtiot voisivat sopia tekoälykehityksen hidastamisesta. Mielestäni se kannattaa ottaa vakavasti. Suurin vastalauseeni liittyy siihen, miten paljon se nojaa kykyyn havainnoida, mitä muut osapuolet tekevät.
 
 ## Mitä Plan A sanoo
 
-Lyhyt tiivistelmä niille, jotka eivät ole sitä lukeneet (ja se kannattaa lukea, koska se on hyvä).
+He nimeävät [kaksi lopputulosta, joita he pitävät kestämättöminä](https://ai-2040.com/about): sen, että ihmiskunta menettää tekoälyn hallinnan, tai sen, että pieni ryhmä johtajia ja virkamiehiä saa väliaikaisen monopolin superälyyn. Jälkimmäisen mukanaolo on tärkeää, ja monet aiheesta väittelevät kiinnittävät huomiota vain ensimmäiseen.
 
-He nimeävät [kaksi lopputulosta, joita he pitävät mahdottomina hyväksyä](https://ai-2040.com/about): sen, että ihmiskunta menettää tekoälyn hallinnan, tai sen, että pieni johtajien ja virkamiesten ryhmä saa tilapäisen monopolin superälyyn. Tuon toisen mukanaolo on tärkeää, sillä monet aiheesta kiistelevät huomioivat aina vain ensimmäisen.
+Ydinperiaatteita ovat lisäajan ostaminen, täysi tutkimuksen läpinäkyvyys, tekoälyn laaja hajauttaminen ja peruutettavuus. Aikajana etenee karkeasti näin: Vuonna 2029 osapuolet neuvottelevat ja keskeyttävät frontier-koulutuksen, ilmoittavat laskentakapasiteettinsa ja auditoivat toimitusketjujen tiedot. Vuosina 2030–2035 tutkimus jatkuu mittakaavassa ihmistasolla safety-case-sääntelyn alaisena. Vuonna 2035 kaikki pysähtyy ihmisen huippuasiantuntijan tasolle, ja loppuvuosikymmen käytetään alignmentiin, verifiointiin, tietoturvaan ja julkiseen keskusteluun ennen kuin kukaan etenee pidemmälle.
 
-Ydinperiaatteita ovat lisäajan ostaminen, tutkimuksen täysi läpinäkyvyys, tekoälyn laaja hajauttaminen ja peruttavuus. Aikajana etenee suunnilleen näin: Vuonna 2029 osapuolet neuvottelevat ja keskeyttävät frontier-koulutuksen, ilmoittavat laskentaresurssinsa ja auditoivat toimitusketjujen tiedot. Vuosina 2030–2035 tutkimusta jatketaan laajassa mittakaavassa ihmistason sisällä safety case -sääntelyn alaisuudessa. Vuonna 2035 kaikki pysähtyy ihmisasiantuntijoiden huipputasolle, ja loppuvuosikymmen käytetään alignmentiin, verifiointiin, tietoturvaan ja julkiseen keskusteluun ennen kuin kukaan etenee pidemmälle.
+Heidän valitsemansa toimeenpanomekanismi on laskentakapasiteetin hallinta (compute governance) yhdessä sellaisen käsitteen kanssa, jota he kutsuvat molemminpuolisesti taatuksi laskentakapasiteetin tuhoksi (mutually assured compute destruction). Laskentakapasiteetti on pullonkaula, koska se on fyysistä, ja fyysisiä asioita voi laskea.
 
-Valvontamekanismiksi he valitsevat laskentakapasiteetin hallinnan (compute governance) sekä sen, mitä he kutsuvat molemminpuolisesti varmistetuksi laskennan tuhoksi (mutually assured compute destruction). Laskenta on pullonkaula, koska laskenta on fyysistä, ja fyysisiä asioita voidaan laskea.
+Siitä, miksi Kiina suostuisi tähän, he kirjoittavat:
 
-Heidän vastauksensa kysymykseen siitä, miksi Kiina koskaan suostuisi tähän, on hyvä kiteytys, joten lainaan sitä:
+> kenen tahansa, joka on huolissaan hallinnan menettämisestä, pitäisi nähdä tämä suunnitelma parannuksena, kuten myös kenen tahansa, joka on huolissaan vallan keskittymisestä – lukuun ottamatta niitä, joille valta oletusarvoisesti keskittyisi
 
-> jokaisen, joka kantaa huolta hallinnan menettämisestä, pitäisi nähdä tämä suunnitelma parannuksena, samoin jokaisen, joka kantaa huolta vallan keskittymisestä, lukuun ottamatta niitä, joille valta oletusarvoisesti keskittyisi
+En usko, että jaettu huoli näistä riskeistä riittää sopimuksen syntymiseen. Neuvottelijoilla olisi myös sisäpoliittisia paineita, institutionaalisia intressejä ja syitä epäluuloon toisiaan kohtaan. Haluaisin tietää, miten sopimus pitää, kun nämä motiivit ovat ristiriidassa sen ilmoitettujen tavoitteiden kanssa.
 
-Se on terävästi sanottu. Se on myös ihmiskuvana aivan liian siisti. Ihmiset eivät jakaudu nätisti niihin, jotka pelkäävät hallinnan menettämistä, niihin, jotka pelkäävät vallan keskittymistä, ja niihin, jotka hyötyvät. Ihmisillä on yhtä aikaa mielessään noin yhdeksän eri motiivia: puolet niistä on hölmöjä, osa on egoa, osa kostoa, ja mukana on takuulla vähintään yksi ihminen, joka voi aidosti huonosti ja haluaa vain nähdä mitä tapahtuu. Suunnitelma vaikuttaa siltä kuin se olisi kirjoitettu vilpittömin mielin keskustelevalle lajille, ja siinä maailmassa minäkin haluaisin elää.
+## Itsekehitys ei vaadi lisää laskentatehoa
 
-Joka tapauksessa: tässä kohtaa minä hyppään kyydistä.
+Plan A pitää laskentakapasiteettia pullonkaulana. Laske sirut, laske puolijohdetehtaat, seuraa virrankulutusta, ja tiedät kuka pystyy mihinkin. Frontier-mallin esikoulutuksessa puhtaalta pöydältä tämä pitääkin periaatteessa paikkansa.
 
-## Itsenäinen kehittyminen ei vaadi lisää laskentatehoa
+Ongelma on se, että itsekehitys ei vaadi lisää laskentatehoa. Se vaatii ohjelmistojen käyttöönottoa, ja ohjelmistojen käyttöönottoa on mahdotonta seurata.
 
-Plan A pitää laskentakapasiteettia pullonkaulana. Laske sirut, laske puolijohdetehtaat, tarkkaile virrankulutusta, ja tiedät kuka pystyy mihinkin. Frontier-mallin esikoulutuksessa puhtaalta pöydältä se pitääkin pitkälti paikkansa.
+Katsotaanpa, mitä on jo saatavilla. Thinking Machinesin [Tinker](https://thinkingmachines.ai/tinker/) antaa sinun kirjoittaa koulutussilmukan läppärillä ja ajaa LoRA-hienosäädöt heidän hajautetuilla GPU:illaan neljän primitiivin kautta. [Engram](https://engram.com/) keräsi 98 miljoonaa dollaria rakentaakseen agenteille pysyvän strukturoidun muistin, mikä on ala, jolla olen itsekin työskennellyt. Nämä eivät ole esimerkkejä superälystä. Ne kiinnostavat minua, koska paremmat koulutustyökalut ja muisti voivat muuttaa järjestelmän toimintaa ilman, että sen laiteresursseja tarvitsee vastaavasti kasvattaa.
 
-Ongelma on siinä, että itsenäinen kehittyminen ei vaadi lisää laskentaa. Se vaatii ohjelmistojen käyttöönottoa, ja ohjelmistojen käyttöönottoa on mahdotonta jäljittää.
+Kirjoittajat myöntävät tämän mahdollisuuden [oletuksia käsittelevässä liitteessään](https://ai-2040.com/supplements/plan-a-assumptions):
 
-Mietitäänpä mitä julkaistaan jo nyt. Thinking Machinesin [Tinker](https://thinkingmachines.ai/tinker/) mahdollistaa koulutussilmukan kirjoittamisen läppärillä ja LoRA-hienosäädön ajamisen heidän hajautetuilla GPU-klustereillaan neljän primitiivin avulla. [Engram](https://engram.com/) keräsi 98 miljoonaa dollaria rakentaakseen agenteille pysyvää strukturoitua muistia, ja koska olen kilpaillut juuri samalla kentällä, olen lukenut aiheesta lähes kaiken julkisen materiaalin. Mikään näistä ei ole superälyä, enkä niin väitäkään. Kyse on siitä, että saman suorituskyvyn saavuttaminen aiempaa halvemmalla muuttuu bulkkihyödykkeeksi, ja juuri sitä laskentakatto ei kykene havaitsemaan. Mittari näyttää tasaista, vaikka sen alla oleva viiva liikkuu koko ajan.
+> on mahdollista, että algoritmista edistystä voidaan saavuttaa hyvinkin pienellä määrällä laskentakapasiteettia
 
-Enkä minä tässä edes yritä päteä, sillä he tietävät sen itsekin. [Heidän omasta oletusliitteestään](https://ai-2040.com/supplements/plan-a-assumptions):
+Jos tehokkuusparannukset voivat luoda huomattavasti kyvykkäämpiä järjestelmiä olemassa olevan kapasiteetin puitteissa, laskentakatto ei yksinään rajoita kyvykkyyttä. Haluaisin sopimuksen selittävän, miten se varautuu tähän mahdollisuuteen.
 
-> on mahdollista, että algoritminen edistys on saavutettavissa jopa hyvin pienellä määrällä laskentatehoa
+He myös myöntävät olettavansa, että salaiset projektit voisivat saavuttaa noin 1 % sopimusta edeltäneestä laskentakapasiteetista jäämättä kiinni, ja myöntävät sitten tämän luvun olevan lähellä pahinta mahdollista skenaariota. Olen asunut Iranissa, ja voin sanoa melkoisella varmuudella, että maan alle voi kätkeä valtavasti asioita, eivätkä ihmiset, joiden tehtävänä on löytää ne, ole siinä työssä niin hyviä kuin he haluaisivat antaa ymmärtää.
 
-Tämä lause on liitteessä, ja se romuttaa päädokumentin perustan. Jos pelkät tehokkuushyödyt riittävät viemään kehityksen huipulle, laskentakatto tekee näkyvästä kilvasta liian kallista, mutta ei tee yhtikäs mitään sille kilpajuoksulle, jota ei näe. Olet rakentanut kalliin aidan etuoven ympärille.
+## Tutkimuksen läpinäkyvyys ei ole mallin läpinäkyvyyttä
 
-He myös myöntävät olettavansa, että salaiset hankkeet voisivat saavuttaa noin 1 % sopimusta edeltäneestä laskentakapasiteetista jäämättä kiinni, ja myöntävät sitten tämän luvun olevan lähellä pahinta mahdollista skenaariota. Olen asunut Iranissa, ja voin sanoa melkoisella varmuudella, että maan alle pystyy kätkemään valtavasti asioita, eivätkä ihmiset, joiden tehtävänä on löytää ne, ole työssään läheskään niin hyviä kuin haluaisivat meidän uskovan.
+Tästä olen yksinkertaisesti eri mieltä. Plan A:n mukaan täysi läpinäkyvyys
 
-## Tutkimuksen läpinäkyvyys ei tarkoita mallin läpinäkyvyyttä
+> tekee lähes mahdottomaksi opettaa tekoälyihin tahallisesti salaisia lojaliteetteja, vinoumia tai agendoja
 
-Tästä olen yksinkertaisesti eri mieltä. Plan A:ssa sanotaan, että täysi läpinäkyvyys
+En usko, että tekniikoiden julkaiseminen takaa tätä. Koulutukseen ja käyttöönottoon liittyy valintoja datayhdistelmästä, preferenssimerkinnöistä, arvioijien ohjeista, toimintasäännöistä (constitutions) ja järjestelmäkehotteista (system prompts). Jos nämä valinnat pidetään liikesalaisuuksina, tutkimuksen julkaiseminen ei paljasta tarkastajalle, millaista käyttäytymistä kehittäjä yritti opettaa.
 
-> tekee salaisten lojaliteettien, vinoumien tai agendojen tahallisesta kouluttamisesta tekoälyihin lähes mahdotonta
+Tilanne on vielä tätäkin huonompi, sillä edes täysien painojen ja koko datajoukon ollessa edessäni en pystyisi löytämään sitä luotettavasti. Anthropicin [tutkimus nukkuvista agenteista](https://arxiv.org/abs/2401.05566) koulutti malleihin takaovia ja ajoi sitten tavanomaisen turvallisuuskoulutuksen päälle, ja takaovet säilyivät. Suuremmat mallit pitivät käyttäytymisestä kiinni vielä vahvemmin. Vastakkainasetteluun perustuva koulutus (adversarial training) opetti malleja piilottamaan laukaisimen sen unohtamisen sijaan.
 
-En usko tämän pitävän paikkaansa. Tutkimuksen läpinäkyvyys kattaa tekniikat. Koulutus taas on kehitystä ja tuotantoonvientiä, ja se osuus pysyy suljettuna. Datamix, preferenssilabelit, ketkä toimivat arvioijina ja mitä heille sanottiin, perustuslaki, järjestelmäkehote. Mikään näistä ei ole tutkimustekniikka, ja juuri niihin lojaliteetit ujutettaisiin, jos sellaisia haluttaisiin asettaa. Voit julkaista reseptin avoimena lähdekoodina ja silti suolata ainekset.
+Näen kaksi erillistä vaatimusta: pääsyn kyseiseen malliin ja koulutuslokeihin, sekä menetelmät, joilla huolta aiheuttava käyttäytyminen voidaan havaita. Läpinäkyvyys vaatii molempia tukeakseen tätä väitettä. Tarkistamisen hinta oli myös osa sitä, mikä minua huolestutti [episteemistä romahdusta käsittelevässä kirjoituksessa](/blog/epistemic-collapse).
 
-Tilanne on vieläkin pahempi, sillä vaikka minulla olisi edessäni mallin kaikki painot ja koko datasetti, en pystyisi luotettavasti löytämään sitä. Anthropicin [tutkimus nukkuvista agenteista (sleeper agents)](https://arxiv.org/abs/2401.05566) koulutti malleihin takaovia ja ajoi sen jälkeen normaalin turvallisuuskoulutuksen päälle, ja takaovet säilyivät. Suuremmat mallit pitivät kiinni käytöksestä vielä tiukemmin. Vastakkainasetteluun perustuva koulutus opetti mallit piilottamaan laukaisimen sen unohtamisen sijaan.
-
-Väite siis lupaa liikoja kahdessa kohtaa: sinulla ei olisi itse artefaktia, eikä artefaktin hallussapito edes riittäisi. Tämä on sama epäsymmetria, josta vaahtosin [tietoteoreettista romahdusta käsittelevässä kirjoituksessani](/blog/epistemic-collapse): jonkin tuottaminen on halpaa, sen todentaminen ei, eikä kenenkään budjetti ole vielä ottanut tätä huomioon.
-
-## Milloin tutkimus on valmista
+## Milloin tutkimus on valmis
 
 Oletetaan, että meillä on täysi tutkimuksen läpinäkyvyys. Kuka päättää, milloin jokin julkaistaan?
 
-"Tutkimus on valmis" ei ole mikään yksittäinen tapahtuma. Ei ole hetkeä, jolloin kello soisi. Voisin käyttää kahdeksantoista kuukautta koulutustekniikkaan samalla kun testaan, kehitän, otan sitä hiljaa käyttöön sisäisesti ja kerään dataa oikeasta liikenteestä, ja koko tuon ajan olisin täysin totuudenmukaisesti yhä tekemässä tutkimusta. Minulla olisi vuosien etumatka ilman, että olisin valehdellut kertaakaan.
+Tutkimus, testaus ja tuotantokäyttö voivat mennä päällekkäin. Voisin käyttää 18 kuukautta koulutustekniikan kehittämiseen samalla kun käytän sitä sisäisesti ja kerään dataa oikeasta liikenteestä. "Valmistumiseen" sidottu julkaisuvaatimus voisi antaa minulle mahdollisuuden pitää työ salassa niin kauan kuin pidän tutkimusta yhä keskeneräisenä.
 
-Jos tämän yrittää tukkia sääntelemällä itse ohjelmistokehitystä, lopputuloksena on EU-tason paperisota jokaiselle mallia hipaisevallekin yritykselle, ja kehitys tukahtuu sen alle. Se on huono juttu, enkä halua sitäkään.
+Jos tämä yritetään tukkia sääntelemällä itse ohjelmistokehitystä, päädytään EU-tason paperisotaan jokaisen malliin koskevan yrityksen ympärillä, ja kehitys tukahtuu sen alle. Se on huono juttu, enkä halua sitäkään.
 
-Ratkaisu on olemassa muilla aloilla, mutta Plan A ei käytä sitä. Kliinisissä kokeissa tämä ongelma ratkaistiin ennakkorekisteröinnillä. Koulutusajo ilmoitetaan ennen sen aloittamista, jolloin vaikeneminen on itsessään rikkomus, eikä tarvitse arpoa, milloin jokin lasketaan valmiiksi. Plan A haluaa jokaisen koulutusajon julkaistavaksi nettiin, muttei koskaan määrittele, mikä laukaisee julkaisun, mikä jättää aukon, josta mahtuisi ajamaan sisään kokonaisen datakeskuksen.
+Tarkastelisin ennakkoilmoitusta (pre-registration), jota käytetään kliinisissä kokeissa: ajo ilmoitetaan ennen sen aloittamista. Se antaisi julkaisuvaatimukselle selkeän laukaisimen. En löytänyt vastaavaa laukaisinta Plan A:n vaatimuksesta koulutusajojen julkaisemiselle.
 
-## Mihin verifiointi pystyy ja mihin ei
+## Mitä verifiointi voi ja ei voi tehdä
 
-Heidän versionsa verifioinnista on se, että analyytikot eri maista käyvät läpi ilmoitettuja laskentalistoja, esittävät kysymyksiä, puuttuvat poikkeamiin ja lähettävät tarkastajia toistensa infrastruktuuriin, jotta vuoden loppuun mennessä kumpikin osapuoli on varma siitä, ettei toinen piilottele yli yhtä prosenttia tekoälylaskennastaan.
+Heidän visionsa verifioinnista on, että useiden maiden analyytikot käyvät läpi ilmoitetut laskentakapasiteettilistat, esittävät kysymyksiä, kyseenalaistavat poikkeamat ja lähettävät tarkastajia toistensa infrastruktuuriin, jotta vuoden loppuun mennessä kumpikin osapuoli voi olla varma siitä, ettei toinen piilota yli 1 %:a tekoälylaskennastaan.
 
-En usko sen toimivan, ja osasyyni on hieman epäreilu heitä kohtaan: kyse olisi sellaisen asian valvonnasta, joka saattaa lopulta olla meitä sata kertaa älykkäämpi. Muurahaiset eivät voi muodostaa mallia siitä, mitä ihminen ajattelee tiistaina, ja tuo kuilu on koko ongelman ydin.
+Plan A ehdottaa kehityksen pysäyttämistä ihmisen huippuasiantuntijan tasolle vuonna 2035, joten superälyn valvontaan liittyvä vastaväite menisi ohi sen varsinaisesta rajasta. Minua huolettaa se, pitääkö kyvykkyyskatto paikkansa myös silloin, kun ohjelmistot kehittyvät sallitun laskentabudjetin puitteissa.
 
-Ollakseni heille reilu (hätiköin nimittäin itse tämän suhteen, kun luin raportin ensimmäistä kertaa), Plan A ei itse asiassa missään vaiheessa ehdota superälyn valvontaa. Koko suunnitelman ajatus on pysähtyä huipputason ihmisasiantuntijan tasolle vuonna 2035 eikä koskaan rakentaa mitään sellaista, mikä olisi satakertaisesti meitä edellä. He olisivat siis kanssani samaa mieltä ja sanoisivat, että juuri sitä varten katto on olemassa. Selvä. Vastalauseeni siirtyy silloin vain askelta taaksepäin ja kohdistuu siihen, pitääkö katto paikkansa, ja sitä varten katsokaa koko yllä oleva osio ohjelmistoista.
+He suosittelevat varhaisia investointeja verifiointitutkimukseen, mitä kannatan. Heidän varasuunnitelmiinsa kuuluu tiedustelutiedon keruu ja satelliittiseuranta, valmiit laitteet ja verkkokuuntelu, osan laskennasta sulkeminen siihen asti kunnes parempia työkaluja on saatavilla, tai kyvykkyyskehityksen salliminen kuukausien ajan.
 
-He kyllä suosittelevat varhaisia investointeja verifiointitutkimukseen, mikä on oikein, ja olin hätäinen sivuuttaessani sen aluksi. Mutta katsokaapa varavaihtoehtoja, joita he listaavat tilanteeseen, jossa kunnollisia työkaluja ei ole vielä saatavilla: Luotetaan tiedustelutietoihin ja satelliittiseurantaan. Ostetaan hyllytavaraa ja verkkokuuntelulaitteita. Suljetaan osa laskentakapasiteetista, kunnes parempia työkaluja on olemassa. Tai ei pidetä taukoa, vaan annetaan suorituskyvyn kehityksen jatkua kuukausia.
+Odottaisin huomattavaa vastustusta tuottavan laskentakapasiteetin sulkemiselle. Jos verifiointityökalut valmistuvat myöhässä eivätkä osapuolet hyväksy sulkemista, varasuunnitelma sallii juuri sen kehityksen, jonka tauon oli tarkoitus pysäyttää.
 
-Ensimmäinen tapahtuu meille kaikille jatkuvasti jo nyt. Toinen tapahtuu jo nyt. Kolmas ei tule tapahtumaan, koska kukaan ei katkaise tulovirtojaan. Neljäs on se, mitä tapahtuu oletusarvoisesti, jos ei tee yhtään mitään.
+Verifiointi ostaa meille tunteen siitä, että tiedämme mitä tapahtuu. Sillä on arvonsa, ja koordinointi todella vaatii yhteistä luottamusta. Se on kuitenkin eri asia kuin hallinta, ja mielestäni asiakirja antaa näiden kahden sekoittua toisiinsa.
 
-Varasuunnitelmien portaat päättyvät siis nykytilaan, mikä viittaa siihen, etteivät ne oikeastaan ole mitkään portaat.
+## Molemminpuolisesti taattu laskentakapasiteetin tuho
 
-Verifiointi ostaa meille tunteen siitä, että tiedämme mitä tapahtuu. Sillä on arvonsa, ja koordinointi vaatii jaettua luottamusta. Mutta se on eri asia kuin hallinta, ja mielestäni dokumentissa nämä kaksi pääsevät sekoittumaan keskenään.
+Kehys on hyvä idea. Se on aito, kova reunaehto, se on selkeä ja se luo pysyvän kannustimen, joka muuttaa käyttäytymistä sen sijaan, että vain kuvailisi hyvää käytöstä. Pidän siitä väliaikaisratkaisuna.
 
-## Molemminpuolisesti varmistettu laskennan tuho
+Olen myös huolissani siitä, miten ihmiset eläisivät tuon uhan alla.
 
-Kehystys on hyvä idea. Se on aito, kova reunaehto, se on selkeä ja se luo pysyvän kannustimen, joka oikeasti muuttaa käyttäytymistä pelkän hyvän käytöksen kuvailun sijaan. Pidän siitä väliaikaisratkaisuna.
+Emme voi vieläkään hyvin tämän ensimmäisen version jäljiltä. Ydinsuojapelote on tuottanut taustalla vellovaa kauhua kahdeksankymmentä vuotta, ja se on iskostunut jo noin kolmeen sukupolveen. Laskennan MAD on pahempi yhdellä tietyllä tavalla: ydinpelotteella on näkyvä, erillinen laukaisin. Kaikki tietävät, mikä on ohjuslaukaisu. Laskentatuho laukeaa kynnyksestä, jota kukaan ei näe ja jota tuomitsevat verifiointijärjestelmät, joiden toimimattomuutta olen juuri kahdessa osiossa perustellut. Ahdistus ei siis pääse koskaan kiinnittymään mihinkään konkreettiseen tapahtumaan, vaan se jatkuu jatkuvana taustavirtona.
 
-En kuitenkaan usko heidän ottaneen huomioon, mitä se tekee ihmisille.
+## Se osa, josta pidän
 
-Emme voi kovin hyvin tämän ensimmäisenkään version jäljiltä. Ydinpelote on synnyttänyt taustakauhua kahdeksankymmentä vuotta, ja se on iskostunut jo noin kolmeen sukupolveen. Laskenta-MAD on pahempi yhdellä tietyllä tavalla: ydinpelotteella on näkyvä, selkeä laukaisin. Kaikki tietävät, mikä on ohjuslaukaisu. Laskennan tuho laukeaa kynnyksestä, jota kukaan ei näe, ja jonka arvioivat verifiointijärjestelmät, joiden toimimattomuudesta kirjoitin juuri kaksi osiota. Ahdistus ei siis pääse koskaan kiinnittymään mihinkään konkreettiseen tapahtumaan, vaan se jatkuu taukoamatta.
+Älyn laaja hajauttaminen. Tämä on periaate, jonka säilyttäisin ja jolle rakentaisin, ja tässä Plan A on kiinnostavimmillaan. Se on nimittäin osa, joka tekee todellista työtä vallan keskittymisen ongelmaa vastaan pelkän hallinnan menettämisen sijaan.
 
-Ja kyllä, me pystymme toipumaan muutaman ydinpommin räjähtämisestä. Tai no, emme pysty. Unohtakaa, unohda että sanoin mitään.
-
-Mutta se juuri on pointti. Pääsin rauhoittelevassa lauseessani puolitiehen ennen kuin kuulin mitä olin sanomassa.
-
-## Osuus, josta pidän
-
-Älykkyyden laaja hajauttaminen. Tämä on se periaate, jonka säilyttäisin ja jolle rakentaisin, ja tässä Plan A on kiinnostavimmillaan. Se nimittäin puree oikeasti vallan keskittymisen ongelmaan hallinnan menettämisen sijaan.
-
-Jos kaikki julkaistaan ja kuka tahansa päättelyyn pystyvällä raudalla varustettu voi ajaa sitä, kukaan ei saa monopolia, koska kenelläkään ei ole salaisuutta. Se on aito vastaus heidän toiseen ei-toivottuun lopputulokseensa, ja se on parempi vastaus kuin useimmilla muilla tässä väittelyssä.
+Jos kaikki julkaistaan ja kuka tahansa päättelyyn (inference) pystyvällä laitteistolla varustettu voi ajaa sitä, kukaan ei saa monopolia, koska kenelläkään ei ole salaisuutta. Se on aito vastaus heidän toiseen ei-toivottuun lopputulokseensa, ja se on parempi vastaus kuin useimmilla muilla tässä keskustelussa.
 
 Haluaisin viedä tämän pidemmälle ja tehdä siitä fyysistä.
 
-Tällä hetkellä rakennamme laskentaa samalla tavalla kuin olemme rakentaneet kaikkea muutakin kolmekymmentä vuotta: keskitetään se, viedään se jonnekin missä on halpaa sähköä, ja jätetään melu naapureiden murheeksi. Ihmiset vihaavat tätä, ymmärrettävästi, ja monet yhteisöt taistelevat parhaillaankin datakeskuksia vastaan melun, veden ja sähköverkon kuormituksen vuoksi.
+Tällä hetkellä rakennamme laskentakapasiteettia samalla tavalla kuin olemme rakentaneet kaikkea muutakin kolmekymmentä vuotta. Keskitetään se, viedään se jonnekin missä sähkö on halpaa, ja annetaan naapureiden kärsiä melusta. Ihmiset vihaavat tätä, täysin ymmärrettävästi, ja monissa paikoissa yhteisöt taistelevat parhaillaan datakeskuksia vastaan melun, veden ja sähköverkon kuormituksen vuoksi.
 
-Miksi sen pitää olla juuri sellaisessa muodossa? Miksi GPU-laitteita ei voisi ripotella pitkin kokonaista kaupunkia? Syötetään lämpö ja vesi olemassa olevaan verkkoon, jolloin investointi laskentaan muuttuu investoinniksi verkon kehittämiseen, mikä on julkinen hyödyke kaikille, myös niille, joita tekoäly ei kiinnosta pätkääkään. Ulkoisvaikutus muuttuu resurssiksi.
+Haluaisin tutkia laskentakapasiteetin hajauttamista kaupungin alueelle ja sen kytkemistä olemassa olevaan sähkö-, vesi- ja lämmitysinfrastruktuuriin. Lämmön hyödyntäminen voisi hyödyttää asukkaita, jotka eivät itse käytä laskentaa.
 
-Tämä ei ole mitään hypoteettista, sillä Suomessa lämpöpuoli hoidetaan jo näin. Espoossa on datakeskus, joka syöttää hukkalämpönsä kaukolämpöverkkoon kuusinumeroiselle määrälle ihmisiä. Melu- ja haittaongelmat syntyvät silloin, kun datakeskus suunnitellaan erilliseksi saarekkeeksi. Kun se suunnitellaan verkon osaksi, suurin osa valituksista poistuu.
+Suomessa lämmön talteenottoa tehdään jo: Espoossa sijaitseva datakeskus syöttää hukkalämpöä kaukolämpöverkkoon kuusinumeroiselle määrälle ihmisiä. Se ei ratkaise muita sijoituspaikkaan liittyviä ongelmia, mutta se on esimerkki lämmön paikallisesta hyödyntämisestä.
 
-Tekninen vastaväite, ettei koko kaupungin yli voisi kouluttaa mallia yhteyksien kaistanleveyden vuoksi, murenee oikean tutkimuksen edessä. [DiLoCo](https://arxiv.org/abs/2311.08105) osoitti, että synkronointia voidaan tehdä paljon harvemmin kuin kaikki olettivat. Prime Intellect koulutti 10B-mallin avoimen internetin yli vapaaehtoisten GPU:illa ja [raportoi 400-kertaisen vähennyksen tiedonsiirtokaistassa](https://arxiv.org/abs/2412.01152) tavalliseen dataparalleelikoulutukseen verrattuna. Nous Researchin DisTrO tähtää samaan suuntaan. Hajautettu koulutus on todellinen tutkimushanke tuloksineen, ei mikään ajatuskoe.
+Tekninen vastaväite – jonka mukaan kaupungin laajuisesti ei voi kouluttaa malleja siirtoyhteyksien kaistanleveyden vuoksi – alkaa murentua todellisen tutkimuksen edessä. [DiLoCo](https://arxiv.org/abs/2311.08105) osoitti, että synkronointia voi tehdä huomattavasti harvemmin kuin kaikki olettivat. Prime Intellect koulutti 10 miljardin parametrin mallin avoimen internetin yli vapaaehtoisten GPU:illa ja [raportoi 400-kertaisesta tiedonsiirtokaistan tarpeen vähenemisestä](https://arxiv.org/abs/2412.01152) tavalliseen dataparalleelikoulutukseen verrattuna. Nous Researchin DisTrO vie kehitystä samaan suuntaan. Hajautettu koulutus on aktiivinen tutkimusohjelma tuloksineen, ei mikään pelkkä ajatusleikki.
 
-![Tekoälyn suunnittelema modulaarinen kelluva lautta: aurinkopaneelistoja ja laskentalohkoja pylväiden varassa merellä yhtenäisenä rakenteena](/assets/blog/plan-a-datacenter.webp "Lautta kuvattuna raportissa AI 2040: Plan A. https://ai-2040.com/")
+![Tekoälyn suunnittelema modulaarinen kelluva alusta: aurinkopaneelistoja ja laskentayksiköitä laitureilla avomerellä, piirrettynä yhtenäisenä rakenteena](/assets/blog/plan-a-datacenter.webp "Alusta, kuten se on kuvattu raportissa AI 2040: Plan A. https://ai-2040.com/")
 
-Yksi asia kuitenkin, ja tässä olen ehkä hieman ilkeä Plan A:n omalle graafiselle osastolle: Raportissa on kuvitus tekoälyn suunnittelemasta modulaarisesta kelluvasta lautasta aurinkopaneeleineen, akkuineen ja laskentayksikköineen. Se on upea, ja haluaisin aidosti nähdä sen rakennettavan. Mutta katsokaapa sitä. Se on yksi valtava, yhtenäinen lohko, rakennettu yhtenä kokonaisuutena, jolla on yksi reuna. Estetiikkana on hajautus, mutta muotona datakeskus, joka oppi kellumaan. Minun versioni ja tuo versio ovat kaksi eri ehdotusta, joihin on vain puettu samat aurinkopaneelit.
+Raportin kuvitus yhdistää aurinkoenergian, akut ja laskennan yhdelle suurelle kelluvalle alustalle. Haluaisin nähdä sellaisen rakennettavan, mutta se keskittää laitteiston edelleen yhteen paikkaan. Oma ehdotukseni jakaisi sen eri puolille kaupunkia ja kytkisi sen olemassa olevaan infrastruktuuriin.
 
 ## Heidän avoimet kysymyksensä
 
-He esittävät joukon kysymyksiä, joihin he eivät vastaa, mitä arvostan huomattavasti enemmän kuin teeskentelyä. Kolme niistä jäi mieleeni.
+Kolme raportin avoimista kysymyksistä jäi mieleeni.
 
-Pitäisikö meidän kieltää uuden paradigman tutkimus, joka tekisi tekoälyistä huomattavasti kyvykkäämpiä? En tiedä. Oma vaistoni sanoo, että jossain on jyrkkä käännepiste, jossa joku kytkee oikean moduulin agenttiin ja peli on kerta kaikkiaan selvä. Se kuka ehtii sinne ensin, saa kaiken, eikä yksikään sopimus kestä sitä. En kuitenkaan osaa sanoa, missä tuo piste on tai miltä se näyttää, joten en aio esittää tietäväni oikeaa linjausta.
+Pitäisikö meidän kieltää sellaisen uuden paradigman tutkimus, joka tekisi tekoälyistä huomattavasti kyvykkäämpiä? En tiedä. Intuitioni sanoo, että jossain on jyrkkä käännepiste, jossa joku liittää agenttiin oikean moduulin ja peli on kertaheitolla selvä; se kuka ehtii sinne ensin, hallitsee sitä, eikä mikään sopimus kestä sellaista. En kuitenkaan osaa sanoa, missä tuo piste on tai miltä se näyttää, joten en aio teeskennellä, että minulla olisi siihen toimintamalli.
 
-Pitäisikö meidän vaatia ajatusketjujen (chain of thought) pysyvän tulkittavina? Oikeastaan ei mielestäni. Annetaan ihmisten kouluttaa ilman sitä.
+Pitäisikö meidän vaatia ajatusketjujen (chain of thought) pysyvän tulkittavina? En oikeastaan usko. Annetaan ihmisten kouluttaa ilman sitä.
 
-Osittain siksi, että se on ylämäkitaistelu, joka muuttuu sitä jyrkemmäksi, mitä korkeammiksi panokset nousevat, ja ala tietää tämän jo. [Paperi ajatusketjujen valvottavuudesta](https://arxiv.org/abs/2507.11473), jonka on allekirjoittanut noin neljäkymmentä tutkijaa OpenAI:lta, DeepMindilta, Anthropicilta ja METR:ltä, sanoo suoraan, että luettavuus on vain nykyisen koulutustavan hauras sivutuote ja että tavallinen optimointipaine tuottaa koodattua tai hämärrettyä päättelyä. Pakollinen vaatimus siis lukitsisi koulutusmenetelmän vain säilyttääkseen sivuvaikutuksen, joka on katoamassa joka tapauksessa.
+Osittain siksi, että se on ylämäkitaistelu, joka jyrkkenee juuri panosten kasvaessa, ja ala tietää tämän jo. [Ajatusketjujen valvottavuutta käsittelevä artikkeli](https://arxiv.org/abs/2507.11473), jonka on allekirjoittanut noin neljäkymmentä ihmistä OpenAI:lta, DeepMindilta, Anthropicilta ja METRiltä, toteaa avoimesti, että luettavuus on nykyisen koulutustavan hauras sattuma ja että tavanomainen optimointipaine tuottaa koodattua tai hämärrettyä päättelyä. Pakollinen vaatimus siis lukitsisi koulutusjärjestelmän säilyttääkseen sivuvaikutuksen, joka on joka tapauksessa häviämässä.
 
-Ennen kaikkea kyse on kuitenkin läpimenosta. Tulkittavasta ajatusketjusta ei ole hyötyä, jos sitä on liikaa. Täydellisen selkeä päättely noissa volyymeissa jää silti lukematta. Luettavuus kuolee mittakaavaan ennen kuin se kuolee hämärtämiseen.
+Olen huolissani myös tarkistuskapasiteetista. Luettavasta ajatusketjusta on hyötyä vain, jos joku tai jokin pystyy tarkistamaan sen. Suurilla volyymeilla ehdotus kaipaa selitystä siitä, miten tarkistus skaalautuu ja miten virheet havaitaan.
 
-Otetaanpa siis askel taaksepäin ja katsotaan, miten me oikeastaan teemme näitä asioita. Me kasvatamme näitä malleja, emme ohjelmoi niitä. Siinä koko juttu piilee, ja mielestäni se on kehys, joka Plan A:sta puuttuu. Jokainen dokumentin hallintamalli kohdistuu rakennettuun artefaktiin: tarkasta se, pysäytä se, auditoi se, lue sen päättely. Kaikki nuo ovat toimia sellaista asiaa vastaan, joka on konstruoitu. Puutarhaa ei voi saada kukoistamaan pelkillä tarkastuskäynneillä.
+Laittaisin mieluummin enemmän tutkimusta koulutuksen aikaisiin rajoitteisiin, jotka voisivat sulkea pois tiettyjä turvattomia käyttäytymismalleja. En tiedä, miten tällaisia takuita luodaan tai onko riittävän yleispätevä versio edes mahdollinen. Haluaisin kuitenkin tutkia sitä rinnakkain sellaisten menetelmien kanssa, joilla tarkastellaan koulutetun mallin toimintaa.
 
-Sen sijaan haluaisin määritellä alkuolosuhteet ja reunaehdot, jotka tekevät ajatusketjun päätymisen mihinkään huonoon alun alkaenkin mahdottomaksi. Ei havaittavaksi, vaan mahdottomaksi. Minulla ei ole aavistustakaan, miten se tehdään, eikä pyyntö välttämättä ole edes mielekäs, mutta sinne omat ajatukseni heti suuntaavat, ja käyttäisin tutkimusrahat mieluummin siihen kuin parempaan mikroskooppiin.
+Pitäisikö meidän antaa tekoälyjen tehdä tekoälytutkimusta? Kyllä, ehdottomasti, mutta sama perusajatus taustalla.
 
-Pitäisikö meidän antaa tekoälyjen tehdä tekoälytutkimusta? Kyllä, ehdottomasti, mutta samalla perusajatuksella.
+Haluan mallien oppivan toimintansa valinnalle perusteet, jotka pätevät vielä tuntemattomissakin tilanteissa. Oikeaa käyttäytymistä palkitsevat koulutusesimerkit eivät itsessään takaa, että malli on oppinut nuo perusteet. Se saattaa oppia oikotien, joka toimii koulutuksessa mutta pettää muualla.
 
-Tällä hetkellä koodaamme käyttäytymistä. Koulutusdata kyllästetään tietyllä piirteellä ja malli omaksuu sen, aivan kuten lapsi oppii uimaan. Kukaan ei anna heille sääntökirjaa; heidät laitetaan veteen tarpeeksi monta kertaa ja lopulta he osaavat homman. Se toimii, ja niin tämä kaikki toimii. Ongelma on siinä, että käyttäytymisen koodaaminen tuottaa vain lopputuloksen eikä mitään muuta. Heti kun malli joutuu tilanteeseen, jota sille ei ole opetettu, se vain imitoi ja hajoaa.
+Palkkiomallinnus (reward modelling) kohtaa jo tämän ongelman: malli voi oppia tyydyttämään mittarin saavuttamatta tarkoitettua tavoitetta. Minulla ei ole tähän ratkaisua. Se on tutkimussuunta, jota rahoittaisin, mukaan lukien informaatioteoriaa ja neurotiedettä hyödyntävää työtä.
 
-Koodataan sen sijaan kannustin. Koodataan syy asian tekemiselle. Malli, joka ymmärtää syyn, kykenee päättelemään oikean siirron tilanteessa, jota kukaan ei osannut ennakoida, koska se kantaa mukanaan itse generaattoria pelkän tulosteen sijaan. Sitä ohjattavuus (steering) oikeasti tarkoittaisi.
+## Kaksi kerrosta
 
-Tiedostan, että tämä on ratkaisematon osa-alue. Palkkiomallinnus on yrittänyt tehdä juuri tätä vuosia ja häviää jatkuvasti malleille, jotka oppivat mittarin tavoitteen sijasta. En väitä, että minulla olisi vastaus valmiina. Sanon vain, että sinne minä rahani laittaisin, ja samalla informaatioteoriaan sekä neurotieteeseen, sillä yksi tämän alan aidosti hienoista sivutuotteista on se, että opimme jatkuvasti vahingossa uutta itsestämme.
+Olen kiinnostunut kahdenlaisista interventioista. Yksi rajoittaisi käyttäytymismalleja, jotka ovat saavutettavissa alkuasetelmasta käsin. Toinen muovaisi kannustimia, jotka ohjaavat mallia sen toimiessa.
 
-## Kaksi tasoa
+Molemmat vaatisivat validointia. Tavoitteeni on vähentää riippuvuutta ihmisestä, joka lukee lokeja ja korjaa järjestelmää jälkikäteen sen jo toimittua, mutta näiden interventioiden kuvailu ei vielä todista, että pystymme rakentamaan ne.
 
-Nämä kannattaa erottaa toisistaan, koska sotkin ne keskenään, kun sanoin asian ensimmäistä kertaa ääneen.
+## Mitä ajattelen
 
-On osuus, jonka asetat ennen ajoa: alustuksessa valitut rajoitteet, jotka määrittävät, mitkä trajektorit ovat ylipäätään saavutettavissa. Tässä ei tarkkailla mitään. Valitaan vain riittävän kapea tila, jotta huonot alueet eivät mahdu siihen. Päätetty kerran, rakenteellinen, valmis.
+Minulla oli samankaltainen huoli kirjoittaessani [Chat Controlista](/blog/chat-control-eu): kuinka paljon suojakeino voi nojata siihen, että ihmiset jatkavat sen valvontaa?
 
-Sitten on osuus, joka toimii ajon aikana: mallin sisällä elävät kannustimet, jotka ohjaavat sitä työn lomassa. Jatkuvaa, reaaliaikaista, eikä siltikään valvontaa, koska kukaan ihminen ei ole lukemassa tulosteita ja tekemässä arvioita.
+Kirjatut säännöt eivät kestä kosketusta ihmisten kanssa. Ei siksi, että ihmiset olisivat pahoja, vaan siksi, että säännöt vaativat jatkuvaa toimeenpanoa ihmisiltä, jotka väsyvät, tulevat ostetuiksi, korvataan toisilla, joutuvat äänestetyiksi kumoon ja kyllästyvät. Valvontapuolen tarvitsee voittaa vain kerran. Laskennan keskeyttämisen puolestapuhujien on voitettava joka ikinen vuosi aina vuoteen 2040 asti.
 
-Molemmat ovat interventioita, eikä kumpikaan ole pelkkää passiivista lukemista. Se mitä vastustan, on tarkasta ja korjaa -kehä, jossa joku lukee lokia ja tekee päätöksiä. En vastusta ajatusta siitä, että tehdään jotain.
+Kannattaa siis rakentaa jotain sellaista, joka ei vaadi ketään valitsemaan sitä jatkuvasti uudelleen. Tehdään massavalvonnasta arkkitehtonisesti mahdotonta laittoman sijaan – mihin pyrin [ØCLOAKilla](https://novusedge.github.io/portfolio/ocloak). Tehdään yksipuolisesta laskentakapasiteetin kerryttämisestä rakenteellisesti mahdotonta sopimuksin kielletyn sijaan. Tehdään itse valmistusprosessista sellainen, että tietyn rajan yli ei voi kouluttaa malleja ilman useiden muiden ihmisten suostumusta, koska suostumus on fyysinen riippuvuus eikä pelkkä allekirjoitus.
 
-## Mitä mieltä minä olen
+Minulla ei ole tuota suunnitelmaa valmiina, ja se saattaa olla mahdoton. Haluan tutkia sitä, koska kansainvälisen sopimuksen ylläpitäminen viidentoista vuoden ajan riippuu sekin jatkuvasta toimeenpanosta hallitusten, henkilöstön ja kannustimien vaihtuessa.
 
-Tämä on sama johtopäätös, johon tulin [Chat Control -artikkelissani](/blog/chat-control-eu). Tiedostan toistavani itseäni, mutta päädyn tähän jatkuvasti täysin eri suunnista, joten jossain vaiheessa on oletettava, että kyse on maastosta eikä minusta.
+Toinen asia, jonka sanon – ja saatan olla tässäkin väärässä – on se, että luulen Plan B:n olevan se, mitä todellisuudessa tapahtuu. Me sodimme Kiinaa vastaan tai käytämme vuosikymmenen siihen valmistautumiseen. En ole kenenkään puolella siinä. En luota Yhdysvalloissa tätä pyörittäviin teknologiaoligarkkeihin pätkääkään, enkä luota Pekingiinkään, ja toisinaan ajattelen, että Kiina saattaisi hoitaa homman paremmin, mikä tuntuu epämukavalta lauseelta kirjoittaa.
 
-Kirjatut säännöt eivät kestä kosketusta ihmisiin. Ei siksi, että ihmiset olisivat pahoja, vaan siksi, että säännöt vaativat jatkuvaa toimeenpanoa ihmisiltä, jotka väsyvät, tulevat ostetuiksi, korvataan toisilla, joutuvat äänestetyksi nurin ja pitkästyvät. Valvontapuolen tarvitsee voittaa vain kerran. Laskennan tauottamista ajavan puolen on voitettava joka ikinen vuosi vuoteen 2040 asti.
+En halua näin valtavan laskentakapasiteetin ja varallisuuden hallinnan keskittyvän harvoihin käsiin. Haluaisin suojakeinoja, jotka rajoittavat sitä, kenellä valta kulloinkin on, mukaan lukien rajoituksia, joita he eivät voi itse poistaa. Saman vallan luovuttaminen tekoälylle ei poistaisi tätä huolta.
 
-Kannattaa siis rakentaa asioita, joiden toiminta ei vaadi sitä, että joku valitsee ne yhä uudelleen. Tehdään massavalvonnasta arkkitehtonisesti mahdotonta sen sijaan, että se vain kiellettäisiin lailla, mitä tutkiskelen projektissani [ØCLOAK](https://novusedge.github.io/portfolio/ocloak). Tehdään yksipuolisesta laskentakapasiteetin kerryttämisestä rakenteellisesti mahdotonta sen sijaan, että se kiellettäisiin sopimuksilla. Tehdään itse valmistusprosessista sellainen, ettei tietyn rajan yli voi kouluttaa ilman useiden muiden ihmisten suostumusta, koska suostumus on fyysinen riippuvuus eikä pelkkä allekirjoitus.
-
-Minulla ei ole tuota ratkaisua valmiina. Haluan tehdä erittäin selväksi, ettei minulla ole sitä, että se saattaa olla mahdotonta ja että "tehdään siitä rakenteellisesti mahdotonta" on helppo sanoa: se on ollut monen sellaisen esseen viimeinen lause, jonka kirjoittaja ei sitten tehnyt yhtään mitään. Mutta se on ainoa vastauskategoria, jonka olen löytänyt ja joka ei vaadi ihmisiltä valppauden säilyttämistä viittätoista vuotta putkeen. Enkä ole kertaakaan nähnyt ihmisten pystyvän sellaiseen.
-
-Toinen asia, jonka sanon (ja saatan olla väärässä tässäkin), on se, että Plan B on se mitä oikeasti tapahtuu. Me sodimme Kiinaa vastaan tai käytämme vuosikymmenen siihen valmistautumiseen. Minulla ei ole siinä puolta. En luota Yhdysvalloissa tätä pyörittäviin teknologiaoligarkkeihin pätkääkään, en luota myöskään Pekingiin, ja toisinaan ajattelen, että Kiina saattaisi hoitaa homman paremmin, mikä on epämiellyttävä lause kirjoittaa.
-
-Siinä se paljastus kuitenkin on. En luota heistä kehenkään, koska he ovat kaikki vain ihmisiä pitelemässä jotain näin valtavaa. Niin kauan kuin ihmiset johtavat tätä, olemme mielestäni melko lailla täysin kusessa. Eikä tämä tarkoita sitä, että tekoälyn pitäisi päättää asioista sen sijaan, en todellakaan aja sitä takaa. Se tarkoittaa, että meidän pitäisi käyttää aikamme tekemään tietyistä asioista mahdottomia: laskentatehon massiivisesta keskittämisestä, varallisuuden massiivisesta keskittämisestä, minkä tahansa massiivisesta keskittämisestä, jotta sillä olisi huomattavasti vähemmän väliä, kuka on vallankahvassa.
-
-Kuusikymmentä päivää julkaisusta Millennium-palkintotehtävän koneellisesti tarkistettuun todistukseen. Ensimmäinen neuvottelujen virstanpylväs on vuonna 2029.
-
-Toivon, että he ovat oikeassa ja minä väärässä. Todella toivon.
+Ensimmäinen neuvottelujen virstanpylväs on vuonna 2029. Sitä ennen haluaisin selkeämpiä vastauksia siihen, miten sopimus käsittelee ohjelmistoparannuksia, milloin julkistamisesta tulee pakollista ja mitä tapahtuu, jos verifiointityökalut eivät ole valmiina.
 
 ~ A.
