@@ -14,11 +14,9 @@ On the 8th of September 2026, OpenAI announced that [around ten thousand coordin
 
 That is sixty days, and the first milestone in Plan A is 2029.
 
-I want to be clear before I start taking this apart that I think Plan A is a good plan. It is the most serious attempt I have seen to write down what not racing would actually look like in operational detail rather than in slogans, and the people who wrote it are plainly not stupid. Any plan for this is going to attract opposition, and I am not interested in piling onto the one group that did the homework. But I read it and I kept running into the same wall, which is that nearly everything in it assumes you can see what is happening.
+Plan A is the most detailed proposal I've read for how countries could agree to slow AI development. I think it's worth taking seriously. My main objection is how much depends on being able to observe what other parties are doing.
 
 ## What Plan A Says
-
-A short version for anyone who has not read it, and you should read it, because it is good.
 
 They name [two outcomes they consider unacceptable](https://ai-2040.com/about): that humanity loses control of AI, or that a small group of executives and officials ends up with a temporary monopoly on superintelligence. The second one being in there matters, and a lot of people arguing about this only ever track the first.
 
@@ -26,13 +24,11 @@ The core principles are buying time, total research transparency, diffusing AI b
 
 The enforcement mechanism they land on is compute governance, along with what they call mutually assured compute destruction. Compute is the chokepoint because compute is physical, and physical things can be counted.
 
-Their answer to the question of why China would ever agree to this is a good line, so I will quote it:
+On why China would agree, they write:
 
 > anyone concerned about a loss of control should think this plan is an improvement, along with anyone concerned about the concentration of power, except for the people in whom the power would concentrate by default
 
-It is a sharp way of putting it. It is also a picture of human beings that seems far too tidy to me. People do not sort neatly into those worried about losing control, those worried about concentrated power, and those who benefit. People carry about nine motives at once, half of them are stupid, some of them are ego, some of them are revenge, and there is going to be at least one person in the loop who is genuinely unwell and just wants to see what happens. The plan reads as though it was written for a species that argues in good faith, and I would like to live there.
-
-Anyway. This is where I start getting off.
+I don't think shared concern about those risks is enough to secure agreement. The people negotiating would also have domestic political pressures, institutional interests, and reasons to distrust each other. I'd want to know how the deal holds when those motives conflict with its stated goals.
 
 ## Self-Improvement Does Not Need More Compute
 
@@ -40,13 +36,13 @@ Plan A treats compute as the chokepoint. Count the chips, count the fabs, watch 
 
 The problem is that self-improvement does not need more compute. It needs software deployment, and software deployment is impossible to track.
 
-Consider what is already shipping. [Tinker](https://thinkingmachines.ai/tinker/), from Thinking Machines, lets you write a training loop on your laptop and run LoRA fine-tunes across their distributed GPUs through four primitives. [Engram](https://engram.com/) raised $98M to build persistent structured memory for agents, and I have competed in that exact space so I have read most of what is public in it. None of that is superintelligence and I am not claiming it is. What it is, is the entire business of making the same capability cheaper to reach becoming a commodity, and that is the part a compute ceiling cannot see. The meter reads flat while the line underneath it keeps moving.
+Consider what is already shipping. [Tinker](https://thinkingmachines.ai/tinker/), from Thinking Machines, lets you write a training loop on your laptop and run LoRA fine-tunes across their distributed GPUs through four primitives. [Engram](https://engram.com/) raised $98M to build persistent structured memory for agents, a field I've worked in myself. These aren't examples of superintelligence. They interest me because better training tools and memory can change what a system does without a corresponding increase in its hardware allocation.
 
-This is not me being clever, either, because they know. From [their own assumptions supplement](https://ai-2040.com/supplements/plan-a-assumptions):
+The authors acknowledge this possibility in [their assumptions supplement](https://ai-2040.com/supplements/plan-a-assumptions):
 
 > it's possible that algorithmic progress is doable even with a very small amount of compute
 
-That sentence sits in the appendix and it undercuts the main document. If efficiency gains alone can get you to the frontier, then a compute ceiling prices out the race you can see and does nothing at all to the race you cannot. You have built an expensive fence around the front door.
+If efficiency gains can produce much stronger systems within an existing allocation, a compute ceiling won't by itself bound capability. I'd want the agreement to explain how it handles that possibility.
 
 They also concede that they assume covert projects could reach around 1% of pre-deal compute without detection, and then admit that this figure is close to the worst case. I lived in Iran, and I can tell you with some confidence that you can hide a great deal underground, and that the people whose job it is to find it are not as good at that job as they would like you to believe.
 
@@ -56,35 +52,31 @@ This one I simply disagree with. Plan A says that total transparency
 
 > makes it nearly impossible for secret loyalties, biases, or agendas to be intentionally trained into AIs
 
-I do not think that holds. Research transparency covers techniques. Training is development and deployment, and that part stays proprietary. Data mixture, preference labels, who your raters were and what you told them, the constitution, the system prompt. None of that is a research technique and all of it is where you would put a loyalty if you wanted to put one somewhere. You can open source the recipe and still salt the ingredients.
+I don't think publishing techniques establishes that. Training and deployment involve choices about the data mixture, preference labels, raters' instructions, constitutions, and system prompts. If those choices remain proprietary, publishing the research won't tell an inspector what behaviour the developer tried to train.
 
 It is worse than that, because even with the full weights and the full dataset in front of me I could not reliably find it. Anthropic's [sleeper agents work](https://arxiv.org/abs/2401.05566) trained backdoors into models and then ran standard safety training over the top, and the backdoors survived. Larger models held onto the behaviour more strongly. Adversarial training taught the models to conceal the trigger instead of losing it.
 
-So the claim overclaims in two places. You would not have the artifact, and having the artifact would not be enough. This is the same asymmetry I went on about in [the epistemic collapse post](/blog/epistemic-collapse): generating something is cheap, verifying it is not, and nobody's budget has caught up with that.
+I see two separate requirements: access to the relevant model and training records, and methods that can detect the behaviour you're concerned about. Transparency needs both to support this claim. The cost of checking is also part of what worried me in [the epistemic collapse post](/blog/epistemic-collapse).
 
 ## When Is Research Finished
 
 Say we do have total research transparency. Who decides when something gets published?
 
-"Research is complete" is not an event. There is no moment when a bell rings. I could spend eighteen months on a training technique while also doing testing, also doing development, also quietly shipping it internally and gathering data from real traffic, and the whole time I would be, entirely truthfully, still conducting research. I would have a head start measured in years without ever lying about it.
+Research, testing, and deployment can overlap. I could spend eighteen months developing a training technique while using it internally and collecting data from real traffic. A publication requirement tied to "completion" could let me keep that work private while I still considered the research ongoing.
 
 If you try to close that by regulating software development itself, you end up with EU-grade paperwork wrapped around every company that touches a model, and progress dies underneath it. That is bad and I do not want that either.
 
-The fix exists in other fields and Plan A does not use it. Clinical trials solved this problem with pre-registration. You declare the run before you start it, so silence is itself the violation and there is no judgement call about when something counts as finished. Plan A wants every training run published to the internet and never specifies what triggers the publication, which leaves a hole you could drive a datacenter through.
+I'd look at pre-registration, as used in clinical trials: declare the run before starting it. That would give the publication requirement a defined trigger. I couldn't find an equivalent trigger in Plan A's requirement to publish training runs.
 
 ## What Verification Can and Cannot Do
 
 Their verification story is that analysts from many countries go through the declared compute lists, ask questions, challenge anomalies, and send inspectors into each other's infrastructure, so that by the end of the year each side is confident the other is not hiding more than 1% of its AI compute.
 
-I do not think that works, and part of my reason is slightly unfair to them, which is that we would be talking about monitoring something that could end up a hundred times smarter than us. Ants cannot form a model of what a person is thinking about on a Tuesday, and that gap is the whole problem.
+Plan A proposes stopping at top-human-expert level in 2035, so an objection about monitoring a superintelligence would miss its intended limit. My concern is whether the capability ceiling holds, including when software improves within the permitted compute budget.
 
-To be fair to them, though, and I did jump the gun on this when I first read it, Plan A never actually proposes monitoring a superintelligence. The entire design is to stop at top-human-expert level in 2035 and never build the thing that is a hundred times you. So they would agree with me, and they would say that is what the ceiling is for. Fine. My objection then moves back a step and lands on whether the ceiling holds, and for that, see the whole section above about software.
+They recommend early investment in verification research, which I support. Their fallback options include intelligence gathering and satellite monitoring, off-the-shelf devices and network taps, shutting down some compute until better tools exist, or allowing capability progress to continue for months.
 
-They do recommend early investment in verification research, which is right, and I spoke too soon when I first waved it away. But look at the fallback options they list for when the good tools are not ready. Rely on intelligence gathering and satellite monitoring. Buy up off-the-shelf devices and network taps. Shut down some fraction of compute until better tools exist. Or do not pause, and let capability progress continue for months.
-
-The first is already happening to all of us constantly. The second is already happening. The third is not going to happen, because nobody turns off revenue. The fourth is what happens by default if you do nothing at all.
-
-So the fallback ladder ends at the status quo, which suggests it is not really a ladder.
+I'd expect considerable resistance to shutting down revenue-producing compute. If verification tools arrive late and the parties won't accept that shutdown, the fallback allows the progress the pause was meant to stop.
 
 Verification buys us a sense that we know what is going on. That is worth something, and coordination does need shared belief. But it is a different thing from control, and I think the document lets those two blur together.
 
@@ -92,13 +84,9 @@ Verification buys us a sense that we know what is going on. That is worth someth
 
 The framing is a good idea. It is a real hard condition, it is legible, and it creates the kind of standing incentive that changes behaviour instead of merely describing good behaviour. I like it as a stopgap.
 
-What I do not think they have priced is what it does to people.
+I'm also concerned about how people would live with that threat.
 
 We are already not okay from the first version of this. Nuclear deterrence has been generating background dread for eighty years and it is baked into about three generations by now. Compute MAD is worse in one specific way, which is that nuclear deterrence has a visible discrete trigger. Everyone knows what a launch is. Compute destruction triggers on a threshold nobody can see, adjudicated by verification systems I have just spent two sections arguing do not work. So the anxiety never gets to attach itself to an event, and it simply runs continuously.
-
-And yes, we can recover from a number of nukes going off. Actually no, we cannot. Never mind, forget I said that.
-
-That is rather the point, though. I got halfway through the reassuring sentence before I heard myself.
 
 ## The Part I Like
 
@@ -110,19 +98,19 @@ I would like to take it further and make it physical.
 
 At the moment we build compute the way we have built everything else for thirty years. Concentrate it, put it somewhere with cheap power, and let the neighbours deal with the noise. People hate this, reasonably, and there are communities fighting datacenters over sound and water and grid load in a lot of places right now.
 
-Why does it have to be that shape? Why can the GPUs not be spread across a whole city? Put the heat and the water into the existing grid, and investment in compute becomes investment in grid development, which is a public good for everyone including people who do not care about AI at all. The externality turns into an input.
+I'd like to explore spreading compute across a city and connecting it to existing power, water, and heating infrastructure. Reusing the heat could benefit residents who don't use the compute themselves.
 
-This is not hypothetical, because Finland already does the heat part of it. There is a datacenter in Espoo feeding its waste heat into the district heating network for a six-figure number of people. The noise and nuisance problem is what you get when a datacenter is designed as an island. Design it as a participant in the grid and most of the complaint goes away.
+Finland already does the heat-reuse part: a datacenter in Espoo feeds waste heat into the district heating network for a six-figure number of people. That doesn't settle the other siting problems, but it's an example of a local use for the heat.
 
 The technical objection, that you cannot train across a city because of interconnect bandwidth, is being eaten by actual research. [DiLoCo](https://arxiv.org/abs/2311.08105) showed you can synchronise far less often than everyone assumed. Prime Intellect trained a 10B model across the open internet on volunteered GPUs and [reported a 400x reduction in communication bandwidth](https://arxiv.org/abs/2412.01152) against standard data-parallel training. Nous Research's DisTrO pushes in the same direction. Decentralised training is a live research programme with results, not a thought experiment.
 
 ![An AI-designed modular floating platform: solar arrays and compute blocks standing on piers offshore, drawn as one continuous structure](/assets/blog/plan-a-datacenter.webp "The platform, as illustrated in AI 2040: Plan A. https://ai-2040.com/")
 
-One thing though, and here I am being slightly mean to Plan A's own art department. There is an illustration in the report of an AI-designed modular floating platform with solar and batteries and compute, and it is lovely, and I would genuinely like to see it built. But look at it. It is one enormous contiguous block, built as a single unit, with one edge. The aesthetic is diffusion and the form is a datacenter that learned to float. My version and that version are different proposals wearing the same solar panels.
+The report's illustration combines solar, batteries, and compute on one large floating platform. I'd like to see that built, but it still concentrates the hardware at one site. What I'm suggesting would distribute it across a city and connect it to existing infrastructure.
 
 ## Their Open Questions
 
-They pose a set of questions they do not answer, which I respect considerably more than pretending. Three of them stayed with me.
+Three of the report's open questions stayed with me.
 
 Should we ban research into a new paradigm that would make AIs significantly more capable? I do not know. My instinct is that there is some sharp inflection point out there where somebody attaches the right module to an agent and it is simply over, and whoever gets there first has it, and no treaty survives that. But I cannot tell you where that point is or what it looks like, so I am not going to pretend to have a policy.
 
@@ -130,46 +118,36 @@ Should we require chains of thought to stay interpretable? I think not, actually
 
 Partly because it is an uphill battle that gets steeper exactly as the stakes rise, and the field already knows this. The [chain of thought monitorability paper](https://arxiv.org/abs/2507.11473), signed by around forty people across OpenAI, DeepMind, Anthropic and METR, says openly that legibility is a fragile accident of current training and that ordinary optimisation pressure produces encoded or obfuscated reasoning. So a mandate freezes a training regime in order to preserve a side effect that is on its way out regardless.
 
-Mostly, though, it is about throughput. An interpretable chain of thought does not help if there is too much of it. Perfectly readable reasoning at that volume is still unread. Legibility dies of scale before it dies of obfuscation.
+I'm also worried about review capacity. A readable chain of thought is useful only if someone or something can check it. At large volumes, the proposal needs an account of how that checking scales and how failures get detected.
 
-So step back and look at how we actually make these things. We grow these models, we do not program them. That is the whole thing, and I think it is the frame Plan A is missing. Every governance idea in the document is aimed at a built artifact: inspect it, halt it, audit it, read its reasoning. Those are all moves against something that was constructed. You cannot inspect your way to a good garden.
-
-What I would want instead is to define initial conditions and constraints that make it impossible for the chain of thought to end up somewhere bad in the first place. Not detectable, impossible. I have no idea how to do that and it might not even be a coherent request, but that is where my head goes immediately, and I would rather spend the research money there than on a better microscope.
+I'd rather put more research into constraints imposed during training that could rule out particular unsafe behaviours. I don't know how to make those guarantees, or whether a sufficiently general version is possible. But I'd like to investigate that alongside methods for inspecting what a trained model does.
 
 Should we let AIs do AI research? Yes, definitely, but with the same move underneath it.
 
-At the moment we encode behaviour. You saturate the training data with a trait and the model picks it up, the same way a kid learns to swim. Nobody hands them the rules, you put them in the water enough times and eventually they are good at it. That works, and it is how all of this works. The problem is that encoding behaviour gives you the output and nothing else, so the moment the model is somewhere you did not train it, it is imitating and it breaks.
+I want models to learn reasons for choosing an action that still apply in unfamiliar situations. Training examples that reward the right behaviour don't, by themselves, establish that the model has learned those reasons. It might learn a shortcut that works in training and fails elsewhere.
 
-Encode the incentive instead. Encode the reason for doing the thing. A model that holds the reason can work out the right move in a situation nobody anticipated, because it is carrying the generator rather than the output. That is what steering would actually mean.
-
-I am aware this is the unsolved part. Reward modelling has been trying to do exactly this for years and keeps losing to models that learn the measurement instead of the goal. I am not claiming to have it. I am saying that is where I would point the money, and I would point it at information theory and neuroscience while I was at it, because one of the genuinely good side effects of this field is that we keep accidentally learning things about ourselves.
+Reward modelling already faces this problem: a model can learn to satisfy the measurement without achieving the intended goal. I don't have a solution. It's a research direction I'd fund, including work drawing on information theory and neuroscience.
 
 ## Two Layers
 
-Worth separating these, because I blurred them the first time I said it out loud.
+I'm interested in two kinds of intervention. One would constrain the behaviours reachable from the initial setup. The other would shape the incentives that guide the model as it works.
 
-There is the part you set before the run. Constraints chosen at initialisation that decide which trajectories are reachable at all. You are not watching anything here. You are picking a space narrow enough that the bad regions are not in it. Decided once, structural, done.
-
-Then there is the part that operates during the run. Incentives living inside the model, steering it as it works. Continuous, live, and still not oversight, because nothing is being read out and judged by a person.
-
-Both of those are interventions and neither of them is a readout. What I am rejecting is inspect-and-correct, the loop where somebody reads a transcript and decides. I am not rejecting the idea of doing something.
+Both would need validation. My aim is to reduce dependence on a person reading transcripts and correcting the system after it has acted, but describing these interventions doesn't establish that we can build them.
 
 ## What I Think
 
-This is the same conclusion I reached about [Chat Control](/blog/chat-control-eu), and I am aware I am becoming a one-note person about it, but I keep arriving here from completely different directions, so at some point I have to assume it is the terrain and not me.
+I had a similar concern when writing about [Chat Control](/blog/chat-control-eu): how much can a safeguard depend on people continuing to enforce it?
 
 Stated rules do not survive contact with people. Not because people are evil, but because rules need continuous enforcement by humans who get tired, get bought, get replaced, get outvoted and get bored. The surveillance side only has to win once. The compute pause side has to win every single year until 2040.
 
 So the thing worth building is the thing that does not need anyone to keep choosing it. Make mass surveillance architecturally impossible instead of illegal, which is what I am poking at with [ØCLOAK](https://novusedge.github.io/portfolio/ocloak). Make unilateral compute accumulation structurally impossible instead of treaty-prohibited. Make the manufacturing process itself such that you cannot train past a line without a number of other people's consent, because the consent is a physical dependency rather than a signature.
 
-I do not have that design. I want to be very clear that I do not have it, that it might be impossible, and that "make it structurally impossible" is easy to say and has been the last line of a lot of essays by people who then went and did nothing. But it is the only category of answer I have found that does not require humans to stay vigilant for fifteen consecutive years, and I have never once seen humans do that.
+I don't have that design, and it may be impossible. I want to investigate it because maintaining an international agreement for fifteen years also depends on sustained enforcement through changes of government, personnel, and incentives.
 
 The other thing I will say, and I might be wrong about this too, is that I think Plan B is what actually happens. We fight China, or we spend a decade getting ready to. I do not have a side in that. I do not trust the tech oligarchs running this in the US even slightly, I do not trust Beijing either, and there are days I think China might do a better job of it, which is an uncomfortable sentence to type.
 
-That is the tell, though. I do not trust any of them because they are all people holding something this size. As long as humans are in charge of this, I think we are fairly comprehensively fucked. And no, that does not mean AI should be in charge instead, which is not where I am going with this at all. It means we should be spending our time making certain things impossible to do. Mass accumulation of compute, mass accumulation of wealth, mass accumulation of anything, so that it matters rather less who is in charge.
+I don't want control over this much compute and wealth concentrated in a few hands. I'd like safeguards that constrain whoever holds power, including limits they can't remove on their own. Handing the same power to an AI wouldn't answer that concern.
 
-Sixty days from publication to a machine-checked proof of a Millennium Prize problem. The first negotiating milestone is 2029.
-
-I hope they are right and I am wrong. I really do.
+The first negotiating milestone is 2029. Before then, I'd want clearer answers about how the agreement handles software improvements, when disclosure becomes mandatory, and what happens if verification tools aren't ready.
 
 ~ A.

@@ -72,14 +72,14 @@ const LAST_STATE = 9
 const EXTERIOR_AT = [0, 0, 30, 70, 110, 160, 200, 230, 280, 320]
 const CAPTIONS: Record<number, string> = {
   1: 'Every declared chip is counted.',
-  2: 'Capability starts arriving without new chips. Nothing counts it.',
+  2: 'Improved methods can increase capability without adding chips.',
   3: 'The chips are still counted, but what runs on them is unknown.',
-  4: 'Some work is declared but not yet published. No rule says when.',
-  5: 'Inspectors check the counted chips. They cannot see anything else.',
+  4: 'Work can remain unpublished while research is ongoing.',
+  5: 'Inspecting declared chips does not establish everything the software can do.',
   6: 'The uncounted part keeps growing.',
   7: 'The same chips, spread out and shared.',
   8: 'The uncounted part starts to organise itself.',
-  9: 'The boundary still holds. It has stopped meaning anything.',
+  9: 'A fixed chip count does not necessarily imply a fixed level of capability.',
 }
 
 function captionFor(state: number, t: TFunction): string {
