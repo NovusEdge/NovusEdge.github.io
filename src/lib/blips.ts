@@ -1,7 +1,7 @@
 export type Blip = {
   date: string
   text?: string
-  media?: string
+  media?: string[]
   tags?: string[]
 }
 
@@ -46,7 +46,7 @@ function parseBlips(raw: string): Blip[] {
     .map((item) => ({
       date: item.date as string,
       text: typeof item.text === 'string' ? item.text : undefined,
-      media: typeof item.media === 'string' ? item.media : undefined,
+      media: typeof item.media === 'string' ? [item.media] : item.media?.length ? item.media : undefined,
       tags: Array.isArray(item.tags) ? item.tags : undefined,
     }))
 }
