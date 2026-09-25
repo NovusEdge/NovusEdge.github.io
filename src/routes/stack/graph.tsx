@@ -1,5 +1,6 @@
 import { useEffect, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
+import type { TFunction } from 'i18next'
 import { STACK, type Tech } from './data'
 
 type Node = {
@@ -17,16 +18,18 @@ type Node = {
 
 const GOLD = '#d4a03c'
 
-// hubs are focus areas; tools cluster under them, `text` items are logo-less work nodes
+// hubs are focus areas; tools cluster under them, `text` items are logo-less concept nodes.
+// `hub` is a key under stack.hubs and each `text` item a key under stack.nodes.
+// The graph maps tech only: personal projects belong in the editorial view's proof row.
 const NAME2TECH = new Map(STACK.flatMap((g) => g.items.map((t) => [t.name, t] as const)))
 const CLUSTERS: { hub: string; tools: string[]; text: string[] }[] = [
-  { hub: 'AI', tools: ['Claude', 'Gemini', 'PyTorch', 'HuggingFace', 'Ollama', 'LangChain', 'Qdrant', 'Neo4j', 'Redis', 'Python', 'LiteLLM', 'Pydantic AI'], text: [] },
-  { hub: 'the craft', tools: ['Rust', 'Go', 'TypeScript', 'JavaScript', 'Lua', 'C#', 'Linux', 'Docker', 'Neovim', 'Git', 'Postgres', 'uv', 'Ruff', 'mypy'], text: [] },
-  { hub: 'governed autonomy', tools: ['Cedar', 'Stripe', 'SQLite', 'Datasette', 'MCP'], text: ['money-mesh'] },
-  { hub: 'web & motion', tools: ['React', 'Tailwind', 'Vite', 'GSAP', 'WebGL', 'WASM'], text: [] },
+  { hub: 'ai', tools: ['Claude', 'Gemini', 'PyTorch', 'HuggingFace', 'Ollama', 'LangChain', 'Qdrant', 'Neo4j', 'Redis', 'Python', 'LiteLLM', 'Pydantic AI'], text: [] },
+  { hub: 'craft', tools: ['Rust', 'Go', 'TypeScript', 'JavaScript', 'Lua', 'C#', 'Linux', 'Docker', 'QEMU', 'Nix', 'Neovim', 'Git', 'Postgres', 'uv', 'Ruff', 'mypy'], text: [] },
+  { hub: 'autonomy', tools: ['Cedar', 'Stripe', 'SQLite', 'Datasette', 'MCP'], text: [] },
+  { hub: 'web', tools: ['React', 'Tailwind', 'Vite', 'GSAP', 'WebGL', 'WASM', 'Godot'], text: [] },
   { hub: 'hardware', tools: ['ESP32', 'Raspberry Pi', 'Arduino', 'C'], text: [] },
-  { hub: 'founder / cto', tools: [], text: ['fundraising', 'strategy', 'hiring', 'roadmap', 'investors'] },
-  { hub: 'chaos', tools: [], text: ['palpatine', 'ricing', 'joke repos'] },
+  { hub: 'founder', tools: [], text: ['fundraising', 'strategy', 'hiring', 'roadmap', 'investors'] },
+  { hub: 'chaos', tools: [], text: ['ricing', 'jokeRepos'] },
 ]
 
 // concept icons (filled 24x24) for the founder/cto nodes, each with a distinct color
@@ -49,7 +52,7 @@ const REST_HUB = 300
 const REST_SAT = 150
 const CENTER_PULL = 0.0007
 
-function build(w: number, h: number) {
+function build(w: number, h: number, t: TFunction) {
   const nodes: Node[] = []
   const edges: [string, string][] = []
   const cx = w / 2
@@ -58,16 +61,16 @@ function build(w: number, h: number) {
     const a = (gi / CLUSTERS.length) * Math.PI * 2
     const hx = cx + Math.cos(a) * Math.min(w, h) * 0.26
     const hy = cy + Math.sin(a) * Math.min(w, h) * 0.26
-    nodes.push({ id: c.hub, label: c.hub, group: c.hub, hub: true, x: hx, y: hy, vx: 0, vy: 0 })
+    nodes.push({ id: c.hub, label: t(`stack.hubs.${c.hub}`), group: c.hub, hub: true, x: hx, y: hy, vx: 0, vy: 0 })
     const sats = [
-      ...c.tools.map((n) => ({ name: n, tech: NAME2TECH.get(n) })),
-      ...c.text.map((n) => ({ name: n, tech: CONCEPT_TECH.get(n) })),
+      ...c.tools.map((n) => ({ name: n, label: n, tech: NAME2TECH.get(n) })),
+      ...c.text.map((n) => ({ name: n, label: t(`stack.nodes.${n}`), tech: CONCEPT_TECH.get(n) })),
     ]
     sats.forEach((s, ti) => {
       const b = a + (ti - sats.length / 2) * 0.3
       nodes.push({
         id: `${c.hub}:${s.name}`,
-        label: s.name,
+        label: s.label,
         group: c.hub,
         hub: false,
         tech: s.tech,
@@ -97,7 +100,7 @@ export default function StackGraph() {
     const reduce = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches ?? false
     let W = 0
     let H = 0
-    let g = build(1, 1)
+    let g = build(1, 1, t)
     let index = new Map(g.nodes.map((n) => [n.id, n]))
     const paths = new Map<string, Path2D>() // cached icon glyphs (24x24 viewBox)
     const iconOf = (n: Node) => {
@@ -116,7 +119,7 @@ export default function StackGraph() {
       canvas.width = W * dpr
       canvas.height = H * dpr
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0)
-      g = build(W, H)
+      g = build(W, H, t)
       index = new Map(g.nodes.map((n) => [n.id, n]))
       paths.clear()
     }
@@ -374,7 +377,7 @@ export default function StackGraph() {
       window.removeEventListener('mouseup', onUp)
       canvas.removeEventListener('mouseleave', onLeave)
     }
-  }, [])
+  }, [t])
 
   return (
     <div className="relative h-screen w-full overflow-hidden">

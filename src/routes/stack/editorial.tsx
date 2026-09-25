@@ -1,11 +1,11 @@
 import { useEffect, useRef } from 'react'
-import { useTranslation } from 'react-i18next'
+import { Trans, useTranslation } from 'react-i18next'
 import { TLink } from '../../components/page-transition'
 import { revealCards } from '../../lib/reveals'
 import { prefersReducedMotion } from '../../lib/motion'
 import { ArrowRight } from '../../components/icons'
 import { SectionNumber } from '../../components/motifs'
-import { DOMAINS, STACK, LANGS, LANG_TOTAL, LATELY, GROUP_NOTES, DEPTH, PROJECTS, type Tech, type Depth } from './data'
+import { DOMAINS, STACK, LANGS, LANG_TOTAL, DEPTH, PROJECTS, type Tech, type Depth } from './data'
 import { useLocalePath } from '../../i18n/use-locale-path'
 
 // look up a tech's icon by name, for the project rows
@@ -91,20 +91,20 @@ export default function StackEditorial() {
           </div>
 
           <h1 className="mt-8 max-w-4xl font-display text-4xl font-black leading-[1.05] text-charcoal dark:text-bone sm:text-5xl md:text-6xl">
-            The tools i <span className="text-gold">actually reach for</span>.
+            <Trans i18nKey="stack.headline" components={{ accent: <span className="text-gold" /> }} />
           </h1>
           <p className="mt-6 max-w-xl text-base leading-relaxed text-charcoal/60 dark:text-bone/60">
-            Mostly AI these days, some hardware, and a lot of muscle memory.
+            {t('stack.subline')}
           </p>
         </header>
 
-        {/* lately: what i'm actively deep in right now */}
+        {/* lately: what i'm actively deep in right now. Keep stack.latelyText in en.json current. */}
         <div
           data-card
           className="mt-14 flex flex-col gap-2 border-y border-charcoal/10 py-4 sm:flex-row sm:items-baseline sm:gap-5 dark:border-bone/10"
         >
           <span className="shrink-0 font-mono text-[10px] uppercase tracking-[0.3em] text-gold">{t('stack.lately')}</span>
-          <p className="text-sm leading-relaxed text-charcoal/70 dark:text-bone/70">{LATELY}</p>
+          <p className="text-sm leading-relaxed text-charcoal/70 dark:text-bone/70">{t('stack.latelyText')}</p>
         </div>
 
         {/* domains: numbered features */}
@@ -112,7 +112,7 @@ export default function StackEditorial() {
           <h2 className="sr-only">{t('stack.focusAreas')}</h2>
           {DOMAINS.map((d, i) => (
             <article
-              key={d.title}
+              key={d.key}
               data-card
               className="group grid grid-cols-1 gap-4 border-b border-charcoal/10 py-10 md:grid-cols-[6rem_1fr_auto] dark:border-bone/10"
             >
@@ -121,9 +121,11 @@ export default function StackEditorial() {
               </div>
               <div>
                 <h3 className="font-display text-3xl font-black text-charcoal transition-colors group-hover:text-gold dark:text-bone md:text-4xl">
-                  {d.title}
+                  {t(`stack.domains.${d.key}.title`)}
                 </h3>
-                <p className="mt-3 max-w-2xl text-base leading-relaxed text-charcoal/65 dark:text-bone/65">{d.blurb}</p>
+                <p className="mt-3 max-w-2xl text-base leading-relaxed text-charcoal/65 dark:text-bone/65">
+                  {t(`stack.domains.${d.key}.blurb`)}
+                </p>
               </div>
               <span
                 aria-hidden
@@ -154,12 +156,12 @@ export default function StackEditorial() {
           </div>
           {PROJECTS.map((p) => (
             <div
-              key={p.name}
+              key={p.slug}
               data-card
               className="grid grid-cols-1 gap-3 border-t border-charcoal/10 py-6 md:grid-cols-[13rem_1fr_auto] md:items-center md:gap-8 dark:border-bone/10"
             >
               <span className="font-display text-2xl font-black text-charcoal dark:text-bone">{p.name}</span>
-              <p className="text-sm leading-relaxed text-charcoal/65 dark:text-bone/65">{p.blurb}</p>
+              <p className="text-sm leading-relaxed text-charcoal/65 dark:text-bone/65">{t(`stack.projects.${p.slug}`)}</p>
               <div className="flex items-center gap-4 md:justify-end">
                 {p.tech.map((name) => {
                   const t = TECH_BY_NAME.get(name)
@@ -239,20 +241,18 @@ export default function StackEditorial() {
           </div>
           {STACK.map((g) => (
             <div
-              key={g.label}
+              key={g.key}
               data-card
               className="grid grid-cols-1 gap-x-8 gap-y-4 border-t border-charcoal/10 py-8 md:grid-cols-[18rem_1fr] dark:border-bone/10"
             >
               <div>
                 <div className="flex items-baseline gap-3">
-                  <span className="font-display text-2xl font-black text-charcoal dark:text-bone">{g.label}</span>
+                  <span className="font-display text-2xl font-black text-charcoal dark:text-bone">{t(`stack.groups.${g.key}`)}</span>
                   <span className="font-display text-sm text-charcoal/30 dark:text-bone/30">{g.jp}</span>
                 </div>
-                {GROUP_NOTES[g.label] && (
-                  <p className="mt-2 max-w-[16rem] text-sm leading-relaxed text-charcoal/55 dark:text-bone/55">
-                    {GROUP_NOTES[g.label]}
-                  </p>
-                )}
+                <p className="mt-2 max-w-[16rem] text-sm leading-relaxed text-charcoal/55 dark:text-bone/55">
+                  {t(`stack.groupNotes.${g.key}`)}
+                </p>
                 <div className="mt-3 flex items-center gap-2">
                   <span className="h-px w-6 bg-gold/60" />
                   <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-charcoal/40 dark:text-bone/40">
