@@ -2407,6 +2407,9 @@ header.ms-col { max-width: 1400px; text-align: center; }
 /* hello, world! A gold record launched into the dark. One look in both themes. */
 .vg { --vg-space: #05070d; --vg-gold: #e9c46a; --vg-bone: #f5f2eb; background: var(--vg-space); color: var(--vg-bone); }
 .vg-space body { background: #05070d; }
+/* The footer's charcoal reads as a grey band under deep space; it takes the space colour,
+   with a faint gold horizon so the edge still reads. */
+.vg-space .site-footer { background-color: #05070d; box-shadow: inset 0 1px 0 #e9c46a1f; }
 .vg-flight { position: relative; height: 100svh; }
 .vg-flight.vg-mode-live { height: 280svh; }
 .vg-stage {
