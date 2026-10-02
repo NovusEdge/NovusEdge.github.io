@@ -18,6 +18,24 @@ export const FIGURE_PATH =
 
 const inkColor = () => getComputedStyle(document.querySelector('.ms') ?? document.documentElement).getPropertyValue('--ms-ink').trim() || '#1a1a1a'
 
+// Erasing on the canvas, not painting paper behind the prose: a backing would sit
+// above the site's grain overlay and show as a grain-free box around the column.
+function eraseColumn(ctx: CanvasRenderingContext2D, x0: number, x1: number, h: number, amount: number) {
+  const pad = 28
+  const w = x1 - x0 + 2 * pad
+  const g = ctx.createLinearGradient(x0 - pad, 0, x1 + pad, 0)
+  const on = `rgba(0,0,0,${amount})`
+  g.addColorStop(0, 'rgba(0,0,0,0)')
+  g.addColorStop(pad / w, on)
+  g.addColorStop(1 - pad / w, on)
+  g.addColorStop(1, 'rgba(0,0,0,0)')
+  ctx.save()
+  ctx.globalCompositeOperation = 'destination-out'
+  ctx.fillStyle = g
+  ctx.fillRect(x0 - pad, 0, w, h)
+  ctx.restore()
+}
+
 function lineOpacity(i: number, shown: number) {
   if (i >= shown) return 0
   const age = shown - 1 - i
@@ -127,6 +145,9 @@ export function Voices({ lines, meta, locale }: { lines: VoiceLine[]; meta: Voic
     let last = ''
     let lastBase = ''
 
+    // The text column the stage breaks out of; the tangle is erased over it so it never crosses prose.
+    const prose = section.parentElement?.closest('.ms-prose') ?? null
+
     const clear = () => {
       last = ''
       ctx.setTransform(1, 0, 0, 1, 0, 0)
@@ -161,11 +182,12 @@ export function Voices({ lines, meta, locale }: { lines: VoiceLine[]; meta: Voic
       const head = { x: fr.left - cr.left + HEAD.x * s, y: fr.top - cr.top + HEAD.y * s, rx: HEAD.rx * s, ry: HEAD.ry * s }
       fig.style.setProperty('--ms-fig', String(smooth(0.5, 1, m)))
 
+      const col = prose?.getBoundingClientRect()
       const alpha = lerp((0.06 + agit * 0.12) * pres, 0.85, m)
       const e = ellipseAt(m, vw, vh, head)
       const frame = Math.floor(now / (140 - agit * 85))
       // Most frames mid-section are identical; repaint only when an input of the image moved.
-      const base = [Math.round(e.x * 2), Math.round(e.y * 2), Math.round(e.rx * 2), Math.round(e.ry * 2), Math.round(agit * 50), Math.round(alpha * 100), canvas.width, canvas.height, ink].join()
+      const base = [Math.round(e.x * 2), Math.round(e.y * 2), Math.round(e.rx * 2), Math.round(e.ry * 2), Math.round(agit * 50), Math.round(alpha * 100), canvas.width, canvas.height, ink, Math.round(col?.left ?? 0), Math.round(col?.width ?? 0)].join()
       // While anything but the boil frame moves (pull-in, approach fade), half the points:
       // those phases repaint the whole tangle every frame. The settled frame repaints in full.
       const stride = base === lastBase ? 1 : 2
@@ -175,7 +197,10 @@ export function Voices({ lines, meta, locale }: { lines: VoiceLine[]; meta: Voic
         clear()
         last = key
         ctx.setTransform(dpr, 0, 0, dpr, 0, 0)
-        if (alpha > 0.005) drawTangle(ctx, strokes, e, agit, frame, ink, alpha, lerp(1.4, 1.3, m), stride)
+        if (alpha > 0.005) {
+          drawTangle(ctx, strokes, e, agit, frame, ink, alpha, lerp(1.4, 1.3, m), stride)
+          if (m < 1 && col) eraseColumn(ctx, col.left - cr.left, col.right - cr.left, vh, 1 - m)
+        }
       }
       raf = requestAnimationFrame(tick)
     }
