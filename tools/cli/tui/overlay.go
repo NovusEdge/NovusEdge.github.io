@@ -51,6 +51,7 @@ type formOverlay struct {
 	live    []liveCheck
 	liveErr error
 	width   int
+	dark    bool
 
 	// huh's Group.WithHeight only ever shrinks fields and Form.WithHeight
 	// ignores heights <= 0, so a cap cannot be lifted again. The natural sizes
@@ -85,11 +86,11 @@ type tallField struct {
 // terminal. Fields that carry their own height go in tall.
 func newFormOverlay(bg color.Color, onSubmit func() tea.Cmd, groups ...*huh.Group) *formOverlay {
 	form := huh.NewForm(groups...)
-	form.WithShowHelp(false)
+	form.WithShowHelp(false).WithTheme(huh.ThemeFunc(huhTheme))
 	form.SubmitCmd = func() tea.Msg { return overlayDoneMsg{cmd: onSubmit()} }
 	form.Update(tea.BackgroundColorMsg{Color: bg})
 	return &formOverlay{
-		form: form, groups: groups,
+		form: form, groups: groups, dark: tea.BackgroundColorMsg{Color: bg}.IsDark(),
 		cancel: func() tea.Msg { return overlayDoneMsg{} },
 	}
 }
@@ -126,6 +127,9 @@ func (f *formOverlay) Update(msg tea.Msg) (overlay, tea.Cmd) {
 			return f, func() tea.Msg { return overlayDoneMsg{next: next} }
 		}
 		return f, f.cancel
+	}
+	if m, ok := msg.(tea.BackgroundColorMsg); ok {
+		f.dark = m.IsDark()
 	}
 	_, cmd := f.form.Update(msg)
 	if f.after != nil {
@@ -169,7 +173,7 @@ func (f *formOverlay) errView() string {
 	if f.liveErr == nil {
 		return ""
 	}
-	return lipgloss.NewStyle().Foreground(lipgloss.Color("9")).Width(f.width).Render("  * " + f.liveErr.Error())
+	return lipgloss.NewStyle().Foreground(newPalette(f.dark).err).Width(f.width).Render("  * " + f.liveErr.Error())
 }
 
 func (f *formOverlay) View() string {

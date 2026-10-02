@@ -53,6 +53,12 @@ type App struct {
 	wantSettled bool
 }
 
+func newHelp(isDark bool) help.Model {
+	h := help.New()
+	h.Styles = helpStyles(isDark)
+	return h
+}
+
 // NewApp returns the root model.
 func NewApp(p actions.Paths) *App {
 	st := newStyles(true)
@@ -61,7 +67,7 @@ func NewApp(p actions.Paths) *App {
 		st:    st,
 		bg:    color.Black,
 		keys:  newKeyMap(),
-		help:  help.New(),
+		help:  newHelp(true),
 		list:  newPostList(st),
 	}
 }
@@ -143,6 +149,12 @@ func (a *App) update(msg tea.Msg) tea.Cmd {
 		a.st = newStyles(msg.IsDark())
 		a.list.Styles = list.DefaultStyles(msg.IsDark())
 		a.list.SetDelegate(postDelegate{a.st})
+		a.help.Styles = helpStyles(msg.IsDark())
+		if a.overlay != nil {
+			var cmd tea.Cmd
+			a.overlay, cmd = a.overlay.Update(msg)
+			return cmd
+		}
 		return nil
 	case postsLoadedMsg:
 		if msg.err != nil {
