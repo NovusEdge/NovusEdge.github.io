@@ -140,7 +140,7 @@ I had a similar concern when writing about [Chat Control](/blog/chat-control-eu)
 
 Stated rules do not survive contact with people. Not because people are evil, but because rules need continuous enforcement by humans who get tired, get bought, get replaced, get outvoted and get bored. The surveillance side only has to win once. The compute pause side has to win every single year until 2040.
 
-So the thing worth building is the thing that does not need anyone to keep choosing it. Make mass surveillance architecturally impossible instead of illegal, which is what I am poking at with [ØCLOAK](https://novusedge.github.io/portfolio/ocloak). Make unilateral compute accumulation structurally impossible instead of treaty-prohibited. Make the manufacturing process itself such that you cannot train past a line without a number of other people's consent, because the consent is a physical dependency rather than a signature.
+So the thing worth building is the thing that does not need anyone to keep choosing it. Make mass surveillance architecturally impossible instead of illegal, which is what I am poking at with [ØCLOAK](/portfolio/ocloak). Make unilateral compute accumulation structurally impossible instead of treaty-prohibited. Make the manufacturing process itself such that you cannot train past a line without a number of other people's consent, because the consent is a physical dependency rather than a signature.
 
 I don't have that design, and it may be impossible. I want to investigate it because maintaining an international agreement for fifteen years also depends on sustained enforcement through changes of government, personnel, and incentives.
 

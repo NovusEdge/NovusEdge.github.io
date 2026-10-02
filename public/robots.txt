@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://novusedge.github.io/sitemap.xml
+Sitemap: https://khimani.dev/sitemap.xml

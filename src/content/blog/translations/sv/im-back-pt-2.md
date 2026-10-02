@@ -8,7 +8,7 @@ description: "Del två, och den tunga. Sommaren 2025 tog allt, jag klarade mig n
 > [!warning]
 > okej, en snabb varning, det här blir mörkt. om du inte mår bra just nu rekommenderar jag att du bara hoppar över det här, kom tillbaka en annan gång kompis, inga problem. och om du råkar sitta i det hålet själv medan du läser det här, gå och tjata på en riktig människa om det, det var det som drog upp mig.
 
-Så... för att fortsätta där jag slutade i [förra inlägget](https://novusedge.github.io/blog/im-back-pt-1)
+Så... för att fortsätta där jag slutade i [förra inlägget](/blog/im-back-pt-1)
 
 
 Sommaren 2025 kan ha varit den VÄRSTA i mitt liv hittills, ärligt talat. Jag vill inte gå in på detaljerna här men tldr; den sommaren pågick en konflikt där hemma mellan Indien och Pakistan, och det hände en del skit som ledde till att jag i princip förlorade _alla_ mina tillgångar, alltså *helt* pank.

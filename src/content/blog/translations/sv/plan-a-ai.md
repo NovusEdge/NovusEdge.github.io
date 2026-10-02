@@ -140,7 +140,7 @@ Jag hade en liknande oro när jag skrev om [Chat Control](/blog/chat-control-eu)
 
 Uttalade regler överlever inte kontakten med människor. Inte för att människor är onda, utan för att regler kräver kontinuerlig tillsyn av människor som tröttnar, mutas, byts ut, blir nedröstade och blir uttråkade. Övervakningssidan behöver bara vinna en gång. Sidan för beräkningspaus måste vinna varje enskilt år fram till 2040.
 
-Så det som är värt att bygga är det som inte kräver att någon fortsätter att välja det. Gör massövervakning arkitektoniskt omöjligt istället för olagligt, vilket är vad jag experimenterar med i [ØCLOAK](https://novusedge.github.io/portfolio/ocloak). Gör ensidig beräkningsackumulering strukturellt omöjligt istället för fördragsförbjudet. Gör själva tillverkningsprocessen sådan att du inte kan träna bortom en gräns utan ett antal andra personers samtycke, eftersom samtycket är ett fysiskt beroende snarare än en underskrift.
+Så det som är värt att bygga är det som inte kräver att någon fortsätter att välja det. Gör massövervakning arkitektoniskt omöjligt istället för olagligt, vilket är vad jag experimenterar med i [ØCLOAK](/portfolio/ocloak). Gör ensidig beräkningsackumulering strukturellt omöjligt istället för fördragsförbjudet. Gör själva tillverkningsprocessen sådan att du inte kan träna bortom en gräns utan ett antal andra personers samtycke, eftersom samtycket är ett fysiskt beroende snarare än en underskrift.
 
 Jag har inte den designen, och det kan vara omöjligt. Jag vill undersöka det eftersom upprätthållandet av ett internationellt avtal i femton år också beror på kontinuerlig efterlevnad genom regeringsskiften, personalbyten och skiftande incitament.
 

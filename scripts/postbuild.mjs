@@ -1,7 +1,7 @@
 import { readFileSync, readdirSync, writeFileSync, mkdirSync, cpSync, existsSync, statSync } from 'node:fs'
 import { join } from 'node:path'
 
-const ORIGIN = 'https://novusedge.github.io'
+const ORIGIN = 'https://khimani.dev'
 const pageUrl = (route) => `${ORIGIN}${route === '/' ? '/' : `${route.replace(/\/+$/, '')}/`}`
 const dist = 'dist'
 

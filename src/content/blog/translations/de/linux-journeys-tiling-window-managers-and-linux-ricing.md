@@ -5,7 +5,7 @@ tags: [linux-journeys, linux]
 description: "Ein Follow-up zum Ricing-Rabbit-Hole, das durch das Setup aus i3, Polybar, Rofi, compton, kitty und zsh hinter einem ersten Tiling-Window-Manager-Rice führt."
 ---
 
-Okay. Also... Das ist gewissermaßen ein Follow-up-Post zum [letzten Linux-Journeys-Beitrag](https://novusedge.github.io/posts/linux-journeys-customizing-the-bootsplash/). Hoffe, es gefällt euch~
+Okay. Also... Das ist gewissermaßen ein Follow-up-Post zum [letzten Linux-Journeys-Beitrag](/blog/linux-journeys-customizing-the-bootsplash). Hoffe, es gefällt euch~
 
 TL;DR: Wenn ihr nur an den Dotfiles interessiert seid, bitte sehr: https://github.com/NovusEdge/dotfiles
 

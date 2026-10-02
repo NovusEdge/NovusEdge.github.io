@@ -5,7 +5,7 @@ tags: [linux-journeys, linux]
 description: "Jatkoa ricing-kaninkoloon: käydään läpi i3-, Polybar-, Rofi-, compton-, kitty- ja zsh-setuppi ensimmäisen tiling window manager -ricen takana."
 ---
 
-Okei. Eli... Tämä on tavallaan jatkopostaus [viimeisimmälle Linux Journeys -kirjoitukselle](https://novusedge.github.io/posts/linux-journeys-customizing-the-bootsplash/). Toivottavasti tykkäät~
+Okei. Eli... Tämä on tavallaan jatkopostaus [viimeisimmälle Linux Journeys -kirjoitukselle](/blog/linux-journeys-customizing-the-bootsplash). Toivottavasti tykkäät~
 
 TL;DR: Jos sinua kiinnostavat vain dotfilet, tässä ole hyvä: https://github.com/NovusEdge/dotfiles
 

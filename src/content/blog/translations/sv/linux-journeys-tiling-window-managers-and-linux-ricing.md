@@ -5,7 +5,7 @@ tags: [linux-journeys, linux]
 description: "En uppföljning om ricing-kaninhålet, med en genomgång av setupen med i3, Polybar, Rofi, compton, kitty och zsh bakom min allra första tiling window manager-rice."
 ---
 
-Okej. Så... Det här är typ ett uppföljningsinlägg till [förra Linux Journeys-inlägget](https://novusedge.github.io/posts/linux-journeys-customizing-the-bootsplash/). Hoppas du gillar det~
+Okej. Så... Det här är typ ett uppföljningsinlägg till [förra Linux Journeys-inlägget](/blog/linux-journeys-customizing-the-bootsplash). Hoppas du gillar det~
 
 TL;DR: Om du bara är ute efter mina dotfiles så finns de här: https://github.com/NovusEdge/dotfiles
 

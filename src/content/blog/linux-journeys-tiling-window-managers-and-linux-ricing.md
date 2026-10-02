@@ -5,7 +5,7 @@ tags: [linux-journeys, linux]
 description: A follow-up on the ricing rabbit hole, walking through the i3, Polybar, Rofi, compton, kitty and zsh setup behind a first tiling window manager rice.
 ---
 
-Okay. So... This is a kinda follow-up blog for [the last Linux Journeys post](https://novusedge.github.io/posts/linux-journeys-customizing-the-bootsplash/). Hope you enjoy~
+Okay. So... This is a kinda follow-up blog for [the last Linux Journeys post](/blog/linux-journeys-customizing-the-bootsplash). Hope you enjoy~
 
 TL;DR: If you're only interested in the dotfiles, here you go: https://github.com/NovusEdge/dotfiles
 

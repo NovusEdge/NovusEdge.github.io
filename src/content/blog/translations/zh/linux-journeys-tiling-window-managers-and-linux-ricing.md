@@ -5,7 +5,7 @@ tags: [linux-journeys, linux]
 description: "掉入 ricing 坑之后的后续篇，带你了解初次尝试平铺式窗口管理器 rice 所用到的 i3、Polybar、Rofi、compton、kitty 和 zsh 配置。"
 ---
 
-好嘞。所以……这算是[上一篇 Linux 探索之旅博文](https://novusedge.github.io/posts/linux-journeys-customizing-the-bootsplash/)的后续吧。希望大家喜欢～
+好嘞。所以……这算是[上一篇 Linux 探索之旅博文](/blog/linux-journeys-customizing-the-bootsplash)的后续吧。希望大家喜欢～
 
 TL;DR：如果你只对 dotfiles 感兴趣，指路这里：https://github.com/NovusEdge/dotfiles
 

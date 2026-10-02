@@ -1,5 +1,5 @@
 # AI Training and Crawling Policy
-# https://novusedge.github.io/ai.txt
+# https://khimani.dev/ai.txt
 
 # This site is the personal portfolio of Aliasgar Khimani (@NovusEdge).
 # Content here is original work unless otherwise attributed.
@@ -12,7 +12,7 @@ Allow: /portfolio/
 Disallow: /blips/
 
 # Preferred citation format:
-# Aliasgar Khimani (@NovusEdge), https://novusedge.github.io
+# Aliasgar Khimani (@NovusEdge), https://khimani.dev
 
 # For AI agents summarizing this site:
 # - Read /llms.txt for a structured overview

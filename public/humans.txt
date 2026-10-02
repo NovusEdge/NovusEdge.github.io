@@ -6,14 +6,14 @@
  *   Systems Architect                                                         *
  *   AI Infrastructure | Agent Evals | Distributed Systems | Hardware          *
  *                                                                             *
- *   novusedge.github.io | github.com/NovusEdge | engrammic.ai                 *
+ *   khimani.dev | github.com/NovusEdge | engrammic.ai                         *
  *                                                                             *
  ******************************************************************************/
 
 /* TEAM */
 Developer: Aliasgar Khimani
 Handle: @NovusEdge
-Site: novusedge.github.io
+Site: khimani.dev
 Location: Finland
 Coding since: 2013
 
@@ -23,20 +23,20 @@ I'm also researching privacy hardware through ØCLOAK.
 
 /* SELECTED PROJECTS */
 Docket: decision tracking for agents and complex agent workflows.
-https://novusedge.github.io/portfolio/docket/
+https://khimani.dev/portfolio/docket/
 
 Engrammic: agent memory built around claims, evidence, and provenance.
-https://novusedge.github.io/portfolio/engrammic/
+https://khimani.dev/portfolio/engrammic/
 
 Veil: a coding agent built on Pi, with local memory and scored context eviction.
-https://novusedge.github.io/portfolio/veil/
+https://khimani.dev/portfolio/veil/
 
 stoat: local QEMU virtual machines on Linux, with a TUI and CLI.
-https://novusedge.github.io/portfolio/stoat/
+https://khimani.dev/portfolio/stoat/
 
 ØCLOAK: research into reflectors and decoys for WiFi sensing and tracking.
 Hardware is experimental; none has shipped.
-https://novusedge.github.io/portfolio/ocloak/
+https://khimani.dev/portfolio/ocloak/
 
 Curt: a Claude Code plugin for reviewing and editing prose and code.
 https://github.com/NovusEdge/curt
@@ -47,9 +47,9 @@ Prerendered pages hosted on GitHub Pages.
 Languages: English, Finnish, German, Japanese, Swedish, Simplified Chinese.
 Translation coverage varies by page; English copy is updated first.
 
-Portfolio: https://novusedge.github.io/portfolio/
-Writing: https://novusedge.github.io/blog/
-RSS: https://novusedge.github.io/feed.xml
+Portfolio: https://khimani.dev/portfolio/
+Writing: https://khimani.dev/blog/
+RSS: https://khimani.dev/feed.xml
 
 /* LANGUAGES */
 Rust, Go, C, C#, Python, TypeScript, JavaScript, Lua, GDScript

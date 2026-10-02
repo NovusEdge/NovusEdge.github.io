@@ -2,233 +2,233 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <!-- Core pages -->
   <url>
-    <loc>https://novusedge.github.io/</loc>
+    <loc>https://khimani.dev/</loc>
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://novusedge.github.io/about</loc>
+    <loc>https://khimani.dev/about</loc>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://novusedge.github.io/portfolio</loc>
+    <loc>https://khimani.dev/portfolio</loc>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://novusedge.github.io/blog</loc>
+    <loc>https://khimani.dev/blog</loc>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://novusedge.github.io/research</loc>
+    <loc>https://khimani.dev/research</loc>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://novusedge.github.io/stack</loc>
+    <loc>https://khimani.dev/stack</loc>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://novusedge.github.io/blips</loc>
+    <loc>https://khimani.dev/blips</loc>
     <priority>0.6</priority>
   </url>
 
   <!-- Portfolio projects -->
   <url>
-    <loc>https://novusedge.github.io/portfolio/engrammic</loc>
+    <loc>https://khimani.dev/portfolio/engrammic</loc>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://novusedge.github.io/portfolio/veil</loc>
+    <loc>https://khimani.dev/portfolio/veil</loc>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://novusedge.github.io/portfolio/primitives</loc>
+    <loc>https://khimani.dev/portfolio/primitives</loc>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://novusedge.github.io/portfolio/stoat</loc>
+    <loc>https://khimani.dev/portfolio/stoat</loc>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://novusedge.github.io/portfolio/anti-slop</loc>
+    <loc>https://khimani.dev/portfolio/anti-slop</loc>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://novusedge.github.io/portfolio/ocloak</loc>
+    <loc>https://khimani.dev/portfolio/ocloak</loc>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://novusedge.github.io/portfolio/money-mesh</loc>
+    <loc>https://khimani.dev/portfolio/money-mesh</loc>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://novusedge.github.io/portfolio/goob</loc>
+    <loc>https://khimani.dev/portfolio/goob</loc>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://novusedge.github.io/portfolio/palpatine</loc>
+    <loc>https://khimani.dev/portfolio/palpatine</loc>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://novusedge.github.io/portfolio/screenjack</loc>
+    <loc>https://khimani.dev/portfolio/screenjack</loc>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://novusedge.github.io/portfolio/hirejack</loc>
+    <loc>https://khimani.dev/portfolio/hirejack</loc>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://novusedge.github.io/portfolio/prepender</loc>
+    <loc>https://khimani.dev/portfolio/prepender</loc>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://novusedge.github.io/portfolio/glowworm</loc>
+    <loc>https://khimani.dev/portfolio/glowworm</loc>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://novusedge.github.io/portfolio/remy</loc>
+    <loc>https://khimani.dev/portfolio/remy</loc>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://novusedge.github.io/portfolio/puffgo</loc>
+    <loc>https://khimani.dev/portfolio/puffgo</loc>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://novusedge.github.io/portfolio/gfb</loc>
+    <loc>https://khimani.dev/portfolio/gfb</loc>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://novusedge.github.io/portfolio/loxoten</loc>
+    <loc>https://khimani.dev/portfolio/loxoten</loc>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://novusedge.github.io/portfolio/malware-dev-guide</loc>
+    <loc>https://khimani.dev/portfolio/malware-dev-guide</loc>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://novusedge.github.io/portfolio/thm-writeups</loc>
+    <loc>https://khimani.dev/portfolio/thm-writeups</loc>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://novusedge.github.io/portfolio/deepspeed</loc>
+    <loc>https://khimani.dev/portfolio/deepspeed</loc>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://novusedge.github.io/portfolio/tapestry</loc>
+    <loc>https://khimani.dev/portfolio/tapestry</loc>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://novusedge.github.io/portfolio/lightgbm</loc>
+    <loc>https://khimani.dev/portfolio/lightgbm</loc>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://novusedge.github.io/portfolio/rosin</loc>
+    <loc>https://khimani.dev/portfolio/rosin</loc>
     <priority>0.5</priority>
   </url>
 
   <!-- Blog posts -->
   <url>
-    <loc>https://novusedge.github.io/blog/on-building-something-engrammic</loc>
+    <loc>https://khimani.dev/blog/on-building-something-engrammic</loc>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://novusedge.github.io/blog/epistemic-collapse</loc>
+    <loc>https://khimani.dev/blog/epistemic-collapse</loc>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://novusedge.github.io/blog/building-vs-creating</loc>
+    <loc>https://khimani.dev/blog/building-vs-creating</loc>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://novusedge.github.io/blog/chat-control-eu</loc>
+    <loc>https://khimani.dev/blog/chat-control-eu</loc>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://novusedge.github.io/blog/what-do-i-want</loc>
+    <loc>https://khimani.dev/blog/what-do-i-want</loc>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://novusedge.github.io/blog/going-forward</loc>
+    <loc>https://khimani.dev/blog/going-forward</loc>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://novusedge.github.io/blog/im-back-pt-1</loc>
+    <loc>https://khimani.dev/blog/im-back-pt-1</loc>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://novusedge.github.io/blog/im-back-pt-2</loc>
+    <loc>https://khimani.dev/blog/im-back-pt-2</loc>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://novusedge.github.io/blog/shader-journeys-part-1</loc>
+    <loc>https://khimani.dev/blog/shader-journeys-part-1</loc>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://novusedge.github.io/blog/shader-journeys-part-2</loc>
+    <loc>https://khimani.dev/blog/shader-journeys-part-2</loc>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://novusedge.github.io/blog/hardware-journeys-starting-from-zero</loc>
+    <loc>https://khimani.dev/blog/hardware-journeys-starting-from-zero</loc>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://novusedge.github.io/blog/linux-journeys-tiling-window-managers-and-linux-ricing</loc>
+    <loc>https://khimani.dev/blog/linux-journeys-tiling-window-managers-and-linux-ricing</loc>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://novusedge.github.io/blog/linux-journeys-customizing-the-bootsplash</loc>
+    <loc>https://khimani.dev/blog/linux-journeys-customizing-the-bootsplash</loc>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://novusedge.github.io/blog/university</loc>
+    <loc>https://khimani.dev/blog/university</loc>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://novusedge.github.io/blog/hello-world</loc>
+    <loc>https://khimani.dev/blog/hello-world</loc>
     <priority>0.4</priority>
   </url>
   <url>
-    <loc>https://novusedge.github.io/blog/thm-blue-writeup</loc>
+    <loc>https://khimani.dev/blog/thm-blue-writeup</loc>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://novusedge.github.io/blog/thm-writeup-alfred</loc>
+    <loc>https://khimani.dev/blog/thm-writeup-alfred</loc>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://novusedge.github.io/blog/game-zone-writeup</loc>
+    <loc>https://khimani.dev/blog/game-zone-writeup</loc>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://novusedge.github.io/blog/daily-bugle-writeup</loc>
+    <loc>https://khimani.dev/blog/daily-bugle-writeup</loc>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://novusedge.github.io/blog/chocolate-factory-writeup</loc>
+    <loc>https://khimani.dev/blog/chocolate-factory-writeup</loc>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://novusedge.github.io/blog/red-writeup</loc>
+    <loc>https://khimani.dev/blog/red-writeup</loc>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://novusedge.github.io/blog/toolsrus-writeup</loc>
+    <loc>https://khimani.dev/blog/toolsrus-writeup</loc>
     <priority>0.5</priority>
   </url>
 
   <!-- Meta files -->
   <url>
-    <loc>https://novusedge.github.io/llms.txt</loc>
+    <loc>https://khimani.dev/llms.txt</loc>
     <priority>0.3</priority>
   </url>
   <url>
-    <loc>https://novusedge.github.io/humans.txt</loc>
+    <loc>https://khimani.dev/humans.txt</loc>
     <priority>0.2</priority>
   </url>
   <url>
-    <loc>https://novusedge.github.io/security.txt</loc>
+    <loc>https://khimani.dev/security.txt</loc>
     <priority>0.2</priority>
   </url>
   <url>
-    <loc>https://novusedge.github.io/ai.txt</loc>
+    <loc>https://khimani.dev/ai.txt</loc>
     <priority>0.2</priority>
   </url>
 </urlset>

@@ -8,42 +8,42 @@ Updated: 2026-09-24. Consult the linked project pages and repositories for imple
 
 ## Site directory
 
-- [Home](https://novusedge.github.io/): Introduction and selected work.
-- [About](https://novusedge.github.io/about/): Background, interests, and open-source contributions.
-- [Portfolio](https://novusedge.github.io/portfolio/): Projects, development status, and repository links.
-- [Research](https://novusedge.github.io/research/): Research interests and work.
-- [Stack](https://novusedge.github.io/stack/): Tools and technologies I use.
-- [Blog](https://novusedge.github.io/blog/): Essays on AI, energy, governance, systems, and security, alongside older tutorials and personal posts.
-- [RSS](https://novusedge.github.io/feed.xml): Published posts.
-- [Sitemap](https://novusedge.github.io/sitemap.xml): Public page URLs, including localized routes.
+- [Home](https://khimani.dev/): Introduction and selected work.
+- [About](https://khimani.dev/about/): Background, interests, and open-source contributions.
+- [Portfolio](https://khimani.dev/portfolio/): Projects, development status, and repository links.
+- [Research](https://khimani.dev/research/): Research interests and work.
+- [Stack](https://khimani.dev/stack/): Tools and technologies I use.
+- [Blog](https://khimani.dev/blog/): Essays on AI, energy, governance, systems, and security, alongside older tutorials and personal posts.
+- [RSS](https://khimani.dev/feed.xml): Published posts.
+- [Sitemap](https://khimani.dev/sitemap.xml): Public page URLs, including localized routes.
 
 English is the default language. Localized routes use `/fi/` for Finnish, `/de/` for German, `/ja/` for Japanese, `/sv/` for Swedish, and `/zh/` for Simplified Chinese; for example, `/zh/blog/what-did-we-all-miss/`. Translation coverage varies by page. Recent English revisions may not yet appear in translations.
 
 ## Selected projects
 
-- [Docket](https://novusedge.github.io/portfolio/docket/): Decision tracking for agents and complex agent workflows. Keeps settled choices, rejected options, and open questions outside the conversation, with supporting reasons and a history of superseded decisions. [Repository](https://github.com/NovusEdge/docket).
-- [Engrammic](https://novusedge.github.io/portfolio/engrammic/): Epistemic memory for AI agents. Models claims, evidence, provenance, and decay so observations and beliefs can be traced to their sources. [Website](https://engrammic.ai), [repository](https://github.com/engrammic-ai/engrammic).
-- [Veil](https://novusedge.github.io/portfolio/veil/): A coding agent forked from Pi, with local SQLite memory, scored context eviction, and records of failed attempts. The memory store is local; a configured remote model provider can receive prompt context. [Repository](https://github.com/engrammic-ai/veil), [npm package](https://www.npmjs.com/package/@engrammic/veil).
+- [Docket](https://khimani.dev/portfolio/docket/): Decision tracking for agents and complex agent workflows. Keeps settled choices, rejected options, and open questions outside the conversation, with supporting reasons and a history of superseded decisions. [Repository](https://github.com/NovusEdge/docket).
+- [Engrammic](https://khimani.dev/portfolio/engrammic/): Epistemic memory for AI agents. Models claims, evidence, provenance, and decay so observations and beliefs can be traced to their sources. [Website](https://engrammic.ai), [repository](https://github.com/engrammic-ai/engrammic).
+- [Veil](https://khimani.dev/portfolio/veil/): A coding agent forked from Pi, with local SQLite memory, scored context eviction, and records of failed attempts. The memory store is local; a configured remote model provider can receive prompt context. [Repository](https://github.com/engrammic-ai/veil), [npm package](https://www.npmjs.com/package/@engrammic/veil).
 - [Primitives](https://github.com/engrammic-ai/primitives): Python schemas and rules for observations, claims, facts, and beliefs. [Repository](https://github.com/engrammic-ai/primitives), [PyPI package](https://pypi.org/project/engrammic-primitives/).
-- [stoat](https://novusedge.github.io/portfolio/stoat/): Local QEMU virtual machines on Linux, managed through a Go TUI and CLI. [Repository](https://github.com/NovusEdge/stoat).
-- [ØCLOAK](https://novusedge.github.io/portfolio/ocloak/): Research into a home reflector, portable devices, and software decoys intended to interfere with sensing and profiling. The planned 2.4 GHz reflector experiment has not established efficacy, and no hardware has shipped. [Repository](https://github.com/NovusEdge/ocloak).
-- [money-mesh](https://novusedge.github.io/portfolio/): An experimental autonomous-agent system with bounded budgets, node-owned business code, and a protected runtime. Self-sustaining operation is a design goal, not a claim of demonstrated profitability.
+- [stoat](https://khimani.dev/portfolio/stoat/): Local QEMU virtual machines on Linux, managed through a Go TUI and CLI. [Repository](https://github.com/NovusEdge/stoat).
+- [ØCLOAK](https://khimani.dev/portfolio/ocloak/): Research into a home reflector, portable devices, and software decoys intended to interfere with sensing and profiling. The planned 2.4 GHz reflector experiment has not established efficacy, and no hardware has shipped. [Repository](https://github.com/NovusEdge/ocloak).
+- [money-mesh](https://khimani.dev/portfolio/): An experimental autonomous-agent system with bounded budgets, node-owned business code, and a protected runtime. Self-sustaining operation is a design goal, not a claim of demonstrated profitability.
 - [Curt](https://github.com/NovusEdge/curt): A Claude Code plugin with prose and code review skills, session hooks, and a linter. Writing guidance focuses on clarity, supported claims, and preserving the author's voice. [Repository](https://github.com/NovusEdge/curt).
 - [goob](https://github.com/NovusEdge/goob): A Godot desktop pet that wanders, naps, and comments on desktop activity, with support for custom spritesheets. [Repository](https://github.com/NovusEdge/goob).
-- [Palpatine](https://novusedge.github.io/portfolio/palpatine/): A tongue-in-cheek strategic-advisor plugin for pursuing goals. [Repository](https://github.com/NovusEdge/palpatine).
+- [Palpatine](https://khimani.dev/portfolio/palpatine/): A tongue-in-cheek strategic-advisor plugin for pursuing goals. [Repository](https://github.com/NovusEdge/palpatine).
 
 ## Recent posts
 
-- [Fine-tuning OpenJev on 62,695 A/B Tests](https://novusedge.github.io/blog/fine-tuning-openjev-on-62695-ab-tests/): September 23, 2026. Training a headline ranker on Upworthy's A/B tests, correcting the evaluation, comparing it with Gemini, and testing transfer to Reddit.
-- [What Did We All Miss?](https://novusedge.github.io/blog/what-did-we-all-miss/): September 12, 2026. Reflections on AI progress, research, robotics, and the gap between technical developments and public attention.
-- [Google's €13 Billion in Finland](https://novusedge.github.io/blog/googles-13-billion-in-finland/): September 12, 2026. An essay on energy investment in Finland, grid constraints, and the attention given to generation versus storage.
-- [Let's Talk About Plan A](https://novusedge.github.io/blog/plan-a-ai/): September 11, 2026. A broadly supportive critique of the AI Futures Project's AI 2040: Plan A, examining compute limits, transparency, verification, and constraints on AI systems.
+- [Fine-tuning OpenJev on 62,695 A/B Tests](https://khimani.dev/blog/fine-tuning-openjev-on-62695-ab-tests/): September 23, 2026. Training a headline ranker on Upworthy's A/B tests, correcting the evaluation, comparing it with Gemini, and testing transfer to Reddit.
+- [What Did We All Miss?](https://khimani.dev/blog/what-did-we-all-miss/): September 12, 2026. Reflections on AI progress, research, robotics, and the gap between technical developments and public attention.
+- [Google's €13 Billion in Finland](https://khimani.dev/blog/googles-13-billion-in-finland/): September 12, 2026. An essay on energy investment in Finland, grid constraints, and the attention given to generation versus storage.
+- [Let's Talk About Plan A](https://khimani.dev/blog/plan-a-ai/): September 11, 2026. A broadly supportive critique of the AI Futures Project's AI 2040: Plan A, examining compute limits, transparency, verification, and constraints on AI systems.
 
 ## More writing
 
-- [How Do You Know What's True?](https://novusedge.github.io/blog/epistemic-collapse/): The growing asymmetry between cheap generation and costly verification.
-- [On Building Something... Engrammic](https://novusedge.github.io/blog/on-building-something-engrammic/): Why agent memory involves belief and evidence as well as retrieval.
-- [All posts](https://novusedge.github.io/blog/): The published archive. Drafts are not part of this index.
+- [How Do You Know What's True?](https://khimani.dev/blog/epistemic-collapse/): The growing asymmetry between cheap generation and costly verification.
+- [On Building Something... Engrammic](https://khimani.dev/blog/on-building-something-engrammic/): Why agent memory involves belief and evidence as well as retrieval.
+- [All posts](https://khimani.dev/blog/): The published archive. Drafts are not part of this index.
 
 ## Earlier security work
 
@@ -85,7 +85,7 @@ I'm interested in agent memory, eval systems, multi-agent coordination, distribu
 
 Attribute writing to Aliasgar Khimani (@NovusEdge) and link to the specific article. Essays express the author's views; follow their cited sources when checking external claims. Do not invent credentials, affiliations, project capabilities, or employment history. Keep development goals distinct from implemented and verified behavior.
 
-- [AI crawling policy](https://novusedge.github.io/ai.txt)
-- [Robots directives](https://novusedge.github.io/robots.txt)
-- [Security contact](https://novusedge.github.io/security.txt)
-- [Human-readable credits](https://novusedge.github.io/humans.txt)
+- [AI crawling policy](https://khimani.dev/ai.txt)
+- [Robots directives](https://khimani.dev/robots.txt)
+- [Security contact](https://khimani.dev/security.txt)
+- [Human-readable credits](https://khimani.dev/humans.txt)

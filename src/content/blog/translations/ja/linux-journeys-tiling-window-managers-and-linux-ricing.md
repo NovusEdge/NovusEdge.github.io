@@ -5,7 +5,7 @@ tags: [linux-journeys, linux]
 description: "Ricingの沼にハマった話の続き。初めて組んだタイリングウィンドウマネージャーのriceについて、i3、Polybar、Rofi、compton、kitty、zshのセットアップを紹介します。"
 ---
 
-さてさて… 今回は[前回のLinux Journeysの記事](https://novusedge.github.io/posts/linux-journeys-customizing-the-bootsplash/)のちょっとした続きです。楽しんでもらえたら嬉しいです〜
+さてさて… 今回は[前回のLinux Journeysの記事](/blog/linux-journeys-customizing-the-bootsplash)のちょっとした続きです。楽しんでもらえたら嬉しいです〜
 
 TL;DR: dotfilesだけ見たい方はこちらをどうぞ: https://github.com/NovusEdge/dotfiles
 

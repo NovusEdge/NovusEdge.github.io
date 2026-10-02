@@ -1,4 +1,4 @@
-// Command site-cli is a TUI for managing content on novusedge.github.io: a
+// Command site-cli is a TUI for managing content on khimani.dev: a
 // filterable list of posts with a detail pane, plus forms for new posts,
 // blips and research cards, tags, thumbnails, draft state and translation
 // runs. Run it from anywhere inside the repo.

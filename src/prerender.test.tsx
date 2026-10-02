@@ -8,7 +8,7 @@ describe('blog prerendering', () => {
     const page = await prerender({ url: `/blog/${slug}/` })
     const post = await getPost(slug, 'en')
     const elements = [...page.head.elements]
-    const canonical = `https://novusedge.github.io/blog/${slug}/`
+    const canonical = `https://khimani.dev/blog/${slug}/`
 
     expect(elements).toContainEqual({ type: 'link', props: { rel: 'canonical', href: canonical } })
     expect(elements).toContainEqual({ type: 'meta', props: { property: 'og:url', content: canonical } })
@@ -21,7 +21,7 @@ describe('blog prerendering', () => {
   it('uses translated article metadata and canonical URLs', async () => {
     const page = await prerender({ url: '/fi/blog/hello-world/' })
     const elements = [...page.head.elements]
-    expect(elements).toContainEqual({ type: 'link', props: { rel: 'canonical', href: 'https://novusedge.github.io/fi/blog/hello-world/' } })
+    expect(elements).toContainEqual({ type: 'link', props: { rel: 'canonical', href: 'https://khimani.dev/fi/blog/hello-world/' } })
     const article = JSON.parse(elements.find((element) => element.type === 'script')!.children!)
     expect(article).toMatchObject({ inLanguage: 'fi', headline: 'hei, maailma!' })
   })
@@ -50,7 +50,7 @@ describe('blog prerendering', () => {
     expect(page.html).not.toContain('<!--$!-->')
     expect([...page.head.elements]).toContainEqual({
       type: 'meta',
-      props: { property: 'og:image', content: 'https://novusedge.github.io/assets/blog/fatigue-thumb.webp' },
+      props: { property: 'og:image', content: 'https://khimani.dev/assets/blog/fatigue-thumb.webp' },
     })
   })
 

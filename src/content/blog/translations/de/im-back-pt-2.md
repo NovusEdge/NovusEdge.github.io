@@ -8,7 +8,7 @@ description: "Teil zwei, und der schwere Teil. Der Sommer 2025 hat mir alles gen
 > [!warning]
 > Ok, kurze Warnung: Das hier wird ziemlich düster. Wenn es dir im Moment nicht gut geht, überspring das lieber und komm ein andermal wieder, Digga, kein Ding. Und falls du beim Lesen selbst gerade in so einem Loch steckst: Geh und laber einen echten Menschen voll – genau das hat mich da nämlich rausgeholt.
 
-Also... machen wir da weiter, wo ich im [vorherigen Blogbeitrag](https://novusedge.github.io/blog/im-back-pt-1) aufgehört habe.
+Also... machen wir da weiter, wo ich im [vorherigen Blogbeitrag](/blog/im-back-pt-1) aufgehört habe.
 
 
 Der Sommer 2025 war ungelogen der SCHLIMMSTE meines bisherigen Lebens. Ich will nicht zu sehr ins Detail gehen, aber tl;dr: In diesem Sommer gab es in der Heimat Konflikte zwischen Indien und Pakistan, und es ist einiges an Scheiße passiert, was dazu geführt hat, dass ich quasi _mein ganzes_ Vermögen verloren habe – ich war wirklich *völlig* pleite.

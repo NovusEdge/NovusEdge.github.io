@@ -34,7 +34,7 @@ export async function prerender(data: { url: string }) {
     { onError(error) { throw error } },
   )
   const html = await new Response(prelude).text()
-  const origin = 'https://novusedge.github.io'
+  const origin = 'https://khimani.dev'
   const pathname = new URL(data.url, origin).pathname.replace(/\/+$/, '') || '/'
   const locale = localeFromPath(pathname)
   const slug = /^\/blog\/([^/]+)$/.exec(stripLocale(pathname))?.[1]
@@ -80,7 +80,7 @@ export async function prerender(data: { url: string }) {
     )
   }
   if (headState.image) {
-    const imageUrl = `https://novusedge.github.io${headState.image}`
+    const imageUrl = `${origin}${headState.image}`
     elements.push(
       { type: 'meta', props: { property: 'og:image', content: imageUrl } },
       { type: 'meta', props: { name: 'twitter:image', content: imageUrl } },

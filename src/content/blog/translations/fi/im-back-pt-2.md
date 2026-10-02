@@ -8,7 +8,7 @@ description: "Kakkososa, ja se vaikea sellainen. Kesä 2025 vei kaiken, olin vä
 > [!warning]
 > okei eli nopea varoitus, tästä tulee synkkää. jos sulla ei oo kaikki ok tällä hetkellä, suosittelen skippaamaan tän ja palaamaan joskus toiste, ei mitään hätää bro. ja jos satut itse olemaan siellä kuopassa tätä lukiessasi, mee puhumaan jollekin oikealle ihmiselle, se oli se juttu mikä pelasti mut.
 
-Eli... jatketaan siitä mihin jäin [edellisessä blogissa](https://novusedge.github.io/blog/im-back-pt-1)
+Eli... jatketaan siitä mihin jäin [edellisessä blogissa](/blog/im-back-pt-1)
 
 
 Kesä 2025 oli ehkä mun elämän PAJIN tähän mennessä, ngl. En halua mennä yksityiskohtiin tässä, mutta tldr; sinä kesänä kotimaassa oli konflikti Intian ja Pakistanin välillä, ja tapahtui kaikenlaista paskaa, jonka seurauksena menetin käytännössä _kaiken_ omaisuuteni, siis olin *täysin* PA.

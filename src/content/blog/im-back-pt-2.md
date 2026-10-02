@@ -8,7 +8,7 @@ description: Part two, and the hard one. Summer 2025 took everything, I nearly d
 > [!warning]
 > ok so quick warning, this one gets dark. if you're not ok atm I'd recommend to just skip it, come back some other time dawg, no worries. and if you happen to be down in that hole yourself while reading this, go bug an actual human about it, that's the bit that got me out.
 
-So... picking up from where i left off in [previous blog](https://novusedge.github.io/blog/im-back-pt-1)
+So... picking up from where i left off in [previous blog](/blog/im-back-pt-1)
 
 
 Summer of 2025 might have been the WORST in my life thus far ngl. I don't wanna get into the details of this one but tldr; that summer there was conflict back home between India and Pakistan, and some shit happened that led to me basically losing _all_ of my assets, I mean *flat* broke.
