@@ -12,7 +12,7 @@ import (
 // edits without reformatting fields we don't touch.
 type Frontmatter struct {
 	Lines []string // raw "key: value" lines, in original order
-	Body  string    // everything after the closing ---
+	Body  string   // everything after the closing ---
 }
 
 var fmBlockRe = regexp.MustCompile(`(?s)\A---\n(.*?)\n---\n?(.*)\z`)

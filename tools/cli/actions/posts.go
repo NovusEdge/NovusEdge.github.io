@@ -19,6 +19,8 @@ type PostMeta struct {
 	Date   string
 	Tags   []string
 	Hidden bool
+
+	Description string
 }
 
 // BlogInput is the user-supplied data for creating a new blog post.
@@ -103,10 +105,13 @@ func ListPosts(p Paths) ([]PostMeta, error) {
 		if ok {
 			meta.Hidden = isDraft(fm)
 			if title, ok := fm.Get("title"); ok {
-				meta.Title = title
+				meta.Title = unquote(title)
 			}
 			if date, ok := fm.Get("date"); ok {
 				meta.Date = date
+			}
+			if desc, ok := fm.Get("description"); ok {
+				meta.Description = unquote(desc)
 			}
 			if tags, ok := fm.Get("tags"); ok {
 				meta.Tags = ParseTagsValue(tags)
@@ -120,6 +125,13 @@ func ListPosts(p Paths) ([]PostMeta, error) {
 	sort.Slice(posts, func(i, j int) bool { return posts[i].Date > posts[j].Date })
 	return posts, nil
 }
+
+// unquote strips one leading and one trailing quote, as the site does.
+func unquote(s string) string {
+	return quoteEdgeRe.ReplaceAllString(s, "")
+}
+
+var quoteEdgeRe = regexp.MustCompile(`^['"]|['"]$`)
 
 // PostFilePath returns the markdown file path for a slug.
 func PostFilePath(p Paths, slug string) string {
@@ -140,19 +152,69 @@ func GetTags(p Paths, slug string) ([]string, error) {
 	return ParseTagsValue(tags), nil
 }
 
-// EditTags rewrites the tags: line in a post's frontmatter.
+// PostLocales returns the sorted locale directories under TranslationsDir
+// that hold a translation of slug.
+func PostLocales(p Paths, slug string) ([]string, error) {
+	entries, err := os.ReadDir(p.TranslationsDir)
+	if os.IsNotExist(err) {
+		return nil, nil
+	}
+	if err != nil {
+		return nil, err
+	}
+	var locales []string
+	for _, e := range entries {
+		if !e.IsDir() {
+			continue
+		}
+		if _, err := os.Stat(filepath.Join(p.TranslationsDir, e.Name(), slug+".md")); err == nil {
+			locales = append(locales, e.Name())
+		}
+	}
+	sort.Strings(locales)
+	return locales, nil
+}
+
+// EditTags rewrites the tags: line in a post's frontmatter and in each of its
+// translations. Every file is parsed before any is written, so a translation
+// without frontmatter leaves the English post untouched.
 func EditTags(p Paths, slug string, tags []string) error {
-	path := PostFilePath(p, slug)
-	raw, err := os.ReadFile(path)
+	locales, err := PostLocales(p, slug)
 	if err != nil {
 		return err
 	}
-	fm, ok := ParseFrontmatter(string(raw))
-	if !ok {
-		return fmt.Errorf("%s has no frontmatter block", slug)
+	paths := []string{PostFilePath(p, slug)}
+	for _, l := range locales {
+		paths = append(paths, filepath.Join(p.TranslationsDir, l, slug+".md"))
 	}
-	fm.Set("tags", TagsValue(tags))
-	return os.WriteFile(path, []byte(fm.String()), 0o644)
+
+	updated := make([]string, len(paths))
+	for i, path := range paths {
+		raw, err := os.ReadFile(path)
+		if err != nil {
+			return err
+		}
+		fm, ok := ParseFrontmatter(string(raw))
+		if !ok {
+			return fmt.Errorf("%s has no frontmatter block", path)
+		}
+		fm.Set("tags", TagsValue(tags))
+		updated[i] = fm.String()
+	}
+	for i, path := range paths {
+		if err := os.WriteFile(path, []byte(updated[i]), 0o644); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+var nonSlugRun = regexp.MustCompile(`[^a-z0-9]+`)
+
+// Slugify derives a kebab-case slug from a title. Non-ASCII letters are
+// dropped rather than transliterated.
+func Slugify(title string) string {
+	return strings.Trim(nonSlugRun.ReplaceAllString(strings.ToLower(title), "-"), "-")
 }
 
 // src/lib/posts.ts compares the raw frontmatter string, so only the literal
@@ -160,21 +222,6 @@ func EditTags(p Paths, slug string, tags []string) error {
 func isDraft(fm Frontmatter) bool {
 	v, _ := fm.Get("draft")
 	return strings.TrimSpace(v) == "true"
-}
-
-// ReadHidden returns the slugs of every post marked draft: true.
-func ReadHidden(p Paths) ([]string, error) {
-	posts, err := ListPosts(p)
-	if err != nil {
-		return nil, err
-	}
-	var slugs []string
-	for _, post := range posts {
-		if post.Hidden {
-			slugs = append(slugs, post.Slug)
-		}
-	}
-	return slugs, nil
 }
 
 // SetHidden sets or clears draft: true in a post's frontmatter.

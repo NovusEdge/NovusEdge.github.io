@@ -1,13 +1,14 @@
-// Command site-cli is a small TUI for managing content on novusedge.github.io:
-// new blog posts, blips, research cards, thumbnails, tags, and draft/publish
-// state. Run it from the repo root (or anywhere inside the repo).
+// Command site-cli is a TUI for managing content on novusedge.github.io: a
+// filterable list of posts with a detail pane, plus forms for new posts,
+// blips and research cards, tags, thumbnails, draft state and translation
+// runs. Run it from anywhere inside the repo.
 package main
 
 import (
 	"fmt"
 	"os"
 
-	tea "github.com/charmbracelet/bubbletea"
+	tea "charm.land/bubbletea/v2"
 
 	"novusedge/site-cli/actions"
 	"novusedge/site-cli/tui"
@@ -21,7 +22,7 @@ func main() {
 	}
 	paths := actions.NewPaths(root)
 
-	p := tea.NewProgram(tui.NewApp(paths), tea.WithAltScreen())
+	p := tea.NewProgram(tui.NewApp(paths))
 	if _, err := p.Run(); err != nil {
 		fmt.Fprintln(os.Stderr, "error:", err)
 		os.Exit(1)

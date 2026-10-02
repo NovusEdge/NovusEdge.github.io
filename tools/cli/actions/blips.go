@@ -5,43 +5,56 @@ import (
 	"io"
 	"os"
 	"path/filepath"
-	"strconv"
+	"regexp"
 	"strings"
 	"time"
+	"unicode/utf8"
 )
 
 // BlipInput is the user-supplied data for a new blip entry.
 type BlipInput struct {
-	Date      string // YYYY-MM-DD, defaults to today if empty
-	Text      string // optional, max 255 chars
-	MediaPath string // optional, source path of a file to copy into assets/
-	Tags      []string
+	Date       string   // YYYY-MM-DD, defaults to today if empty
+	Text       string   // optional, max 255 chars
+	MediaPaths []string // optional, source paths of files to copy into assets/
+	Tags       []string
 }
 
 const maxBlipTextLen = 255
 
-// NewBlip copies the media file (if any) into src/content/blips/assets/ and
-// appends the entry to blips.yaml.
+// NewBlip copies the media files (if any) into src/content/blips/assets/ and
+// inserts the entry at the top of blips.yaml.
 func NewBlip(p Paths, in BlipInput) error {
-	if len(in.Text) > maxBlipTextLen {
-		return fmt.Errorf("text is too long (%d chars, max %d)", len(in.Text), maxBlipTextLen)
+	if n := utf8.RuneCountInString(in.Text); n > maxBlipTextLen {
+		return fmt.Errorf("text is too long (%d chars, max %d)", n, maxBlipTextLen)
 	}
 	date := strings.TrimSpace(in.Date)
 	if date == "" {
 		date = time.Now().Format("2006-01-02")
 	}
-
-	var mediaFilename string
-	if in.MediaPath != "" {
-		name, err := copyMediaAsset(p, in.MediaPath)
-		if err != nil {
-			return err
-		}
-		mediaFilename = name
+	if _, err := time.Parse("2006-01-02", date); err != nil {
+		return fmt.Errorf("date must be a real YYYY-MM-DD date, got %q", date)
 	}
 
-	entry := formatBlipEntry(date, in.Text, mediaFilename, in.Tags)
-	return appendBlipEntry(p, entry)
+	var media []string
+	cleanup := func() {
+		for _, done := range media {
+			os.Remove(filepath.Join(p.BlipsAssetsDir, done))
+		}
+	}
+	for _, src := range in.MediaPaths {
+		name, err := copyMediaAsset(p, src)
+		if err != nil {
+			cleanup()
+			return err
+		}
+		media = append(media, name)
+	}
+
+	if err := insertBlipEntry(p, formatBlipEntry(date, in.Text, media, in.Tags)); err != nil {
+		cleanup()
+		return err
+	}
+	return nil
 }
 
 func copyMediaAsset(p Paths, srcPath string) (string, error) {
@@ -55,7 +68,8 @@ func copyMediaAsset(p Paths, srcPath string) (string, error) {
 		return "", err
 	}
 
-	base := filepath.Base(srcPath)
+	// The site parser splits the media flow list on commas.
+	base := unsafeAssetChars.ReplaceAllString(filepath.Base(srcPath), "-")
 	dest := uniqueAssetName(p.BlipsAssetsDir, base)
 	out, err := os.OpenFile(filepath.Join(p.BlipsAssetsDir, dest), os.O_CREATE|os.O_EXCL|os.O_WRONLY, 0o644)
 	if err != nil {
@@ -83,16 +97,20 @@ func uniqueAssetName(dir, base string) string {
 	}
 }
 
-func formatBlipEntry(date, text, media string, tags []string) string {
+func formatBlipEntry(date, text string, media, tags []string) string {
 	var b strings.Builder
 	b.WriteString("- date: ")
 	b.WriteString(date)
 	b.WriteString("\n")
-	if text != "" {
+	if text = strings.Join(strings.Fields(text), " "); text != "" {
 		fmt.Fprintf(&b, "  text: %s\n", yamlQuote(text))
 	}
-	if media != "" {
-		fmt.Fprintf(&b, "  media: %s\n", media)
+	switch len(media) {
+	case 0:
+	case 1:
+		fmt.Fprintf(&b, "  media: %s\n", media[0])
+	default:
+		fmt.Fprintf(&b, "  media: [%s]\n", strings.Join(media, ", "))
 	}
 	if len(tags) > 0 {
 		b.WriteString("  tags: [" + strings.Join(tags, ", ") + "]\n")
@@ -100,23 +118,24 @@ func formatBlipEntry(date, text, media string, tags []string) string {
 	return b.String()
 }
 
+// yamlQuote wraps s in raw double quotes. src/lib/blips.ts strips one quote
+// at each end and never unescapes, and its line parser has no multiline
+// scalars, so whitespace runs (newlines included) fold to single spaces.
 func yamlQuote(s string) string {
-	return strconv.Quote(s)
+	return `"` + strings.Join(strings.Fields(s), " ") + `"`
 }
 
-// appendBlipEntry inserts entry into blips.yaml. The file may currently hold
-// the empty flow-style list "[]" (the checked-in placeholder) or a block of
-// "- ..." items; either way the new entry is added as a block-style list
-// item so existing comments/formatting are preserved.
-func appendBlipEntry(p Paths, entry string) error {
+var unsafeAssetChars = regexp.MustCompile(`[^A-Za-z0-9._-]+`)
+
+// insertBlipEntry puts entry before the first existing item, after the
+// leading comments and blank lines, so the file stays newest-first. The file
+// may be empty, comment-only, or hold the "[]" placeholder.
+func insertBlipEntry(p Paths, entry string) error {
 	raw, err := os.ReadFile(p.BlipsYAML)
 	if err != nil {
 		return err
 	}
 	content := string(raw)
-
-	// Find the first non-comment, non-blank line: that's where the YAML
-	// value starts.
 	lines := strings.Split(content, "\n")
 	valueStart := -1
 	for i, l := range lines {
@@ -128,24 +147,21 @@ func appendBlipEntry(p Paths, entry string) error {
 		break
 	}
 
-	if valueStart == -1 {
-		// File is only comments (or empty); append the value at the end.
-		if !strings.HasSuffix(content, "\n") && content != "" {
+	switch {
+	case valueStart == -1:
+		if content != "" && !strings.HasSuffix(content, "\n") {
 			content += "\n"
 		}
 		content += entry
-		return os.WriteFile(p.BlipsYAML, []byte(content), 0o644)
-	}
-
-	if strings.TrimSpace(lines[valueStart]) == "[]" {
+	case strings.TrimSpace(lines[valueStart]) == "[]":
 		lines[valueStart] = strings.TrimSuffix(entry, "\n")
-		return os.WriteFile(p.BlipsYAML, []byte(strings.Join(lines, "\n")), 0o644)
+		content = strings.Join(lines, "\n")
+	default:
+		head := strings.Join(lines[:valueStart], "\n")
+		if valueStart > 0 {
+			head += "\n"
+		}
+		content = head + entry + "\n" + strings.Join(lines[valueStart:], "\n")
 	}
-
-	// Block-style list already has entries; append at the end of the file.
-	if !strings.HasSuffix(content, "\n") {
-		content += "\n"
-	}
-	content += entry
 	return os.WriteFile(p.BlipsYAML, []byte(content), 0o644)
 }
