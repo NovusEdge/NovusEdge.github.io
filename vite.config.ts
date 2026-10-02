@@ -1,6 +1,7 @@
 import { createRequire } from 'node:module'
 import { readdirSync, readFileSync } from 'node:fs'
 import { defineConfig } from 'vite'
+import { configDefaults } from 'vitest/config'
 import react from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
 import { vitePrerenderPlugin } from 'vite-prerender-plugin'
@@ -20,6 +21,11 @@ const projectSlugs = readdirSync('src/routes/portfolio/content')
   .map((f) => f.replace(/\.tsx$/, ''))
 
 export default defineConfig({
+  test: {
+    // Agent worktrees live under .claude/worktrees/ with their own copies of src;
+    // without this a root run collects their tests too and fails on their imports.
+    exclude: [...configDefaults.exclude, '.claude/**'],
+  },
   resolve: {
     alias: {
       // its browser build touches document at import time and crashes prerendering;
