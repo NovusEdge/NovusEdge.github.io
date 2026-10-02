@@ -52,10 +52,6 @@
       "title": "Oon takas! (Osa 2)",
       "description": "Kakkososa, ja se vaikea sellainen. Kesä 2025 vei kaiken, olin vähällä olla selviämättä, ja olin vähällä lähteä sotimaan. Näin mä putosin aivan pohjalle ja raavin tieni takaisin ylös, ja nämä ovat ne ihmiset, jotka eivät antaneet mun jäädä maahan."
     },
-    "in-search-of-meaning-01": {
-      "title": "Merkitystä etsimässä #1",
-      "description": "Lyhyt pohdinta merkityksestä ja tarkoituksesta"
-    },
     "linux-journeys-customizing-the-bootsplash": {
       "title": "Linux Journeys – Bootsplashin kustomointi",
       "description": "Tensuran inspiroima kaninkolo Linux-tuunaukseen (ricing), joka päättyy plymouthin asentamiseen ja teemoittamiseen kustomoidun bootsplashin luomiseksi."
@@ -173,10 +169,6 @@
     "im-back-pt-2": {
       "title": "Ich bin zurück! (Teil 2)",
       "description": "Teil zwei, und der schwere Teil. Der Sommer 2025 hat mir alles genommen, ich hätte es fast nicht geschafft und wäre fast in den Krieg gezogen. So bin ich ganz nach unten gestürzt und habe mich wieder hochgekämpft – und das sind die Leute, die mich nicht am Boden liegen ließen."
-    },
-    "in-search-of-meaning-01": {
-      "title": "Auf der Suche nach Sinn #1",
-      "description": "Eine kurze Notiz zu Sinn und Zweck"
     },
     "linux-journeys-customizing-the-bootsplash": {
       "title": "Linux Journeys – Bootsplash anpassen",
@@ -296,10 +288,6 @@
       "title": "復活！（Part 2）",
       "description": "パート2、そして一番キツかった話。2025年の夏はすべてを奪っていった。死にかけたし、戦争に行きそうにすらなった。これは、俺がどん底まで落ちてどうやって這い上がってきたか、そして俺を見捨てずにいてくれた人たちの話。"
     },
-    "in-search-of-meaning-01": {
-      "title": "意味を求めて #1",
-      "description": "意味と目的についての短いメモ"
-    },
     "linux-journeys-customizing-the-bootsplash": {
       "title": "Linux Journeys - ブートスプラッシュのカスタマイズ",
       "description": "転スラに影響されてLinuxのricing（外観カスタマイズ）の沼にハマり、最終的にplymouthを導入・テーマ設定してカスタムブートスプラッシュを作ることになった話。"
@@ -365,6 +353,124 @@
       "description": "ハッキングやモノづくりの何が楽しかったのかを見失い、純粋な興味からではなく「取り残されるかもしれない」という不安から選んだキャリアパスに疑問を抱く、とりとめのない振り返り。"
     }
   },
+  "sv": {
+    "building-vs-creating": {
+      "title": "Bygga vs. skapa",
+      "description": "Går bara igenom en slumpmässig tanke jag hade nyligen"
+    },
+    "chat-control-eu": {
+      "title": "Låt oss prata om EU:s Chat Control Act",
+      "description": "Varför Chat Control stör mig, vad andra typer av övervakning har med saken att göra och integritetsverktygen jag vill att folk ska bygga."
+    },
+    "chocolate-factory-writeup": {
+      "title": "Chocolate Factory Writeup",
+      "description": "Enumerering av FTP- och webbtjänster med rustscan innan vi jobbar oss igenom initial access och behörighetseskalering i TryHackMes Chocolate Factory-rum."
+    },
+    "daily-bugle-writeup": {
+      "title": "Daily Bugle Writeup",
+      "description": "Fingerprinting och exploatering av en Joomla-installation med Metasploit för att få fotfäste och eskalera behörighet i TryHackMes Daily Bugle-rum."
+    },
+    "epistemic-collapse": {
+      "title": "Hur vet man vad som är sant?",
+      "description": "Tankar om syntetiska medier, jobbet med att faktagranska påståenden och varför ökad innehållsproduktion kan överväldiga dem som försöker verifiera det."
+    },
+    "fine-tuning-openjev-on-62695-ab-tests": {
+      "title": "Finjustering av OpenJev på 62 695 A/B-tester",
+      "description": "Tränar en rubrikrankare på Upworthys A/B-tester, fixar utvärderingen och kollar hur den står sig mot Gemini och överförs till Reddit."
+    },
+    "game-zone-writeup": {
+      "title": "Game Zone Writeup",
+      "description": "Skanna och exploatera ett sårbart webbforum i TryHackMes Game Zone-rum för att få ett shell och eskalera behörigheter."
+    },
+    "going-forward": {
+      "title": "Framöver",
+      "description": "Tackar den handfull tidiga läsarna och presenterar en oschemalagd när-det-är-klart-takt för inlägg framöver."
+    },
+    "googles-13-billion-in-finland": {
+      "title": "Googles 13 miljarder euro i Finland",
+      "description": "Ett rum fullt av investerare tillbringade en förmiddag med att klura på var de ska placera pengar inom energi. De diskuterade elproduktion och regleringar. Lagring dök upp ungefär två gånger, samtidigt som stamnätsoperatören har haft ett moratorium för nya anslutningar sedan förra året."
+    },
+    "hardware-journeys-starting-from-zero": {
+      "title": "Hårdvaruresor: Att börja från absoluta noll",
+      "description": "Startar en logg för att lära mig hårdvara, från lösa kablar och skadade komponenter till de integritetsprojekt jag vill bygga."
+    },
+    "hello-world": {
+      "title": "hej, världen!",
+      "description": "Ett hej-inlägg med en enda bild som kickar igång den här bloggen med en loopande animerad gif."
+    },
+    "im-back-pt-1": {
+      "title": "Jag är tillbaka!",
+      "description": "Två års tystnad förklarad. Del ett av hur 2025 gick: bygga ett community från 5 personer till 250+, lära mig om entreprenörskap, och en startup som lärde mig exakt vad man inte ska bli."
+    },
+    "im-back-pt-2": {
+      "title": "Jag är tillbaka! (Del 2)",
+      "description": "Del två, och den tunga. Sommaren 2025 tog allt, jag klarade mig nästan inte, och jag åkte nästan iväg för att strida i ett krig. Det här är historien om hur jag föll hela vägen till botten och klöste mig upp igen, och människorna som vägrade låta mig stanna där nere."
+    },
+    "linux-journeys-customizing-the-bootsplash": {
+      "title": "Linux-resor - Anpassa bootsplash",
+      "description": "Ett Tensura-inspirerat kaninhål in i Linux-ricing som slutar med att installera och tema plymouth för en anpassad bootsplash."
+    },
+    "linux-journeys-tiling-window-managers-and-linux-ricing": {
+      "title": "Linux Journeys - Tiling Window Managers och Linux-ricing",
+      "description": "En uppföljning om ricing-kaninhålet, med en genomgång av setupen med i3, Polybar, Rofi, compton, kitty och zsh bakom min allra första tiling window manager-rice."
+    },
+    "on-building-something-engrammic": {
+      "title": "Om att bygga något... Engrammic",
+      "description": "Upprepade inaktuella påståenden i en AI-pipeline fick mig att börja jobba på agentminne som sparar bevis, spårar revideringar och hanterar motstridiga observationer."
+    },
+    "one-in-fifty": {
+      "title": "En rant om skolan",
+      "description": "Några tankar om skolan, undervisning och om bra betyg faktiskt betyder att vi lär oss något."
+    },
+    "plan-a-ai": {
+      "title": "Låt oss prata om Plan A",
+      "description": "AI Futures Project vill att USA och Kina ska pausa superintelligens fram till 2040. Det är en bra plan. Sextio dagar efter att de publicerade den löste tiotusen agenter Navier-Stokes."
+    },
+    "post-labour-post-learning": {
+      "title": "Behöver folk ens jobba så här mycket längre?",
+      "description": "Industrikapaciteten växte ifrån behovet av att alla arbetar för flera decennier sedan, och ingen uppdaterade institutionerna. Skolan fortsatte dela ut meriter för en kö som redan krympte. Nu är svaren gratis också, och ungarna kan inte läsa."
+    },
+    "red-writeup": {
+      "title": "Red Writeup",
+      "description": "Utnyttjar en exponerad tjänst för att få fotfäste och använder CVE-2021-4034 pkexec-buggen för att roota TryHackMes Red-rum."
+    },
+    "rsi-emergence-and-the-pope": {
+      "title": "Om RSI, emergens och påven",
+      "description": "Att läsa påvens AI-encyklika vid sidan av ny forskning om självförbättring, modellbeteende och medvetande."
+    },
+    "shader-journeys-part-1": {
+      "title": "Shaderresor: Del 1",
+      "description": "Startar en ny serie om att lära sig shaders från grunden. Fragment, vertices och en hel del förvirrat stirrande på matte."
+    },
+    "shader-journeys-part-2": {
+      "title": "Shaderresor: Del 2",
+      "description": "TODO"
+    },
+    "thm-blue-writeup": {
+      "title": "THM Blue Writeup",
+      "description": "Skannar en exponerad SMB-tjänst och använder MS17-010 EternalBlue-exploiten för att få fotfäste i TryHackMes Blue-rum."
+    },
+    "thm-writeup-alfred": {
+      "title": "Alfred Writeup",
+      "description": "Bruteforcea en Jenkins-inloggning med Burp Intruder och kedja sedan ihop ett PowerShell-reverse-shell med token impersonation privesc på TryHackMe-rummet Alfred."
+    },
+    "toolsrus-writeup": {
+      "title": "ToolsRus Writeup",
+      "description": "Ladda upp en skadlig WAR-fil till en sårbar Tomcat-manager för ett reverse shell i TryHackMes ToolsRus-rum, och sedan säkra persistens med en SSH-nyckel."
+    },
+    "university": {
+      "title": "Universitet!!",
+      "description": "Första intrycken av att flytta utomlands för att börja studera på LUT Universitys Lahti-campus i Finland."
+    },
+    "what-did-we-all-miss": {
+      "title": "Vad missade vi alla?",
+      "description": "De gjorde det grabbar, det är jover hörni ToT"
+    },
+    "what-do-i-want": {
+      "title": "Vad vill jag?",
+      "description": "En osammanhängande reflektion om att tappa bort varför det brukade vara kul att hacka och bygga saker, och att ifrågasätta en karriärväg vald av relevansångest snarare än genuint intresse."
+    }
+  },
   "zh": {
     "building-vs-creating": {
       "title": "Building vs. Creating（构建与创造）",
@@ -417,10 +523,6 @@
     "im-back-pt-2": {
       "title": "我回来了！（Part 2）",
       "description": "第二部分，也是最难熬的那段。2025 年的夏天夺走了一切，我差点没撑过去，甚至差点跑去参战。这就是我如何跌落谷底又拼命爬上来的过程，以及那些不愿看着我就此沉沦的人们。"
-    },
-    "in-search-of-meaning-01": {
-      "title": "寻找意义 #1",
-      "description": "关于意义与目标的小记"
     },
     "linux-journeys-customizing-the-bootsplash": {
       "title": "Linux 之旅 - 自定义 bootsplash 开机画面",

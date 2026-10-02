@@ -17,6 +17,15 @@ const translationPath = (slug, code) => `${TRANSLATIONS_DIR}/${code}/${slug}.md`
 const force = process.argv.includes('--force')
 const checkOnly = process.argv.includes('--check')
 const dryRun = process.argv.includes('--dry-run')
+// The lock is keyed by slug alone, so a locale added later is invisible to it. --locale=xx
+// translates just that locale for every post missing it (all posts with --force), leaving the
+// others and the lock alone: node --env-file=<path to .env> scripts/translate-blog.mjs --locale=sv
+const onlyLocale = process.argv.find((a) => a.startsWith('--locale='))?.slice('--locale='.length)
+if (onlyLocale && !LOCALES.some((l) => l.code === onlyLocale)) {
+  console.error(`unknown locale ${onlyLocale}`)
+  process.exit(1)
+}
+const TARGETS = onlyLocale ? LOCALES.filter((l) => l.code === onlyLocale) : LOCALES
 
 const key = process.env.GEMINI_API_KEY
 if (!key && !checkOnly && !dryRun) {
@@ -122,13 +131,14 @@ if (checkOnly) {
   process.exit(0)
 }
 
-const todoSlugs = dryRun ? staleSlugs.slice(0, 1) : staleSlugs
+const pendingSlugs = onlyLocale ? slugs.filter((s) => force || !existsSync(translationPath(s, onlyLocale))) : staleSlugs
+const todoSlugs = dryRun ? pendingSlugs.slice(0, 1) : pendingSlugs
 if (!todoSlugs.length) {
   console.log('nothing to translate')
   process.exit(0)
 }
 
-console.log(`translating ${todoSlugs.length * LOCALES.length} file(s)`)
+console.log(`translating ${todoSlugs.length * TARGETS.length} file(s)`)
 let failed = false
 for (const slug of todoSlugs) {
   const raw = readFileSync(`${BLOG_DIR}/${slug}.md`, 'utf8')
@@ -137,7 +147,7 @@ for (const slug of todoSlugs) {
   const proseIdx = chunks.map((c, i) => (c.isCode ? -1 : i)).filter((i) => i !== -1)
   const proseStrings = [data.title ?? '', data.description ?? '', ...proseIdx.map((i) => chunks[i].text)]
 
-  for (const locale of LOCALES) {
+  for (const locale of TARGETS) {
     const outPath = translationPath(slug, locale.code)
     let translated
     try {
@@ -177,7 +187,7 @@ for (const slug of todoSlugs) {
     }
   }
 
-  if (!dryRun) lock[slug] = sha(raw)
+  if (!dryRun && !onlyLocale) lock[slug] = sha(raw)
 }
 
 if (failed) {
@@ -186,8 +196,10 @@ if (failed) {
 }
 
 if (!dryRun) {
-  writeJson(LOCK_PATH, lock)
-  console.log(`lock updated for ${todoSlugs.length} post(s)`)
+  if (!onlyLocale) {
+    writeJson(LOCK_PATH, lock)
+    console.log(`lock updated for ${todoSlugs.length} post(s)`)
+  }
 
   // Build listings manifest from all locale files
   const listings = {}

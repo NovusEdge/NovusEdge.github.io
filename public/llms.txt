@@ -17,7 +17,7 @@ Updated: 2026-09-24. Consult the linked project pages and repositories for imple
 - [RSS](https://novusedge.github.io/feed.xml): Published posts.
 - [Sitemap](https://novusedge.github.io/sitemap.xml): Public page URLs, including localized routes.
 
-English is the default language. Localized routes use `/fi/` for Finnish, `/de/` for German, `/ja/` for Japanese, and `/zh/` for Simplified Chinese; for example, `/zh/blog/what-did-we-all-miss/`. Translation coverage varies by page. Recent English revisions may not yet appear in translations.
+English is the default language. Localized routes use `/fi/` for Finnish, `/de/` for German, `/ja/` for Japanese, `/sv/` for Swedish, and `/zh/` for Simplified Chinese; for example, `/zh/blog/what-did-we-all-miss/`. Translation coverage varies by page. Recent English revisions may not yet appear in translations.
 
 ## Selected projects
 

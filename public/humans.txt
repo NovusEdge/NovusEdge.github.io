@@ -44,7 +44,7 @@ https://github.com/NovusEdge/curt
 /* THIS SITE */
 Built with React, TypeScript, Vite, Tailwind CSS, and GSAP.
 Prerendered pages hosted on GitHub Pages.
-Languages: English, Finnish, German, Japanese, Simplified Chinese.
+Languages: English, Finnish, German, Japanese, Swedish, Simplified Chinese.
 Translation coverage varies by page; English copy is updated first.
 
 Portfolio: https://novusedge.github.io/portfolio/

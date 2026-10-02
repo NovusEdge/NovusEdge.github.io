@@ -4,9 +4,10 @@ import en from './locales/en.json'
 import fi from './locales/fi.json'
 import de from './locales/de.json'
 import ja from './locales/ja.json'
+import sv from './locales/sv.json'
 import zh from './locales/zh.json'
 
-export const catalogs: Record<string, Record<string, string>> = { en, fi, de, ja, zh }
+export const catalogs: Record<string, Record<string, string>> = { en, fi, de, ja, sv, zh }
 
 // i18next 26 renamed initImmediate to initAsync (default true); initAsync: false is the
 // current spelling of the same contract, plus inline resources makes init() finish before it

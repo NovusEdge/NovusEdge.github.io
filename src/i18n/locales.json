@@ -3,5 +3,6 @@
   { "code": "fi", "prefix": "/fi", "htmlLang": "fi", "label": "Suomi", "default": false },
   { "code": "de", "prefix": "/de", "htmlLang": "de", "label": "Deutsch", "default": false },
   { "code": "ja", "prefix": "/ja", "htmlLang": "ja", "label": "日本語", "default": false },
+  { "code": "sv", "prefix": "/sv", "htmlLang": "sv", "label": "Svenska", "default": false },
   { "code": "zh", "prefix": "/zh", "htmlLang": "zh-Hans", "label": "简体中文", "default": false }
 ]
