@@ -1,5 +1,50 @@
 import { describe, expect, it } from 'vitest'
-import { drawTangle, ellipseAt, makeStrokes, presence, sectionProgress, stagePhase, type TangleCtx } from './meaning-tangle'
+import { drawTangle, drawTendrils, ellipseAt, makeStrokes, makeTendrils, presence, pullToward, type TangleCtx } from './meaning-tangle'
+
+describe('tendrils', () => {
+  it('start at the rim and wander outward', () => {
+    const ts = makeTendrils(12, 4)
+    expect(makeTendrils(12, 4)).toEqual(ts)
+    for (const t of ts) {
+      expect(Math.hypot(...t[0])).toBeCloseTo(1, 1)
+      expect(Math.hypot(...t[t.length - 1])).toBeGreaterThan(1.5)
+    }
+  })
+  it('stay inside the head when calm and reach further toward the lean when agitated', () => {
+    const calls: number[] = []
+    const ctx: TangleCtx = {
+      save() {}, restore() {}, beginPath() {}, stroke() {},
+      moveTo: (x: number) => void calls.push(x),
+      quadraticCurveTo: (_cx: number, _cy: number, x: number) => void calls.push(x),
+      strokeStyle: '', globalAlpha: 1, lineWidth: 1, lineCap: 'butt', lineJoin: 'miter',
+    }
+    const e = { x: 0, y: 0, rx: 60, ry: 60 }
+    drawTendrils(ctx, makeTendrils(12, 4), e, 0.2, 0, '#000', 1, 1, { x: 1, y: 0 })
+    expect(calls).toHaveLength(0)
+    drawTendrils(ctx, makeTendrils(12, 4), e, 1, 0, '#000', 1, 1, { x: 1, y: 0 })
+    expect(Math.max(...calls)).toBeGreaterThan(-Math.min(...calls))
+  })
+})
+
+describe('pullToward', () => {
+  const head = { x: 100, y: 100, rx: 60, ry: 80 }
+  it('points at the target and grows with strength', () => {
+    const weak = pullToward(head, { x: 400, y: 100 }, 0.3)
+    const strong = pullToward(head, { x: 400, y: 100 }, 1)
+    expect(strong.dy).toBeCloseTo(0)
+    expect(strong.dx).toBeGreaterThan(weak.dx)
+    expect(weak.dx).toBeGreaterThan(0)
+    expect(pullToward(head, { x: 100, y: -50 }, 1).dy).toBeLessThan(0)
+  })
+  it('stays inside the head at full strength', () => {
+    const p = pullToward(head, { x: 1000, y: 1000 }, 1)
+    expect(Math.hypot(p.dx, p.dy)).toBeLessThan(head.rx / 2)
+  })
+  it('does not pull without strength or direction', () => {
+    expect(pullToward(head, { x: 400, y: 100 }, 0)).toEqual({ dx: 0, dy: 0 })
+    expect(pullToward(head, { x: 100, y: 100 }, 1)).toEqual({ dx: 0, dy: 0 })
+  })
+})
 
 describe('makeStrokes', () => {
   it('is deterministic for a seed', () => {
@@ -63,19 +108,7 @@ describe('drawTangle', () => {
   })
 })
 
-describe('scroll maths', () => {
-  it('maps a section scrolling past to 0..1', () => {
-    expect(sectionProgress(100, 4200, 1000)).toBe(0)
-    expect(sectionProgress(-1600, 4200, 1000)).toBe(0.5)
-    expect(sectionProgress(-9000, 4200, 1000)).toBe(1)
-  })
-  it('pulls in, shows every line, then spills out', () => {
-    expect(stagePhase(0, 8)).toEqual({ m: 0, shown: 0 })
-    expect(stagePhase(0.16, 8)).toEqual({ m: 1, shown: 0 })
-    expect(stagePhase(0.5, 8).shown).toBeGreaterThan(2)
-    expect(stagePhase(0.86, 8)).toEqual({ m: 1, shown: 8 })
-    expect(stagePhase(1, 8)).toEqual({ m: 0, shown: 8 })
-  })
+describe('stage maths', () => {
   it('fades the tangle in before the section and out after it', () => {
     expect(presence(1300, 5500, 1000)).toBe(0)
     expect(presence(0, 4200, 1000)).toBe(1)

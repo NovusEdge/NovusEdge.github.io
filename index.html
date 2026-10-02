@@ -3,67 +3,12 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>NovusEdge</title>
+    <title>Aliasgar Khimani | NovusEdge | Systems Architect</title>
 
     <!-- Open Graph -->
-    <meta property="og:site_name" content="NovusEdge" />
+    <meta property="og:site_name" content="Aliasgar Khimani" />
 
-    <!-- JSON-LD structured data -->
-    <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "Person",
-      "name": "Aliasgar Khimani",
-      "alternateName": "NovusEdge",
-      "url": "https://khimani.dev",
-      "jobTitle": "Systems Architect",
-      "description": "Building cognitive infrastructure for AI agents",
-      "knowsAbout": [
-        "AI Agents", "Epistemic Memory", "Agent Evals", "LLM-as-Judge",
-        "Benchmark Design", "Failure Mode Analysis", "Production Monitoring",
-        "TypeScript", "Python", "Rust", "Go", "C",
-        "MCP", "Docker", "Redis", "Memgraph", "Qdrant", "Neo4j",
-        "React", "WebGL", "QEMU", "KVM", "ESP32", "RF",
-        "Privacy Infrastructure", "Offensive Security", "Distributed Systems",
-        "Multi-Agent Systems", "Knowledge Graphs", "Provenance Tracking"
-      ],
-      "sameAs": [
-        "https://github.com/NovusEdge",
-        "https://github.com/engrammic-ai"
-      ],
-      "worksFor": {
-        "@type": "Organization",
-        "name": "Engrammic",
-        "url": "https://engrammic.ai"
-      },
-      "contributor": [
-        {
-          "@type": "SoftwareSourceCode",
-          "name": "DeepSpeed",
-          "codeRepository": "https://github.com/deepspeedai/DeepSpeed",
-          "creator": { "@type": "Organization", "name": "Microsoft" }
-        },
-        {
-          "@type": "SoftwareSourceCode",
-          "name": "Tapestry",
-          "codeRepository": "https://github.com/The-AI-Alliance/tapestry",
-          "creator": { "@type": "Organization", "name": "The AI Alliance" }
-        },
-        {
-          "@type": "SoftwareSourceCode",
-          "name": "LightGBM",
-          "codeRepository": "https://github.com/microsoft/LightGBM",
-          "creator": { "@type": "Organization", "name": "Microsoft" }
-        },
-        {
-          "@type": "SoftwareSourceCode",
-          "name": "ROSIN",
-          "url": "https://rosin-project.eu",
-          "creator": { "@type": "Organization", "name": "ROS-Industrial" }
-        }
-      ]
-    }
-    </script>
+    <!-- JSON-LD is generated per page at prerender: src/lib/structured-data.ts -->
 
     <link rel="icon" href="/favicon.ico" sizes="32x32" />
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
@@ -75,6 +20,8 @@
       (function () {
         var t = localStorage.theme || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light')
         document.documentElement.classList.toggle('dark', t === 'dark')
+        // Lets prerendered text that a script will animate start hidden instead of flashing.
+        document.documentElement.classList.add('js')
       })()
     </script>
     <link rel="preconnect" href="https://fonts.googleapis.com" />

@@ -78,25 +78,84 @@ export function drawTangle(ctx: TangleCtx, strokes: Pt[][], e: Ellipse, agit: nu
   ctx.restore()
 }
 
-export const lerp = (a: number, b: number, t: number) => a + (b - a) * t
+// Walks that leave the rim and wander outward, for the tangle spilling out of the head
+// as the argument peaks.
+export function makeTendrils(n: number, seed: number): Pt[][] {
+  const r = rng(seed)
+  const out: Pt[][] = []
+  for (let k = 0; k < n; k++) {
+    const ang = ((k + r() * 0.8) / n) * Math.PI * 2
+    let heading = ang
+    let x = Math.cos(ang)
+    let y = Math.sin(ang)
+    const p: Pt[] = [[x, y]]
+    for (let i = 0; i < 40; i++) {
+      // Wander, but keep turning back toward straight out so it never curls inward.
+      heading += (r() - 0.5) * 1.1 + (Math.atan2(y, x) - heading) * 0.15
+      x += Math.cos(heading) * 0.03
+      y += Math.sin(heading) * 0.03
+      p.push([x, y])
+    }
+    out.push(p)
+  }
+  return out
+}
+
+// Tendrils appear above agitation 0.35 and lengthen toward 1; those facing the lean
+// (the voice that spoke last) reach furthest.
+export function drawTendrils(ctx: TangleCtx, tendrils: Pt[][], e: Ellipse, agit: number, frame: number, color: string, alpha: number, lineWidth: number, lean: { x: number; y: number }) {
+  const grow = smooth(0.35, 1, agit)
+  if (!grow) return
+  const k = Math.min(1.5, Math.max(0.5, Math.min(e.rx, e.ry) / 62))
+  const amp = (0.6 + agit * 2.6) * k
+  const r = rng(frame * 613 + 7)
+  ctx.save()
+  ctx.strokeStyle = color
+  ctx.globalAlpha = alpha
+  ctx.lineWidth = lineWidth * k
+  ctx.lineCap = 'round'
+  ctx.lineJoin = 'round'
+  for (const t of tendrils) {
+    const [x0, y0] = t[0]
+    const facing = Math.max(0, x0 * lean.x + y0 * lean.y)
+    const len = Math.floor(t.length * grow * (0.45 + 0.55 * facing))
+    if (len < 2) continue
+    ctx.beginPath()
+    let px = 0
+    let py = 0
+    for (let i = 0; i < len; i++) {
+      const X = e.x + t[i][0] * e.rx + (r() - 0.5) * amp * (i / len + 0.3)
+      const Y = e.y + t[i][1] * e.ry + (r() - 0.5) * amp * (i / len + 0.3)
+      if (i === 0) ctx.moveTo(X, Y)
+      else ctx.quadraticCurveTo(px, py, (px + X) / 2, (py + Y) / 2)
+      px = X
+      py = Y
+    }
+    ctx.stroke()
+  }
+  ctx.restore()
+}
+
+export const lerp =(a: number, b: number, t: number) => a + (b - a) * t
 
 export function smooth(a: number, b: number, x: number) {
   const t = Math.max(0, Math.min(1, (x - a) / (b - a)))
   return t * t * (3 - 2 * t)
 }
 
-export function sectionProgress(top: number, height: number, vh: number) {
-  return Math.max(0, Math.min(1, -top / (height - vh)))
-}
-
-export function stagePhase(q: number, count: number) {
-  const m = smooth(0, 0.16, q) * (1 - smooth(0.88, 1, q))
-  const shown = Math.min(count, Math.floor(smooth(0.16, 0.86, q) * (count + 0.999)))
-  return { m, shown }
-}
-
 export function presence(top: number, bottom: number, vh: number) {
   return smooth(1.3 * vh, 0, top) * smooth(0, 0.9 * vh, bottom)
+}
+
+// The tangle leans toward whichever voice is speaking. 0.4 of the head's width keeps
+// the scribbles mostly inside the outline even at full strength.
+export function pullToward(head: Ellipse, target: { x: number; y: number }, strength: number) {
+  const dx = target.x - head.x
+  const dy = target.y - head.y
+  const d = Math.hypot(dx, dy)
+  if (!d || !strength) return { dx: 0, dy: 0 }
+  const k = (0.4 * head.rx * Math.min(1, strength)) / d
+  return { dx: dx * k, dy: dy * k }
 }
 
 export function ellipseAt(m: number, vw: number, vh: number, head: Ellipse): Ellipse {

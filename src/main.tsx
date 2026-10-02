@@ -25,6 +25,8 @@ export async function prerender(data: { url: string }) {
   const { headState } = await import('./lib/meta')
   const { getPost } = await import('./lib/posts')
   const { LOCALES, localeFromPath, stripLocale } = await import('./i18n/paths')
+  const { structuredData } = await import('./lib/structured-data')
+  const { getProject, projects } = await import('./content/projects')
   // Blog routes suspend while loading a post, so metadata is only final once
   // the complete tree has rendered. renderToString only emits the fallback.
   const { prelude } = await renderStatic(
@@ -59,25 +61,27 @@ export async function prerender(data: { url: string }) {
       elements.push({ type: 'link', props: { rel: 'alternate', hreflang: alternate.htmlLang, href: `${origin}${alternate.prefix}/blog/${post.slug}/` } })
     }
     elements.push({ type: 'link', props: { rel: 'alternate', hreflang: 'x-default', href: `${origin}/blog/${post.slug}/` } })
-    elements.push(
-      { type: 'meta', props: { property: 'article:published_time', content: new Date(post.date).toISOString() } },
-      {
-        type: 'script',
-        props: { type: 'application/ld+json' },
-        children: JSON.stringify({
-          '@context': 'https://schema.org',
-          '@type': 'BlogPosting',
-          headline: post.title,
-          description: post.description,
-          datePublished: new Date(post.date).toISOString(),
-          url: canonical,
-          mainEntityOfPage: { '@type': 'WebPage', '@id': canonical },
-          inLanguage: LOCALES.find((entry) => entry.code === post.contentLocale)?.htmlLang ?? post.contentLocale,
-          author: { '@type': 'Person', name: 'NovusEdge', url: `${origin}/about/` },
-          ...(headState.image ? { image: `${origin}${headState.image}` } : {}),
-        }).replace(/</g, '\\u003c'),
-      },
-    )
+    elements.push({ type: 'meta', props: { property: 'article:published_time', content: new Date(post.date).toISOString() } })
+  }
+  if (headState.pageTitle !== '404') {
+    const projectSlug = /^\/portfolio\/([^/]+)$/.exec(stripLocale(pathname))?.[1]
+    elements.push({
+      type: 'script',
+      props: { type: 'application/ld+json' },
+      children: structuredData({
+        canonical,
+        path: stripLocale(canonicalPath),
+        localePrefix: localeFromPath(canonicalPath).prefix,
+        title: headState.title,
+        pageTitle: headState.pageTitle,
+        description: headState.description,
+        image: headState.image,
+        inLanguage: LOCALES.find((entry) => entry.code === (post?.contentLocale ?? locale.code))?.htmlLang ?? locale.code,
+        post,
+        project: projectSlug ? getProject(projectSlug) : undefined,
+        projects,
+      }),
+    })
   }
   if (headState.image) {
     const imageUrl = `${origin}${headState.image}`

@@ -2,7 +2,8 @@ export const MEANING_PREFIX = 'in-search-of-meaning-'
 
 export const isMeaningSlug = (slug: string) => slug.startsWith(MEANING_PREFIX) && slug.length > MEANING_PREFIX.length
 
-export type DoodleKind = 'question' | 'spiral' | 'arrow' | 'star'
+export const DOODLE_KINDS = ['question', 'spiral', 'arrow', 'star', 'cycle', 'wall', 'carry', 'pull', 'hand', 'door', 'tree', 'spill', 'lamp', 'worm', 'magnifier', 'road'] as const
+export type DoodleKind = (typeof DOODLE_KINDS)[number]
 export type Doodle = { after: string; kind: DoodleKind; side: 'left' | 'right' }
 export type VoiceMeta = { agit: number; audio?: string }
 
@@ -19,6 +20,8 @@ export type MeaningPost = {
 export const MEANING_POSTS: Record<string, MeaningPost> = {
   'in-search-of-meaning-01': {
     hero: { text: 'cogito, ergo sum' },
+    // Climbs to the office line, then the last three settle instead of cutting out.
+    voices: [0.2, 0.25, 0.3, 0.45, 0.55, 0.6, 0.7, 0.8, 0.9, 1, 0.6, 0.35, 0.1].map((agit) => ({ agit })),
     photoCredit: 'https://www.instagram.com/p/C_niznfC7Yh/',
   },
 }

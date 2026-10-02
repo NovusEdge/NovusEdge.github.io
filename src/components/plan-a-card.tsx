@@ -15,17 +15,17 @@ const CLIP = '/assets/blog/plan-a-thumb.mp4'
  * the card's whole point is that this geometry survives the churn behind it
  * unchanged. Any hover style added to this element kills the idea.
  */
-function Perimeter() {
+function Perimeter({ color }: { color: string }) {
   return (
     <span aria-hidden className="pointer-events-none absolute inset-0">
-      <span className="absolute inset-[9px] border" style={{ borderColor: OXIDE }} />
+      <span className="absolute inset-[9px] border" style={{ borderColor: color }} />
       {[
         'left-[9px] top-[9px] border-l-2 border-t-2',
         'right-[9px] top-[9px] border-r-2 border-t-2',
         'left-[9px] bottom-[9px] border-b-2 border-l-2',
         'right-[9px] bottom-[9px] border-b-2 border-r-2',
       ].map((pos) => (
-        <span key={pos} className={`absolute h-3 w-3 ${pos}`} style={{ borderColor: OXIDE }} />
+        <span key={pos} className={`absolute h-3 w-3 ${pos}`} style={{ borderColor: color }} />
       ))}
     </span>
   )
@@ -34,12 +34,15 @@ function Perimeter() {
 type Props = {
   post: Post
   img: string
-  clip?: string
+  /** Hover clip; null for a post with none. */
+  clip?: string | null
+  /** A six-digit hex: tag colours append an alpha byte to it. */
+  accent?: string
   dayOf: (date: string) => string
   monthOf: (date: string) => string
 }
 
-export function PlanACard({ post, img, clip = CLIP, dayOf, monthOf }: Props) {
+export function PlanACard({ post, img, clip = CLIP, accent = OXIDE, dayOf, monthOf }: Props) {
   const [hovered, setHovered] = useState(false)
   const [animated, setAnimated] = useState(false)
   // The clip is 330KB for a hover flourish, so it only gets a src once the
@@ -75,7 +78,7 @@ export function PlanACard({ post, img, clip = CLIP, dayOf, monthOf }: Props) {
         <time dateTime={post.date} className="flex items-baseline gap-2.5 md:flex-col md:gap-1.5">
           <span
             className="font-display text-3xl font-black leading-none tracking-tight text-charcoal/90 transition-colors duration-300 dark:text-bone/90"
-            style={hovered ? { color: OXIDE } : undefined}
+            style={hovered ? { color: accent } : undefined}
           >
             {dayOf(post.date)}
           </span>
@@ -101,7 +104,7 @@ export function PlanACard({ post, img, clip = CLIP, dayOf, monthOf }: Props) {
                   : undefined
               }
             />
-            {armed && (
+            {armed && clip && (
               <video
                 ref={video}
                 src={clip}
@@ -113,7 +116,7 @@ export function PlanACard({ post, img, clip = CLIP, dayOf, monthOf }: Props) {
                 style={{ opacity: hovered ? 1 : 0 }}
               />
             )}
-            <Perimeter />
+            <Perimeter color={accent} />
           </div>
         </TLink>
       </div>
@@ -122,7 +125,7 @@ export function PlanACard({ post, img, clip = CLIP, dayOf, monthOf }: Props) {
         <TLink
           to={lp(`/blog/${post.slug}`)}
           className="font-display text-2xl font-bold leading-snug text-charcoal transition-colors duration-300 dark:text-bone md:text-3xl"
-          style={hovered ? { color: OXIDE } : undefined}
+          style={hovered ? { color: accent } : undefined}
         >
           {post.title}
         </TLink>
@@ -136,14 +139,14 @@ export function PlanACard({ post, img, clip = CLIP, dayOf, monthOf }: Props) {
             <span
               key={tag}
               className="font-mono text-[10px] font-medium uppercase tracking-wider text-charcoal/65 dark:text-bone/65 border border-charcoal/15 rounded px-1.5 py-0.5 dark:border-bone/15 transition-colors duration-300"
-              style={hovered ? { borderColor: `${OXIDE}55`, color: `${OXIDE}cc` } : undefined}
+              style={hovered ? { borderColor: `${accent}55`, color: `${accent}cc` } : undefined}
             >
               #{tag}
             </span>
           ))}
           <ArrowRight
             className="ml-auto h-4 w-4 shrink-0 -translate-x-1 opacity-0 transition-all duration-200 group-hover:translate-x-0 group-hover:opacity-100"
-            style={{ color: OXIDE }}
+            style={{ color: accent }}
           />
         </div>
       </div>

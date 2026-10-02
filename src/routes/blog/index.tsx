@@ -13,6 +13,7 @@ import { CRTCard } from '../../components/crt-card'
 import { AttritionCard } from '../../components/attrition-card'
 import { PlanACard } from '../../components/plan-a-card'
 import { OPENJEV_SLUG } from '../../lib/openjev-data'
+import { isMeaningSlug } from '../../lib/meaning-data'
 import { useReveal } from '../../lib/motion'
 import { revealBlogList } from '../../lib/reveals'
 import { SideFlourish } from '../../components/side-flourish'
@@ -132,6 +133,15 @@ export default function BlogIndex() {
                   return (
                     <div key={post.slug}>
                       <PlanACard post={post} img={img} clip="/assets/blog/openjev-thumb.mp4" dayOf={dayOf} monthOf={monthOf} />
+                      <InlineBlipCount count={blipCount} />
+                    </div>
+                  )
+                }
+                if (isMeaningSlug(post.slug) && img) {
+                  return (
+                    <div key={post.slug}>
+                      {/* The site gold, as a hex because the card appends alpha bytes to it. */}
+                      <PlanACard post={post} img={img} clip={null} accent="#d4a03c" dayOf={dayOf} monthOf={monthOf} />
                       <InlineBlipCount count={blipCount} />
                     </div>
                   )
