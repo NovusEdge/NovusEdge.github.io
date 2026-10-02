@@ -125,7 +125,7 @@ export function Voices({ lines, meta, locale }: { lines: VoiceLine[]; meta: Voic
     let agit = 0.15
     let raf = 0
     let last = ''
-    let lastShape = ''
+    let lastBase = ''
 
     const clear = () => {
       last = ''
@@ -165,11 +165,12 @@ export function Voices({ lines, meta, locale }: { lines: VoiceLine[]; meta: Voic
       const e = ellipseAt(m, vw, vh, head)
       const frame = Math.floor(now / (140 - agit * 85))
       // Most frames mid-section are identical; repaint only when an input of the image moved.
-      const shape = [Math.round(e.x * 2), Math.round(e.y * 2), Math.round(e.rx * 2), Math.round(e.ry * 2)].join()
-      // While the ellipse moves, half the points: the pull-in repaints the whole tangle every frame.
-      const stride = shape === lastShape ? 1 : 2
-      lastShape = shape
-      const key = [frame, shape, Math.round(agit * 50), Math.round(alpha * 100), canvas.width, canvas.height, ink, stride].join()
+      const base = [Math.round(e.x * 2), Math.round(e.y * 2), Math.round(e.rx * 2), Math.round(e.ry * 2), Math.round(agit * 50), Math.round(alpha * 100), canvas.width, canvas.height, ink].join()
+      // While anything but the boil frame moves (pull-in, approach fade), half the points:
+      // those phases repaint the whole tangle every frame. The settled frame repaints in full.
+      const stride = base === lastBase ? 1 : 2
+      lastBase = base
+      const key = `${frame},${base},${stride}`
       if (key !== last) {
         clear()
         last = key
