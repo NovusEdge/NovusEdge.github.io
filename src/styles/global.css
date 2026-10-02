@@ -2317,3 +2317,22 @@ html:has(.oj-dialog[open]) {
   .ms-voice-list li[data-side='left'] { justify-self: start; text-align: left; }
   .ms-voice-list li[data-side='right'] { justify-self: end; text-align: right; }
 }
+
+.ms-col {
+  position: relative;
+  z-index: 1;
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 0 20px;
+  font-family: var(--font-prose);
+  font-size: 19px;
+  line-height: 1.75;
+}
+.ms-prose h2 { position: relative; display: inline-block; font: 600 24px/1.3 var(--font-prose); margin: 2.4em 0 0.8em; }
+.ms-prose p { position: relative; margin: 0 0 1.3em; }
+/* Paper behind the prose so the tangle never crosses a line of text. */
+.ms-prose p, .ms-prose h2 { background: var(--ms-paper); box-shadow: 0 0 28px 22px var(--ms-paper); }
+.ms-prose a { text-decoration: underline; text-decoration-color: var(--ms-accent); text-underline-offset: 3px; }
+.ms-prose blockquote { border-left: 2px solid var(--ms-accent); padding-left: 1em; font-style: italic; }
+.ms-ring { position: relative; }
+.ms-divider { position: relative; height: 40px; margin: 3em 0; }
