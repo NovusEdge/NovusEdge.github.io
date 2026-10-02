@@ -18,7 +18,8 @@ const force = process.argv.includes('--force')
 const checkOnly = process.argv.includes('--check')
 const dryRun = process.argv.includes('--dry-run')
 // The lock is keyed by slug alone, so a locale added later is invisible to it. --locale=xx
-// translates just that locale for every post missing it, leaving the others and the lock alone.
+// translates just that locale for every post missing it (all posts with --force), leaving the
+// others and the lock alone: node --env-file=<path to .env> scripts/translate-blog.mjs --locale=sv
 const onlyLocale = process.argv.find((a) => a.startsWith('--locale='))?.slice('--locale='.length)
 if (onlyLocale && !LOCALES.some((l) => l.code === onlyLocale)) {
   console.error(`unknown locale ${onlyLocale}`)
@@ -130,7 +131,7 @@ if (checkOnly) {
   process.exit(0)
 }
 
-const pendingSlugs = onlyLocale ? slugs.filter((s) => !existsSync(translationPath(s, onlyLocale))) : staleSlugs
+const pendingSlugs = onlyLocale ? slugs.filter((s) => force || !existsSync(translationPath(s, onlyLocale))) : staleSlugs
 const todoSlugs = dryRun ? pendingSlugs.slice(0, 1) : pendingSlugs
 if (!todoSlugs.length) {
   console.log('nothing to translate')
@@ -195,8 +196,10 @@ if (failed) {
 }
 
 if (!dryRun) {
-  writeJson(LOCK_PATH, lock)
-  console.log(`lock updated for ${todoSlugs.length} post(s)`)
+  if (!onlyLocale) {
+    writeJson(LOCK_PATH, lock)
+    console.log(`lock updated for ${todoSlugs.length} post(s)`)
+  }
 
   // Build listings manifest from all locale files
   const listings = {}
