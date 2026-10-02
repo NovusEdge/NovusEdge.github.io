@@ -1,16 +1,13 @@
 import ReactMarkdown, { type Components } from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import { blogHeadings, headingId } from '../../lib/blog-headings'
-import { MEANING_POSTS, voiceMeta, type Doodle, type DoodleKind } from '../../lib/meaning-data'
+import { DOODLE_KINDS, MEANING_POSTS, voiceMeta, type Doodle, type DoodleKind } from '../../lib/meaning-data'
 import { nodeText, voicesFromNode } from '../../lib/meaning-voices'
 import { rehypeMargin } from '../../lib/meaning-margin'
 import { Drawn } from './drawn'
 import { Jostle, Reveal } from './inline'
 import { PenText } from './pen'
 import { Voices } from './voices'
-
-const DOODLE_KINDS = new Set<DoodleKind>(['question', 'spiral', 'arrow', 'star', 'cycle'])
-
 // Blocks a doodle cannot sit in: headings, quotes, lists, tables, fences, rules.
 const NOT_PARAGRAPH = /^(#|>|[-*+] |\d+\. |\||```|---)/
 
@@ -76,7 +73,7 @@ export function MeaningMarkdown({ slug, locale, children }: { slug: string; loca
       const doodle = href?.match(/^#doodle-(\w+)-(left|right)$/)
       if (doodle) {
         const kind = doodle[1] as DoodleKind
-        return DOODLE_KINDS.has(kind) ? <Drawn kind={kind} seed={seed} className={`ms-doodle ms-doodle-${doodle[2]}`} /> : <>{kids}</>
+        return DOODLE_KINDS.includes(kind) ? <Drawn kind={kind} seed={seed} className={`ms-doodle ms-doodle-${doodle[2]}`} /> : <>{kids}</>
       }
       const external = !!href && /^https?:\/\//.test(href)
       return (

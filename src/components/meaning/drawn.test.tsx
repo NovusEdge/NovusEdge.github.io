@@ -2,8 +2,9 @@ import { describe, expect, it } from 'vitest'
 import { renderToStaticMarkup } from 'react-dom/server'
 import { Drawn, drawnVariants, jitterPath, type DrawnKind } from './drawn'
 import { rng } from '../../lib/meaning-tangle'
+import { DOODLE_KINDS } from '../../lib/meaning-data'
 
-const KINDS: DrawnKind[] = ['underline', 'ring', 'squiggle', 'strike', 'quote', 'question', 'spiral', 'arrow', 'star', 'cycle']
+const KINDS: DrawnKind[] = ['underline', 'ring', 'squiggle', 'strike', 'quote', ...DOODLE_KINDS]
 
 describe('drawnVariants', () => {
   it.each(KINDS)('gives three distinct, repeatable paths for %s', (kind) => {

@@ -2,7 +2,8 @@ export const MEANING_PREFIX = 'in-search-of-meaning-'
 
 export const isMeaningSlug = (slug: string) => slug.startsWith(MEANING_PREFIX) && slug.length > MEANING_PREFIX.length
 
-export type DoodleKind = 'question' | 'spiral' | 'arrow' | 'star' | 'cycle'
+export const DOODLE_KINDS = ['question', 'spiral', 'arrow', 'star', 'cycle', 'wall', 'carry', 'pull', 'hand', 'door', 'tree', 'spill', 'lamp', 'worm', 'magnifier', 'road'] as const
+export type DoodleKind = (typeof DOODLE_KINDS)[number]
 export type Doodle = { after: string; kind: DoodleKind; side: 'left' | 'right' }
 export type VoiceMeta = { agit: number; audio?: string }
 
