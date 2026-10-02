@@ -18,6 +18,8 @@ export const FIGURE_PATH =
 
 // How long the last line holds in the head before the tangle spills back out.
 const SETTLE_MS = 2500
+// Fraction of the viewport height the stage's top must rise past before the page snaps to it.
+const SNAP_AT = 0.45
 
 const inkColor = () => getComputedStyle(document.querySelector('.ms') ?? document.documentElement).getPropertyValue('--ms-ink').trim() || '#1a1a1a'
 
@@ -80,9 +82,10 @@ export function Voices({ lines, meta, locale }: { lines: VoiceLine[]; meta: Voic
     el.play().catch(() => {})
   }
 
-  // The page holds still while the voices play: first time the stage is reached scrolling
-  // down, scroll is blocked until the last line has settled, then the page moves on to the
-  // next paragraph. A scroll or swipe gesture advances a line instead; Esc or skip lets go.
+  // The page holds still while the voices play: the first time the stage's top passes
+  // SNAP_AT scrolling down, the page glides to it and scroll is blocked until the last line
+  // has settled, then it moves on to the next paragraph. Only a tap (or the focused next
+  // button) advances a line; Esc or skip lets go.
   const [held, setHeld] = useState(false)
   const hold = useRef({ on: false, passed: false, off: () => {} })
   const nextRef = useRef<HTMLButtonElement>(null)
@@ -104,54 +107,32 @@ export function Voices({ lines, meta, locale }: { lines: VoiceLine[]; meta: Voic
     if (next) playLine(next - 1)
     if (next === lines.length && hold.current.on) window.setTimeout(() => release(true), SETTLE_MS)
   }
-  const advanceRef = useRef(advance)
   const releaseRef = useRef(release)
   useEffect(() => {
-    advanceRef.current = advance
     releaseRef.current = release
   })
 
   const startHold = (section: HTMLElement) => {
     if (hold.current.on || hold.current.passed) return
-    window.scrollTo({ top: scrollY + section.getBoundingClientRect().top, behavior: 'instant' })
-    let cool = 0
-    const step = () => {
-      const now = performance.now()
-      if (now < cool || shownRef.current === lines.length) return
-      cool = now + 650
-      advanceRef.current()
-    }
-    const wheel = (e: WheelEvent) => {
-      e.preventDefault()
-      if (e.deltaY > 4) step()
-    }
-    let touchY = 0
-    const touchStart = (e: TouchEvent) => (touchY = e.touches[0].clientY)
-    const touchMove = (e: TouchEvent) => e.preventDefault()
-    const touchEnd = (e: TouchEvent) => {
-      if (touchY - e.changedTouches[0].clientY > 40) step()
-    }
+    const block = (e: Event) => e.preventDefault()
     const key = (e: KeyboardEvent) => {
       if (e.key === 'Escape') return releaseRef.current(false)
       // A focused button handles its own Space and Enter; cancelling the keydown would stop its click.
       if ((e.key === ' ' || e.key === 'Enter') && document.activeElement instanceof HTMLButtonElement) return
       if ([' ', 'ArrowDown', 'PageDown', 'ArrowUp', 'PageUp', 'Home', 'End'].includes(e.key)) e.preventDefault()
-      if ([' ', 'ArrowDown', 'PageDown'].includes(e.key)) step()
     }
     const opts = { passive: false } as const
-    addEventListener('wheel', wheel, opts)
-    addEventListener('touchstart', touchStart, opts)
-    addEventListener('touchmove', touchMove, opts)
-    addEventListener('touchend', touchEnd)
+    addEventListener('wheel', block, opts)
+    addEventListener('touchmove', block, opts)
     addEventListener('keydown', key)
+    // Blocking first means leftover wheel momentum cannot fight the glide.
+    window.scrollTo({ top: scrollY + section.getBoundingClientRect().top, behavior: 'smooth' })
     hold.current = {
       on: true,
       passed: false,
       off: () => {
-        removeEventListener('wheel', wheel)
-        removeEventListener('touchstart', touchStart)
-        removeEventListener('touchmove', touchMove)
-        removeEventListener('touchend', touchEnd)
+        removeEventListener('wheel', block)
+        removeEventListener('touchmove', block)
         removeEventListener('keydown', key)
       },
     }
@@ -262,13 +243,16 @@ export function Voices({ lines, meta, locale }: { lines: VoiceLine[]; meta: Voic
         canvas.height = Math.round(vh * dpr)
       }
       const r = section.getBoundingClientRect()
-      // Crossing the top edge downward; arriving from below (a back-scroll or a link) never holds.
-      if (prevTop > 0 && r.top <= 0 && r.bottom > 0) startHoldRef.current(section)
+      // Crossing the snap line downward; arriving from below (a back-scroll or a link) never holds.
+      const snapAt = vh * SNAP_AT
+      if (prevTop > snapAt && r.top <= snapAt && r.bottom > 0) startHoldRef.current(section)
       prevTop = r.top
       const shownNow = shownRef.current
       const onScreen = (Math.min(r.bottom, vh) - Math.max(r.top, 0)) / vh
       const settled = doneAt.current !== null && now - doneAt.current > SETTLE_MS
-      m = ease(m, onScreen > 0.6 && !settled ? 1 : 0, 0.002)
+      // The gather is a switch, eased over time, not tied to scroll position: it happens once
+      // the stage owns the screen (the snap, or a reader who scrolls back fully onto it).
+      m = ease(m, (hold.current.on || onScreen > 0.95) && !settled ? 1 : 0, 0.002)
 
       const pres = presence(r.top, r.bottom, vh)
       const target = m > 0.5 ? (shownNow ? meta[shownNow - 1].agit : 0.15) : r.top > 0 ? lerp(0.2, 0.7, pres) : 0.12
