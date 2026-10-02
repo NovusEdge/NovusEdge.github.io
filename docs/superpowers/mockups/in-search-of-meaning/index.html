@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lamp mockup</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+<style>
+  :root { --bg: #060608; --ink: #ece4d4; --lamp: 255, 214, 160; }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; background: var(--bg); color: var(--ink); }
+  body { font: 21px/1.7 'EB Garamond', Georgia, serif; cursor: none; }
+  main { max-width: 640px; margin: 0 auto; padding: 30vh 20px 60vh; position: relative; z-index: 1; }
+  h1 { font-weight: 500; font-size: 15px; letter-spacing: .25em; text-transform: uppercase; margin: 0 0 22vh; }
+  .cogito { font-size: 44px; font-style: italic; text-align: center; margin: 0 0 30vh; line-height: 1.2; }
+  .cogito .w { opacity: 1 !important; text-shadow: 0 0 24px rgba(var(--lamp), .35); }
+  p { margin: 0 0 1.4em; }
+  .w { opacity: .04; transition: opacity .25s linear; }
+  #halo {
+    position: fixed; left: 0; top: 0; width: 520px; height: 520px; margin: -260px 0 0 -260px;
+    pointer-events: none; z-index: 0; border-radius: 50%;
+    background: radial-gradient(circle, rgba(var(--lamp), .10) 0%, rgba(var(--lamp), .04) 35%, transparent 70%);
+  }
+  #halo.band { width: 100vw; height: 260px; margin: -130px 0 0 0; left: 0 !important; border-radius: 0;
+    background: linear-gradient(transparent, rgba(var(--lamp), .06) 50%, transparent); }
+  nav {
+    position: fixed; top: 14px; right: 14px; z-index: 5; display: flex; flex-wrap: wrap; gap: 6px;
+    font: 13px/1 system-ui, sans-serif; cursor: auto;
+  }
+  nav button {
+    background: #15151a; color: #aaa; border: 1px solid #2a2a30; padding: 8px 10px; border-radius: 4px; cursor: pointer;
+  }
+  nav button[aria-pressed="true"] { color: #fff; border-color: rgb(var(--lamp)); }
+  nav .sep { width: 10px; }
+  @media (max-width: 600px) { body { font-size: 18px; } .cogito { font-size: 32px; } }
+</style>
+</head>
+<body>
+<div id="halo"></div>
+<nav>
+  <button data-mode="dark" aria-pressed="false">Goes dark</button>
+  <button data-mode="dim" aria-pressed="true">Stays dim</button>
+  <button data-mode="fill" aria-pressed="false">Fills in</button>
+  <span class="sep"></span>
+  <button id="band" aria-pressed="false">Scroll lamp (mobile)</button>
+  <button id="reset">Reset</button>
+</nav>
+<main>
+  <h1 class="lit">In Search of Meaning #1</h1>
+  <div class="cogito">cogito, ergo sum</div>
+  <div id="text">
+    <p>Placeholder text, from Descartes' Meditations (1641). Some years ago I was struck by the large number of falsehoods that I had accepted as true in my childhood, and by the highly doubtful nature of the whole edifice that I had subsequently based on them.</p>
+    <p>I realized that it was necessary, once in the course of my life, to demolish everything completely and start again right from the foundations if I wanted to establish anything at all in the sciences that was stable and likely to last.</p>
+    <p>But the task looked an enormous one, and I began to wait until I should reach a mature enough age to ensure that no subsequent time of life would be more suitable for tackling such inquiries.</p>
+    <p>Whatever I have up till now accepted as most true I have acquired either from the senses or through the senses. But from time to time I have found that the senses deceive, and it is prudent never to trust completely those who have deceived us even once.</p>
+    <p>Yet although the senses occasionally deceive us with respect to objects which are very small or in the distance, there are many other beliefs about which doubt is quite impossible, even though they are derived from the senses: for example, that I am here, sitting by the fire, wearing a winter dressing-gown, holding this piece of paper in my hands, and so on.</p>
+    <p>So after considering everything very thoroughly, I must finally conclude that this proposition, I am, I exist, is necessarily true whenever it is put forward by me or conceived in my mind.</p>
+    <p>But I do not yet have a sufficient understanding of what this I is, that now necessarily exists. So I must be on my guard against carelessly taking something else to be this I, and so making a mistake in the very item of knowledge that I maintain is the most certain and evident of all.</p>
+  </div>
+</main>
+<script>
+  const R = 170, DIM = 0.3, FLOOR = 0.04;
+  let mode = 'dim', band = false;
+  const text = document.getElementById('text');
+  for (const p of text.querySelectorAll('p')) {
+    p.innerHTML = p.textContent.split(/(\s+)/).map(t => /\S/.test(t) ? `<span class="w">${t}</span>` : t).join('');
+  }
+  for (const el of document.querySelectorAll('.cogito, h1.lit')) {
+    el.innerHTML = el.textContent.split(/(\s+)/).map(t => /\S/.test(t) ? `<span class="w">${t}</span>` : t).join('');
+  }
+  const words = [...text.querySelectorAll('.w')].map(el => ({ el, x: 0, y: 0, mem: 0, shown: -1 }));
+  document.querySelectorAll('h1.lit .w').forEach(el => el.style.opacity = .5);
+
+  function measure() {
+    for (const w of words) {
+      const r = w.el.getBoundingClientRect();
+      w.x = r.left + r.width / 2 + scrollX;
+      w.y = r.top + r.height / 2 + scrollY;
+    }
+  }
+  measure();
+  addEventListener('resize', measure);
+  document.fonts.ready.then(measure);
+
+  let mx = -9999, my = -9999;
+  const coarse = matchMedia('(pointer: coarse)').matches;
+  if (coarse) setBand(true);
+  addEventListener('pointermove', e => { mx = e.clientX; my = e.clientY; });
+
+  const halo = document.getElementById('halo');
+  function frame() {
+    const lx = mx + scrollX, ly = (band ? innerHeight * 0.45 : my) + scrollY;
+    halo.style.transform = band ? `translateY(${innerHeight * 0.45}px)` : `translate(${mx}px, ${my}px)`;
+    for (const w of words) {
+      const d = band ? Math.abs(w.y - ly) * 1.2 : Math.hypot(w.x - lx, w.y - ly);
+      let l = Math.max(0, 1 - d / R);
+      l = l * l * (3 - 2 * l);
+      if (mode === 'dim') w.mem = Math.max(w.mem, Math.min(l, DIM));
+      if (mode === 'fill' && l > 0.55) w.mem = 1;
+      const b = mode === 'dark' ? l : Math.max(l, w.mem);
+      const o = Math.round((FLOOR + b * (1 - FLOOR)) * 50) / 50;
+      if (o !== w.shown) { w.el.style.opacity = o; w.shown = o; }
+    }
+    requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+
+  function setBand(v) {
+    band = v; halo.classList.toggle('band', v);
+    document.getElementById('band').setAttribute('aria-pressed', v);
+    document.body.style.cursor = v ? 'auto' : 'none';
+  }
+  document.querySelectorAll('[data-mode]').forEach(b => b.onclick = () => {
+    mode = b.dataset.mode;
+    document.querySelectorAll('[data-mode]').forEach(x => x.setAttribute('aria-pressed', x === b));
+    words.forEach(w => w.mem = 0);
+  });
+  document.getElementById('band').onclick = () => setBand(!band);
+  document.getElementById('reset').onclick = () => words.forEach(w => w.mem = 0);
+</script>
+</body>
+</html>

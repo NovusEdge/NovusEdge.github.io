@@ -22,6 +22,8 @@ import { PlanAPage } from './plan-a-page'
 import { GridPage } from './grid-page'
 import { PortalPage } from './portal-page'
 import { OpenJevPage } from './openjev-page'
+import { MeaningPage } from './meaning-page'
+import { isMeaningSlug } from '../../lib/meaning-data'
 import { OPENJEV_SLUG } from '../../lib/openjev-data'
 import { useLocalePath } from '../../i18n/use-locale-path'
 import { useLocale } from '../../i18n/context'
@@ -92,6 +94,10 @@ export default function BlogPost() {
   // The trends piece argues nobody is in a state to read the signal, so it is
   // served as an onboarding portal that tracks whether you got to the end.
   if (post.slug === 'what-did-we-all-miss') return <PortalPage post={post} image={image} />
+
+  // The meaning series is a sketchbook still being drawn, with a set piece of
+  // two voices arguing around a head full of scribbles.
+  if (isMeaningSlug(post.slug)) return <MeaningPage post={post} image={image} />
 
   return (
     <>
