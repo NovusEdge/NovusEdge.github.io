@@ -20,7 +20,7 @@ import (
 )
 
 const (
-	logLines = 6
+	logLines = 40
 	maxLine  = 64 << 10
 	// killGrace is how long a stopped script gets to exit on SIGTERM.
 	killGrace = 3 * time.Second
@@ -49,7 +49,8 @@ func startTranslate(p actions.Paths) (*translateRun, error) {
 	cmd := actions.TranslateCmd(p)
 	// npm runs the script in a child; a separate process group lets kill reach
 	// node as well, which is the process that spends API credit.
-	cmd.SysProcAttr = &syscall.SysProcAttr{Setpgid: true}
+	// Pdeathsig covers the TUI being killed: nothing else would stop the run.
+	cmd.SysProcAttr = &syscall.SysProcAttr{Setpgid: true, Pdeathsig: syscall.SIGTERM}
 	stdout, err := cmd.StdoutPipe()
 	if err != nil {
 		return nil, err
@@ -122,7 +123,7 @@ type translateOverlay struct {
 	exitErr  error
 	stopping bool
 	stop     *formOverlay
-	w        int
+	w, h     int
 }
 
 func (a *App) translate() tea.Cmd {
@@ -162,10 +163,7 @@ func startTranslation(paths actions.Paths, st styles, bg color.Color) tea.Cmd {
 		bar:   progress.New(progress.WithWidth(40)),
 		label: "starting...",
 		finish: func(status string, err error) tea.Cmd {
-			return tea.Batch(
-				func() tea.Msg { return writeDoneMsg{status: status, err: err} },
-				checkTranslations(paths),
-			)
+			return func() tea.Msg { return writeDoneMsg{status: status, err: err} }
 		},
 	}
 	return func() tea.Msg { return overlayDoneMsg{next: o} }
@@ -174,7 +172,7 @@ func startTranslation(paths actions.Paths, st styles, bg color.Color) tea.Cmd {
 func (o *translateOverlay) Init() tea.Cmd { return o.run.next() }
 
 func (o *translateOverlay) SetSize(w, h int) {
-	o.w = w
+	o.w, o.h = w, h
 	o.bar.SetWidth(max(w, 20))
 	if o.stop != nil {
 		o.stop.SetSize(w, h)
@@ -237,9 +235,9 @@ func (o *translateOverlay) Update(msg tea.Msg) (overlay, tea.Cmd) {
 
 func (o *translateOverlay) askStop() tea.Cmd {
 	var yes bool
-	f := newFormOverlay(huh.NewForm(huh.NewGroup(
+	f := newFormOverlay(o.bg, nil, huh.NewGroup(
 		huh.NewConfirm().Title("Stop translation?").Affirmative("Stop").Negative("Keep going").Value(&yes),
-	)), o.bg, nil)
+	))
 	f.form.SubmitCmd = func() tea.Msg { return stopAnswerMsg{yes} }
 	f.cancel = func() tea.Msg { return stopAnswerMsg{false} }
 	f.SetSize(o.w, 6)
@@ -260,7 +258,9 @@ func (o *translateOverlay) line(ev actions.TranslateEvent) {
 	case actions.TranslateNothing:
 		o.nothing = true
 	}
-	if strings.TrimSpace(ev.Line) == "" {
+	// npm prints config deprecation warnings on every run; they bury the
+	// script's own output.
+	if strings.TrimSpace(ev.Line) == "" || strings.HasPrefix(ev.Line, "npm warn") {
 		return
 	}
 	o.log = append(o.log, ev.Line)
@@ -299,16 +299,24 @@ func (o *translateOverlay) View() string {
 	if o.total > 0 {
 		pct = float64(o.done) / float64(o.total)
 	}
-	lines := []string{o.st.title.Render("Translating"), "", o.bar.ViewAs(pct), o.label, ""}
-	clip := lipgloss.NewStyle().MaxWidth(max(o.w, 20))
-	for _, l := range o.log {
-		lines = append(lines, clip.Render(o.st.muted.Render(l)))
-	}
+	head := []string{o.st.title.Render("Translating"), "", o.bar.ViewAs(pct), o.label, ""}
+	var tail []string
 	if o.exited {
-		lines = append(lines, "", o.st.err.Render(o.failure().Error()))
+		tail = append(tail, "", o.st.err.Width(max(o.w, 20)).Render(o.failure().Error()))
 	}
 	if o.stop != nil {
-		lines = append(lines, "", o.stop.View())
+		tail = append(tail, "", o.stop.View())
 	}
-	return strings.Join(lines, "\n")
+	// Wrapped lines are kept newest-last, as many as the overlay height leaves
+	// room for.
+	wrap := o.st.muted.Width(max(o.w, 20))
+	var wrapped []string
+	for _, l := range o.log {
+		wrapped = append(wrapped, strings.Split(wrap.Render(l), "\n")...)
+	}
+	room := max(o.h-lipgloss.Height(strings.Join(head, "\n"))-lipgloss.Height(strings.Join(tail, "\n"))-1, 0)
+	if len(wrapped) > room {
+		wrapped = wrapped[len(wrapped)-room:]
+	}
+	return strings.Join(append(append(head, wrapped...), tail...), "\n")
 }

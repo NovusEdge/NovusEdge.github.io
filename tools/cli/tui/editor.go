@@ -35,13 +35,12 @@ func (a *App) openEditor() tea.Cmd {
 		opts[i] = huh.NewOption(fmt.Sprintf("%s (%s)", label, kind), i)
 	}
 	var idx int
-	form := huh.NewForm(huh.NewGroup(
-		huh.NewSelect[int]().Title("Open " + p.Slug + " in").Options(opts...).Value(&idx),
-	))
 	file := actions.PostFilePath(a.paths, p.Slug)
-	a.overlay = newFormOverlay(form, a.bg, func() tea.Cmd {
+	a.overlay = newFormOverlay(a.bg, func() tea.Cmd {
 		return launchEditor(editors[idx], file, p.Slug)
-	})
+	}, huh.NewGroup(
+		huh.NewSelect[int]().Title("Open "+p.Slug+" in").Options(opts...).Value(&idx),
+	))
 	return a.overlay.Init()
 }
 
