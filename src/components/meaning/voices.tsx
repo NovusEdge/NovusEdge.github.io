@@ -145,8 +145,9 @@ export function Voices({ lines, meta, locale }: { lines: VoiceLine[]; meta: Voic
     let last = ''
     let lastBase = ''
 
-    // The text column the stage breaks out of; the tangle is erased over it so it never crosses prose.
-    const prose = section.parentElement?.closest('.ms-prose') ?? null
+    // A paragraph is as wide as the reading column; the tangle is erased over that column so it
+    // never crosses prose, and stays free to wander through the margin notes.
+    const textBlock = section.parentElement?.closest('.ms-prose')?.querySelector(':scope > p, .ms-row > p') ?? null
 
     const clear = () => {
       last = ''
@@ -182,7 +183,7 @@ export function Voices({ lines, meta, locale }: { lines: VoiceLine[]; meta: Voic
       const head = { x: fr.left - cr.left + HEAD.x * s, y: fr.top - cr.top + HEAD.y * s, rx: HEAD.rx * s, ry: HEAD.ry * s }
       fig.style.setProperty('--ms-fig', String(smooth(0.5, 1, m)))
 
-      const col = prose?.getBoundingClientRect()
+      const col = textBlock?.getBoundingClientRect()
       const alpha = lerp((0.06 + agit * 0.12) * pres, 0.85, m)
       const e = ellipseAt(m, vw, vh, head)
       const frame = Math.floor(now / (140 - agit * 85))

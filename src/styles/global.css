@@ -2264,11 +2264,11 @@ html:has(.oj-dialog[open]) {
 .ms-doodle { top: 0; width: 70px; height: 70px; }
 .ms-doodle-left { left: -120px; }
 .ms-doodle-right { right: -120px; }
-@media (max-width: 1000px) {
+@media (max-width: 1200px) {
   .ms-doodle { display: none; }
 }
 
-/* Full-bleed out of the 640px column. Each line gets its own grid row so the
+/* Full-bleed out of the column. Each line gets its own grid row so the
    argument reads top to bottom, alternating sides, in DOM order. */
 .ms-voices { position: relative; z-index: 1; width: 100vw; margin-left: calc(50% - 50vw); }
 .ms-voices.ms-motion { height: 420vh; }
@@ -2288,8 +2288,9 @@ html:has(.oj-dialog[open]) {
 .ms-figure svg, .ms-figure canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
 .ms-figure path { fill: none; stroke: var(--ms-ink); stroke-width: 2.2; stroke-linecap: round; }
 .ms-motion .ms-figure svg { opacity: var(--ms-fig, 0); }
-.ms-voice-list { display: contents; list-style: none; }
-.ms-voice-list li {
+/* .ms-prose ol/li rules would otherwise number the lines and indent them. */
+.ms-prose .ms-voice-list { display: contents; list-style: none; padding: 0; margin: 0; }
+.ms-prose .ms-voice-list li {
   grid-row: var(--ms-row);
   margin: 0;
   max-width: 300px;
@@ -2319,15 +2320,39 @@ html:has(.oj-dialog[open]) {
   .ms-voice-list li[data-side='right'] { justify-self: end; text-align: right; }
 }
 
+/* Notebook layout: a reading column on the left, the rest of the sheet as margin for
+   notes and images. Padding stays symmetric so the full-bleed voices math holds. */
 .ms-col {
+  --ms-text: 680px;
+  --ms-gap: 5vw;
   position: relative;
   z-index: 1;
-  max-width: 640px;
+  max-width: 1680px;
   margin: 0 auto;
-  padding: 0 20px;
+  padding: 0 7vw;
   font-family: var(--font-prose);
   font-size: 19px;
   line-height: 1.75;
+}
+.ms-prose > :not(.ms-row):not(.ms-voices):not(.ms-lede) { max-width: var(--ms-text); }
+.ms-row { display: grid; grid-template-columns: minmax(0, var(--ms-text)) minmax(0, 1fr); column-gap: var(--ms-gap); align-items: start; }
+.ms-side { display: flex; flex-direction: column; gap: 1.4em; padding-top: 0.2em; }
+.ms-note {
+  max-width: 30ch;
+  font: 700 26px/1.2 'Caveat', 'Zen Kaku Gothic New', 'Noto Sans SC', cursive;
+  color: var(--ms-accent);
+  transform: rotate(-1.5deg);
+}
+.ms-side > .ms-note:nth-child(even) { color: var(--ms-ink); opacity: 0.8; transform: rotate(1.2deg); }
+.ms-fig { margin: 0; max-width: 560px; }
+.ms-prose .ms-fig img { width: 100%; margin: 0; border-radius: 3px; }
+.ms-fig-cap { margin-top: 0.4em; font: 700 20px/1.2 'Caveat', cursive; opacity: 0.7; }
+.ms-prose .ms-lede { margin: 0 0 1.4em; font: 700 clamp(30px, 3.2vw, 50px)/1.2 'Caveat', 'Zen Kaku Gothic New', 'Noto Sans SC', cursive; }
+@media (max-width: 900px) {
+  .ms-col { padding: 0 20px; }
+  .ms-row { display: block; }
+  .ms-side { margin: 0 0 1.3em; }
+  .ms-note { font-size: 22px; }
 }
 .ms-prose h2 { position: relative; display: inline-block; font: 600 24px/1.3 var(--font-prose); margin: 2.4em 0 0.8em; }
 .ms-prose h3 { position: relative; display: inline-block; font: 600 20px/1.3 var(--font-prose); margin: 1.8em 0 0.6em; }
@@ -2355,7 +2380,7 @@ html:has(.oj-dialog[open]) {
   position: relative;
   display: inline-block;
   margin: 6vh 0 10vh;
-  font: 700 clamp(56px, 11vw, 104px)/1 'Caveat', 'Zen Kaku Gothic New', 'Noto Sans SC', cursive;
+  font: 700 clamp(64px, 12vw, 210px)/1 'Caveat', 'Zen Kaku Gothic New', 'Noto Sans SC', cursive;
 }
 .ms-hero img { display: block; width: auto; height: 1em; }
 .dark .ms-hero img { filter: invert(1); }
