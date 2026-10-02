@@ -72,7 +72,7 @@
   "blog.meaning.play": "Play this line",
   "blog.meaning.soundOff": "sound off",
   "blog.meaning.soundOn": "sound on",
-  "blog.noMatch":"no posts match [ {{query}} ]",
+  "blog.noMatch": "no posts match [ {{query}} ]",
   "blog.docPlaceholder": "[ doc ]",
   "blog.backToBlog": "[ back to blog ]",
   "blips.expandedLabel": "Expanded blip",

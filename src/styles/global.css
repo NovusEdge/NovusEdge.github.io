@@ -2292,7 +2292,7 @@ html:has(.oj-dialog[open]) {
   grid-row: var(--ms-row);
   margin: 0;
   max-width: 300px;
-  font: 600 26px/1.15 'Caveat', 'Zen Kaku Gothic New', 'Noto Sans SC', cursive;
+  font: 700 26px/1.15 'Caveat', 'Zen Kaku Gothic New', 'Noto Sans SC', cursive;
   transition: opacity 0.35s;
 }
 .ms-motion .ms-voice-list li { opacity: 0; }
@@ -2303,7 +2303,7 @@ html:has(.oj-dialog[open]) {
   border: 1.5px solid currentColor;
   border-radius: 16px;
   color: var(--ms-ink);
-  font: 600 20px/1 'Caveat', cursive;
+  font: 700 20px/1 'Caveat', cursive;
   cursor: pointer;
 }
 .ms-sound { position: absolute; top: 4vh; left: 50%; transform: translateX(-50%); padding: 4px 12px 6px; opacity: 0.6; }

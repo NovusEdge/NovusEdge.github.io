@@ -49,10 +49,15 @@ export function Voices({ lines, meta, locale }: { lines: VoiceLine[]; meta: Voic
     pan.pan.value = lines[i].side === 'left' ? -0.7 : 0.7
     ac.createMediaElementSource(el).connect(pan).connect(ac.destination)
     playing.current.push(el)
-    void el.play()
+    el.play().catch(() => {})
   }
   const playRef = useRef(playLine)
-  playRef.current = playLine
+  useEffect(() => {
+    playRef.current = playLine
+  })
+  // Held across motion-effect re-runs so a changed lines/meta identity does not replay clips.
+  const played = useRef(new Set<number>())
+  const lastShown = useRef(-1)
 
   const toggleSound = () => {
     soundRef.current = !soundRef.current
@@ -62,12 +67,18 @@ export function Voices({ lines, meta, locale }: { lines: VoiceLine[]; meta: Voic
   }
 
   useEffect(() => {
-    if (!prefersReducedMotion()) setMode('motion')
-    return () => {
+    // Motion hides every line until scroll reveals it, so enter it only when the effect below can run.
+    if (!prefersReducedMotion() && layer?.current?.getContext('2d')) setMode('motion')
+  }, [layer])
+
+  useEffect(
+    () => () => {
       playing.current.forEach((a) => a.pause())
       void audioCtx.current?.close()
-    }
-  }, [])
+      audioCtx.current = null
+    },
+    [],
+  )
 
   // The figure boils with the page's drawings.
   useEffect(() => {
@@ -110,10 +121,8 @@ export function Voices({ lines, meta, locale }: { lines: VoiceLine[]; meta: Voic
     const items = [...list.children] as HTMLElement[]
     const strokes = makeStrokes(80, 110, 5)
     const dpr = Math.min(devicePixelRatio || 1, isMobile() ? 1.5 : 2)
-    const played = new Set<number>()
     let ink = inkColor()
     let agit = 0.15
-    let lastShown = -1
     let raf = 0
 
     const clear = () => {
@@ -130,13 +139,13 @@ export function Voices({ lines, meta, locale }: { lines: VoiceLine[]; meta: Voic
       }
       const r = section.getBoundingClientRect()
       const { m, shown } = stagePhase(sectionProgress(r.top, r.height, vh), lines.length)
-      if (shown !== lastShown) {
+      if (shown !== lastShown.current) {
         items.forEach((el, i) => (el.style.opacity = String(lineOpacity(i, shown))))
-        for (const i of linesToPlay(Math.max(0, lastShown), shown, played)) {
-          played.add(i)
+        for (const i of linesToPlay(Math.max(0, lastShown.current), shown, played.current)) {
+          played.current.add(i)
           playRef.current(i)
         }
-        lastShown = shown
+        lastShown.current = shown
       }
       const pres = presence(r.top, r.bottom, vh)
       const target = m > 0.5 ? (shown ? meta[shown - 1].agit : 0.15) : r.top > 0 ? lerp(0.2, 0.7, pres) : 0.12
