@@ -2398,8 +2398,7 @@ header.ms-col { max-width: 1400px; text-align: center; }
 .ms-prose p > .ms-doodle:not(:first-child) { top: auto; }
 .ms-prose blockquote.ms-quote { position: relative; border: 0; padding: 0 0 0 0.2em; margin: 2em 0; font: 700 clamp(28px, 2.6vw, 36px)/1.25 'Caveat', 'Zen Kaku Gothic New', 'Noto Sans SC', cursive; font-style: normal; }
 .ms-draw-quote { left: -58px; top: -6px; width: 50px; height: 40px; }
-/* Caveat's slant runs its last glyph into a following quote mark; the margin clears it. */
-.ms-hand { margin-inline: 0.05em 0.12em; font: 700 1.3em/1 'Caveat', 'Zen Kaku Gothic New', 'Noto Sans SC', cursive; color: var(--ms-accent); }
+.ms-hand { font: 700 1.3em/1 'Caveat', 'Zen Kaku Gothic New', 'Noto Sans SC', cursive; color: var(--ms-accent); }
 .ms-hand.ms-armed { opacity: 0; transition: opacity 0.9s ease-out 0.15s; }
 .ms-hand.ms-in { opacity: 1; }
 .ms-smudge.ms-armed { filter: blur(3px); opacity: 0.7; transition: filter 1.8s ease-out 0.6s, opacity 1.8s ease-out 0.6s; }
