@@ -124,8 +124,10 @@ export function Voices({ lines, meta, locale }: { lines: VoiceLine[]; meta: Voic
     let ink = inkColor()
     let agit = 0.15
     let raf = 0
+    let last = ''
 
     const clear = () => {
+      last = ''
       ctx.setTransform(1, 0, 0, 1, 0, 0)
       ctx.clearRect(0, 0, canvas.width, canvas.height)
     }
@@ -149,7 +151,8 @@ export function Voices({ lines, meta, locale }: { lines: VoiceLine[]; meta: Voic
       }
       const pres = presence(r.top, r.bottom, vh)
       const target = m > 0.5 ? (shown ? meta[shown - 1].agit : 0.15) : r.top > 0 ? lerp(0.2, 0.7, pres) : 0.12
-      agit += (target - agit) * 0.05
+      // Snap so the easing stops changing the redraw key.
+      agit = Math.abs(target - agit) < 0.005 ? target : agit + (target - agit) * 0.05
 
       const fr = fig.getBoundingClientRect()
       const s = fr.width / 280
@@ -157,10 +160,17 @@ export function Voices({ lines, meta, locale }: { lines: VoiceLine[]; meta: Voic
       const head = { x: fr.left - cr.left + HEAD.x * s, y: fr.top - cr.top + HEAD.y * s, rx: HEAD.rx * s, ry: HEAD.ry * s }
       fig.style.setProperty('--ms-fig', String(smooth(0.5, 1, m)))
 
-      clear()
-      ctx.setTransform(dpr, 0, 0, dpr, 0, 0)
       const alpha = lerp((0.06 + agit * 0.12) * pres, 0.85, m)
-      if (alpha > 0.005) drawTangle(ctx, strokes, ellipseAt(m, vw, vh, head), agit, Math.floor(now / (140 - agit * 85)), ink, alpha, lerp(1.4, 1.3, m))
+      const e = ellipseAt(m, vw, vh, head)
+      const frame = Math.floor(now / (140 - agit * 85))
+      // Most frames mid-section are identical; repaint only when an input of the image moved.
+      const key = [frame, Math.round(e.x * 2), Math.round(e.y * 2), Math.round(e.rx * 2), Math.round(e.ry * 2), Math.round(agit * 50), Math.round(alpha * 100), canvas.width, canvas.height, ink].join()
+      if (key !== last) {
+        clear()
+        last = key
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0)
+        if (alpha > 0.005) drawTangle(ctx, strokes, e, agit, frame, ink, alpha, lerp(1.4, 1.3, m))
+      }
       raf = requestAnimationFrame(tick)
     }
 

@@ -28,6 +28,23 @@ describe('drawTangle', () => {
     expect(count(1).n).toBe(80)
     expect(count(1).segs).toBeGreaterThan(count(0).segs)
   })
+
+  const strokesDrawn = (rx: number, agit: number) => {
+    let n = 0
+    const ctx: TangleCtx = {
+      save() {}, restore() {}, beginPath() {}, moveTo() {}, quadraticCurveTo() {}, stroke() { n++ },
+      strokeStyle: '', globalAlpha: 1, lineWidth: 1, lineCap: 'butt', lineJoin: 'miter',
+    }
+    drawTangle(ctx, makeStrokes(80, 110, 5), { x: 0, y: 0, rx, ry: rx }, agit, 0, '#000', 1, 1)
+    return n
+  }
+
+  it('draws fewer strokes into a small head', () => {
+    expect(strokesDrawn(31, 1)).toBe(40)
+  })
+  it('clamps an agitation above 1', () => {
+    expect(strokesDrawn(100, 2)).toBe(strokesDrawn(100, 1))
+  })
 })
 
 describe('scroll maths', () => {

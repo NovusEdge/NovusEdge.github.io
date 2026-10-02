@@ -45,19 +45,23 @@ export function makeStrokes(n: number, pts: number, seed: number): Pt[][] {
 }
 
 // A new frame value re-rolls the jitter; changing it a few times a second is the boil.
+// Line weight, jitter and stroke count follow the ellipse so a small head is not
+// a solid blob; k is 1 at the head's drawing size and clamps for the full screen.
 export function drawTangle(ctx: TangleCtx, strokes: Pt[][], e: Ellipse, agit: number, frame: number, color: string, alpha: number, lineWidth: number) {
-  const count = Math.round(strokes.length * (0.25 + 0.75 * agit))
-  const amp = 0.5 + agit * 2.2
+  const a = Math.min(1, Math.max(0, agit))
+  const k = Math.min(1.5, Math.max(0.5, Math.min(e.rx, e.ry) / 62))
+  const count = Math.round(strokes.length * (0.25 + 0.75 * a) * Math.min(1, k))
+  const amp = (0.5 + a * 2.2) * k
   const r = rng(frame * 977 + 13)
   ctx.save()
   ctx.strokeStyle = color
   ctx.globalAlpha = alpha
-  ctx.lineWidth = lineWidth
+  ctx.lineWidth = lineWidth * k
   ctx.lineCap = 'round'
   ctx.lineJoin = 'round'
   for (let k = 0; k < count; k++) {
     const s = strokes[k]
-    const len = Math.floor(s.length * (0.4 + 0.6 * agit))
+    const len = Math.floor(s.length * (0.4 + 0.6 * a))
     ctx.beginPath()
     let px = 0
     let py = 0
