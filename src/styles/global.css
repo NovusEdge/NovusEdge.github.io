@@ -2364,4 +2364,7 @@ html:has(.oj-dialog[open]) {
 .ms-hero img { display: block; width: auto; height: 1em; }
 .dark .ms-hero img { filter: invert(1); }
 .ms-end { position: relative; height: 50px; margin: 3em 0 20vh; }
+.ms-end:has(+ .ms-credit) { margin-bottom: 2em; }
+.ms-credit { margin: 0 0 20vh; font: 12px/1.4 var(--font-mono); opacity: 0.6; }
+.ms-credit a { color: inherit; text-decoration: underline; text-decoration-color: var(--ms-accent); }
 .ms-signoff { position: relative; z-index: 1; max-width: 56rem; margin: 0 auto; padding: 0 1.5rem 6rem; }

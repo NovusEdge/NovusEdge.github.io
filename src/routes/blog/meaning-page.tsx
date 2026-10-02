@@ -14,7 +14,8 @@ export function MeaningPage({ post, image }: { post: Post; image?: string | null
   const { t } = useTranslation()
   const lp = useLocalePath()
   const tangle = useRef<HTMLCanvasElement>(null)
-  const hero = MEANING_POSTS[post.slug]?.hero ?? { text: post.description }
+  const data = MEANING_POSTS[post.slug]
+  const hero = data?.hero ?? { text: post.description }
 
   return (
     <TangleLayerContext.Provider value={tangle}>
@@ -43,6 +44,14 @@ export function MeaningPage({ post, image }: { post: Post; image?: string | null
           <div className="ms-end" aria-hidden="true">
             <Drawn kind="star" accent />
           </div>
+          {data?.photoCredit && (
+            <p className="ms-credit">
+              {t('blog.meaning.photoCredit')}{' '}
+              <a href={data.photoCredit} target="_blank" rel="noreferrer noopener">
+                {new URL(data.photoCredit).hostname.replace(/^www\./, '')}
+              </a>
+            </p>
+          )}
         </div>
 
         <div className="ms-signoff">

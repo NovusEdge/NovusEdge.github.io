@@ -37,6 +37,11 @@ describe('MeaningPage', () => {
     expect(render(post('in-search-of-meaning-77'))).toContain('A brief note on meaning and purpose')
   })
 
+  it('credits the thumbnail photo when the post names a source', () => {
+    expect(render(post('in-search-of-meaning-01'))).toContain('href="https://www.instagram.com/p/C_niznfC7Yh/"')
+    expect(render(post('in-search-of-meaning-77'))).not.toContain('ms-credit')
+  })
+
   it('puts the tangle canvas in a hidden sticky layer', () => {
     expect(render(post('in-search-of-meaning-01'))).toMatch(/class="ms-tangle-layer" aria-hidden="true"><canvas/)
   })

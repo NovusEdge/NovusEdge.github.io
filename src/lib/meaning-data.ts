@@ -12,10 +12,15 @@ export type MeaningPost = {
   doodles?: Doodle[]
   /** By line index in the post's [!voices] block, so the markdown holds only translatable text. */
   voices?: Partial<VoiceMeta>[]
+  /** Source of the post's thumbnail photo, credited at the foot of the page. */
+  photoCredit?: string
 }
 
 export const MEANING_POSTS: Record<string, MeaningPost> = {
-  'in-search-of-meaning-01': { hero: { text: 'cogito, ergo sum' } },
+  'in-search-of-meaning-01': {
+    hero: { text: 'cogito, ergo sum' },
+    photoCredit: 'https://www.instagram.com/p/C_niznfC7Yh/',
+  },
 }
 
 // Rises to the peak three quarters of the way through, then the last line settles.
