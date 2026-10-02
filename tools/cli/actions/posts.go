@@ -217,21 +217,6 @@ func isDraft(fm Frontmatter) bool {
 	return strings.TrimSpace(v) == "true"
 }
 
-// ReadHidden returns the slugs of every post marked draft: true.
-func ReadHidden(p Paths) ([]string, error) {
-	posts, err := ListPosts(p)
-	if err != nil {
-		return nil, err
-	}
-	var slugs []string
-	for _, post := range posts {
-		if post.Hidden {
-			slugs = append(slugs, post.Slug)
-		}
-	}
-	return slugs, nil
-}
-
 // SetHidden sets or clears draft: true in a post's frontmatter.
 func SetHidden(p Paths, slug string, hidden bool) error {
 	path := PostFilePath(p, slug)

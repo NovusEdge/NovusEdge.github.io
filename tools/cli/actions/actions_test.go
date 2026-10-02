@@ -75,10 +75,7 @@ func TestNewBlogAndHidden(t *testing.T) {
 		t.Fatalf("unexpected content:\n%q\nwant:\n%q", got, want)
 	}
 
-	hidden, err := ReadHidden(p)
-	if err != nil {
-		t.Fatal(err)
-	}
+	hidden := hiddenSlugs(t, p)
 	if !contains(hidden, "my-post") || !contains(hidden, "ai-industry-trends") {
 		t.Fatalf("expected my-post to be added, kept existing entries: %v", hidden)
 	}
@@ -87,17 +84,32 @@ func TestNewBlogAndHidden(t *testing.T) {
 	if err := SetHidden(p, "my-post", false); err != nil {
 		t.Fatal(err)
 	}
-	hidden, _ = ReadHidden(p)
+	hidden = hiddenSlugs(t, p)
 	if contains(hidden, "my-post") {
 		t.Fatalf("expected my-post to be removed: %v", hidden)
 	}
 	if err := SetHidden(p, "my-post", true); err != nil {
 		t.Fatal(err)
 	}
-	hidden, _ = ReadHidden(p)
+	hidden = hiddenSlugs(t, p)
 	if !contains(hidden, "my-post") {
 		t.Fatalf("expected my-post back in hidden: %v", hidden)
 	}
+}
+
+func hiddenSlugs(t *testing.T, p Paths) []string {
+	t.Helper()
+	posts, err := ListPosts(p)
+	if err != nil {
+		t.Fatal(err)
+	}
+	var slugs []string
+	for _, post := range posts {
+		if post.Hidden {
+			slugs = append(slugs, post.Slug)
+		}
+	}
+	return slugs
 }
 
 func TestEditTags(t *testing.T) {

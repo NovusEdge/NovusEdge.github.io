@@ -199,7 +199,7 @@ func (o *translateOverlay) Update(msg tea.Msg) (overlay, tea.Cmd) {
 	case translateExitMsg:
 		return o, o.exit(msg.err)
 	case forceKillMsg:
-		if msg.pid == o.run.pid {
+		if !o.exited && msg.pid == o.run.pid {
 			o.run.kill(syscall.SIGKILL)
 		}
 		return o, nil

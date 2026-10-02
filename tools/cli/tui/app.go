@@ -1,6 +1,7 @@
-// Package tui implements the Bubble Tea models for the site content manager.
-// actions/ holds the file manipulation logic; this package is presentation
-// and input handling.
+// Package tui implements the Bubble Tea models for the site content manager:
+// a root App with a filterable list and detail pane, modal overlays (huh
+// forms, help, translation run) and a resize notice. actions/ holds the file
+// manipulation logic; this package is presentation and input handling.
 package tui
 
 import (

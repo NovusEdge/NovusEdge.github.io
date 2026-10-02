@@ -1,6 +1,7 @@
-// Command site-cli is a small TUI for managing content on novusedge.github.io:
-// new blog posts, blips, research cards, thumbnails, tags, and draft/publish
-// state. Run it from the repo root (or anywhere inside the repo).
+// Command site-cli is a TUI for managing content on novusedge.github.io: a
+// browsable list of posts, blips and research with a detail pane, plus forms
+// for new content, tags, thumbnails, draft state and translation runs. Run it
+// from anywhere inside the repo.
 package main
 
 import (
