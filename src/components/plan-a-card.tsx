@@ -40,11 +40,13 @@ type Props = {
   accent?: string
   /** Loop the clip all the time instead of only on hover; reduced motion still gets the still. */
   loopClip?: boolean
+  /** The corner-bracket perimeter belongs to Plan A; other posts reusing the card go without. */
+  frame?: boolean
   dayOf: (date: string) => string
   monthOf: (date: string) => string
 }
 
-export function PlanACard({ post, img, clip = CLIP, accent = OXIDE, loopClip = false, dayOf, monthOf }: Props) {
+export function PlanACard({ post, img, clip = CLIP, accent = OXIDE, loopClip = false, frame = true, dayOf, monthOf }: Props) {
   const [hovered, setHovered] = useState(false)
   const [animated, setAnimated] = useState(false)
   // The clip is 330KB for a hover flourish, so it only gets a src once the
@@ -120,7 +122,7 @@ export function PlanACard({ post, img, clip = CLIP, accent = OXIDE, loopClip = f
                 style={{ opacity: playing ? 1 : 0 }}
               />
             )}
-            <Perimeter color={accent} />
+            {frame && <Perimeter color={accent} />}
           </div>
         </TLink>
       </div>

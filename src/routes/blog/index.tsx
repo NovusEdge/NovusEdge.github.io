@@ -132,7 +132,7 @@ export default function BlogIndex() {
                 if (post.slug === OPENJEV_SLUG && img) {
                   return (
                     <div key={post.slug}>
-                      <PlanACard post={post} img={img} clip="/assets/blog/openjev-thumb.mp4" loopClip dayOf={dayOf} monthOf={monthOf} />
+                      <PlanACard post={post} img={img} clip="/assets/blog/openjev-thumb.mp4" loopClip frame={false} dayOf={dayOf} monthOf={monthOf} />
                       <InlineBlipCount count={blipCount} />
                     </div>
                   )
@@ -141,7 +141,7 @@ export default function BlogIndex() {
                   return (
                     <div key={post.slug}>
                       {/* The site gold, as a hex because the card appends alpha bytes to it. */}
-                      <PlanACard post={post} img={img} clip={null} accent="#d4a03c" dayOf={dayOf} monthOf={monthOf} />
+                      <PlanACard post={post} img={img} clip={null} accent="#d4a03c" frame={false} dayOf={dayOf} monthOf={monthOf} />
                       <InlineBlipCount count={blipCount} />
                     </div>
                   )
