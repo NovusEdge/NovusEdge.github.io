@@ -52,12 +52,12 @@ export function MeaningMarkdown({ slug, locale, children }: { slug: string; loca
         </p>
       )
     },
-    a({ href, children: kids, ...props }) {
+    a({ href, children: kids, node, ...props }) {
       if (href === '#ring') {
         return (
           <span className="ms-ring">
             {kids}
-            <Drawn kind="ring" accent />
+            <Drawn kind="ring" accent seed={node?.position?.start.offset} />
           </span>
         )
       }

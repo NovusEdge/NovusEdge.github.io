@@ -187,7 +187,8 @@ export function Voices({ lines, meta, locale }: { lines: VoiceLine[]; meta: Voic
         if (entry.isIntersecting) raf = requestAnimationFrame(tick)
         else clear()
       },
-      { rootMargin: '130% 0px 90% 0px' },
+      // Bottom margin is the approach side: start 1.3 screens before the section's top enters, run 0.9 after it leaves.
+      { rootMargin: '90% 0px 130% 0px' },
     )
     io.observe(section)
     const mo = new MutationObserver(() => (ink = inkColor()))

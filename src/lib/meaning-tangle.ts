@@ -59,8 +59,8 @@ export function drawTangle(ctx: TangleCtx, strokes: Pt[][], e: Ellipse, agit: nu
   ctx.lineWidth = lineWidth * k
   ctx.lineCap = 'round'
   ctx.lineJoin = 'round'
-  for (let k = 0; k < count; k++) {
-    const s = strokes[k]
+  for (let n = 0; n < count; n++) {
+    const s = strokes[n]
     const len = Math.floor(s.length * (0.4 + 0.6 * a))
     ctx.beginPath()
     let px = 0
