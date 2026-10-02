@@ -3,6 +3,7 @@ package actions
 import (
 	"bytes"
 	"errors"
+	"fmt"
 	"os/exec"
 	"path/filepath"
 	"strconv"
@@ -88,18 +89,32 @@ func ParseTranslationCheck(stderr string) (stale map[string]bool, missing map[st
 	return stale, missing
 }
 
-// TranslationStatus runs the script's --check mode. Exit code 1 means the
-// translations are out of date, which is a result, not an error.
+// TranslationStatus runs the script's --check mode.
 func TranslationStatus(p Paths) (stale map[string]bool, missing map[string][]string, err error) {
 	cmd := exec.Command("node", "scripts/translate-blog.mjs", "--check")
 	cmd.Dir = p.Root
 	var stderr bytes.Buffer
 	cmd.Stderr = &stderr
-	err = cmd.Run()
-	var exitErr *exec.ExitError
-	if err != nil && !(errors.As(err, &exitErr) && exitErr.ExitCode() == 1) {
-		return nil, nil, err
+	return interpretCheck(cmd.Run(), stderr.String())
+}
+
+// interpretCheck turns the outcome of --check into a result. Exit 1 means the
+// translations are out of date, but a node crash also exits 1, so exit 1 only
+// counts when the report lines were actually printed.
+func interpretCheck(runErr error, stderr string) (map[string]bool, map[string][]string, error) {
+	detail := func() error {
+		if s := strings.TrimSpace(stderr); s != "" {
+			return fmt.Errorf("%w: %s", runErr, s)
+		}
+		return runErr
 	}
-	stale, missing = ParseTranslationCheck(stderr.String())
+	var exitErr *exec.ExitError
+	if runErr != nil && !(errors.As(runErr, &exitErr) && exitErr.ExitCode() == 1) {
+		return nil, nil, detail()
+	}
+	stale, missing := ParseTranslationCheck(stderr)
+	if runErr != nil && len(stale)+len(missing) == 0 {
+		return nil, nil, detail()
+	}
 	return stale, missing, nil
 }

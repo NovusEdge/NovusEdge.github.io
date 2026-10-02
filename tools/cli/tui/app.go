@@ -211,8 +211,10 @@ func (a *App) handleKey(msg tea.KeyPressMsg) tea.Cmd {
 		return a.newBlip()
 	case key.Matches(msg, a.keys.NewCard):
 		return a.newCard()
-	case key.Matches(msg, a.keys.Edit, a.keys.Trans):
-		a.setStatus("not yet implemented", true)
+	case key.Matches(msg, a.keys.Edit):
+		return a.openEditor()
+	case key.Matches(msg, a.keys.Trans):
+		return a.translate()
 	case a.narrow() && a.showDetail:
 	default:
 		return a.updateList(msg)
@@ -312,6 +314,9 @@ func (a *App) footer() string {
 	var bar string
 	if a.overlay != nil {
 		bar = a.st.muted.Render("enter confirm  esc cancel")
+		if h, ok := a.overlay.(interface{ hint() string }); ok {
+			bar = a.st.muted.Render(h.hint())
+		}
 	} else {
 		bar = a.help.View(a.keys)
 	}
