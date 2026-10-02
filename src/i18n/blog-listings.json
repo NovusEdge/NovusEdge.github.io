@@ -52,6 +52,10 @@
       "title": "Oon takas! (Osa 2)",
       "description": "Kakkososa, ja se vaikea sellainen. Kesä 2025 vei kaiken, olin vähällä olla selviämättä, ja olin vähällä lähteä sotimaan. Näin mä putosin aivan pohjalle ja raavin tieni takaisin ylös, ja nämä ovat ne ihmiset, jotka eivät antaneet mun jäädä maahan."
     },
+    "in-search-of-meaning-01": {
+      "title": "Merkitystä etsimässä #1",
+      "description": "Lyhyt pohdinta merkityksestä ja tarkoituksesta"
+    },
     "linux-journeys-customizing-the-bootsplash": {
       "title": "Linux Journeys – Bootsplashin kustomointi",
       "description": "Tensuran inspiroima kaninkolo Linux-tuunaukseen (ricing), joka päättyy plymouthin asentamiseen ja teemoittamiseen kustomoidun bootsplashin luomiseksi."
@@ -169,6 +173,10 @@
     "im-back-pt-2": {
       "title": "Ich bin zurück! (Teil 2)",
       "description": "Teil zwei, und der schwere Teil. Der Sommer 2025 hat mir alles genommen, ich hätte es fast nicht geschafft und wäre fast in den Krieg gezogen. So bin ich ganz nach unten gestürzt und habe mich wieder hochgekämpft – und das sind die Leute, die mich nicht am Boden liegen ließen."
+    },
+    "in-search-of-meaning-01": {
+      "title": "Auf der Suche nach Sinn #1",
+      "description": "Ein kurzer Gedanke über Sinn und Zweck"
     },
     "linux-journeys-customizing-the-bootsplash": {
       "title": "Linux Journeys – Bootsplash anpassen",
@@ -288,6 +296,10 @@
       "title": "復活！（Part 2）",
       "description": "パート2、そして一番キツかった話。2025年の夏はすべてを奪っていった。死にかけたし、戦争に行きそうにすらなった。これは、俺がどん底まで落ちてどうやって這い上がってきたか、そして俺を見捨てずにいてくれた人たちの話。"
     },
+    "in-search-of-meaning-01": {
+      "title": "意味の探求 #1",
+      "description": "意味と目的についての短いメモ"
+    },
     "linux-journeys-customizing-the-bootsplash": {
       "title": "Linux Journeys - ブートスプラッシュのカスタマイズ",
       "description": "転スラに影響されてLinuxのricing（外観カスタマイズ）の沼にハマり、最終的にplymouthを導入・テーマ設定してカスタムブートスプラッシュを作ることになった話。"
@@ -406,6 +418,10 @@
       "title": "Jag är tillbaka! (Del 2)",
       "description": "Del två, och den tunga. Sommaren 2025 tog allt, jag klarade mig nästan inte, och jag åkte nästan iväg för att strida i ett krig. Det här är historien om hur jag föll hela vägen till botten och klöste mig upp igen, och människorna som vägrade låta mig stanna där nere."
     },
+    "in-search-of-meaning-01": {
+      "title": "I sökandet efter mening #1",
+      "description": "En kort anteckning om mening och syfte"
+    },
     "linux-journeys-customizing-the-bootsplash": {
       "title": "Linux-resor - Anpassa bootsplash",
       "description": "Ett Tensura-inspirerat kaninhål in i Linux-ricing som slutar med att installera och tema plymouth för en anpassad bootsplash."
@@ -523,6 +539,10 @@
     "im-back-pt-2": {
       "title": "我回来了！（Part 2）",
       "description": "第二部分，也是最难熬的那段。2025 年的夏天夺走了一切，我差点没撑过去，甚至差点跑去参战。这就是我如何跌落谷底又拼命爬上来的过程，以及那些不愿看着我就此沉沦的人们。"
+    },
+    "in-search-of-meaning-01": {
+      "title": "寻觅意义 #1",
+      "description": "关于意义与目标的小记"
     },
     "linux-journeys-customizing-the-bootsplash": {
       "title": "Linux 之旅 - 自定义 bootsplash 开机画面",
