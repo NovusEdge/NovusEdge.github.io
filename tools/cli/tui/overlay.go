@@ -3,7 +3,6 @@ package tui
 import (
 	"image/color"
 
-	"charm.land/bubbles/v2/key"
 	tea "charm.land/bubbletea/v2"
 	"charm.land/huh/v2"
 	"charm.land/lipgloss/v2"
@@ -31,27 +30,74 @@ type overlayDoneMsg struct {
 // it can read the values bound to the form's fields, and returns the command
 // that performs the work.
 type formOverlay struct {
-	form *huh.Form
+	form    *huh.Form
+	started bool
+	// after runs once per Update, so a form can derive one field from another.
+	after func()
+	// cancel runs on esc or ctrl+c. The keys are taken here and never reach
+	// the form: huh's quit marks the form finished for good and its View then
+	// renders empty, so a form could not be resumed after a discard prompt.
+	cancel tea.Cmd
 }
 
-// newFormOverlay wires submit and cancel (esc or ctrl+c) to overlayDoneMsg.
+// newFormOverlay wires submit to overlayDoneMsg and cancel to a plain close.
 // bg is the terminal background the root last saw; huh reads it from a
 // BackgroundColorMsg and otherwise assumes a dark terminal.
 func newFormOverlay(form *huh.Form, bg color.Color, onSubmit func() tea.Cmd) *formOverlay {
-	km := huh.NewDefaultKeyMap()
-	km.Quit = key.NewBinding(key.WithKeys("esc", "ctrl+c"))
-	form.WithKeyMap(km).WithShowHelp(false)
+	form.WithShowHelp(false)
 	form.SubmitCmd = func() tea.Msg { return overlayDoneMsg{cmd: onSubmit()} }
-	form.CancelCmd = func() tea.Msg { return overlayDoneMsg{} }
 	form.Update(tea.BackgroundColorMsg{Color: bg})
-	return &formOverlay{form: form}
+	return &formOverlay{form: form, cancel: func() tea.Msg { return overlayDoneMsg{} }}
 }
 
-func (f *formOverlay) Init() tea.Cmd { return f.form.Init() }
+// Init is a no-op when the overlay is resumed after a discard prompt: running
+// the form's Init again would reset its focus.
+func (f *formOverlay) Init() tea.Cmd {
+	if f.started {
+		return nil
+	}
+	f.started = true
+	return f.form.Init()
+}
 
 func (f *formOverlay) Update(msg tea.Msg) (overlay, tea.Cmd) {
+	if k, ok := msg.(tea.KeyPressMsg); ok && (k.String() == "esc" || k.String() == "ctrl+c") {
+		return f, f.cancel
+	}
 	_, cmd := f.form.Update(msg)
+	if f.after != nil {
+		f.after()
+	}
 	return f, cmd
+}
+
+// guard makes esc ask "Discard changes?" while dirty reports true.
+func (f *formOverlay) guard(bg color.Color, dirty func() bool) *formOverlay {
+	f.cancel = func() tea.Msg {
+		if !dirty() {
+			return overlayDoneMsg{}
+		}
+		return overlayDoneMsg{next: newDiscard(bg, f)}
+	}
+	return f
+}
+
+// newDiscard asks whether to drop back. Declining (or esc) resumes back with
+// its state intact.
+func newDiscard(bg color.Color, back *formOverlay) *formOverlay {
+	var yes bool
+	c := newFormOverlay(huh.NewForm(huh.NewGroup(
+		huh.NewConfirm().Title("Discard changes?").Affirmative("Discard").Negative("Keep editing").Value(&yes),
+	)), bg, nil)
+	resume := func() tea.Msg { return overlayDoneMsg{next: back} }
+	c.form.SubmitCmd = func() tea.Msg {
+		if yes {
+			return overlayDoneMsg{}
+		}
+		return resume()
+	}
+	c.cancel = resume
+	return c
 }
 
 func (f *formOverlay) View() string { return f.form.View() }

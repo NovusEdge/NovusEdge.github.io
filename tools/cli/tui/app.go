@@ -201,8 +201,17 @@ func (a *App) handleKey(msg tea.KeyPressMsg) tea.Cmd {
 		_, a.showDetail = selectedPost(a.list)
 	case key.Matches(msg, a.keys.Publish):
 		return a.publish()
-	case key.Matches(msg, a.keys.Edit, a.keys.Tags, a.keys.Thumb, a.keys.Trans,
-		a.keys.NewPost, a.keys.NewBlip, a.keys.NewCard):
+	case key.Matches(msg, a.keys.Tags):
+		return a.editTags()
+	case key.Matches(msg, a.keys.Thumb):
+		return a.editThumb()
+	case key.Matches(msg, a.keys.NewPost):
+		return a.newPost()
+	case key.Matches(msg, a.keys.NewBlip):
+		return a.newBlip()
+	case key.Matches(msg, a.keys.NewCard):
+		return a.newCard()
+	case key.Matches(msg, a.keys.Edit, a.keys.Trans):
 		a.setStatus("not yet implemented", true)
 	case a.narrow() && a.showDetail:
 	default:
