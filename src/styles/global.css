@@ -2394,7 +2394,7 @@ header.ms-col { max-width: 1400px; text-align: center; }
   position: relative;
   display: inline-block;
   margin: 6vh 0 10vh;
-  font: 700 clamp(64px, 12vw, 210px)/1 'Caveat', 'Zen Kaku Gothic New', 'Noto Sans SC', cursive;
+  font: 700 clamp(56px, 7vw, 128px)/1 'Caveat', 'Zen Kaku Gothic New', 'Noto Sans SC', cursive;
 }
 .ms-hero img { display: block; width: auto; height: 1em; }
 .dark .ms-hero img { filter: invert(1); }
