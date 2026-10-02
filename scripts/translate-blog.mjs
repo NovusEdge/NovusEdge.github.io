@@ -128,6 +128,7 @@ if (!todoSlugs.length) {
   process.exit(0)
 }
 
+console.log(`translating ${todoSlugs.length * LOCALES.length} file(s)`)
 let failed = false
 for (const slug of todoSlugs) {
   const raw = readFileSync(`${BLOG_DIR}/${slug}.md`, 'utf8')
