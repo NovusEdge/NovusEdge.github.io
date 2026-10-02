@@ -2266,3 +2266,54 @@ html:has(.oj-dialog[open]) {
 @media (max-width: 1000px) {
   .ms-doodle { display: none; }
 }
+
+/* Full-bleed out of the 640px column. Each line gets its own grid row so the
+   argument reads top to bottom, alternating sides, in DOM order. */
+.ms-voices { position: relative; z-index: 1; width: 100vw; margin-left: calc(50% - 50vw); }
+.ms-voices.ms-motion { height: 420vh; }
+.ms-stage {
+  display: grid;
+  grid-template-columns: 1fr 280px 1fr;
+  align-content: center;
+  column-gap: 24px;
+  row-gap: 10px;
+  max-width: 1060px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+.ms-motion .ms-stage { position: sticky; top: 0; height: 100vh; }
+.ms-still .ms-stage { padding-block: 10vh; }
+.ms-figure { position: relative; grid-column: 2; grid-row: 1 / span var(--ms-n); align-self: center; width: 280px; height: 380px; }
+.ms-figure svg, .ms-figure canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+.ms-figure path { fill: none; stroke: var(--ms-ink); stroke-width: 2.2; stroke-linecap: round; }
+.ms-motion .ms-figure svg { opacity: var(--ms-fig, 0); }
+.ms-voice-list { display: contents; list-style: none; }
+.ms-voice-list li {
+  grid-row: var(--ms-row);
+  margin: 0;
+  max-width: 300px;
+  font: 600 26px/1.15 'Caveat', 'Zen Kaku Gothic New', 'Noto Sans SC', cursive;
+  transition: opacity 0.35s;
+}
+.ms-motion .ms-voice-list li { opacity: 0; }
+.ms-voice-list li[data-side='left'] { grid-column: 1; justify-self: end; text-align: right; }
+.ms-voice-list li[data-side='right'] { grid-column: 3; justify-self: start; color: var(--ms-accent); }
+.ms-sound, .ms-play {
+  background: none;
+  border: 1.5px solid currentColor;
+  border-radius: 16px;
+  color: var(--ms-ink);
+  font: 600 20px/1 'Caveat', cursive;
+  cursor: pointer;
+}
+.ms-sound { position: absolute; top: 4vh; left: 50%; transform: translateX(-50%); padding: 4px 12px 6px; opacity: 0.6; }
+.ms-sound[aria-pressed='true'] { opacity: 1; color: var(--ms-accent); }
+.ms-still .ms-sound { position: static; transform: none; grid-column: 1 / -1; justify-self: center; }
+.ms-play { margin-left: 8px; padding: 0 8px; font-size: 16px; }
+@media (max-width: 760px) {
+  .ms-stage { grid-template-columns: 1fr; }
+  .ms-figure { grid-column: 1; grid-row: 1; justify-self: center; width: 176px; height: 240px; }
+  .ms-voice-list li { grid-column: 1 !important; grid-row: calc(var(--ms-row) + 1); font-size: 22px; }
+  .ms-voice-list li[data-side='left'] { justify-self: start; text-align: left; }
+  .ms-voice-list li[data-side='right'] { justify-self: end; text-align: right; }
+}
