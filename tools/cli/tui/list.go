@@ -38,13 +38,13 @@ func (d postDelegate) Render(w io.Writer, m list.Model, index int, item list.Ite
 		mark = " " + d.st.muted.Render("D")
 	}
 	room := max(m.Width()-lipgloss.Width(prefix)-lipgloss.Width(mark), 1)
-	title := titleStyle.Inline(true).Width(room).MaxWidth(room).Render(p.Title)
+	title := titleStyle.Inline(true).Width(room).MaxWidth(room).Render(truncate(p.Title, room))
 	fmt.Fprint(w, prefix+title+mark)
 }
 
 func newPostList(st styles) list.Model {
 	l := list.New(nil, postDelegate{st}, 0, 0)
-	l.Title = "posts"
+	l.Title = "posts (/ filter)"
 	l.Styles = list.DefaultStyles(true)
 	l.SetShowHelp(false)
 	l.SetShowStatusBar(false)
@@ -60,6 +60,31 @@ func postItems(posts []actions.PostMeta) []list.Item {
 		items[i] = postItem{p}
 	}
 	return items
+}
+
+// slugInItems reports whether slug is among all items, ignoring any filter.
+func slugInItems(l list.Model, slug string) bool {
+	for _, it := range l.Items() {
+		if p, ok := it.(postItem); ok && p.Slug == slug {
+			return true
+		}
+	}
+	return false
+}
+
+// truncate shortens s to at most w cells, ending in an ellipsis when cut.
+func truncate(s string, w int) string {
+	if lipgloss.Width(s) <= w {
+		return s
+	}
+	out := ""
+	for _, r := range s {
+		if lipgloss.Width(out+string(r)) > w-1 {
+			break
+		}
+		out += string(r)
+	}
+	return out + "…"
 }
 
 // selectedPost returns the post under the cursor, if any.

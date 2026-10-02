@@ -155,7 +155,11 @@ func (a *App) update(msg tea.Msg) tea.Cmd {
 		} else {
 			a.setStatus(msg.status, false)
 		}
-		return a.reloadPosts(msg.sel)
+		// Any write to an English post makes its translations stale.
+		return tea.Batch(a.reloadPosts(msg.sel), a.checkTranslations())
+	case tea.FocusMsg:
+		// Covers GUI editors and edits made outside the TUI.
+		return tea.Batch(a.reloadPosts(""), a.checkTranslations())
 	case overlayDoneMsg:
 		a.overlay = msg.next
 		if msg.next != nil {
@@ -164,6 +168,15 @@ func (a *App) update(msg tea.Msg) tea.Cmd {
 		return msg.cmd
 	case list.FilterMatchesMsg:
 		a.wantSettled = true
+		// The list needs the result even while an overlay is open, or it keeps
+		// filteredItems nil and renders empty.
+		cmd := a.updateList(msg)
+		if a.overlay != nil {
+			var oc tea.Cmd
+			a.overlay, oc = a.overlay.Update(msg)
+			cmd = tea.Batch(cmd, oc)
+		}
+		return cmd
 	}
 
 	if a.overlay != nil {
@@ -253,7 +266,13 @@ func (a *App) publish() tea.Cmd {
 // selection restored by reloadPosts, and the detail pane's data.
 func (a *App) sync() {
 	if a.wantSlug != "" {
-		if i, ok := indexOfSlug(a.list, a.wantSlug); ok {
+		i, ok := indexOfSlug(a.list, a.wantSlug)
+		if !ok && a.wantSettled && a.list.FilterState() != list.Unfiltered && slugInItems(a.list, a.wantSlug) {
+			// A new post the active filter hides would otherwise stay unselected.
+			a.list.ResetFilter()
+			i, ok = indexOfSlug(a.list, a.wantSlug)
+		}
+		if ok {
 			a.list.Select(i)
 			a.wantSlug = ""
 		} else if a.wantSettled {
@@ -314,13 +333,15 @@ func (a *App) footer() string {
 		line = a.st.muted.Render(a.tr.summary())
 	}
 	var bar string
-	if a.overlay != nil {
-		bar = a.st.muted.Render("enter confirm  esc cancel")
-		if h, ok := a.overlay.(interface{ hint() string }); ok {
-			bar = a.st.muted.Render(h.hint())
-		}
-	} else {
+	switch o := a.overlay.(type) {
+	case nil:
 		bar = a.help.View(a.keys)
+	case interface{ footerKeys() []key.Binding }:
+		bar = a.help.ShortHelpView(o.footerKeys())
+	case interface{ hint() string }:
+		bar = a.st.muted.Render(o.hint())
+	default:
+		bar = a.st.muted.Render("esc cancel")
 	}
 	return lipgloss.NewStyle().MaxWidth(a.w).Render(" "+line) + "\n" + bar
 }
@@ -367,5 +388,6 @@ func (a *App) View() tea.View {
 	}
 	v := tea.NewView(content)
 	v.AltScreen = true
+	v.ReportFocus = true
 	return v
 }
