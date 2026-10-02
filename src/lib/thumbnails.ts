@@ -1,46 +1,14 @@
-// Post slug -> thumbnail for blog list cards
+import thumbnails from '../content/thumbnails.json'
+
+type Entry = { hero: string; list?: string }
+const map: Record<string, Entry> = thumbnails
+
+// The OpenJev featured card plays the grid as an mp4 on hover; its `list` image is the resting frame.
 export function getListThumbnail(slug: string): string | null {
-  if (slug === 'chat-control-eu') return '/assets/blog/chat-control-featured.jpeg'
-  if (slug === 'epistemic-collapse') return '/assets/blog/truth-power.jpeg'
-  if (slug === 'shader-journeys-part-1') return '/assets/blog/shader-journeys-thumb.gif'
-  // The featured card plays the grid as an mp4 on hover; at rest it shows this frame.
-  if (slug === 'fine-tuning-openjev-on-62695-ab-tests') return '/assets/blog/openjev-still.webp'
-  return getPostThumbnail(slug)
+  const e = map[slug]
+  return e ? (e.list ?? e.hero) : null
 }
 
-// Post slug -> thumbnail image for post-page hero
 export function getPostThumbnail(slug: string): string | null {
-  if (slug.includes('tiling-window-managers')) return '/assets/img/LJ-TWM-01.png'
-  if (slug.includes('alfred')) return '/assets/img/writeup_assets/alfred/port-8080-login.png'
-  if (slug.includes('blue')) return '/assets/img/writeup_assets/blue/blue-room-top.png'
-  if (slug.includes('chocolate-factory')) return '/assets/img/writeup_assets/chocolate-factory/port-80.png'
-  if (slug.includes('daily-bugle')) return '/assets/img/writeup_assets/daily-bugle/login-page.png'
-  if (slug.includes('game-zone')) return '/assets/img/writeup_assets/game-zone/home-page.png'
-  if (slug.includes('red')) return '/assets/img/writeup_assets/red/port-80.png'
-  if (slug.includes('toolsrus')) return '/assets/img/writeup_assets/toolsrus/protected_page_moved.png'
-  if (slug.includes('bootsplash')) return '/assets/img/LJ-TWM-04.png'
-  // essays - hero uses the red vintage banner, list uses the dithered eye
-  if (slug === 'chat-control-eu') return '/assets/blog/chat-control-hero.jpeg'
-  if (slug === 'epistemic-collapse') return '/assets/blog/epistemic-banner.gif'
-  if (slug === 'plan-a-ai') return '/assets/blog/plan-a-thumb.jpeg'
-  if (slug === 'googles-13-billion-in-finland') return '/assets/blog/google-finland-thumb.webp'
-  if (slug === 'what-did-we-all-miss') return '/assets/blog/fatigue-thumb.webp'
-  if (slug === 'fine-tuning-openjev-on-62695-ab-tests') return '/assets/blog/openjev-thumb.gif'
-  // AI / founder-log posts -> art assets
-  if (slug === 'on-building-something-engrammic') return '/assets/cosmos_948956014.jpeg'
-  if (slug === 'hardware-journeys-starting-from-zero') return '/assets/patent.jpeg'
-  if (slug === 'i-build-cool-shit-and-also-spreadsheets') return '/assets/moth.jpeg'
-  // other option: /assets/eros-resting.jpeg
-  if (slug === 'rsi-emergence-and-the-pope') return '/assets/pandora.jpeg'
-  if (slug === 'post-labour-post-learning') return '/assets/blog/scribble-figure.jpeg'
-  // personal / blog-update posts -> art assets
-  if (slug === 'im-back-pt-1') return '/assets/cosmos_1829710684.jpeg'
-  if (slug === 'im-back-pt-2') return '/assets/fallen_angel.webp'
-  if (slug === 'hello-world') return '/assets/bg-3.jpg'
-  if (slug === 'university') return '/assets/spore.jpg'
-  if (slug === 'what-do-i-want') return '/assets/anim2.gif'
-  if (slug === 'going-forward') return '/assets/anim1.gif'
-  if (slug === 'shader-journeys-part-1') return '/assets/blog/shader-journeys-thumb.gif'
-  if (slug === 'building-vs-creating') return '/assets/blog/building-vs-creating.mp4'
-  return null
+  return map[slug]?.hero ?? null
 }
