@@ -38,6 +38,8 @@ type App struct {
 	detailSlug string
 	showDetail bool // narrow layout only: detail replaces the list
 	tr         translationState
+	trRunning  bool
+	trWanted   bool
 
 	overlay overlay
 
@@ -100,10 +102,16 @@ func (a *App) reloadPosts(sel string) tea.Cmd {
 	}
 }
 
-// checkTranslations runs translate:blog --check in the background.
-func (a *App) checkTranslations() tea.Cmd { return checkTranslations(a.paths) }
-
-func checkTranslations(paths actions.Paths) tea.Cmd {
+// checkTranslations runs translate:blog --check in the background. Only one
+// check runs at a time; a request made meanwhile is remembered and served by
+// one more run when the current one finishes, so the newest result wins.
+func (a *App) checkTranslations() tea.Cmd {
+	if a.trRunning {
+		a.trWanted = true
+		return nil
+	}
+	a.trRunning = true
+	paths := a.paths
 	return func() tea.Msg {
 		stale, missing, err := actions.TranslationStatus(paths)
 		return translationMsg{stale: stale, missing: missing, err: err}
@@ -147,6 +155,11 @@ func (a *App) update(msg tea.Msg) tea.Cmd {
 		return a.list.SetItems(postItems(msg.posts))
 	case translationMsg:
 		a.tr = translationState{loaded: true, err: msg.err, stale: msg.stale, missing: msg.missing}
+		a.trRunning = false
+		if a.trWanted {
+			a.trWanted = false
+			return a.checkTranslations()
+		}
 		return nil
 	case writeDoneMsg:
 		// Reload on failure too: a tag sync can fail after partial writes.

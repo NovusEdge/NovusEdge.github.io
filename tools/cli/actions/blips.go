@@ -36,18 +36,25 @@ func NewBlip(p Paths, in BlipInput) error {
 	}
 
 	var media []string
+	cleanup := func() {
+		for _, done := range media {
+			os.Remove(filepath.Join(p.BlipsAssetsDir, done))
+		}
+	}
 	for _, src := range in.MediaPaths {
 		name, err := copyMediaAsset(p, src)
 		if err != nil {
-			for _, done := range media {
-				os.Remove(filepath.Join(p.BlipsAssetsDir, done))
-			}
+			cleanup()
 			return err
 		}
 		media = append(media, name)
 	}
 
-	return insertBlipEntry(p, formatBlipEntry(date, in.Text, media, in.Tags))
+	if err := insertBlipEntry(p, formatBlipEntry(date, in.Text, media, in.Tags)); err != nil {
+		cleanup()
+		return err
+	}
+	return nil
 }
 
 func copyMediaAsset(p Paths, srcPath string) (string, error) {

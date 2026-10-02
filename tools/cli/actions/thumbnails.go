@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"os"
+	"path/filepath"
 	"sort"
 	"strings"
 )
@@ -93,7 +94,11 @@ func ValidateAssetPath(p Paths, path string) error {
 	if !strings.HasPrefix(path, "/") {
 		return fmt.Errorf("path must start with /, got %q", path)
 	}
-	info, err := os.Stat(p.PublicDir + path)
+	full := filepath.Join(p.PublicDir, filepath.FromSlash(path))
+	if rel, err := filepath.Rel(p.PublicDir, full); err != nil || rel == ".." || strings.HasPrefix(rel, ".."+string(filepath.Separator)) {
+		return fmt.Errorf("path %q escapes public/", path)
+	}
+	info, err := os.Stat(full)
 	if err != nil || info.IsDir() {
 		return fmt.Errorf("no file at public%s", path)
 	}

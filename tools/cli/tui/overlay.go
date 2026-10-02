@@ -42,6 +42,9 @@ type formOverlay struct {
 	// the form: huh's quit marks the form finished for good and its View then
 	// renders empty, so a form could not be resumed after a discard prompt.
 	cancel tea.Cmd
+	// dirty, when set, diverts cancel into a discard prompt built with bg.
+	dirty func() bool
+	bg    color.Color
 	// live validates the focused field on every keystroke. huh only validates
 	// on enter and cannot be handed an error from outside, so the message is
 	// drawn under the form.
@@ -118,6 +121,10 @@ func (f *formOverlay) Init() tea.Cmd {
 
 func (f *formOverlay) Update(msg tea.Msg) (overlay, tea.Cmd) {
 	if k, ok := msg.(tea.KeyPressMsg); ok && (k.String() == "esc" || k.String() == "ctrl+c") {
+		if f.dirty != nil && f.dirty() {
+			next := newDiscard(f.bg, f)
+			return f, func() tea.Msg { return overlayDoneMsg{next: next} }
+		}
 		return f, f.cancel
 	}
 	_, cmd := f.form.Update(msg)
@@ -133,15 +140,10 @@ func (f *formOverlay) Update(msg tea.Msg) (overlay, tea.Cmd) {
 	return f, cmd
 }
 
-// guard makes esc ask "Discard changes?" while dirty reports true. bg is
-// captured by the caller on the update loop.
+// guard makes esc ask "Discard changes?" while dirty reports true. dirty reads
+// form-bound values, so Update calls it on the update loop, never inside a Cmd.
 func (f *formOverlay) guard(bg color.Color, dirty func() bool) *formOverlay {
-	f.cancel = func() tea.Msg {
-		if !dirty() {
-			return overlayDoneMsg{}
-		}
-		return overlayDoneMsg{next: newDiscard(bg, f)}
-	}
+	f.bg, f.dirty = bg, dirty
 	return f
 }
 

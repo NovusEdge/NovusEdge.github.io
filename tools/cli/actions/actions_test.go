@@ -180,10 +180,17 @@ func TestSetThumbnailEmptyDeletes(t *testing.T) {
 func TestValidateAssetPath(t *testing.T) {
 	p := setupFixture(t)
 	cases := map[string]bool{
-		"/assets/a.png":       true,
-		"assets/a.png":        false,
-		"/assets/missing.png": false,
-		"/assets":             false,
+		"/assets/a.png":           true,
+		"assets/a.png":            false,
+		"/assets/missing.png":     false,
+		"/assets":                 false,
+		"/../package.json":        false,
+		"/assets/../../x":         false,
+		"/assets/../a.png":        false,
+		"/assets/../assets/a.png": true,
+	}
+	if err := os.WriteFile(filepath.Join(p.Root, "package.json"), []byte("{}"), 0o644); err != nil {
+		t.Fatal(err)
 	}
 	for path, want := range cases {
 		if err := ValidateAssetPath(p, path); (err == nil) != want {
@@ -399,6 +406,27 @@ func TestNewBlipRejectsBadDate(t *testing.T) {
 		if err := NewBlip(p, BlipInput{Date: d, Text: "x"}); err == nil {
 			t.Errorf("date %q accepted", d)
 		}
+	}
+}
+
+func TestNewBlipRemovesAssetsWhenInsertFails(t *testing.T) {
+	p := setupFixture(t)
+	if err := os.Remove(p.BlipsYAML); err != nil {
+		t.Fatal(err)
+	}
+	if err := os.Mkdir(p.BlipsYAML, 0o755); err != nil {
+		t.Fatal(err)
+	}
+	src := filepath.Join(t.TempDir(), "shot.png")
+	if err := os.WriteFile(src, []byte("png"), 0o644); err != nil {
+		t.Fatal(err)
+	}
+	if err := NewBlip(p, BlipInput{Date: "2026-03-03", MediaPaths: []string{src}}); err == nil {
+		t.Fatal("expected an error")
+	}
+	entries, _ := os.ReadDir(p.BlipsAssetsDir)
+	if len(entries) != 0 {
+		t.Errorf("assets left behind: %v", entries)
 	}
 }
 

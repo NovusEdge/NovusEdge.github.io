@@ -2,12 +2,14 @@ package actions
 
 import (
 	"bytes"
+	"context"
 	"errors"
 	"fmt"
 	"os/exec"
 	"path/filepath"
 	"strconv"
 	"strings"
+	"time"
 )
 
 // TranslateEventKind classifies one line of translate-blog.mjs output.
@@ -89,9 +91,14 @@ func ParseTranslationCheck(stderr string) (stale map[string]bool, missing map[st
 	return stale, missing
 }
 
-// TranslationStatus runs the script's --check mode.
+const translationStatusTimeout = 20 * time.Second
+
+// TranslationStatus runs the script's --check mode. A hung node is killed
+// after translationStatusTimeout and reported as an error.
 func TranslationStatus(p Paths) (stale map[string]bool, missing map[string][]string, err error) {
-	cmd := exec.Command("node", "scripts/translate-blog.mjs", "--check")
+	ctx, cancel := context.WithTimeout(context.Background(), translationStatusTimeout)
+	defer cancel()
+	cmd := exec.CommandContext(ctx, "node", "scripts/translate-blog.mjs", "--check")
 	cmd.Dir = p.Root
 	var stderr bytes.Buffer
 	cmd.Stderr = &stderr
