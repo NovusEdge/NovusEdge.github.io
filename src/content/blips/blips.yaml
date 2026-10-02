@@ -1,5 +1,25 @@
 # blips - short-form updates
 
+- date: 2026-10-03
+  text: "checked with Cabin just rn for analytics"
+  media: cabin-analytics-china.jpg
+  tags: [site]
+
+- date: 2026-10-03
+  text: "Us wo a singular ray of sunshine"
+  media: office-ray-of-sunshine.jpg
+  tags: [life]
+
+- date: 2026-10-03
+  text: "First game of Warhammer 40k, kinda interesting ngl"
+  media: warhammer-40k-first-game.mp4
+  tags: [games]
+
+- date: 2026-10-03
+  text: "Tf is going on in Lahti bruh smh"
+  media: lahti-sirens.mp4
+  tags: [life, finland]
+
 - date: 2026-09-25
   text: "gg voima ventures excursion, we had a mini-pitching competition lmao"
   media: [voima-ventures-pitching.jpg, voima-ventures-group.jpg]
