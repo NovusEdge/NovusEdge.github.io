@@ -5,6 +5,7 @@ import { Meta } from '../../lib/meta'
 import type { Post } from '../../lib/posts'
 import { isMobile, prefersReducedMotion } from '../../lib/motion'
 import { scrollOut, signal, smoothstep, type Stroke } from '../../lib/voyager'
+import { VoyagerSound } from '../../lib/voyager-sound'
 import { makeRig } from '../../components/voyager/rig'
 import { TLink } from '../../components/page-transition'
 import { PostSignoff } from '../../components/post-signoff'
@@ -13,7 +14,11 @@ import { useLocalePath } from '../../i18n/use-locale-path'
 const RecordScene = lazy(() => import('../../components/voyager/record-scene'))
 
 const PLAQUE_SOURCE = 'https://commons.wikimedia.org/wiki/File:Voyager_plaque.svg'
+const GREETINGS_SOURCE = 'https://commons.wikimedia.org/wiki/Category:Greetings_messages_on_the_Voyager_Golden_Record'
 const GIF = '/assets/gifs/helloworld.gif'
+// Real greetings from the Golden Record (NASA, public domain via Wikimedia Commons). English
+// plays when the heading resolves; each ping sends the next one out.
+const GREETINGS = ['en', 'cs', 'nl', 'th', 'vi', 'nan'].map((k) => `/assets/voyager/greetings/${k}.mp3`)
 
 // pending: server render and the first client frame, before we know what the browser can do.
 type Mode = 'pending' | 'live' | 'still' | 'gif'
@@ -39,6 +44,8 @@ export function HelloWorldPage({ post, image }: { post: Post; image?: string | n
   const [mode, setMode] = useState<Mode>('pending')
   const [strokes, setStrokes] = useState<Stroke[] | null>(null)
   const [running, setRunning] = useState(true)
+  const runningRef = useRef(true)
+  runningRef.current = running
   const [touch, setTouch] = useState(false)
   const rig = useRef(makeRig()).current
   const flightRef = useRef<HTMLElement>(null)
@@ -50,6 +57,10 @@ export function HelloWorldPage({ post, image }: { post: Post; image?: string | n
   const hintRef = useRef<HTMLParagraphElement>(null)
   const signalStart = useRef<number | null>(null)
   const burst = useRef(0)
+  const sound = useRef<VoyagerSound | null>(null)
+  const [soundOn, setSoundOn] = useState(false)
+  const nextGreeting = useRef(1)
+  const resolved = useRef(false)
 
   useEffect(() => {
     // Space is dark in either theme; borrowing the site's dark class restyles the nav and
@@ -113,6 +124,9 @@ export function HelloWorldPage({ post, image }: { post: Post; image?: string | n
     let raf = 0
     let blocks: { x: number; y: number }[] | null = null
     let block = 6
+    let lastNow = performance.now()
+    let lastDraw = rig.intro.draw
+    let lastT = -1
     const dpr = Math.min(devicePixelRatio || 1, 2)
 
     const buildBlocks = (cv: HTMLCanvasElement, h1: HTMLHeadingElement) => {
@@ -138,8 +152,22 @@ export function HelloWorldPage({ post, image }: { post: Post; image?: string | n
       return out
     }
 
+    // Canvas sizes come from a ResizeObserver, not a per-frame getBoundingClientRect,
+    // which would force a layout every frame.
+    const size = new Map<Element, { width: number; height: number }>()
+    const ro = new ResizeObserver((es) => es.forEach((e) => size.set(e.target, e.contentRect)))
+    if (waveRef.current) ro.observe(waveRef.current)
+    if (pixelRef.current) ro.observe(pixelRef.current)
+    let pixelsDone = false
+    let waveBlank = false
+
     const tick = (now: number) => {
       raf = requestAnimationFrame(tick)
+      // Scrolled past the flight: nothing here is on screen.
+      if (!runningRef.current) {
+        sound.current?.update({ drawRate: 0, spin: 0, scroll: 1, signal: 0 })
+        return
+      }
       const out = scrollOut(rig.scroll)
       const t = signalStart.current === null ? -1 : (now - signalStart.current) / 1000
       const wave = waveRef.current
@@ -148,20 +176,37 @@ export function HelloWorldPage({ post, image }: { post: Post; image?: string | n
       if (!wave || !pix || !h1) return
 
       const titleIn = smoothstep(SCAN_AT + SCAN_FOR, SCAN_AT + SCAN_FOR + RESOLVE_FOR, t)
+      const snd = sound.current
+      if (snd?.on) {
+        const dt = Math.max(1e-3, (now - lastNow) / 1000)
+        snd.update({ drawRate: (rig.intro.draw - lastDraw) / dt, spin: rig.spin, scroll: rig.scroll, signal: smoothstep(0, 0.8, t) })
+        if (lastT < SCAN_AT && t >= SCAN_AT) snd.chirp()
+      }
+      if (!resolved.current && titleIn >= 1) {
+        resolved.current = true
+        snd?.greet(GREETINGS[0])
+      }
+      lastNow = now
+      lastDraw = rig.intro.draw
+      lastT = t
       h1.style.opacity = String(titleIn * out.title)
       if (plateRef.current) plateRef.current.style.opacity = String(out.plate)
       if (hintRef.current) hintRef.current.style.opacity = String(smoothstep(SCAN_AT + SCAN_FOR + RESOLVE_FOR, SCAN_AT + SCAN_FOR + RESOLVE_FOR + 1, t) * 0.7 * out.title)
 
       // The trace: speeds up and roughens while the record is spun, spikes on a ping.
-      const wr = wave.getBoundingClientRect()
+      const wr = size.get(wave)
+      if (!wr) return
       if (wave.width !== Math.round(wr.width * dpr)) {
         wave.width = Math.round(wr.width * dpr)
         wave.height = Math.round(wr.height * dpr)
       }
       const w = wave.getContext('2d')!
-      w.setTransform(dpr, 0, 0, dpr, 0, 0)
-      w.clearRect(0, 0, wr.width, wr.height)
       const waveIn = smoothstep(0, 0.8, t) * out.title
+      if (waveIn > 0 || !waveBlank) {
+        w.setTransform(dpr, 0, 0, dpr, 0, 0)
+        w.clearRect(0, 0, wr.width, wr.height)
+        waveBlank = waveIn <= 0
+      }
       if (waveIn > 0) {
         burst.current *= 0.94
         const speed = 1 + Math.min(6, Math.abs(rig.spin) * 1.5)
@@ -181,7 +226,8 @@ export function HelloWorldPage({ post, image }: { post: Post; image?: string | n
       }
 
       // The scan: the greeting painted in as gold blocks behind a sweeping line, left to right.
-      const pr = pix.getBoundingClientRect()
+      const pr = size.get(pix)
+      if (!pr || pixelsDone) return
       if (pix.width !== Math.round(pr.width * dpr)) {
         pix.width = Math.round(pr.width * dpr)
         pix.height = Math.round(pr.height * dpr)
@@ -192,6 +238,8 @@ export function HelloWorldPage({ post, image }: { post: Post; image?: string | n
       p.clearRect(0, 0, pr.width, pr.height)
       const sweep = smoothstep(SCAN_AT, SCAN_AT + SCAN_FOR, t)
       const fade = 1 - titleIn
+      // Once the heading has resolved, the blocks are gone for good.
+      pixelsDone = fade <= 0
       if (sweep > 0 && fade > 0) {
         blocks ??= buildBlocks(pix, h1)
         const sx = sweep * pr.width
@@ -205,7 +253,10 @@ export function HelloWorldPage({ post, image }: { post: Post; image?: string | n
       }
     }
     document.fonts.ready.then(() => (raf = requestAnimationFrame(tick)))
-    return () => cancelAnimationFrame(raf)
+    return () => {
+      cancelAnimationFrame(raf)
+      ro.disconnect()
+    }
   }, [mode, rig])
 
   // Hovering tilts the record toward the cursor, dragging spins it, a click sends a ping.
@@ -229,9 +280,27 @@ export function HelloWorldPage({ post, image }: { post: Post; image?: string | n
     if (drag.current && !drag.current.moved) {
       rig.queued++
       burst.current = 0.9
+      if (sound.current?.on) {
+        sound.current.ping()
+        // The ping goes out first; the greeting follows it into the dark.
+        const src = GREETINGS[nextGreeting.current++ % GREETINGS.length]
+        window.setTimeout(() => sound.current?.greet(src), 450)
+      }
     }
     drag.current = null
   }
+
+  const toggleSound = () => {
+    sound.current ??= new VoyagerSound()
+    if (sound.current.on) sound.current.stop()
+    else {
+      sound.current.start()
+      // Turned on after the greeting already resolved: say hello now.
+      if (resolved.current) sound.current.greet(GREETINGS[0])
+    }
+    setSoundOn(sound.current.on)
+  }
+  useEffect(() => () => sound.current?.stop(), [])
 
   const launched = t('blog.hello.plate', { date: post.date.slice(0, 10) })
   const live = mode === 'live'
@@ -277,6 +346,18 @@ export function HelloWorldPage({ post, image }: { post: Post; image?: string | n
               </p>
             )}
           </div>
+          {live && (
+            <button
+              type="button"
+              className="vg-sound"
+              aria-pressed={soundOn}
+              onPointerDown={(e) => e.stopPropagation()}
+              onPointerUp={(e) => e.stopPropagation()}
+              onClick={toggleSound}
+            >
+              {soundOn ? t('blog.hello.soundOn') : t('blog.hello.soundOff')}
+            </button>
+          )}
           <p ref={plateRef} className="vg-plate">
             {launched}
           </p>
@@ -292,7 +373,10 @@ export function HelloWorldPage({ post, image }: { post: Post; image?: string | n
           <a href={PLAQUE_SOURCE} target="_blank" rel="noreferrer noopener">
             Voyager_plaque.svg
           </a>{' '}
-          {t('blog.hello.creditLicense')}
+          {t('blog.hello.creditLicense')}{' '}
+          <a href={GREETINGS_SOURCE} target="_blank" rel="noreferrer noopener">
+            {t('blog.hello.creditVoices')}
+          </a>
         </p>
         <PostSignoff variant={0} />
       </div>

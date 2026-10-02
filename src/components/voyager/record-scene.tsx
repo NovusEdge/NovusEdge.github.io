@@ -1,6 +1,6 @@
-import { useEffect, useMemo, useRef } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { Canvas, useFrame, useThree } from '@react-three/fiber'
-import { Environment, Lightformer, Stars } from '@react-three/drei'
+import { Environment, Lightformer, PerformanceMonitor, Stars } from '@react-three/drei'
 import { Bloom, EffectComposer } from '@react-three/postprocessing'
 import * as THREE from 'three'
 import { drawWindows, partialStroke, scrollOut, strokeLength, type Stroke } from '../../lib/voyager'
@@ -13,13 +13,21 @@ const PING_LIFE = 2.6
 
 // Draws the cover etching up to `draw` (0..1) into the albedo canvas, and only the
 // strokes still being cut into the glow canvas, so the stylus tip blooms and cools.
-function paint(albedo: HTMLCanvasElement, glow: HTMLCanvasElement, strokes: Stroke[], windows: [number, number][], draw: number) {
+// Moving forward from `from`, only strokes cut in between are drawn: re-stroking a
+// path over itself just extends it, so the finished ones need no repaint.
+function paint(albedo: HTMLCanvasElement, glow: HTMLCanvasElement, strokes: Stroke[], windows: [number, number][], from: number, draw: number) {
   const S = albedo.width
   const a = albedo.getContext('2d')!
   const g = glow.getContext('2d')!
-  a.fillStyle = GOLD
-  a.fillRect(0, 0, S, S)
-  g.clearRect(0, 0, S, S)
+  const fresh = from < 0 || draw < from
+  if (fresh) {
+    a.fillStyle = GOLD
+    a.fillRect(0, 0, S, S)
+  }
+  // The glow is blurred by bloom anyway, so it lives on a smaller canvas in the same units.
+  g.setTransform(1, 0, 0, 1, 0, 0)
+  g.clearRect(0, 0, glow.width, glow.height)
+  g.setTransform(glow.width / S, 0, 0, glow.width / S, 0, 0)
   for (const ctx of [a, g]) {
     ctx.lineCap = 'round'
     ctx.lineJoin = 'round'
@@ -30,6 +38,7 @@ function paint(albedo: HTMLCanvasElement, glow: HTMLCanvasElement, strokes: Stro
   strokes.forEach(([w, flat], i) => {
     const [s, e] = windows[i]
     if (draw <= s) return
+    if (!fresh && e <= from && draw - e > 0.05) return
     const frac = (draw - s) / (e - s)
     const pts = partialStroke(flat, frac)
     if (pts.length < 4) return
@@ -56,7 +65,8 @@ function Record({ rig, strokes, size }: { rig: Rig; strokes: Stroke[]; size: num
   const { albedo, glow, map, emissiveMap } = useMemo(() => {
     const albedo = document.createElement('canvas')
     const glow = document.createElement('canvas')
-    albedo.width = albedo.height = glow.width = glow.height = size
+    albedo.width = albedo.height = size
+    glow.width = glow.height = size / 4
     const map = new THREE.CanvasTexture(albedo)
     map.colorSpace = THREE.SRGBColorSpace
     map.anisotropy = 8
@@ -76,9 +86,10 @@ function Record({ rig, strokes, size }: { rig: Rig; strokes: Stroke[]; size: num
   const angle = useRef(0)
 
   useFrame((_, dt) => {
-    const d = Math.round(rig.intro.draw * 400) / 400
+    // 300 steps is smoother than the eye can follow at this speed, and caps texture uploads.
+    const d = Math.round(rig.intro.draw * 300) / 300
     if (d !== painted.current) {
-      paint(albedo, glow, strokes, windows, d)
+      paint(albedo, glow, strokes, windows, painted.current, d)
       map.needsUpdate = true
       emissiveMap.needsUpdate = true
       painted.current = d
@@ -181,10 +192,15 @@ function Sky({ rig, count }: { rig: Rig; count: number }) {
 }
 
 export default function RecordScene({ rig, strokes, mobile, running }: { rig: Rig; strokes: Stroke[]; mobile: boolean; running: boolean }) {
+  const maxDpr = Math.min(typeof devicePixelRatio === 'number' ? devicePixelRatio : 1, mobile ? 1.5 : 2)
+  const [dpr, setDpr] = useState(maxDpr)
+  // A struggling GPU first loses resolution, then the bloom pass, and never gets them back
+  // in the same visit, so the quality does not flicker up and down.
+  const [bloom, setBloom] = useState(true)
   return (
     <Canvas
       frameloop={running ? 'always' : 'never'}
-      dpr={[1, mobile ? 1.5 : 2]}
+      dpr={dpr}
       camera={{ position: [0, 0, 5], fov: 40, near: 0.1, far: 400 }}
       gl={{ antialias: !mobile, powerPreference: 'high-performance' }}
     >
@@ -200,9 +216,19 @@ export default function RecordScene({ rig, strokes, mobile, running }: { rig: Ri
       <Sky rig={rig} count={mobile ? 2500 : 6000} />
       <Record rig={rig} strokes={strokes} size={mobile ? 1024 : 2048} />
       <Pings rig={rig} />
-      <EffectComposer multisampling={0}>
-        <Bloom mipmapBlur intensity={0.75} luminanceThreshold={0.62} luminanceSmoothing={0.2} />
-      </EffectComposer>
+      <PerformanceMonitor
+        onDecline={() => setDpr((d) => (d > 1 ? 1 : d))}
+        onFallback={() => {
+          setDpr(1)
+          setBloom(false)
+        }}
+        flipflops={2}
+      />
+      {bloom && (
+        <EffectComposer multisampling={0}>
+          <Bloom mipmapBlur intensity={0.75} luminanceThreshold={0.62} luminanceSmoothing={0.2} />
+        </EffectComposer>
+      )}
     </Canvas>
   )
 }
