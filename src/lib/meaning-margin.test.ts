@@ -16,7 +16,7 @@ describe('arrangeMargin', () => {
   it('pairs a note with the paragraph before it', () => {
     const [row] = blocks([p('a long enough paragraph '.repeat(10)), t('\n'), note('is it, though?')])
     expect(cls(row)).toEqual(['ms-row'])
-    const [text, side] = row.children!
+    const [side, text] = row.children!
     expect(text.tagName).toBe('p')
     expect(cls(side)).toEqual(['ms-side'])
     expect(side.children![0].tagName).toBe('aside')
@@ -25,7 +25,7 @@ describe('arrangeMargin', () => {
 
   it('stacks consecutive notes and images in one margin', () => {
     const [row] = blocks([p('x'.repeat(200)), note('one'), img('a sketch'), note('two')])
-    const side = row.children![1]
+    const side = row.children![0]
     expect(side.children!.map((c) => c.tagName)).toEqual(['aside', 'figure', 'aside'])
     expect(side.children![1].children![1].children![0].value).toBe('a sketch')
   })

@@ -2270,7 +2270,7 @@ html:has(.oj-dialog[open]) {
 
 /* Full-bleed out of the column. Each line gets its own grid row so the
    argument reads top to bottom, alternating sides, in DOM order. */
-.ms-voices { position: relative; z-index: 1; width: 100vw; margin-left: calc(50% - 50vw); }
+.ms-voices { position: relative; z-index: 1; clear: both; width: 100vw; margin-left: calc(50% - 50vw); }
 .ms-voices.ms-motion { height: 420vh; }
 .ms-stage {
   display: grid;
@@ -2320,23 +2320,34 @@ html:has(.oj-dialog[open]) {
   .ms-voice-list li[data-side='right'] { justify-self: end; text-align: right; }
 }
 
-/* Notebook layout: a reading column on the left, the rest of the sheet as margin for
-   notes and images. Padding stays symmetric so the full-bleed voices math holds. */
+/* A centred reading column; margin notes and images hang into the empty space to its
+   right, so a post with no notes is simply centred. Padding stays symmetric so the
+   full-bleed voices math holds. */
 .ms-col {
-  --ms-text: 680px;
-  --ms-gap: 5vw;
+  --ms-text: 760px;
+  --ms-gap: 4vw;
   position: relative;
   z-index: 1;
-  max-width: 1680px;
+  max-width: calc(var(--ms-text) + 80px);
   margin: 0 auto;
-  padding: 0 7vw;
+  padding: 0 40px;
   font-family: var(--font-prose);
-  font-size: 19px;
+  font-size: 20px;
   line-height: 1.75;
 }
-.ms-prose > :not(.ms-row):not(.ms-voices):not(.ms-lede) { max-width: var(--ms-text); }
-.ms-row { display: grid; grid-template-columns: minmax(0, var(--ms-text)) minmax(0, 1fr); column-gap: var(--ms-gap); align-items: start; }
-.ms-side { display: flex; flex-direction: column; gap: 1.4em; padding-top: 0.2em; }
+header.ms-col { max-width: 1400px; text-align: center; }
+/* Sidenote technique: the margin floats right with a negative margin into the gutter, and
+   clear: right makes a later note slide below an earlier tall image instead of overlapping it. */
+.ms-side {
+  --ms-side: min(400px, calc((100vw - var(--ms-text)) / 2 - var(--ms-gap) - 40px));
+  float: right;
+  clear: right;
+  width: var(--ms-side);
+  margin: 0.2em calc(-1 * (var(--ms-side) + var(--ms-gap))) 1.4em 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1.4em;
+}
 .ms-note {
   max-width: 30ch;
   font: 700 26px/1.2 'Caveat', 'Zen Kaku Gothic New', 'Noto Sans SC', cursive;
@@ -2344,14 +2355,17 @@ html:has(.oj-dialog[open]) {
   transform: rotate(-1.5deg);
 }
 .ms-side > .ms-note:nth-child(even) { color: var(--ms-ink); opacity: 0.8; transform: rotate(1.2deg); }
-.ms-fig { margin: 0; max-width: 560px; }
+.ms-fig { margin: 0; max-width: 340px; }
 .ms-prose .ms-fig img { width: 100%; margin: 0; border-radius: 3px; }
 .ms-fig-cap { margin-top: 0.4em; font: 700 20px/1.2 'Caveat', cursive; opacity: 0.7; }
 .ms-prose .ms-lede { margin: 0 0 1.4em; font: 700 clamp(30px, 3.2vw, 50px)/1.2 'Caveat', 'Zen Kaku Gothic New', 'Noto Sans SC', cursive; }
+/* Below this the right gutter is too narrow for notes, so they fall back between paragraphs. */
+@media (max-width: 1400px) {
+  .ms-row { display: flex; flex-direction: column; }
+  .ms-side { order: 1; float: none; width: auto; margin: 0 0 1.3em; }
+}
 @media (max-width: 900px) {
-  .ms-col { padding: 0 20px; }
-  .ms-row { display: block; }
-  .ms-side { margin: 0 0 1.3em; }
+  .ms-col { padding: 0 20px; font-size: 19px; }
   .ms-note { font-size: 22px; }
 }
 .ms-prose h2 { position: relative; display: inline-block; font: 600 24px/1.3 var(--font-prose); margin: 2.4em 0 0.8em; }

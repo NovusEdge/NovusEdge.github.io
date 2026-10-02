@@ -33,7 +33,7 @@ function toFigure(n: Hast): Hast | null {
 
 /**
  * Pairs each block with the `> [!note]` quotes and lone images that follow it, as a
- * `div.ms-row` of [block, div.ms-side]. A short first paragraph becomes the handwritten lede.
+ * `div.ms-row` of [div.ms-side, block]. A short first paragraph becomes the handwritten lede.
  */
 export function arrangeMargin(children: Hast[]): Hast[] {
   const out: Hast[] = []
@@ -46,8 +46,9 @@ export function arrangeMargin(children: Hast[]): Hast[] {
     const side = toNote(c) ?? toFigure(c)
     const prev = out[lastBlock]
     if (side && prev && (classes(prev).includes('ms-row') || (ANCHORS.has(prev.tagName ?? '') && !voicesFromNode(prev)))) {
-      if (classes(prev).includes('ms-row')) prev.children![1].children!.push(side)
-      else out[lastBlock] = el('div', 'ms-row', [prev, el('div', 'ms-side', [side])])
+      // The margin goes first: it floats right beside the block, and floats stack instead of overlapping.
+      if (classes(prev).includes('ms-row')) prev.children![0].children!.push(side)
+      else out[lastBlock] = el('div', 'ms-row', [el('div', 'ms-side', [side]), prev])
       continue
     }
     out.push(side ?? c)
