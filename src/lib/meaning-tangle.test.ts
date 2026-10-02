@@ -42,6 +42,22 @@ describe('drawTangle', () => {
   it('draws fewer strokes into a small head', () => {
     expect(strokesDrawn(31, 1)).toBe(40)
   })
+  it('draws about half the segments at stride 2', () => {
+    const segsAt = (stride: number) => {
+      let segs = 0
+      let n = 0
+      const ctx: TangleCtx = {
+        save() {}, restore() {}, beginPath() {}, moveTo() {}, quadraticCurveTo() { segs++ }, stroke() { n++ },
+        strokeStyle: '', globalAlpha: 1, lineWidth: 1, lineCap: 'butt', lineJoin: 'miter',
+      }
+      drawTangle(ctx, makeStrokes(80, 110, 5), { x: 0, y: 0, rx: 100, ry: 100 }, 1, 0, '#000', 1, 1, stride)
+      return { segs, n }
+    }
+    const one = segsAt(1)
+    const two = segsAt(2)
+    expect(two.segs).toBeLessThan(one.segs)
+    expect(two.segs).toBeLessThanOrEqual(Math.ceil(one.segs / 2) + two.n)
+  })
   it('clamps an agitation above 1', () => {
     expect(strokesDrawn(100, 2)).toBe(strokesDrawn(100, 1))
   })

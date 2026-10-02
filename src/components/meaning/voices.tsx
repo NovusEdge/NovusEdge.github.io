@@ -125,6 +125,7 @@ export function Voices({ lines, meta, locale }: { lines: VoiceLine[]; meta: Voic
     let agit = 0.15
     let raf = 0
     let last = ''
+    let lastShape = ''
 
     const clear = () => {
       last = ''
@@ -164,12 +165,16 @@ export function Voices({ lines, meta, locale }: { lines: VoiceLine[]; meta: Voic
       const e = ellipseAt(m, vw, vh, head)
       const frame = Math.floor(now / (140 - agit * 85))
       // Most frames mid-section are identical; repaint only when an input of the image moved.
-      const key = [frame, Math.round(e.x * 2), Math.round(e.y * 2), Math.round(e.rx * 2), Math.round(e.ry * 2), Math.round(agit * 50), Math.round(alpha * 100), canvas.width, canvas.height, ink].join()
+      const shape = [Math.round(e.x * 2), Math.round(e.y * 2), Math.round(e.rx * 2), Math.round(e.ry * 2)].join()
+      // While the ellipse moves, half the points: the pull-in repaints the whole tangle every frame.
+      const stride = shape === lastShape ? 1 : 2
+      lastShape = shape
+      const key = [frame, shape, Math.round(agit * 50), Math.round(alpha * 100), canvas.width, canvas.height, ink, stride].join()
       if (key !== last) {
         clear()
         last = key
         ctx.setTransform(dpr, 0, 0, dpr, 0, 0)
-        if (alpha > 0.005) drawTangle(ctx, strokes, e, agit, frame, ink, alpha, lerp(1.4, 1.3, m))
+        if (alpha > 0.005) drawTangle(ctx, strokes, e, agit, frame, ink, alpha, lerp(1.4, 1.3, m), stride)
       }
       raf = requestAnimationFrame(tick)
     }
