@@ -132,7 +132,7 @@ export default function BlogIndex() {
                 if (post.slug === OPENJEV_SLUG && img) {
                   return (
                     <div key={post.slug}>
-                      <PlanACard post={post} img={img} clip="/assets/blog/openjev-thumb.mp4" dayOf={dayOf} monthOf={monthOf} />
+                      <PlanACard post={post} img={img} clip="/assets/blog/openjev-thumb.mp4" loopClip dayOf={dayOf} monthOf={monthOf} />
                       <InlineBlipCount count={blipCount} />
                     </div>
                   )

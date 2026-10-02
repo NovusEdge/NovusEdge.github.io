@@ -38,11 +38,13 @@ type Props = {
   clip?: string | null
   /** A six-digit hex: tag colours append an alpha byte to it. */
   accent?: string
+  /** Loop the clip all the time instead of only on hover; reduced motion still gets the still. */
+  loopClip?: boolean
   dayOf: (date: string) => string
   monthOf: (date: string) => string
 }
 
-export function PlanACard({ post, img, clip = CLIP, accent = OXIDE, dayOf, monthOf }: Props) {
+export function PlanACard({ post, img, clip = CLIP, accent = OXIDE, loopClip = false, dayOf, monthOf }: Props) {
   const [hovered, setHovered] = useState(false)
   const [animated, setAnimated] = useState(false)
   // The clip is 330KB for a hover flourish, so it only gets a src once the
@@ -53,14 +55,16 @@ export function PlanACard({ post, img, clip = CLIP, accent = OXIDE, dayOf, month
 
   useEffect(() => {
     setAnimated(!prefersReducedMotion() && !isMobile())
-  }, [])
+    if (loopClip && !prefersReducedMotion()) setArmed(true)
+  }, [loopClip])
 
+  const playing = hovered || loopClip
   useEffect(() => {
     const el = video.current
     if (!el) return
-    if (hovered) void el.play().catch(() => {})
+    if (playing) void el.play().catch(() => {})
     else el.pause()
-  }, [hovered, armed])
+  }, [playing, armed])
 
   const enter = () => {
     setHovered(true)
@@ -111,9 +115,9 @@ export function PlanACard({ post, img, clip = CLIP, accent = OXIDE, dayOf, month
                 loop
                 muted
                 playsInline
-                preload="none"
+                preload={loopClip ? 'auto' : 'none'}
                 className="absolute inset-0 h-full w-full object-cover transition-opacity duration-500"
-                style={{ opacity: hovered ? 1 : 0 }}
+                style={{ opacity: playing ? 1 : 0 }}
               />
             )}
             <Perimeter color={accent} />
