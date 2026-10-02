@@ -74,16 +74,14 @@ func PaperSlugs(p Paths) ([]string, error) {
 	return slugs, nil
 }
 
-func tsQuote(s string) string {
-	s = strings.ReplaceAll(s, `\`, `\\`)
-	s = strings.ReplaceAll(s, `'`, `\'`)
-	return "'" + s + "'"
-}
+// tsQuote emits a JSON string literal, which is also a valid TS string
+// literal; hand-escaping broke on raw newlines from the multi-line abstract.
+func tsQuote(s string) string { return jsonString(s) }
 
 func formatPaperEntry(in PaperInput) string {
 	var b strings.Builder
 	b.WriteString("  {\n")
-	fmt.Fprintf(&b, "    slug: %s,\n", tsQuote(in.Slug))
+	fmt.Fprintf(&b, "    slug: %s,\n", "'"+in.Slug+"'")
 	fmt.Fprintf(&b, "    title: %s,\n", tsQuote(in.Title))
 	fmt.Fprintf(&b, "    venue: %s,\n", tsQuote(in.Venue))
 	fmt.Fprintf(&b, "    date: %s,\n", tsQuote(in.Date))

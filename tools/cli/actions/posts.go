@@ -105,13 +105,13 @@ func ListPosts(p Paths) ([]PostMeta, error) {
 		if ok {
 			meta.Hidden = isDraft(fm)
 			if title, ok := fm.Get("title"); ok {
-				meta.Title = title
+				meta.Title = unquote(title)
 			}
 			if date, ok := fm.Get("date"); ok {
 				meta.Date = date
 			}
 			if desc, ok := fm.Get("description"); ok {
-				meta.Description = desc
+				meta.Description = unquote(desc)
 			}
 			if tags, ok := fm.Get("tags"); ok {
 				meta.Tags = ParseTagsValue(tags)
@@ -125,6 +125,13 @@ func ListPosts(p Paths) ([]PostMeta, error) {
 	sort.Slice(posts, func(i, j int) bool { return posts[i].Date > posts[j].Date })
 	return posts, nil
 }
+
+// unquote strips one leading and one trailing quote, as the site does.
+func unquote(s string) string {
+	return quoteEdgeRe.ReplaceAllString(s, "")
+}
+
+var quoteEdgeRe = regexp.MustCompile(`^['"]|['"]$`)
 
 // PostFilePath returns the markdown file path for a slug.
 func PostFilePath(p Paths, slug string) string {

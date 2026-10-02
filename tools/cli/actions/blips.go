@@ -5,9 +5,10 @@ import (
 	"io"
 	"os"
 	"path/filepath"
-	"strconv"
+	"regexp"
 	"strings"
 	"time"
+	"unicode/utf8"
 )
 
 // BlipInput is the user-supplied data for a new blip entry.
@@ -23,8 +24,8 @@ const maxBlipTextLen = 255
 // NewBlip copies the media files (if any) into src/content/blips/assets/ and
 // inserts the entry at the top of blips.yaml.
 func NewBlip(p Paths, in BlipInput) error {
-	if len(in.Text) > maxBlipTextLen {
-		return fmt.Errorf("text is too long (%d chars, max %d)", len(in.Text), maxBlipTextLen)
+	if n := utf8.RuneCountInString(in.Text); n > maxBlipTextLen {
+		return fmt.Errorf("text is too long (%d chars, max %d)", n, maxBlipTextLen)
 	}
 	date := strings.TrimSpace(in.Date)
 	if date == "" {
@@ -60,7 +61,8 @@ func copyMediaAsset(p Paths, srcPath string) (string, error) {
 		return "", err
 	}
 
-	base := filepath.Base(srcPath)
+	// The site parser splits the media flow list on commas.
+	base := unsafeAssetChars.ReplaceAllString(filepath.Base(srcPath), "-")
 	dest := uniqueAssetName(p.BlipsAssetsDir, base)
 	out, err := os.OpenFile(filepath.Join(p.BlipsAssetsDir, dest), os.O_CREATE|os.O_EXCL|os.O_WRONLY, 0o644)
 	if err != nil {
@@ -93,7 +95,7 @@ func formatBlipEntry(date, text string, media, tags []string) string {
 	b.WriteString("- date: ")
 	b.WriteString(date)
 	b.WriteString("\n")
-	if text != "" {
+	if text = strings.Join(strings.Fields(text), " "); text != "" {
 		fmt.Fprintf(&b, "  text: %s\n", yamlQuote(text))
 	}
 	switch len(media) {
@@ -109,9 +111,14 @@ func formatBlipEntry(date, text string, media, tags []string) string {
 	return b.String()
 }
 
+// yamlQuote wraps s in raw double quotes. src/lib/blips.ts strips one quote
+// at each end and never unescapes, and its line parser has no multiline
+// scalars, so whitespace runs (newlines included) fold to single spaces.
 func yamlQuote(s string) string {
-	return strconv.Quote(s)
+	return `"` + strings.Join(strings.Fields(s), " ") + `"`
 }
+
+var unsafeAssetChars = regexp.MustCompile(`[^A-Za-z0-9._-]+`)
 
 // insertBlipEntry puts entry before the first existing item, after the
 // leading comments and blank lines, so the file stays newest-first. The file

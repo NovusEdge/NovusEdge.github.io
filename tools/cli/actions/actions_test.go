@@ -1,6 +1,7 @@
 package actions
 
 import (
+	"encoding/json"
 	"os"
 	"path/filepath"
 	"strings"
@@ -424,4 +425,93 @@ func contains(ss []string, s string) bool {
 		}
 	}
 	return false
+}
+
+func TestNewPaperEscapesStrings(t *testing.T) {
+	p := setupFixture(t)
+	abstract := "line one\nline \"two\" it's a back\\slash\tand ä"
+	err := NewPaper(p, PaperInput{
+		Slug: "tricky", Title: "It's \"quoted\"", Venue: "v", Date: "2026",
+		Abstract: abstract, URL: "https://example.com/?a=1&b=<2>",
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+	raw, _ := os.ReadFile(p.PapersFile)
+	for _, line := range strings.Split(string(raw), "\n") {
+		trimmed := strings.TrimSpace(line)
+		if !strings.HasPrefix(trimmed, "abstract: ") {
+			continue
+		}
+		lit := strings.TrimSuffix(strings.TrimPrefix(trimmed, "abstract: "), ",")
+		var got string
+		if err := json.Unmarshal([]byte(lit), &got); err != nil || got != abstract {
+			t.Fatalf("abstract literal %s -> %q, %v", lit, got, err)
+		}
+		if !strings.Contains(string(raw), "url: \"https://example.com/?a=1&b=<2>\"") {
+			t.Fatalf("url escaped unexpectedly:\n%s", raw)
+		}
+		slugs, _ := PaperSlugs(p)
+		if !contains(slugs, "tricky") {
+			t.Fatalf("slug not found: %v", slugs)
+		}
+		return
+	}
+	t.Fatalf("no abstract line:\n%s", raw)
+}
+
+func TestNewBlipTextRoundTripsSiteParser(t *testing.T) {
+	p := setupFixture(t)
+	if err := NewBlip(p, BlipInput{Date: "2026-05-05", Text: "she said \"hi\"\nthen  left"}); err != nil {
+		t.Fatal(err)
+	}
+	raw, _ := os.ReadFile(p.BlipsYAML)
+	var line string
+	for _, l := range strings.Split(string(raw), "\n") {
+		if strings.HasPrefix(strings.TrimSpace(l), "text:") {
+			line = strings.TrimSpace(strings.TrimPrefix(strings.TrimSpace(l), "text:"))
+		}
+	}
+	// Mirrors parseValue in src/lib/blips.ts: strip one quote at each end.
+	got := strings.TrimSuffix(strings.TrimPrefix(line, `"`), `"`)
+	if want := `she said "hi" then left`; got != want {
+		t.Fatalf("got %q want %q", got, want)
+	}
+}
+
+func TestNewBlipCountsRunes(t *testing.T) {
+	p := setupFixture(t)
+	if err := NewBlip(p, BlipInput{Date: "2026-05-05", Text: strings.Repeat("ä", 255)}); err != nil {
+		t.Fatalf("255 runes rejected: %v", err)
+	}
+	if err := NewBlip(p, BlipInput{Date: "2026-05-05", Text: strings.Repeat("ä", 256)}); err == nil {
+		t.Fatal("256 runes accepted")
+	}
+}
+
+func TestCopyMediaSanitizesName(t *testing.T) {
+	p := setupFixture(t)
+	src := filepath.Join(t.TempDir(), "my shot, final [1].png")
+	os.WriteFile(src, []byte("x"), 0o644)
+	if err := NewBlip(p, BlipInput{Date: "2026-05-05", MediaPaths: []string{src}}); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := os.Stat(filepath.Join(p.BlipsAssetsDir, "my-shot-final-1-.png")); err != nil {
+		t.Fatal(err)
+	}
+}
+
+func TestListPostsStripsQuotes(t *testing.T) {
+	p := setupFixture(t)
+	os.WriteFile(filepath.Join(p.BlogDir, "q.md"),
+		[]byte("---\ntitle: \"Shader Journeys: Part 1\"\ndate: 2026-02-02\ndescription: 'It is fine'\n---\n\nbody\n"), 0o644)
+	posts, err := ListPosts(p)
+	if err != nil {
+		t.Fatal(err)
+	}
+	for _, m := range posts {
+		if m.Slug == "q" && (m.Title != "Shader Journeys: Part 1" || m.Description != "It is fine") {
+			t.Fatalf("got %q / %q", m.Title, m.Description)
+		}
+	}
 }
