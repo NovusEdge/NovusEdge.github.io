@@ -2336,3 +2336,19 @@ html:has(.oj-dialog[open]) {
 .ms-prose blockquote { border-left: 2px solid var(--ms-accent); padding-left: 1em; font-style: italic; }
 .ms-ring { position: relative; }
 .ms-divider { position: relative; height: 40px; margin: 3em 0; }
+
+/* Sticky, not fixed: .page-enter carries a transform, so a fixed layer here
+   would size itself to the whole page. */
+.ms-tangle-layer { position: sticky; top: 0; height: 100lvh; margin-bottom: -100lvh; pointer-events: none; z-index: 0; }
+.ms-tangle-layer canvas { display: block; width: 100%; height: 100%; }
+.ms-back { padding-top: 6rem; font: 12px/1 var(--font-mono); letter-spacing: 0.2em; text-transform: uppercase; }
+.ms-kicker { margin: 14vh 0 0; font: 600 12px/1 var(--font-prose); letter-spacing: 0.25em; text-transform: uppercase; opacity: 0.55; }
+.ms-hero {
+  position: relative;
+  display: inline-block;
+  margin: 6vh 0 10vh;
+  font: 700 clamp(56px, 11vw, 104px)/1 'Caveat', 'Zen Kaku Gothic New', 'Noto Sans SC', cursive;
+}
+.ms-hero img { display: block; width: auto; height: 1em; }
+.ms-end { position: relative; height: 50px; margin: 3em 0 20vh; }
+.ms-signoff { position: relative; z-index: 1; max-width: 56rem; margin: 0 auto; padding: 0 1.5rem 6rem; }
