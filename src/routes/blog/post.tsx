@@ -23,6 +23,7 @@ import { GridPage } from './grid-page'
 import { PortalPage } from './portal-page'
 import { OpenJevPage } from './openjev-page'
 import { MeaningPage } from './meaning-page'
+import { HelloWorldPage } from './hello-world-page'
 import { isMeaningSlug } from '../../lib/meaning-data'
 import { OPENJEV_SLUG } from '../../lib/openjev-data'
 import { useLocalePath } from '../../i18n/use-locale-path'
@@ -98,6 +99,10 @@ export default function BlogPost() {
   // The meaning series is a sketchbook still being drawn, with a set piece of
   // two voices arguing around a head full of scribbles.
   if (isMeaningSlug(post.slug)) return <MeaningPage post={post} image={image} />
+
+  // The first post is a greeting sent out with no idea who reads it, so it goes out
+  // the way Voyager's did: etched on a gold record and launched into the dark.
+  if (post.slug === 'hello-world') return <HelloWorldPage post={post} image={image} />
 
   return (
     <>

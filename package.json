@@ -18,6 +18,7 @@
     "@paper-design/shaders": "^0.0.77",
     "@paper-design/shaders-react": "^0.0.77",
     "@react-spring/web": "^10.1.2",
+    "@react-three/drei": "10.7.9",
     "@react-three/fiber": "^9.7.0",
     "@react-three/postprocessing": "^3.1.0",
     "@use-gesture/react": "^10.3.1",
