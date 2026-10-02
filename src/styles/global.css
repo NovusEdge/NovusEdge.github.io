@@ -2320,16 +2320,17 @@ html:has(.oj-dialog[open]) {
   .ms-voice-list li[data-side='right'] { justify-self: end; text-align: right; }
 }
 
-/* Notebook layout: a reading column on the left, the rest of the sheet as margin for
-   notes and images. Padding stays symmetric so the full-bleed voices math holds. */
+/* Notebook layout: a reading column with a margin for notes and images beside it, the
+   pair centred as one sheet so a post without notes yet doesn't hug the left edge.
+   Padding stays symmetric so the full-bleed voices math holds. */
 .ms-col {
   --ms-text: 680px;
   --ms-gap: 5vw;
   position: relative;
   z-index: 1;
-  max-width: 1680px;
+  max-width: 1320px;
   margin: 0 auto;
-  padding: 0 7vw;
+  padding: 0 40px;
   font-family: var(--font-prose);
   font-size: 19px;
   line-height: 1.75;
