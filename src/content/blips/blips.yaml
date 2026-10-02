@@ -10,20 +10,20 @@
   media: office-ray-of-sunshine.jpg
   tags: [life]
 
-- date: 2026-10-03
+- date: 2026-09-30
   text: "First game of Warhammer 40k, kinda interesting ngl"
   media: warhammer-40k-first-game.mp4
   tags: [games]
-
-- date: 2026-10-03
-  text: "Tf is going on in Lahti bruh smh"
-  media: lahti-sirens.mp4
-  tags: [life, finland]
 
 - date: 2026-09-25
   text: "gg voima ventures excursion, we had a mini-pitching competition lmao"
   media: [voima-ventures-pitching.jpg, voima-ventures-group.jpg]
   tags: [events, pitching, startups, finland]
+
+- date: 2026-09-22
+  text: "Tf is going on in Lahti bruh smh"
+  media: lahti-sirens.mp4
+  tags: [life, finland]
 
 - date: 2026-09-22
   text: "Had a fun sparring sesh with the R'Space team in Lahti, what a bunch of lads!"
