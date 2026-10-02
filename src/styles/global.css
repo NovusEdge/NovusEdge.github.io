@@ -2406,7 +2406,7 @@ header.ms-col { max-width: 1400px; text-align: center; }
 .ms-smudge.ms-in { filter: none; opacity: 1; }
 .ms-jw { white-space: nowrap; }
 .ms-j { display: inline-block; }
-.ms-armed .ms-j { transform: translate(var(--x), var(--y)) rotate(var(--r)); transition: transform 1.1s cubic-bezier(0.3, 1.4, 0.5, 1) calc(0.3s + var(--d)); }
+.ms-armed .ms-j { transform: translate(var(--x), var(--y)) rotate(var(--r)); transition: transform 1.1s cubic-bezier(0.22, 1, 0.36, 1) calc(0.3s + var(--d)); }
 .ms-in .ms-j { transform: none; }
 
 /* Pen: each glyph's outline draws, then its ink fills in behind the stroke. */
