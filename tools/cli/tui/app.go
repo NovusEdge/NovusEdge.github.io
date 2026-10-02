@@ -147,14 +147,18 @@ func (a *App) update(msg tea.Msg) tea.Cmd {
 		a.tr = translationState{loaded: true, err: msg.err, stale: msg.stale, missing: msg.missing}
 		return nil
 	case writeDoneMsg:
+		// Reload on failure too: a tag sync can fail after partial writes.
 		if msg.err != nil {
 			a.setStatus(msg.err.Error(), true)
-			return nil
+		} else {
+			a.setStatus(msg.status, false)
 		}
-		a.setStatus(msg.status, false)
 		return a.reloadPosts(msg.sel)
 	case overlayDoneMsg:
-		a.overlay = nil
+		a.overlay = msg.next
+		if msg.next != nil {
+			return tea.Batch(msg.cmd, msg.next.Init())
+		}
 		return msg.cmd
 	case list.FilterMatchesMsg:
 		a.wantSettled = true
