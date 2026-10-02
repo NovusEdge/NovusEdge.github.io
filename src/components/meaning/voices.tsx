@@ -2,8 +2,8 @@ import { createContext, useContext, useEffect, useRef, useState, type CSSPropert
 import { useTranslation } from 'react-i18next'
 import { onBoil } from '../../lib/boil'
 import type { VoiceMeta } from '../../lib/meaning-data'
-import { linesToPlay, type VoiceLine } from '../../lib/meaning-voices'
-import { HEAD, drawTangle, ellipseAt, lerp, makeStrokes, presence, rng, sectionProgress, smooth, stagePhase } from '../../lib/meaning-tangle'
+import { sideRows, type VoiceLine } from '../../lib/meaning-voices'
+import { HEAD, drawTangle, ellipseAt, lerp, makeStrokes, presence, pullToward, rng, smooth } from '../../lib/meaning-tangle'
 import { isMobile, prefersReducedMotion } from '../../lib/motion'
 import { jitterPath } from './drawn'
 
@@ -15,6 +15,9 @@ export const FIGURE_PATH =
   'M 140 42 C 92 40 62 82 64 138 C 66 196 100 236 142 238 C 186 238 218 196 216 136 C 214 80 186 44 140 42 Z' +
   ' M 118 236 C 120 256 118 268 112 280 M 164 236 C 162 256 164 268 170 280' +
   ' M 112 280 C 70 288 34 310 22 372 M 170 280 C 212 288 248 310 258 372'
+
+// How long the last line holds in the head before the tangle spills back out.
+const SETTLE_MS = 2500
 
 const inkColor = () => getComputedStyle(document.querySelector('.ms') ?? document.documentElement).getPropertyValue('--ms-ink').trim() || '#1a1a1a'
 
@@ -36,9 +39,11 @@ function eraseColumn(ctx: CanvasRenderingContext2D, x0: number, x1: number, h: n
   ctx.restore()
 }
 
-function lineOpacity(i: number, shown: number) {
+// solo: the phone layout stacks every line in one slot under the figure, so only the newest shows.
+function lineOpacity(i: number, shown: number, solo: boolean) {
   if (i >= shown) return 0
   const age = shown - 1 - i
+  if (solo) return age === 0 ? 1 : 0
   return age < 2 ? 1 : Math.max(0.18, 1 - age * 0.22)
 }
 
@@ -48,6 +53,9 @@ export function Voices({ lines, meta, locale }: { lines: VoiceLine[]; meta: Voic
   // Rendered still on the server and before hydration, so nothing is hidden if JS never runs.
   const [mode, setMode] = useState<'still' | 'motion'>('still')
   const [sound, setSound] = useState(false)
+  const [shown, setShown] = useState(0)
+  const shownRef = useRef(0)
+  const doneAt = useRef<number | null>(null)
   const sectionRef = useRef<HTMLElement>(null)
   const listRef = useRef<HTMLOListElement>(null)
   const figRef = useRef<HTMLDivElement>(null)
@@ -57,6 +65,8 @@ export function Voices({ lines, meta, locale }: { lines: VoiceLine[]; meta: Voic
   const audioCtx = useRef<AudioContext | null>(null)
   const playing = useRef<HTMLAudioElement[]>([])
   const hasAudio = locale === 'en' && meta.some((m) => m.audio)
+  const { row, rows } = sideRows(lines)
+  const done = shown === lines.length
 
   const playLine = (i: number) => {
     const src = meta[i]?.audio
@@ -69,13 +79,90 @@ export function Voices({ lines, meta, locale }: { lines: VoiceLine[]; meta: Voic
     playing.current.push(el)
     el.play().catch(() => {})
   }
-  const playRef = useRef(playLine)
+
+  // The page holds still while the voices play: first time the stage is reached scrolling
+  // down, scroll is blocked until the last line has settled, then the page moves on to the
+  // next paragraph. A scroll or swipe gesture advances a line instead; Esc or skip lets go.
+  const [held, setHeld] = useState(false)
+  const hold = useRef({ on: false, passed: false, off: () => {} })
+  const nextRef = useRef<HTMLButtonElement>(null)
+
+  const release = (moveOn: boolean) => {
+    if (!hold.current.on) return
+    hold.current.off()
+    hold.current = { on: false, passed: true, off: () => {} }
+    setHeld(false)
+    const after = sectionRef.current?.nextElementSibling
+    if (moveOn && after) window.scrollTo({ top: scrollY + after.getBoundingClientRect().top - innerHeight * 0.25, behavior: 'smooth' })
+  }
+
+  const advance = () => {
+    const next = shownRef.current === lines.length ? 0 : shownRef.current + 1
+    shownRef.current = next
+    doneAt.current = next === lines.length ? performance.now() : null
+    setShown(next)
+    if (next) playLine(next - 1)
+    if (next === lines.length && hold.current.on) window.setTimeout(() => release(true), SETTLE_MS)
+  }
+  const advanceRef = useRef(advance)
+  const releaseRef = useRef(release)
   useEffect(() => {
-    playRef.current = playLine
+    advanceRef.current = advance
+    releaseRef.current = release
   })
-  // Held across motion-effect re-runs so a changed lines/meta identity does not replay clips.
-  const played = useRef(new Set<number>())
-  const lastShown = useRef(-1)
+
+  const startHold = (section: HTMLElement) => {
+    if (hold.current.on || hold.current.passed) return
+    window.scrollTo({ top: scrollY + section.getBoundingClientRect().top, behavior: 'instant' })
+    let cool = 0
+    const step = () => {
+      const now = performance.now()
+      if (now < cool || shownRef.current === lines.length) return
+      cool = now + 650
+      advanceRef.current()
+    }
+    const wheel = (e: WheelEvent) => {
+      e.preventDefault()
+      if (e.deltaY > 4) step()
+    }
+    let touchY = 0
+    const touchStart = (e: TouchEvent) => (touchY = e.touches[0].clientY)
+    const touchMove = (e: TouchEvent) => e.preventDefault()
+    const touchEnd = (e: TouchEvent) => {
+      if (touchY - e.changedTouches[0].clientY > 40) step()
+    }
+    const key = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') return releaseRef.current(false)
+      // A focused button handles its own Space and Enter; cancelling the keydown would stop its click.
+      if ((e.key === ' ' || e.key === 'Enter') && document.activeElement instanceof HTMLButtonElement) return
+      if ([' ', 'ArrowDown', 'PageDown', 'ArrowUp', 'PageUp', 'Home', 'End'].includes(e.key)) e.preventDefault()
+      if ([' ', 'ArrowDown', 'PageDown'].includes(e.key)) step()
+    }
+    const opts = { passive: false } as const
+    addEventListener('wheel', wheel, opts)
+    addEventListener('touchstart', touchStart, opts)
+    addEventListener('touchmove', touchMove, opts)
+    addEventListener('touchend', touchEnd)
+    addEventListener('keydown', key)
+    hold.current = {
+      on: true,
+      passed: false,
+      off: () => {
+        removeEventListener('wheel', wheel)
+        removeEventListener('touchstart', touchStart)
+        removeEventListener('touchmove', touchMove)
+        removeEventListener('touchend', touchEnd)
+        removeEventListener('keydown', key)
+      },
+    }
+    setHeld(true)
+    nextRef.current?.focus({ preventScroll: true })
+  }
+  const startHoldRef = useRef(startHold)
+  useEffect(() => {
+    startHoldRef.current = startHold
+  })
+  useEffect(() => () => hold.current.off(), [])
 
   const toggleSound = () => {
     soundRef.current = !soundRef.current
@@ -85,7 +172,7 @@ export function Voices({ lines, meta, locale }: { lines: VoiceLine[]; meta: Voic
   }
 
   useEffect(() => {
-    // Motion hides every line until scroll reveals it, so enter it only when the effect below can run.
+    // Motion hides every line until a tap reveals it, so enter it only when the effect below can run.
     if (!prefersReducedMotion() && layer?.current?.getContext('2d')) setMode('motion')
   }, [layer])
 
@@ -97,6 +184,13 @@ export function Voices({ lines, meta, locale }: { lines: VoiceLine[]; meta: Voic
     },
     [],
   )
+
+  useEffect(() => {
+    const list = listRef.current
+    if (mode !== 'motion' || !list) return
+    const solo = matchMedia('(max-width: 760px)').matches
+    ;[...list.children].forEach((el, i) => ((el as HTMLElement).style.opacity = String(lineOpacity(i, shown, solo))))
+  }, [mode, shown])
 
   // The figure boils with the page's drawings.
   useEffect(() => {
@@ -127,7 +221,8 @@ export function Voices({ lines, meta, locale }: { lines: VoiceLine[]; meta: Voic
     return () => mo.disconnect()
   }, [mode])
 
-  // Motion mode: scroll drives the lines and the tangle on the page's sticky canvas.
+  // Motion mode: the tangle creeps over the page on approach, gathers into the head while the
+  // stage fills the screen, leans toward whoever spoke last, and spills out once the last line settles.
   useEffect(() => {
     const canvas = layer?.current
     const section = sectionRef.current
@@ -141,9 +236,12 @@ export function Voices({ lines, meta, locale }: { lines: VoiceLine[]; meta: Voic
     const dpr = Math.min(devicePixelRatio || 1, isMobile() ? 1.5 : 2)
     let ink = inkColor()
     let agit = 0.15
+    let m = 0
+    let pull = { dx: 0, dy: 0 }
     let raf = 0
     let last = ''
     let lastBase = ''
+    let prevTop = Infinity
 
     // A paragraph is as wide as the reading column; the tangle is erased over that column so it
     // never crosses prose, and stays free to wander through the margin notes.
@@ -154,6 +252,7 @@ export function Voices({ lines, meta, locale }: { lines: VoiceLine[]; meta: Voic
       ctx.setTransform(1, 0, 0, 1, 0, 0)
       ctx.clearRect(0, 0, canvas.width, canvas.height)
     }
+    const ease = (from: number, to: number, snap: number) => (Math.abs(to - from) < snap ? to : from + (to - from) * 0.05)
 
     const tick = (now: number) => {
       const vw = canvas.clientWidth
@@ -163,34 +262,40 @@ export function Voices({ lines, meta, locale }: { lines: VoiceLine[]; meta: Voic
         canvas.height = Math.round(vh * dpr)
       }
       const r = section.getBoundingClientRect()
-      const { m, shown } = stagePhase(sectionProgress(r.top, r.height, vh), lines.length)
-      if (shown !== lastShown.current) {
-        items.forEach((el, i) => (el.style.opacity = String(lineOpacity(i, shown))))
-        for (const i of linesToPlay(Math.max(0, lastShown.current), shown, played.current)) {
-          played.current.add(i)
-          playRef.current(i)
-        }
-        lastShown.current = shown
-      }
+      // Crossing the top edge downward; arriving from below (a back-scroll or a link) never holds.
+      if (prevTop > 0 && r.top <= 0 && r.bottom > 0) startHoldRef.current(section)
+      prevTop = r.top
+      const shownNow = shownRef.current
+      const onScreen = (Math.min(r.bottom, vh) - Math.max(r.top, 0)) / vh
+      const settled = doneAt.current !== null && now - doneAt.current > SETTLE_MS
+      m = ease(m, onScreen > 0.6 && !settled ? 1 : 0, 0.002)
+
       const pres = presence(r.top, r.bottom, vh)
-      const target = m > 0.5 ? (shown ? meta[shown - 1].agit : 0.15) : r.top > 0 ? lerp(0.2, 0.7, pres) : 0.12
-      // Snap so the easing stops changing the redraw key.
-      agit = Math.abs(target - agit) < 0.005 ? target : agit + (target - agit) * 0.05
+      const target = m > 0.5 ? (shownNow ? meta[shownNow - 1].agit : 0.15) : r.top > 0 ? lerp(0.2, 0.7, pres) : 0.12
+      agit = ease(agit, target, 0.005)
 
       const fr = fig.getBoundingClientRect()
       const s = fr.width / 280
       const cr = canvas.getBoundingClientRect()
       const head = { x: fr.left - cr.left + HEAD.x * s, y: fr.top - cr.top + HEAD.y * s, rx: HEAD.rx * s, ry: HEAD.ry * s }
-      fig.style.setProperty('--ms-fig', String(smooth(0.5, 1, m)))
+      // On the section so the next button fades in with the figure.
+      section.style.setProperty('--ms-fig', String(smooth(0.5, 1, m)))
 
       const col = textBlock?.getBoundingClientRect()
       const alpha = lerp((0.06 + agit * 0.12) * pres, 0.85, m)
       const e = ellipseAt(m, vw, vh, head)
+      const speaker = shownNow && m > 0.5 ? items[shownNow - 1].getBoundingClientRect() : null
+      const want = speaker
+        ? pullToward(head, { x: speaker.left - cr.left + speaker.width / 2, y: speaker.top - cr.top + speaker.height / 2 }, meta[shownNow - 1].agit)
+        : { dx: 0, dy: 0 }
+      pull = { dx: ease(pull.dx, want.dx, 0.25), dy: ease(pull.dy, want.dy, 0.25) }
+      e.x += pull.dx * m
+      e.y += pull.dy * m
       const frame = Math.floor(now / (140 - agit * 85))
-      // Most frames mid-section are identical; repaint only when an input of the image moved.
+      // Most frames are identical; repaint only when an input of the image moved.
       const base = [Math.round(e.x * 2), Math.round(e.y * 2), Math.round(e.rx * 2), Math.round(e.ry * 2), Math.round(agit * 50), Math.round(alpha * 100), canvas.width, canvas.height, ink, Math.round(col?.left ?? 0), Math.round(col?.width ?? 0)].join()
-      // While anything but the boil frame moves (pull-in, approach fade), half the points:
-      // those phases repaint the whole tangle every frame. The settled frame repaints in full.
+      // While anything but the boil frame moves (gathering, spilling, approach fade), half the
+      // points: those phases repaint the whole tangle every frame. The settled frame repaints in full.
       const stride = base === lastBase ? 1 : 2
       lastBase = base
       const key = `${frame},${base},${stride}`
@@ -225,10 +330,15 @@ export function Voices({ lines, meta, locale }: { lines: VoiceLine[]; meta: Voic
       cancelAnimationFrame(raf)
       clear()
     }
-  }, [mode, layer, lines, meta])
+  }, [mode, layer, meta])
 
   return (
-    <section ref={sectionRef} className={`ms-voices ${mode === 'still' ? 'ms-still' : 'ms-motion'}`} style={{ '--ms-n': lines.length } as CSSProperties}>
+    <section
+      ref={sectionRef}
+      className={`ms-voices ${mode === 'still' ? 'ms-still' : 'ms-motion'}`}
+      style={{ '--ms-n': lines.length, '--ms-rows': rows } as CSSProperties}
+      onClick={mode === 'motion' ? advance : undefined}
+    >
       <div className="ms-stage">
         <div ref={figRef} className="ms-figure" role="img" aria-label={t('blog.meaning.figure')}>
           <svg viewBox="0 0 280 380" aria-hidden="true">
@@ -238,7 +348,7 @@ export function Voices({ lines, meta, locale }: { lines: VoiceLine[]; meta: Voic
         </div>
         <ol ref={listRef} className="ms-voice-list">
           {lines.map((line, i) => (
-            <li key={i} data-side={line.side} style={{ '--ms-row': i + 1 } as CSSProperties}>
+            <li key={i} data-side={line.side} style={{ '--ms-i': i + 1, '--ms-row': row[i] } as CSSProperties}>
               {line.text}
               {mode === 'still' && sound && meta[i]?.audio && (
                 <button type="button" className="ms-play" aria-label={t('blog.meaning.play')} onClick={() => playLine(i)}>
@@ -248,8 +358,34 @@ export function Voices({ lines, meta, locale }: { lines: VoiceLine[]; meta: Voic
             </li>
           ))}
         </ol>
+        {mode === 'motion' && (
+          // The whole stage takes the tap; this button is the keyboard and screen-reader way in.
+          <button ref={nextRef} type="button" className="ms-next">
+            {done ? t('blog.meaning.again') : t('blog.meaning.next')}
+          </button>
+        )}
+        {held && (
+          <button
+            type="button"
+            className="ms-skip"
+            onClick={(e) => {
+              e.stopPropagation()
+              release(true)
+            }}
+          >
+            {t('blog.meaning.skip')}
+          </button>
+        )}
         {hasAudio && (
-          <button type="button" className="ms-sound" aria-pressed={sound} onClick={toggleSound}>
+          <button
+            type="button"
+            className="ms-sound"
+            aria-pressed={sound}
+            onClick={(e) => {
+              e.stopPropagation()
+              toggleSound()
+            }}
+          >
             {sound ? t('blog.meaning.soundOn') : t('blog.meaning.soundOff')}
           </button>
         )}

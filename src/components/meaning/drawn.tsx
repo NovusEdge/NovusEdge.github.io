@@ -4,7 +4,7 @@ import { rng } from '../../lib/meaning-tangle'
 import { prefersReducedMotion } from '../../lib/motion'
 import type { DoodleKind } from '../../lib/meaning-data'
 
-export type DrawnKind = 'underline' | 'ring' | 'squiggle' | DoodleKind
+export type DrawnKind = 'underline' | 'ring' | 'squiggle' | 'strike' | 'quote' | DoodleKind
 
 export function jitterPath(d: string, amp: number, r: () => number) {
   return d.replace(/-?\d+(\.\d+)?/g, (n) => (parseFloat(n) + (r() - 0.5) * 2 * amp).toFixed(1))
@@ -40,6 +40,9 @@ function base(kind: DrawnKind, w: number, h: number, r: () => number): string {
       for (let x = w * 0.3; x < w * 0.7; x += 14) d += ` q 7 ${-14 + j(4)} 14 0`
       return d
     }
+    // One quick stroke that climbs slightly and overshoots both ends.
+    case 'strike':
+      return `M ${-4 + j(2)} ${h * 0.62 + j(2)} Q ${w / 2 + j(8)} ${h * 0.5 + j(4)} ${w + 5 + j(2)} ${h * 0.42 + j(2)}`
     case 'spiral': {
       let d = ''
       for (let i = 0; i < 90; i++) {
@@ -48,6 +51,20 @@ function base(kind: DrawnKind, w: number, h: number, r: () => number): string {
         d += `${i ? ' L' : 'M'} ${35 + Math.cos(a) * rad} ${35 + Math.sin(a) * rad}`
       }
       return d
+    }
+    case 'quote':
+      return 'M 18 8 C 8 12 6 24 14 28 C 20 30 22 22 16 20 M 40 8 C 30 12 28 24 36 28 C 42 30 44 22 38 20'
+    // Most of a circle, then an arrowhead where it closes.
+    case 'cycle': {
+      let d = ''
+      for (let i = 0; i <= 30; i++) {
+        const a = 0.5 + (i / 30) * 5.2
+        d += `${i ? ' L' : 'M'} ${35 + Math.cos(a) * (24 + j(1.5))} ${35 + Math.sin(a) * (24 + j(1.5))}`
+      }
+      const end = 5.7
+      const ex = 35 + Math.cos(end) * 24
+      const ey = 35 + Math.sin(end) * 24
+      return `${d} M ${ex - 9} ${ey - 3} L ${ex} ${ey} L ${ex - 1} ${ey + 10}`
     }
     case 'question':
       return 'M 22 22 C 22 6 50 6 50 22 C 50 34 36 34 36 46 M 36 58 L 37 60'

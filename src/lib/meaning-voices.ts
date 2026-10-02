@@ -29,9 +29,10 @@ export function voicesFromNode(node: unknown): VoiceLine[] | null {
   return lines.length ? lines : null
 }
 
-// A jump past several lines plays only the newest, so a fling or an anchor
-// link never fires a burst of clips.
-export function linesToPlay(prev: number, next: number, played: ReadonlySet<number>): number[] {
-  if (next <= prev || next === 0 || played.has(next - 1)) return []
-  return [next - 1]
+// While animating, each side fills its own column from the top; reading order comes from
+// the reveal, so the stage needs only as many rows as the longer side.
+export function sideRows(lines: VoiceLine[]) {
+  const count = { left: 0, right: 0 }
+  const row = lines.map((l) => ++count[l.side])
+  return { row, rows: Math.max(count.left, count.right) }
 }

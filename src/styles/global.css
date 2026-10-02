@@ -2268,10 +2268,13 @@ html:has(.oj-dialog[open]) {
   .ms-doodle { display: none; }
 }
 
-/* Full-bleed out of the column. Each line gets its own grid row so the
-   argument reads top to bottom, alternating sides, in DOM order. */
+/* Full-bleed out of the column. Still, each line gets its own grid row so the
+   argument reads top to bottom in DOM order; animated, each tap's reveal carries the
+   order and each side stacks from the top, which keeps a long exchange on one screen. */
 .ms-voices { position: relative; z-index: 1; clear: both; width: 100vw; margin-left: calc(50% - 50vw); }
-.ms-voices.ms-motion { height: 420vh; }
+.ms-voices.ms-motion { cursor: pointer; -webkit-tap-highlight-color: transparent; user-select: none; }
+/* The surrounding prose already says what the voices say. */
+@media (prefers-reduced-motion: reduce) { .ms-voices { display: none; } }
 .ms-stage {
   display: grid;
   grid-template-columns: 1fr 280px 1fr;
@@ -2282,25 +2285,27 @@ html:has(.oj-dialog[open]) {
   margin: 0 auto;
   padding: 0 20px;
 }
-.ms-motion .ms-stage { position: sticky; top: 0; height: 100vh; }
+.ms-motion .ms-stage { position: relative; min-height: 100vh; }
 .ms-still .ms-stage { padding-block: 10vh; }
 .ms-figure { position: relative; grid-column: 2; grid-row: 1 / span var(--ms-n); align-self: center; width: 280px; height: 380px; }
 .ms-figure svg, .ms-figure canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
 .ms-figure path { fill: none; stroke: var(--ms-ink); stroke-width: 2.2; stroke-linecap: round; }
+.ms-motion .ms-figure { grid-row: 1 / span var(--ms-rows); }
 .ms-motion .ms-figure svg { opacity: var(--ms-fig, 0); }
 /* .ms-prose ol/li rules would otherwise number the lines and indent them. */
 .ms-prose .ms-voice-list { display: contents; list-style: none; padding: 0; margin: 0; }
 .ms-prose .ms-voice-list li {
-  grid-row: var(--ms-row);
+  grid-row: var(--ms-i);
   margin: 0;
   max-width: 300px;
   font: 700 26px/1.15 'Caveat', 'Zen Kaku Gothic New', 'Noto Sans SC', cursive;
   transition: opacity 0.35s;
 }
 .ms-motion .ms-voice-list li { opacity: 0; }
+.ms-prose .ms-motion .ms-voice-list li { grid-row: var(--ms-row); }
 .ms-voice-list li[data-side='left'] { grid-column: 1; justify-self: end; text-align: right; }
 .ms-voice-list li[data-side='right'] { grid-column: 3; justify-self: start; color: var(--ms-accent); }
-.ms-sound, .ms-play {
+.ms-sound, .ms-play, .ms-next {
   background: none;
   border: 1.5px solid currentColor;
   border-radius: 16px;
@@ -2312,10 +2317,16 @@ html:has(.oj-dialog[open]) {
 .ms-sound[aria-pressed='true'] { opacity: 1; color: var(--ms-accent); }
 .ms-still .ms-sound { position: static; transform: none; grid-column: 1 / -1; justify-self: center; }
 .ms-play { margin-left: 8px; padding: 0 8px; font-size: 16px; }
+.ms-next { position: absolute; bottom: 6vh; left: 50%; transform: translateX(-50%); padding: 4px 16px 6px; font-size: 24px; opacity: calc(0.35 + 0.5 * var(--ms-fig, 0)); }
+.ms-next:focus-visible, .ms-skip:focus-visible { outline: 2px solid var(--ms-accent); outline-offset: 3px; }
+.ms-skip { position: absolute; bottom: 6vh; right: 24px; padding: 4px 8px; background: none; border: 0; color: var(--ms-ink); font: 600 12px/1 var(--font-prose); letter-spacing: 0.2em; text-transform: uppercase; opacity: 0.5; cursor: pointer; }
+.ms-skip:hover { opacity: 0.9; }
 @media (max-width: 760px) {
   .ms-stage { grid-template-columns: 1fr; }
-  .ms-figure { grid-column: 1; grid-row: 1; justify-self: center; width: 176px; height: 240px; }
-  .ms-voice-list li { grid-column: 1 !important; grid-row: calc(var(--ms-row) + 1); font-size: 22px; }
+  .ms-voices .ms-figure { grid-column: 1; grid-row: 1; justify-self: center; width: 176px; height: 240px; }
+  .ms-prose .ms-voice-list li { grid-column: 1; grid-row: calc(var(--ms-i) + 1); font-size: 22px; }
+  /* One slot under the figure; the script shows only the newest line in it. */
+  .ms-prose .ms-motion .ms-voice-list li { grid-row: 2; }
   .ms-voice-list li[data-side='left'] { justify-self: start; text-align: left; }
   .ms-voice-list li[data-side='right'] { justify-self: end; text-align: right; }
 }
@@ -2383,6 +2394,43 @@ header.ms-col { max-width: 1400px; text-align: center; }
 .ms-prose a { text-decoration: underline; text-decoration-color: var(--ms-accent); text-underline-offset: 3px; }
 .ms-prose blockquote { border-left: 2px solid var(--ms-accent); padding-left: 1em; font-style: italic; }
 .ms-ring { position: relative; }
+/* A doodle placed by a #doodle link mid-paragraph keeps top: auto, so it hangs level with its line. */
+.ms-prose p > .ms-doodle:not(:first-child) { top: auto; }
+.ms-prose blockquote.ms-quote { position: relative; border: 0; padding: 0 0 0 0.2em; margin: 2em 0; font: 700 clamp(28px, 2.6vw, 36px)/1.25 'Caveat', 'Zen Kaku Gothic New', 'Noto Sans SC', cursive; font-style: normal; }
+.ms-draw-quote { left: -58px; top: -6px; width: 50px; height: 40px; }
+/* Caveat's slant runs its last glyph into a following quote mark; the margin clears it. */
+.ms-hand { margin-inline: 0.05em 0.12em; font: 700 1.3em/1 'Caveat', 'Zen Kaku Gothic New', 'Noto Sans SC', cursive; color: var(--ms-accent); }
+.ms-hand.ms-armed { opacity: 0; transition: opacity 0.9s ease-out 0.15s; }
+.ms-hand.ms-in { opacity: 1; }
+.ms-smudge.ms-armed { filter: blur(3px); opacity: 0.7; transition: filter 1.8s ease-out 0.6s, opacity 1.8s ease-out 0.6s; }
+.ms-smudge.ms-in { filter: none; opacity: 1; }
+.ms-jw { white-space: nowrap; }
+.ms-j { display: inline-block; }
+.ms-armed .ms-j { transform: translate(var(--x), var(--y)) rotate(var(--r)); transition: transform 1.1s cubic-bezier(0.3, 1.4, 0.5, 1) calc(0.3s + var(--d)); }
+.ms-in .ms-j { transform: none; }
+
+/* Pen: each glyph's outline draws, then its ink fills in behind the stroke. */
+.ms-pen { display: inline-block; }
+.ms-pen svg { display: block; overflow: visible; }
+.ms-pen path { fill: currentColor; fill-opacity: 0; stroke: currentColor; stroke-width: 0.8; stroke-linejoin: round; stroke-dasharray: 1; stroke-dashoffset: 1; }
+.ms-pen.ms-writing path { animation: ms-pen-stroke 0.55s ease-out var(--d) forwards, ms-pen-fill 0.5s ease-in calc(var(--d) + 0.3s) forwards; }
+@keyframes ms-pen-stroke { to { stroke-dashoffset: 0; } }
+@keyframes ms-pen-fill { to { fill-opacity: 1; } }
+.ms-pen-pending .ms-pen-text { opacity: 0; }
+/* The text stays for screen readers; the drawing is aria-hidden. */
+.ms-pen-pen .ms-pen-text { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+.ms-pen-wipe .ms-pen-text { display: inline-block; clip-path: inset(0 100% 0 0); transition: clip-path 1.8s cubic-bezier(0.6, 0.05, 0.3, 1); }
+.ms-pen-wipe.ms-writing .ms-pen-text { clip-path: inset(0); }
+/* Prerendered pen text hides until the script takes over, with a 3s fallback if it never does. */
+@media (prefers-reduced-motion: no-preference) {
+  .js:not(.a11y-reduced-motion) .ms-pen-text:not(.ms-pen-pen *):not(.ms-pen-wipe *) { animation: ms-pen-safety 0s 3s both; }
+}
+@keyframes ms-pen-safety { from { opacity: 0; } to { opacity: 1; } }
+.ms-pen-block { display: block; margin: 2.4em 0 0; font: 700 clamp(32px, 3.4vw, 46px)/1.3 'Caveat', 'Zen Kaku Gothic New', 'Noto Sans SC', cursive; }
+.ms-strike { position: relative; }
+/* The native line stays until the client has built the drawn one, so the joke survives without JS. */
+.ms-strike:has(path[d]) del { text-decoration: none; }
+.ms-draw-strike { inset: 0; width: 100%; height: 100%; }
 .ms-divider { position: relative; height: 40px; margin: 3em 0; }
 
 /* Sticky, not fixed: .page-enter carries a transform, so a fixed layer here

@@ -85,18 +85,19 @@ export function smooth(a: number, b: number, x: number) {
   return t * t * (3 - 2 * t)
 }
 
-export function sectionProgress(top: number, height: number, vh: number) {
-  return Math.max(0, Math.min(1, -top / (height - vh)))
-}
-
-export function stagePhase(q: number, count: number) {
-  const m = smooth(0, 0.16, q) * (1 - smooth(0.88, 1, q))
-  const shown = Math.min(count, Math.floor(smooth(0.16, 0.86, q) * (count + 0.999)))
-  return { m, shown }
-}
-
 export function presence(top: number, bottom: number, vh: number) {
   return smooth(1.3 * vh, 0, top) * smooth(0, 0.9 * vh, bottom)
+}
+
+// The tangle leans toward whichever voice is speaking. 0.4 of the head's width keeps
+// the scribbles mostly inside the outline even at full strength.
+export function pullToward(head: Ellipse, target: { x: number; y: number }, strength: number) {
+  const dx = target.x - head.x
+  const dy = target.y - head.y
+  const d = Math.hypot(dx, dy)
+  if (!d || !strength) return { dx: 0, dy: 0 }
+  const k = (0.4 * head.rx * Math.min(1, strength)) / d
+  return { dx: dx * k, dy: dy * k }
 }
 
 export function ellipseAt(m: number, vw: number, vh: number, head: Ellipse): Ellipse {

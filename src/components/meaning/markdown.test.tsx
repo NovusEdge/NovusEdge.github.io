@@ -28,6 +28,13 @@ describe('MeaningMarkdown', () => {
     expect(html).not.toContain('href="#ring"')
   })
 
+  it('strikes through by hand, keeping the del for meaning', () => {
+    const html = render('is of course ~~good~~ bad')
+    expect(html).toContain('class="ms-strike"')
+    expect(html).toContain('<del>good</del>')
+    expect(html).toContain('ms-draw-strike')
+  })
+
   it('draws a squiggle in place of a rule', () => {
     const html = render('one\n\n---\n\ntwo')
     expect(html).toContain('ms-divider')
@@ -40,8 +47,30 @@ describe('MeaningMarkdown', () => {
     expect(html).not.toContain('<blockquote')
   })
 
-  it('leaves other blockquotes as blockquotes', () => {
-    expect(render('> Just a quote.')).toContain('<blockquote')
+  it('sets other blockquotes by hand, with drawn quote marks', () => {
+    const html = render('> Just a quote.')
+    expect(html).toContain('<blockquote class="ms-quote"')
+    expect(html).toContain('ms-draw-quote')
+  })
+
+  it('turns marker links into effects instead of links', () => {
+    const md = 'a [why me?](#hand) b [**unknown**](#smudge) c [order _lost_](#jostle) d [I am.](#pen)'
+    const html = render(md)
+    for (const cls of ['ms-hand', 'ms-smudge', 'ms-jostle', 'ms-pen']) expect(html).toContain(cls)
+    expect(html).not.toContain('href="#')
+  })
+
+  it('keeps the jostled text whole for screen readers', () => {
+    const html = render('[order _lost_](#jostle)')
+    expect(html).toContain('<span class="sr-only">order <em>lost</em></span>')
+    expect(html).toMatch(/aria-hidden="true">.*<span class="ms-j"/)
+  })
+
+  it('hangs a doodle from a #doodle link and ignores an unknown kind', () => {
+    const html = render('[](#doodle-cycle-right)The cycle.')
+    expect(html).toContain('ms-draw-cycle')
+    expect(html).toContain('ms-doodle-right')
+    expect(render('[x](#doodle-blob-left)')).not.toContain('ms-doodle')
   })
 
   it('opens external links in a new tab', () => {

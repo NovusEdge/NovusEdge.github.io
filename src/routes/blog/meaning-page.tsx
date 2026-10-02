@@ -5,6 +5,7 @@ import type { Post } from '../../lib/posts'
 import { MEANING_POSTS } from '../../lib/meaning-data'
 import { Drawn } from '../../components/meaning/drawn'
 import { MeaningMarkdown } from '../../components/meaning/markdown'
+import { PenText } from '../../components/meaning/pen'
 import { TangleLayerContext } from '../../components/meaning/voices'
 import { PostSignoff } from '../../components/post-signoff'
 
@@ -25,8 +26,9 @@ export function MeaningPage({ post, image }: { post: Post; image?: string | null
         <header className="ms-col">
           <h1 className="ms-kicker">{post.title}</h1>
           <p className="ms-hero">
-            {hero.svg ? <img src={hero.svg} alt={hero.text} /> : hero.text}
-            <Drawn kind="underline" accent delay={400} />
+            {hero.svg ? <img src={hero.svg} alt={hero.text} /> : <PenText text={hero.text} />}
+            {/* Waits for the pen to finish the title. */}
+            <Drawn kind="underline" accent delay={1600} />
           </p>
         </header>
 
