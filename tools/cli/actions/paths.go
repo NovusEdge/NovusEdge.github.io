@@ -12,12 +12,14 @@ import (
 // Paths bundles the repo-relative locations the CLI needs to touch, resolved
 // to absolute paths against a discovered repo root.
 type Paths struct {
-	Root           string
-	BlogDir        string
-	BlipsYAML      string
-	BlipsAssetsDir string
-	PapersFile     string
-	ThumbnailsFile string
+	Root            string
+	BlogDir         string
+	BlipsYAML       string
+	BlipsAssetsDir  string
+	PapersFile      string
+	ThumbnailsFile  string
+	TranslationsDir string
+	PublicDir       string
 }
 
 // FindRepoRoot walks up from the current working directory looking for the
@@ -43,11 +45,13 @@ func FindRepoRoot() (string, error) {
 // NewPaths resolves all the paths the CLI cares about relative to root.
 func NewPaths(root string) Paths {
 	return Paths{
-		Root:           root,
-		BlogDir:        filepath.Join(root, "src", "content", "blog"),
-		BlipsYAML:      filepath.Join(root, "src", "content", "blips", "blips.yaml"),
-		BlipsAssetsDir: filepath.Join(root, "src", "content", "blips", "assets"),
-		PapersFile:     filepath.Join(root, "src", "content", "papers.ts"),
-		ThumbnailsFile: filepath.Join(root, "src", "lib", "thumbnails.ts"),
+		Root:            root,
+		BlogDir:         filepath.Join(root, "src", "content", "blog"),
+		BlipsYAML:       filepath.Join(root, "src", "content", "blips", "blips.yaml"),
+		BlipsAssetsDir:  filepath.Join(root, "src", "content", "blips", "assets"),
+		PapersFile:      filepath.Join(root, "src", "content", "papers.ts"),
+		ThumbnailsFile:  filepath.Join(root, "src", "content", "thumbnails.json"),
+		TranslationsDir: filepath.Join(root, "src", "content", "blog", "translations"),
+		PublicDir:       filepath.Join(root, "public"),
 	}
 }

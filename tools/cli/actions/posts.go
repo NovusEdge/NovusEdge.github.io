@@ -140,19 +140,69 @@ func GetTags(p Paths, slug string) ([]string, error) {
 	return ParseTagsValue(tags), nil
 }
 
-// EditTags rewrites the tags: line in a post's frontmatter.
+// PostLocales returns the sorted locale directories under TranslationsDir
+// that hold a translation of slug.
+func PostLocales(p Paths, slug string) ([]string, error) {
+	entries, err := os.ReadDir(p.TranslationsDir)
+	if os.IsNotExist(err) {
+		return nil, nil
+	}
+	if err != nil {
+		return nil, err
+	}
+	var locales []string
+	for _, e := range entries {
+		if !e.IsDir() {
+			continue
+		}
+		if _, err := os.Stat(filepath.Join(p.TranslationsDir, e.Name(), slug+".md")); err == nil {
+			locales = append(locales, e.Name())
+		}
+	}
+	sort.Strings(locales)
+	return locales, nil
+}
+
+// EditTags rewrites the tags: line in a post's frontmatter and in each of its
+// translations. Every file is parsed before any is written, so a translation
+// without frontmatter leaves the English post untouched.
 func EditTags(p Paths, slug string, tags []string) error {
-	path := PostFilePath(p, slug)
-	raw, err := os.ReadFile(path)
+	locales, err := PostLocales(p, slug)
 	if err != nil {
 		return err
 	}
-	fm, ok := ParseFrontmatter(string(raw))
-	if !ok {
-		return fmt.Errorf("%s has no frontmatter block", slug)
+	paths := []string{PostFilePath(p, slug)}
+	for _, l := range locales {
+		paths = append(paths, filepath.Join(p.TranslationsDir, l, slug+".md"))
 	}
-	fm.Set("tags", TagsValue(tags))
-	return os.WriteFile(path, []byte(fm.String()), 0o644)
+
+	updated := make([]string, len(paths))
+	for i, path := range paths {
+		raw, err := os.ReadFile(path)
+		if err != nil {
+			return err
+		}
+		fm, ok := ParseFrontmatter(string(raw))
+		if !ok {
+			return fmt.Errorf("%s has no frontmatter block", path)
+		}
+		fm.Set("tags", TagsValue(tags))
+		updated[i] = fm.String()
+	}
+	for i, path := range paths {
+		if err := os.WriteFile(path, []byte(updated[i]), 0o644); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+var nonSlugRun = regexp.MustCompile(`[^a-z0-9]+`)
+
+// Slugify derives a kebab-case slug from a title. Non-ASCII letters are
+// dropped rather than transliterated.
+func Slugify(title string) string {
+	return strings.Trim(nonSlugRun.ReplaceAllString(strings.ToLower(title), "-"), "-")
 }
 
 // src/lib/posts.ts compares the raw frontmatter string, so only the literal

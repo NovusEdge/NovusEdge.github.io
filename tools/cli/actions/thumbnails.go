@@ -1,82 +1,101 @@
 package actions
 
 import (
+	"bytes"
+	"encoding/json"
 	"fmt"
 	"os"
-	"regexp"
+	"sort"
 	"strings"
 )
 
-// GetThumbnail returns the current mapping (if any) for a slug in the
-// getPostThumbnail function of thumbnails.ts.
-func GetThumbnail(p Paths, slug string) (string, bool, error) {
-	raw, err := os.ReadFile(p.ThumbnailsFile)
-	if err != nil {
-		return "", false, err
-	}
-	fnStart, fnEnd, err := postThumbnailFuncRange(string(raw))
-	if err != nil {
-		return "", false, err
-	}
-	body := string(raw)[fnStart:fnEnd]
-	re := slugMappingRe(slug)
-	m := re.FindStringSubmatch(body)
-	if m == nil {
-		return "", false, nil
-	}
-	return m[1], true, nil
+// Thumb is one slug's entry in src/content/thumbnails.json. List falls back
+// to Hero on the site when empty.
+type Thumb struct {
+	Hero string `json:"hero"`
+	List string `json:"list,omitempty"`
 }
 
-// SetThumbnail adds or updates the slug -> thumbnail mapping inside
-// getPostThumbnail() in src/lib/thumbnails.ts.
-func SetThumbnail(p Paths, slug, thumbPath string) error {
+func readThumbnails(p Paths) (map[string]Thumb, error) {
 	raw, err := os.ReadFile(p.ThumbnailsFile)
 	if err != nil {
-		return err
+		return nil, err
 	}
-	content := string(raw)
-	fnStart, fnEnd, err := postThumbnailFuncRange(content)
+	m := map[string]Thumb{}
+	if err := json.Unmarshal(raw, &m); err != nil {
+		return nil, fmt.Errorf("parse %s: %w", p.ThumbnailsFile, err)
+	}
+	return m, nil
+}
+
+// GetThumbnail returns the entry for slug and whether one exists.
+func GetThumbnail(p Paths, slug string) (Thumb, bool, error) {
+	m, err := readThumbnails(p)
+	if err != nil {
+		return Thumb{}, false, err
+	}
+	t, ok := m[slug]
+	return t, ok, nil
+}
+
+// SetThumbnail stores t for slug, or removes the slug when t is empty. The
+// file is rewritten in its checked-in layout (sorted keys, one entry per
+// line) so unchanged entries stay byte-identical and diffs show one line.
+func SetThumbnail(p Paths, slug string, t Thumb) error {
+	m, err := readThumbnails(p)
 	if err != nil {
 		return err
 	}
-	body := content[fnStart:fnEnd]
-
-	line := fmt.Sprintf("  if (slug === '%s') return '%s'\n", slug, thumbPath)
-	re := slugMappingRe(slug)
-	var newBody string
-	if re.MatchString(body) {
-		newBody = re.ReplaceAllString(body, strings.TrimSuffix(line, "\n"))
+	if t == (Thumb{}) {
+		delete(m, slug)
 	} else {
-		// Insert right before the function's closing "return null" line.
-		idx := strings.LastIndex(body, "return null")
-		if idx == -1 {
-			return fmt.Errorf("could not find insertion point in getPostThumbnail")
+		m[slug] = t
+	}
+
+	keys := make([]string, 0, len(m))
+	for k := range m {
+		keys = append(keys, k)
+	}
+	sort.Strings(keys)
+
+	var b strings.Builder
+	b.WriteString("{")
+	for i, k := range keys {
+		if i > 0 {
+			b.WriteString(",")
 		}
-		newBody = body[:idx] + line + body[idx:]
+		e := m[k]
+		b.WriteString("\n  " + jsonString(k) + ": { \"hero\": " + jsonString(e.Hero))
+		if e.List != "" {
+			b.WriteString(", \"list\": " + jsonString(e.List))
+		}
+		b.WriteString(" }")
 	}
-
-	updated := content[:fnStart] + newBody + content[fnEnd:]
-	return os.WriteFile(p.ThumbnailsFile, []byte(updated), 0o644)
+	if len(keys) > 0 {
+		b.WriteString("\n")
+	}
+	b.WriteString("}\n")
+	return os.WriteFile(p.ThumbnailsFile, []byte(b.String()), 0o644)
 }
 
-func slugMappingRe(slug string) *regexp.Regexp {
-	return regexp.MustCompile(fmt.Sprintf(`if \(slug === '%s'\) return '([^']*)'\n?`, regexp.QuoteMeta(slug)))
+// jsonString quotes s without escaping <, > and & the way json.Marshal does.
+func jsonString(s string) string {
+	var buf bytes.Buffer
+	enc := json.NewEncoder(&buf)
+	enc.SetEscapeHTML(false)
+	_ = enc.Encode(s)
+	return strings.TrimSuffix(buf.String(), "\n")
 }
 
-// postThumbnailFuncRange locates the byte range of the getPostThumbnail
-// function body within thumbnails.ts.
-func postThumbnailFuncRange(content string) (start, end int, err error) {
-	marker := "export function getPostThumbnail"
-	start = strings.Index(content, marker)
-	if start == -1 {
-		return 0, 0, fmt.Errorf("could not find getPostThumbnail in thumbnails.ts")
+// ValidateAssetPath checks that path is a site-absolute URL path ("/assets/...")
+// naming an existing file under public/.
+func ValidateAssetPath(p Paths, path string) error {
+	if !strings.HasPrefix(path, "/") {
+		return fmt.Errorf("path must start with /, got %q", path)
 	}
-	// end of function: the closing brace on its own line following start.
-	rest := content[start:]
-	closeIdx := strings.Index(rest, "\n}")
-	if closeIdx == -1 {
-		return 0, 0, fmt.Errorf("could not find end of getPostThumbnail in thumbnails.ts")
+	info, err := os.Stat(p.PublicDir + path)
+	if err != nil || info.IsDir() {
+		return fmt.Errorf("no file at public%s", path)
 	}
-	end = start + closeIdx + len("\n}")
-	return start, end, nil
+	return nil
 }

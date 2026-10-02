@@ -16,9 +16,9 @@ func newBlipForm(p actions.Paths) tea.Model {
 	}
 	onSubmit := func(v []string) (string, error) {
 		in := actions.BlipInput{
-			Text:      strings.TrimSpace(v[0]),
-			MediaPath: strings.TrimSpace(v[1]),
-			Tags:      splitTags(v[2]),
+			Text:       strings.TrimSpace(v[0]),
+			MediaPaths: mediaPaths(v[1]),
+			Tags:       splitTags(v[2]),
 		}
 		if err := actions.NewBlip(p, in); err != nil {
 			return "", err
@@ -26,4 +26,11 @@ func newBlipForm(p actions.Paths) tea.Model {
 		return "appended new blip to src/content/blips/blips.yaml", nil
 	}
 	return NewForm("New blip", fields, onSubmit)
+}
+
+func mediaPaths(s string) []string {
+	if s = strings.TrimSpace(s); s == "" {
+		return nil
+	}
+	return []string{s}
 }

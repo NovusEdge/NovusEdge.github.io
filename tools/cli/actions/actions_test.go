@@ -29,16 +29,10 @@ func setupFixture(t *testing.T) Paths {
 	must(os.WriteFile(filepath.Join(root, "src", "content", "blog", "ai-industry-trends.md"),
 		[]byte("---\ntitle: AI Industry Trends\ndate: 2026-01-01\ntags: [ai]\ndescription: draft post\ndraft: true\n---\n\nbody\n"), 0o644))
 
-	thumbsTS := `export function getListThumbnail(slug: string): string | null {
-  return getPostThumbnail(slug)
-}
-
-export function getPostThumbnail(slug: string): string | null {
-  if (slug.includes('tiling-window-managers')) return '/assets/img/LJ-TWM-01.png'
-  return null
-}
-`
-	must(os.WriteFile(filepath.Join(root, "src", "lib", "thumbnails.ts"), []byte(thumbsTS), 0o644))
+	must(os.MkdirAll(filepath.Join(root, "public", "assets"), 0o755))
+	must(os.WriteFile(filepath.Join(root, "public", "assets", "a.png"), []byte("png"), 0o644))
+	thumbsJSON := "{\n  \"aaa\": { \"hero\": \"/assets/a.png\" },\n  \"zzz\": { \"hero\": \"/assets/z.png\", \"list\": \"/assets/z-list.png\" }\n}\n"
+	must(os.WriteFile(filepath.Join(root, "src", "content", "thumbnails.json"), []byte(thumbsJSON), 0o644))
 
 	papersTS := `export type Paper = {
   slug: string
@@ -124,30 +118,149 @@ func TestEditTags(t *testing.T) {
 	}
 }
 
-func TestSetThumbnail(t *testing.T) {
+func TestThumbnailRoundTrip(t *testing.T) {
 	p := setupFixture(t)
-	if err := SetThumbnail(p, "hello-world", "/assets/img/hw.png"); err != nil {
+	orig, _ := os.ReadFile(p.ThumbnailsFile)
+	if err := SetThumbnail(p, "aaa", Thumb{Hero: "/assets/a.png"}); err != nil {
 		t.Fatal(err)
 	}
-	got, ok, err := GetThumbnail(p, "hello-world")
-	if err != nil || !ok || got != "/assets/img/hw.png" {
-		t.Fatalf("got=%q ok=%v err=%v", got, ok, err)
+	got, _ := os.ReadFile(p.ThumbnailsFile)
+	if string(got) != string(orig) {
+		t.Fatalf("no-op set changed bytes:\n%s", got)
 	}
-	// Update existing mapping.
-	if err := SetThumbnail(p, "hello-world", "/assets/img/hw2.png"); err != nil {
+
+	if err := SetThumbnail(p, "mmm", Thumb{Hero: "/assets/m.png?a=1&b=2"}); err != nil {
 		t.Fatal(err)
 	}
-	got, _, _ = GetThumbnail(p, "hello-world")
-	if got != "/assets/img/hw2.png" {
-		t.Fatalf("expected updated thumbnail, got %q", got)
+	got, _ = os.ReadFile(p.ThumbnailsFile)
+	want := "{\n  \"aaa\": { \"hero\": \"/assets/a.png\" },\n  \"mmm\": { \"hero\": \"/assets/m.png?a=1&b=2\" },\n  \"zzz\": { \"hero\": \"/assets/z.png\", \"list\": \"/assets/z-list.png\" }\n}\n"
+	if string(got) != want {
+		t.Fatalf("got:\n%s\nwant:\n%s", got, want)
 	}
-	// Existing unrelated mapping untouched.
-	got2, ok2, _ := GetThumbnail(p, "tiling-window-managers-post")
-	_ = got2
-	_ = ok2
-	raw, _ := os.ReadFile(p.ThumbnailsFile)
-	if !strings.Contains(string(raw), "tiling-window-managers") {
-		t.Fatalf("clobbered existing mapping:\n%s", raw)
+	th, ok, err := GetThumbnail(p, "zzz")
+	if err != nil || !ok || th.List != "/assets/z-list.png" {
+		t.Fatalf("got=%+v ok=%v err=%v", th, ok, err)
+	}
+	if _, ok, _ := GetThumbnail(p, "nope"); ok {
+		t.Fatal("unexpected entry for missing slug")
+	}
+}
+
+func TestSetThumbnailEmptyDeletes(t *testing.T) {
+	p := setupFixture(t)
+	if err := SetThumbnail(p, "zzz", Thumb{}); err != nil {
+		t.Fatal(err)
+	}
+	got, _ := os.ReadFile(p.ThumbnailsFile)
+	if want := "{\n  \"aaa\": { \"hero\": \"/assets/a.png\" }\n}\n"; string(got) != want {
+		t.Fatalf("got:\n%s", got)
+	}
+	if err := SetThumbnail(p, "aaa", Thumb{}); err != nil {
+		t.Fatal(err)
+	}
+	got, _ = os.ReadFile(p.ThumbnailsFile)
+	if string(got) != "{}\n" {
+		t.Fatalf("got:\n%s", got)
+	}
+}
+
+func TestValidateAssetPath(t *testing.T) {
+	p := setupFixture(t)
+	cases := map[string]bool{
+		"/assets/a.png":       true,
+		"assets/a.png":        false,
+		"/assets/missing.png": false,
+		"/assets":             false,
+	}
+	for path, want := range cases {
+		if err := ValidateAssetPath(p, path); (err == nil) != want {
+			t.Errorf("ValidateAssetPath(%q) = %v, want ok=%v", path, err, want)
+		}
+	}
+}
+
+func writeTranslation(t *testing.T, p Paths, locale, slug, content string) string {
+	t.Helper()
+	dir := filepath.Join(p.TranslationsDir, locale)
+	if err := os.MkdirAll(dir, 0o755); err != nil {
+		t.Fatal(err)
+	}
+	path := filepath.Join(dir, slug+".md")
+	if err := os.WriteFile(path, []byte(content), 0o644); err != nil {
+		t.Fatal(err)
+	}
+	return path
+}
+
+func TestEditTagsSyncsTranslations(t *testing.T) {
+	p := setupFixture(t)
+	de := writeTranslation(t, p, "de", "hello-world", "---\ntitle: Hallo\ntags: [personal]\n---\n\nkoerper\n")
+	fi := writeTranslation(t, p, "fi", "hello-world", "---\ntitle: Moi\ntags: [personal]\n---\n\nrunko\n")
+	writeTranslation(t, p, "ja", "other-post", "---\ntitle: x\ntags: [q]\n---\n")
+
+	locales, err := PostLocales(p, "hello-world")
+	if err != nil || len(locales) != 2 || locales[0] != "de" || locales[1] != "fi" {
+		t.Fatalf("locales=%v err=%v", locales, err)
+	}
+	if err := EditTags(p, "hello-world", []string{"x", "y"}); err != nil {
+		t.Fatal(err)
+	}
+	for _, path := range []string{PostFilePath(p, "hello-world"), de, fi} {
+		raw, _ := os.ReadFile(path)
+		if !strings.Contains(string(raw), "tags: [x, y]\n") {
+			t.Errorf("%s not updated:\n%s", path, raw)
+		}
+	}
+	raw, _ := os.ReadFile(de)
+	if !strings.Contains(string(raw), "koerper") {
+		t.Errorf("body lost:\n%s", raw)
+	}
+}
+
+func TestEditTagsTranslationWithoutFrontmatter(t *testing.T) {
+	p := setupFixture(t)
+	bad := writeTranslation(t, p, "de", "hello-world", "no frontmatter here\n")
+	before, _ := os.ReadFile(PostFilePath(p, "hello-world"))
+	err := EditTags(p, "hello-world", []string{"x"})
+	if err == nil || !strings.Contains(err.Error(), bad) {
+		t.Fatalf("expected error naming %s, got %v", bad, err)
+	}
+	after, _ := os.ReadFile(PostFilePath(p, "hello-world"))
+	if string(before) != string(after) {
+		t.Fatalf("English file changed:\n%s", after)
+	}
+}
+
+func TestSetHiddenEnglishOnly(t *testing.T) {
+	p := setupFixture(t)
+	de := writeTranslation(t, p, "de", "hello-world", "---\ntitle: Hallo\n---\n")
+	if err := SetHidden(p, "hello-world", true); err != nil {
+		t.Fatal(err)
+	}
+	raw, _ := os.ReadFile(de)
+	if strings.Contains(string(raw), "draft") {
+		t.Fatalf("translation modified:\n%s", raw)
+	}
+}
+
+func TestSlugify(t *testing.T) {
+	cases := map[string]string{
+		"Hello World":            "hello-world",
+		"  Spaces   &  Symbols!": "spaces-symbols",
+		"Already-kebab":          "already-kebab",
+		"Version 2.0 release":    "version-2-0-release",
+		"Café au lait":           "caf-au-lait",
+		"---":                    "",
+		"日本語 post":               "post",
+	}
+	for in, want := range cases {
+		got := Slugify(in)
+		if got != want {
+			t.Errorf("Slugify(%q) = %q, want %q", in, got, want)
+		}
+		if got != "" && ValidateSlug(got) != nil {
+			t.Errorf("Slugify(%q) = %q fails ValidateSlug", in, got)
+		}
 	}
 }
 
@@ -171,7 +284,7 @@ func TestNewPaper(t *testing.T) {
 	}
 }
 
-func TestNewBlip(t *testing.T) {
+func TestNewBlipPlaceholderAndTopInsert(t *testing.T) {
 	p := setupFixture(t)
 	if err := NewBlip(p, BlipInput{Date: "2026-07-18", Text: "shipped it", Tags: []string{"meta"}}); err != nil {
 		t.Fatal(err)
@@ -181,38 +294,86 @@ func TestNewBlip(t *testing.T) {
 	if !strings.Contains(s, "date: 2026-07-18") || !strings.Contains(s, `text: "shipped it"`) || !strings.Contains(s, "tags: [meta]") {
 		t.Fatalf("unexpected blips.yaml:\n%s", s)
 	}
-	if strings.Contains(s, "[]") {
+	if strings.Contains(s, "[]\n") {
 		t.Fatalf("placeholder [] should have been replaced:\n%s", s)
 	}
 
-	// A second blip should append, not clobber the first.
 	if err := NewBlip(p, BlipInput{Date: "2026-07-19", Text: "second one"}); err != nil {
 		t.Fatal(err)
 	}
 	raw, _ = os.ReadFile(p.BlipsYAML)
 	s = string(raw)
-	if !strings.Contains(s, "shipped it") || !strings.Contains(s, "second one") {
-		t.Fatalf("expected both blips present:\n%s", s)
+	if strings.Index(s, "second one") > strings.Index(s, "shipped it") {
+		t.Fatalf("newest entry should come first:\n%s", s)
+	}
+	if !strings.Contains(s, "  text: \"second one\"\n\n- date: 2026-07-18") {
+		t.Fatalf("entries should be blank-line separated:\n%s", s)
 	}
 }
 
-func TestNewBlipMediaCopy(t *testing.T) {
+func TestNewBlipInsertsAfterHeader(t *testing.T) {
 	p := setupFixture(t)
-	srcDir := t.TempDir()
-	src := filepath.Join(srcDir, "shot.png")
-	if err := os.WriteFile(src, []byte("fake png bytes"), 0o644); err != nil {
+	existing := "# header\n\n- date: 2026-01-01\n  text: \"old\"\n\n# note\n- date: 2025-12-31\n  text: \"older\"\n"
+	if err := os.WriteFile(p.BlipsYAML, []byte(existing), 0o644); err != nil {
 		t.Fatal(err)
 	}
-	if err := NewBlip(p, BlipInput{MediaPath: src}); err != nil {
+	src := filepath.Join(t.TempDir(), "one.jpg")
+	os.WriteFile(src, []byte("x"), 0o644)
+	if err := NewBlip(p, BlipInput{Date: "2026-02-02", Text: "new", MediaPaths: []string{src}}); err != nil {
 		t.Fatal(err)
-	}
-	dest := filepath.Join(p.BlipsAssetsDir, "shot.png")
-	if _, err := os.Stat(dest); err != nil {
-		t.Fatalf("expected copied asset at %s: %v", dest, err)
 	}
 	raw, _ := os.ReadFile(p.BlipsYAML)
-	if !strings.Contains(string(raw), "media: shot.png") {
-		t.Fatalf("expected media reference:\n%s", raw)
+	want := "# header\n\n- date: 2026-02-02\n  text: \"new\"\n  media: one.jpg\n\n- date: 2026-01-01\n  text: \"old\"\n\n# note\n- date: 2025-12-31\n  text: \"older\"\n"
+	if string(raw) != want {
+		t.Fatalf("got:\n%s\nwant:\n%s", raw, want)
+	}
+}
+
+func TestNewBlipTwoMediaAndCopy(t *testing.T) {
+	p := setupFixture(t)
+	srcDir := t.TempDir()
+	var srcs []string
+	for _, n := range []string{"a.png", "b.png"} {
+		src := filepath.Join(srcDir, n)
+		if err := os.WriteFile(src, []byte("fake"), 0o644); err != nil {
+			t.Fatal(err)
+		}
+		srcs = append(srcs, src)
+	}
+	if err := NewBlip(p, BlipInput{Date: "2026-03-03", MediaPaths: srcs}); err != nil {
+		t.Fatal(err)
+	}
+	for _, n := range []string{"a.png", "b.png"} {
+		if _, err := os.Stat(filepath.Join(p.BlipsAssetsDir, n)); err != nil {
+			t.Fatalf("expected copied asset %s: %v", n, err)
+		}
+	}
+	raw, _ := os.ReadFile(p.BlipsYAML)
+	if !strings.Contains(string(raw), "  media: [a.png, b.png]\n") {
+		t.Fatalf("expected flow list:\n%s", raw)
+	}
+}
+
+func TestNewBlipCommentOnlyAndEmptyFile(t *testing.T) {
+	for name, start := range map[string]string{"comment-only": "# header\n", "empty": ""} {
+		p := setupFixture(t)
+		os.WriteFile(p.BlipsYAML, []byte(start), 0o644)
+		if err := NewBlip(p, BlipInput{Date: "2026-04-04", Text: "hi"}); err != nil {
+			t.Fatalf("%s: %v", name, err)
+		}
+		raw, _ := os.ReadFile(p.BlipsYAML)
+		if want := start + "- date: 2026-04-04\n  text: \"hi\"\n"; string(raw) != want {
+			t.Fatalf("%s: got %q want %q", name, raw, want)
+		}
+	}
+}
+
+func TestNewBlipRejectsBadDate(t *testing.T) {
+	p := setupFixture(t)
+	for _, d := range []string{"2026-13-01", "2026-02-30", "26-01-01", "yesterday"} {
+		if err := NewBlip(p, BlipInput{Date: d, Text: "x"}); err == nil {
+			t.Errorf("date %q accepted", d)
+		}
 	}
 }
 
