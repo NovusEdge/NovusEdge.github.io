@@ -17,6 +17,12 @@ type translationState struct {
 	missing map[string][]string
 }
 
+// firstLine keeps a multi-line error (node stack traces) to its first line.
+func firstLine(err error) string {
+	s, _, _ := strings.Cut(err.Error(), "\n")
+	return s
+}
+
 func (t translationState) summary() string {
 	switch {
 	case !t.loaded:
@@ -86,7 +92,7 @@ func (d postDetail) render(st styles, tr translationState, width int) string {
 	case !tr.loaded:
 		lines = append(lines, label("status: checking..."))
 	case tr.err != nil:
-		lines = append(lines, st.err.Render("status: check failed"))
+		lines = append(lines, st.err.Render("status: check failed: "+firstLine(tr.err)))
 	default:
 		if tr.stale[m.Slug] {
 			lines = append(lines, st.err.Render("stale: source changed since translating"))

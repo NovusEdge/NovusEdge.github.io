@@ -100,8 +100,9 @@ func (a *App) reloadPosts(sel string) tea.Cmd {
 }
 
 // checkTranslations runs translate:blog --check in the background.
-func (a *App) checkTranslations() tea.Cmd {
-	paths := a.paths
+func (a *App) checkTranslations() tea.Cmd { return checkTranslations(a.paths) }
+
+func checkTranslations(paths actions.Paths) tea.Cmd {
 	return func() tea.Msg {
 		stale, missing, err := actions.TranslationStatus(paths)
 		return translationMsg{stale: stale, missing: missing, err: err}

@@ -9,6 +9,7 @@ import (
 	"strings"
 	"sync"
 	"syscall"
+	"time"
 
 	"charm.land/bubbles/v2/progress"
 	tea "charm.land/bubbletea/v2"
@@ -18,7 +19,12 @@ import (
 	"novusedge/site-cli/actions"
 )
 
-const logLines = 6
+const (
+	logLines = 6
+	maxLine  = 64 << 10
+	// killGrace is how long a stopped script gets to exit on SIGTERM.
+	killGrace = 3 * time.Second
+)
 
 type translateLineMsg struct {
 	ev actions.TranslateEvent
@@ -27,6 +33,9 @@ type translateLineMsg struct {
 type translateExitMsg struct{ err error }
 
 type stopAnswerMsg struct{ yes bool }
+
+// forceKillMsg fires killGrace after SIGTERM.
+type forceKillMsg struct{ pid int }
 
 // translateRun is a running translate script. Output and the exit status
 // arrive in order on ch: the exit message is sent only after both pipes hit
@@ -56,9 +65,26 @@ func startTranslate(p actions.Paths) (*translateRun, error) {
 	var wg sync.WaitGroup
 	pump := func(rd io.Reader) {
 		defer wg.Done()
-		sc := bufio.NewScanner(rd)
-		for sc.Scan() {
-			r.ch <- translateLineMsg{actions.ParseTranslateLine(strings.TrimRight(sc.Text(), "\r"))}
+		// A line over maxLine is truncated, not fatal: bufio.Scanner would
+		// stop reading at that point, the child would block on a full pipe,
+		// and the run would hang.
+		br := bufio.NewReader(rd)
+		var line []byte
+		for {
+			chunk, isPrefix, err := br.ReadLine()
+			if len(line) < maxLine {
+				line = append(line, chunk...)
+			}
+			if isPrefix {
+				continue
+			}
+			if len(line) > 0 || err == nil {
+				r.ch <- translateLineMsg{actions.ParseTranslateLine(string(line))}
+			}
+			line = line[:0]
+			if err != nil {
+				return
+			}
 		}
 	}
 	wg.Add(2)
@@ -75,7 +101,7 @@ func (r *translateRun) next() tea.Cmd {
 	return func() tea.Msg { return <-r.ch }
 }
 
-func (r *translateRun) kill() { _ = syscall.Kill(-r.pid, syscall.SIGTERM) }
+func (r *translateRun) kill(sig syscall.Signal) { _ = syscall.Kill(-r.pid, sig) }
 
 // translateOverlay is the progress screen. It nests its own "Stop?" confirm
 // because the root holds a single overlay slot and the run must keep
@@ -101,7 +127,11 @@ type translateOverlay struct {
 
 func (a *App) translate() tea.Cmd {
 	if !a.tr.loaded || a.tr.err != nil {
-		a.setStatus("translation status unavailable", true)
+		msg := "translation status unavailable"
+		if a.tr.err != nil {
+			msg += ": " + firstLine(a.tr.err)
+		}
+		a.setStatus(msg, true)
 		return nil
 	}
 	n := len(a.tr.stale)
@@ -109,30 +139,32 @@ func (a *App) translate() tea.Cmd {
 		a.setStatus("no stale posts to translate", false)
 		return nil
 	}
+	// The submit command runs off the update loop, so the root's fields are
+	// copied here rather than read there.
+	paths, st, bg := a.paths, a.st, a.bg
 	a.overlay = newConfirm(
 		fmt.Sprintf("Translate %d stale post(s)? This calls the Gemini API.", n),
-		a.bg, a.startTranslation)
+		bg, func() tea.Cmd { return startTranslation(paths, st, bg) })
 	return a.overlay.Init()
 }
 
 // startTranslation spawns the script and swaps the confirm for the progress
-// screen. It runs inside the confirm's submit command, not on the update loop,
-// so it only reads root fields that never change after startup.
-func (a *App) startTranslation() tea.Cmd {
-	run, err := startTranslate(a.paths)
+// screen.
+func startTranslation(paths actions.Paths, st styles, bg color.Color) tea.Cmd {
+	run, err := startTranslate(paths)
 	if err != nil {
 		return func() tea.Msg { return writeDoneMsg{err: fmt.Errorf("starting translation: %w", err)} }
 	}
 	o := &translateOverlay{
-		st:    a.st,
-		bg:    a.bg,
+		st:    st,
+		bg:    bg,
 		run:   run,
 		bar:   progress.New(progress.WithWidth(40)),
 		label: "starting...",
 		finish: func(status string, err error) tea.Cmd {
 			return tea.Batch(
 				func() tea.Msg { return writeDoneMsg{status: status, err: err} },
-				a.checkTranslations(),
+				checkTranslations(paths),
 			)
 		},
 	}
@@ -153,6 +185,9 @@ func (o *translateOverlay) hint() string {
 	if o.exited {
 		return "press any key to close"
 	}
+	if o.stopping {
+		return "stopping... esc to force kill"
+	}
 	return "esc stop"
 }
 
@@ -163,13 +198,19 @@ func (o *translateOverlay) Update(msg tea.Msg) (overlay, tea.Cmd) {
 		return o, o.run.next()
 	case translateExitMsg:
 		return o, o.exit(msg.err)
+	case forceKillMsg:
+		if msg.pid == o.run.pid {
+			o.run.kill(syscall.SIGKILL)
+		}
+		return o, nil
 	}
 	if o.stop != nil {
 		if m, ok := msg.(stopAnswerMsg); ok {
 			o.stop = nil
 			if m.yes && !o.exited {
 				o.stopping = true
-				o.run.kill()
+				o.run.kill(syscall.SIGTERM)
+				return o, tea.Tick(killGrace, func(time.Time) tea.Msg { return forceKillMsg{o.run.pid} })
 			}
 			return o, nil
 		}
@@ -184,9 +225,11 @@ func (o *translateOverlay) Update(msg tea.Msg) (overlay, tea.Cmd) {
 		case o.exited:
 			return o, o.close("", o.failure())
 		case k.String() == "esc" || k.String() == "ctrl+c":
-			if !o.stopping {
-				return o, o.askStop()
+			if o.stopping {
+				o.run.kill(syscall.SIGKILL)
+				return o, nil
 			}
+			return o, o.askStop()
 		}
 	}
 	return o, nil
