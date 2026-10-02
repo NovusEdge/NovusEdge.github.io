@@ -3,6 +3,7 @@ package tui
 import (
 	"fmt"
 	"os"
+	"slices"
 	"strings"
 	"time"
 
@@ -47,6 +48,17 @@ func changed(vals ...*string) func() bool {
 			}
 		}
 		return false
+	}
+}
+
+// assetValidator accepts an empty value and otherwise requires an existing
+// file under public/.
+func assetValidator(p actions.Paths) func(string) error {
+	return func(s string) error {
+		if s == "" {
+			return nil
+		}
+		return actions.ValidateAssetPath(p, s)
 	}
 }
 
@@ -106,7 +118,10 @@ func (a *App) editTags() tea.Cmd {
 			if err := actions.EditTags(paths, p.Slug, splitTags(val)); err != nil {
 				return writeDoneMsg{err: err, sel: p.Slug}
 			}
-			locales, _ := actions.PostLocales(paths, p.Slug)
+			locales, err := actions.PostLocales(paths, p.Slug)
+			if err != nil {
+				return writeDoneMsg{status: "tags written, but listing translations failed: " + err.Error(), sel: p.Slug}
+			}
 			return writeDoneMsg{status: fmt.Sprintf("tags written to %d file(s), English + %d translation(s)", 1+len(locales), len(locales)), sel: p.Slug}
 		}
 	}).guard(a.bg, changed(&val))
@@ -125,22 +140,16 @@ func (a *App) editThumb() tea.Cmd {
 	}
 	hero, list := cur.Hero, cur.List
 	paths := a.paths
-	assetOK := func(s string) error {
-		if s == "" {
-			return nil
-		}
-		return actions.ValidateAssetPath(paths, s)
-	}
-	form := huh.NewForm(huh.NewGroup(
-		huh.NewInput().Title("Hero").Description("path under public/, e.g. /assets/x.png").Value(&hero).
-			Validate(func(s string) error {
-				if s == "" && list != "" {
-					return fmt.Errorf("hero is required when list is set")
-				}
-				return assetOK(s)
-			}),
-		huh.NewInput().Title("List").Description("empty uses the hero").Value(&list).Validate(assetOK),
-	).Title("Thumbnail for " + p.Slug))
+	assetOK := assetValidator(paths)
+	heroIn := huh.NewInput().Title("Hero").Description("path under public/, e.g. /assets/x.png").Value(&hero).
+		Validate(func(s string) error {
+			if s == "" && list != "" {
+				return fmt.Errorf("hero is required when list is set")
+			}
+			return assetOK(s)
+		})
+	listIn := huh.NewInput().Title("List").Description("empty uses the hero").Value(&list).Validate(assetOK)
+	form := huh.NewForm(huh.NewGroup(heroIn, listIn).Title("Thumbnail for " + p.Slug))
 	o := newFormOverlay(form, a.bg, func() tea.Cmd {
 		return func() tea.Msg {
 			if err := actions.SetThumbnail(paths, p.Slug, actions.Thumb{Hero: hero, List: list}); err != nil {
@@ -152,6 +161,7 @@ func (a *App) editThumb() tea.Cmd {
 			return writeDoneMsg{status: "thumbnail set for " + p.Slug, sel: p.Slug}
 		}
 	}).guard(a.bg, changed(&hero, &list))
+	o.live = []liveCheck{{heroIn, &hero, assetOK}, {listIn, &list, assetOK}}
 	return a.open(o)
 }
 
@@ -160,7 +170,7 @@ func (a *App) newPost() tea.Cmd {
 	date = today()
 	paths := a.paths
 	autoSlug := ""
-	slugIn := huh.NewInput().Title("Slug").Value(&slug).Validate(func(s string) error {
+	slugOK := func(s string) error {
 		if err := actions.ValidateSlug(s); err != nil {
 			return err
 		}
@@ -168,11 +178,13 @@ func (a *App) newPost() tea.Cmd {
 			return fmt.Errorf("a post with this slug already exists")
 		}
 		return nil
-	})
+	}
+	slugIn := huh.NewInput().Title("Slug").Value(&slug).Validate(slugOK)
+	dateIn := huh.NewInput().Title("Date").Value(&date).Validate(validDate)
 	form := huh.NewForm(huh.NewGroup(
 		huh.NewInput().Title("Title").Value(&title).Validate(required("title")),
 		slugIn,
-		huh.NewInput().Title("Date").Value(&date).Validate(validDate),
+		dateIn,
 		huh.NewInput().Title("Tags").Description("comma separated").Value(&tags),
 		huh.NewInput().Title("Description").Value(&desc),
 	).Title("New post"))
@@ -185,6 +197,7 @@ func (a *App) newPost() tea.Cmd {
 			return writeDoneMsg{status: "created draft " + in.Slug, sel: in.Slug}
 		}
 	}).guard(a.bg, changed(&title, &slug, &date, &tags, &desc))
+	o.live = []liveCheck{{slugIn, &slug, slugOK}, {dateIn, &date, validDate}}
 	// The slug follows the title until the user types in the slug field.
 	following, atEnd := true, false
 	o.after = func() {
@@ -227,8 +240,9 @@ func (a *App) newBlip() tea.Cmd {
 	}
 	fieldsChanged := changed(&text, &tags)
 	dirty := func() bool { return len(media) > 0 || fieldsChanged() || date != today() }
+	dateIn := huh.NewInput().Title("Date").Value(&date).Validate(validDate)
 	form := huh.NewForm(huh.NewGroup(
-		huh.NewInput().Title("Date").Value(&date).Validate(validDate),
+		dateIn,
 		huh.NewText().Title("Text").Lines(4).CharLimit(blipMaxLen).Value(&text).
 			DescriptionFunc(func() string {
 				return fmt.Sprintf("%d left", blipMaxLen-len([]rune(text)))
@@ -249,17 +263,27 @@ func (a *App) newBlip() tea.Cmd {
 				Validate(required("file"))),
 			huh.NewGroup(huh.NewConfirm().Title("Add another file?").Value(&again)),
 		)
-		return newFormOverlay(f, a.bg, func() tea.Cmd {
-			media = append(media, path)
+		o := newFormOverlay(f, a.bg, func() tea.Cmd {
 			if again {
 				return openOverlay(pickFile())
 			}
 			return finish()
 		}).guard(a.bg, dirty)
+		// Appended on the Update path: dirty reads media while the submit
+		// command runs on another goroutine.
+		appended := false
+		o.after = func() {
+			if f.State == huh.StateCompleted && !appended {
+				appended = true
+				media = append(media, path)
+			}
+		}
+		return o
 	}
 	o := newFormOverlay(form, a.bg, func() tea.Cmd {
 		return openOverlay(offer("Attach a media file?"))
 	}).guard(a.bg, dirty)
+	o.live = []liveCheck{{dateIn, &date, validDate}}
 	return a.open(o)
 }
 
@@ -280,20 +304,31 @@ func (a *App) newCard() tea.Cmd {
 	}
 	fieldsChanged := changed(&slug, &title, &venue, &abstract, &url, &thumb)
 	dirty := func() bool { return len(links) > 0 || fieldsChanged() || date != today() }
-	assetOK := func(s string) error {
-		if s == "" {
-			return nil
+	assetOK := assetValidator(paths)
+	slugOK := func(s string) error {
+		if err := actions.ValidateSlug(s); err != nil {
+			return err
 		}
-		return actions.ValidateAssetPath(paths, s)
+		taken, err := actions.PaperSlugs(paths)
+		if err != nil {
+			return err
+		}
+		if slices.Contains(taken, s) {
+			return fmt.Errorf("a research card with this slug already exists")
+		}
+		return nil
 	}
+	slugIn := huh.NewInput().Title("Slug").Value(&slug).Validate(slugOK)
+	dateIn := huh.NewInput().Title("Date").Value(&date).Validate(validDate)
+	thumbIn := huh.NewInput().Title("Thumb").Description("optional, path under public/").Value(&thumb).Validate(assetOK)
 	form := huh.NewForm(huh.NewGroup(
-		huh.NewInput().Title("Slug").Value(&slug).Validate(actions.ValidateSlug),
+		slugIn,
 		huh.NewInput().Title("Title").Value(&title).Validate(required("title")),
 		huh.NewInput().Title("Venue").Value(&venue),
-		huh.NewInput().Title("Date").Value(&date).Validate(validDate),
+		dateIn,
 		huh.NewText().Title("Abstract").Lines(4).Value(&abstract),
 		huh.NewInput().Title("URL").Value(&url).Validate(required("url")),
-		huh.NewInput().Title("Thumb").Description("optional, path under public/").Value(&thumb).Validate(assetOK),
+		thumbIn,
 	).Title("New research card"))
 	var linkForm func() overlay
 	linkForm = func() overlay {
@@ -304,16 +339,24 @@ func (a *App) newCard() tea.Cmd {
 			huh.NewInput().Title("Link URL").Value(&href).Validate(required("url")),
 			huh.NewConfirm().Title("Add another link?").Value(&again),
 		))
-		return newFormOverlay(f, a.bg, func() tea.Cmd {
-			links = append(links, actions.PaperLink{Label: strings.TrimSpace(label), Href: strings.TrimSpace(href)})
+		o := newFormOverlay(f, a.bg, func() tea.Cmd {
 			if again {
 				return openOverlay(linkForm())
 			}
 			return finish()
 		}).guard(a.bg, dirty)
+		appended := false
+		o.after = func() {
+			if f.State == huh.StateCompleted && !appended {
+				appended = true
+				links = append(links, actions.PaperLink{Label: strings.TrimSpace(label), Href: strings.TrimSpace(href)})
+			}
+		}
+		return o
 	}
 	o := newFormOverlay(form, a.bg, func() tea.Cmd {
 		return openOverlay(a.ask("Add a link?", dirty, func() tea.Cmd { return openOverlay(linkForm()) }, finish))
 	}).guard(a.bg, dirty)
+	o.live = []liveCheck{{slugIn, &slug, slugOK}, {dateIn, &date, validDate}, {thumbIn, &thumb, assetOK}}
 	return a.open(o)
 }

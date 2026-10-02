@@ -38,6 +38,20 @@ type formOverlay struct {
 	// the form: huh's quit marks the form finished for good and its View then
 	// renders empty, so a form could not be resumed after a discard prompt.
 	cancel tea.Cmd
+	// live validates the focused field on every keystroke. huh only validates
+	// on enter and cannot be handed an error from outside, so the message is
+	// drawn under the form.
+	live    []liveCheck
+	liveErr error
+	width   int
+}
+
+// liveCheck ties a field to its bound value and validator. An empty value is
+// not checked: required-field errors are left to huh's submit-time pass.
+type liveCheck struct {
+	field    huh.Field
+	val      *string
+	validate func(string) error
 }
 
 // newFormOverlay wires submit to overlayDoneMsg and cancel to a plain close.
@@ -67,6 +81,12 @@ func (f *formOverlay) Update(msg tea.Msg) (overlay, tea.Cmd) {
 	_, cmd := f.form.Update(msg)
 	if f.after != nil {
 		f.after()
+	}
+	f.liveErr = nil
+	for _, c := range f.live {
+		if f.form.GetFocusedField() == c.field && *c.val != "" {
+			f.liveErr = c.validate(*c.val)
+		}
 	}
 	return f, cmd
 }
@@ -100,11 +120,18 @@ func newDiscard(bg color.Color, back *formOverlay) *formOverlay {
 	return c
 }
 
-func (f *formOverlay) View() string { return f.form.View() }
+func (f *formOverlay) View() string {
+	v := f.form.View()
+	if f.liveErr != nil {
+		v += "\n" + lipgloss.NewStyle().Foreground(lipgloss.Color("9")).Width(f.width).Render("  * "+f.liveErr.Error())
+	}
+	return v
+}
 
 // SetSize fixes the width and caps the height. Below its natural height a
 // huh form scrolls, so the cap is applied only when the form would overflow.
 func (f *formOverlay) SetSize(w, h int) {
+	f.width = w
 	f.form.WithWidth(w).WithHeight(0)
 	if lipgloss.Height(f.form.View()) > h {
 		f.form.WithHeight(h)

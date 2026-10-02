@@ -3,6 +3,8 @@ package actions
 import (
 	"fmt"
 	"os"
+	"regexp"
+	"slices"
 	"strings"
 )
 
@@ -33,6 +35,13 @@ func NewPaper(p Paths, in PaperInput) error {
 	if in.Title == "" || in.URL == "" {
 		return fmt.Errorf("title and url are required")
 	}
+	taken, err := PaperSlugs(p)
+	if err != nil {
+		return err
+	}
+	if slices.Contains(taken, in.Slug) {
+		return fmt.Errorf("a research card with slug %q already exists", in.Slug)
+	}
 
 	raw, err := os.ReadFile(p.PapersFile)
 	if err != nil {
@@ -48,6 +57,21 @@ func NewPaper(p Paths, in PaperInput) error {
 	entry := formatPaperEntry(in)
 	updated := content[:closeIdx+1] + entry + content[closeIdx+1:]
 	return os.WriteFile(p.PapersFile, []byte(updated), 0o644)
+}
+
+var paperSlugRe = regexp.MustCompile(`(?m)^\s+slug:\s*'((?:[^'\\]|\\.)*)'`)
+
+// PaperSlugs returns the slug of every card in papers.ts.
+func PaperSlugs(p Paths) ([]string, error) {
+	raw, err := os.ReadFile(p.PapersFile)
+	if err != nil {
+		return nil, err
+	}
+	var slugs []string
+	for _, m := range paperSlugRe.FindAllStringSubmatch(string(raw), -1) {
+		slugs = append(slugs, m[1])
+	}
+	return slugs, nil
 }
 
 func tsQuote(s string) string {

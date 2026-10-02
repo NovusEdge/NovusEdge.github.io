@@ -284,6 +284,18 @@ func TestNewPaper(t *testing.T) {
 	}
 }
 
+func TestNewPaperRejectsExistingSlug(t *testing.T) {
+	p := setupFixture(t)
+	slugs, err := PaperSlugs(p)
+	if err != nil || !contains(slugs, "beyond-retrieval") {
+		t.Fatalf("PaperSlugs = %v, %v", slugs, err)
+	}
+	err = NewPaper(p, PaperInput{Slug: "beyond-retrieval", Title: "T", URL: "https://example.com"})
+	if err == nil || !strings.Contains(err.Error(), "already exists") {
+		t.Fatalf("expected duplicate slug error, got %v", err)
+	}
+}
+
 func TestNewBlipPlaceholderAndTopInsert(t *testing.T) {
 	p := setupFixture(t)
 	if err := NewBlip(p, BlipInput{Date: "2026-07-18", Text: "shipped it", Tags: []string{"meta"}}); err != nil {
