@@ -44,7 +44,8 @@ func newKeyMap() keyMap {
 }
 
 func (k keyMap) ShortHelp() []key.Binding {
-	return []key.Binding{k.Edit, k.Tags, k.Thumb, k.Publish, k.Trans, k.NewPost, k.NewBlip, k.NewCard, k.Help, k.Quit}
+	// Help and Quit lead: help.View truncates from the right on narrow terminals.
+	return []key.Binding{k.Help, k.Quit, k.Edit, k.Tags, k.Thumb, k.Publish, k.Trans, k.NewPost, k.NewBlip, k.NewCard}
 }
 
 func (k keyMap) FullHelp() [][]key.Binding {

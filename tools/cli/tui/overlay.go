@@ -20,8 +20,12 @@ type overlay interface {
 }
 
 // overlayDoneMsg closes the current overlay and runs cmd, which is nil when
-// the overlay was cancelled.
-type overlayDoneMsg struct{ cmd tea.Cmd }
+// the overlay was cancelled. A non-nil next replaces the overlay instead of
+// leaving none, which is how a form chains into a confirm or a follow-up form.
+type overlayDoneMsg struct {
+	cmd  tea.Cmd
+	next overlay
+}
 
 // formOverlay hosts a huh form. onSubmit runs after the form completes, so
 // it can read the values bound to the form's fields, and returns the command

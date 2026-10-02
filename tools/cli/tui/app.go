@@ -247,7 +247,9 @@ func (a *App) sync() {
 	switch {
 	case !ok:
 		a.detail, a.detailSlug = postDetail{}, ""
-		a.showDetail = false
+		if a.wantSlug == "" {
+			a.showDetail = false
+		}
 	case p.Slug != a.detailSlug:
 		a.detail, a.detailSlug = loadDetail(a.paths, p), p.Slug
 	}
@@ -270,6 +272,9 @@ func (a *App) bodyHeight() int { return a.h - lipgloss.Height(a.footer()) }
 func (a *App) layout() {
 	if a.tooSmall() {
 		return
+	}
+	if !a.narrow() {
+		a.showDetail = false
 	}
 	a.help.SetWidth(a.w)
 	bh := a.bodyHeight()
