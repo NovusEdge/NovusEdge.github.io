@@ -50,6 +50,9 @@ importers:
       ogl:
         specifier: ^1.0.11
         version: 1.0.11
+      opentype.js:
+        specifier: 2.0.0
+        version: 2.0.0
       postprocessing:
         specifier: ^6.39.4
         version: 6.39.4(three@0.185.1)
@@ -1444,6 +1447,10 @@ packages:
 
   ogl@1.0.11:
     resolution: {integrity: sha512-kUpC154AFfxi16pmZUK4jk3J+8zxwTWGPo03EoYA8QPbzikHoaC82n6pNTbd+oEaJonaE8aPWBlX7ad9zrqLsA==}
+
+  opentype.js@2.0.0:
+    resolution: {integrity: sha512-kCyjv6xdDY1W/jLWZ/L3QhhTlKUqDZMQ5+Jdlw12b3dXkKNpYBqqlMMj0YDQPShWFTMwgZI1hG14kN3XUDSg/A==}
+    hasBin: true
 
   parse-entities@4.0.2:
     resolution: {integrity: sha512-GG2AQYWoLgL877gQIKeRPGO1xF9+eG1ujIb5soS5gPvLQ1y2o8FL90w2QWNdf9I361Mpp7726c+lj3U0qK1uGw==}
@@ -3236,6 +3243,8 @@ snapshots:
   obug@2.1.4: {}
 
   ogl@1.0.11: {}
+
+  opentype.js@2.0.0: {}
 
   parse-entities@4.0.2:
     dependencies:

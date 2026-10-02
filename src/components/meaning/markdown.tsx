@@ -1,12 +1,13 @@
 import ReactMarkdown, { type Components } from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import { blogHeadings, headingId } from '../../lib/blog-headings'
-import { MEANING_POSTS, voiceMeta, type Doodle } from '../../lib/meaning-data'
-import { voicesFromNode } from '../../lib/meaning-voices'
+import { DOODLE_KINDS, MEANING_POSTS, voiceMeta, type Doodle, type DoodleKind } from '../../lib/meaning-data'
+import { nodeText, voicesFromNode } from '../../lib/meaning-voices'
 import { rehypeMargin } from '../../lib/meaning-margin'
 import { Drawn } from './drawn'
+import { Jostle, Reveal } from './inline'
+import { PenText } from './pen'
 import { Voices } from './voices'
-
 // Blocks a doodle cannot sit in: headings, quotes, lists, tables, fences, rules.
 const NOT_PARAGRAPH = /^(#|>|[-*+] |\d+\. |\||```|---)/
 
@@ -53,20 +54,40 @@ export function MeaningMarkdown({ slug, locale, children }: { slug: string; loca
         </p>
       )
     },
+    // Links to these fragments are effect markers, not links. They survive translation
+    // because the translator keeps link targets, unlike a list of English anchor texts.
     a({ href, children: kids, node, ...props }) {
+      const seed = node?.position?.start.offset
       if (href === '#ring') {
         return (
           <span className="ms-ring">
             {kids}
-            <Drawn kind="ring" accent seed={node?.position?.start.offset} />
+            <Drawn kind="ring" accent seed={seed} />
           </span>
         )
+      }
+      if (href === '#hand') return <Reveal className="ms-hand">{kids}</Reveal>
+      if (href === '#smudge') return <Reveal className="ms-smudge">{kids}</Reveal>
+      if (href === '#jostle') return <Jostle seed={seed ?? 1}>{kids}</Jostle>
+      if (href === '#pen') return <PenText text={nodeText(node)} lineHeight={1.3} className="ms-pen-block" />
+      const doodle = href?.match(/^#doodle-(\w+)-(left|right)$/)
+      if (doodle) {
+        const kind = doodle[1] as DoodleKind
+        return DOODLE_KINDS.includes(kind) ? <Drawn kind={kind} seed={seed} className={`ms-doodle ms-doodle-${doodle[2]}`} /> : <>{kids}</>
       }
       const external = !!href && /^https?:\/\//.test(href)
       return (
         <a href={href} {...(external ? { target: '_blank', rel: 'noreferrer noopener' } : {})} {...props}>
           {kids}
         </a>
+      )
+    },
+    del({ children: kids, node }) {
+      return (
+        <span className="ms-strike">
+          <del>{kids}</del>
+          <Drawn kind="strike" seed={node?.position?.start.offset} delay={700} />
+        </span>
       )
     },
     hr() {
@@ -78,7 +99,13 @@ export function MeaningMarkdown({ slug, locale, children }: { slug: string; loca
     },
     blockquote({ node, children: kids, ...props }) {
       const lines = voicesFromNode(node)
-      if (!lines) return <blockquote {...props}>{kids}</blockquote>
+      if (!lines)
+        return (
+          <blockquote className="ms-quote" {...props}>
+            <Drawn kind="quote" accent seed={node?.position?.start.offset} />
+            {kids}
+          </blockquote>
+        )
       return <Voices lines={lines} meta={lines.map((_, i) => voiceMeta(slug, i, lines.length))} locale={locale} />
     },
   }

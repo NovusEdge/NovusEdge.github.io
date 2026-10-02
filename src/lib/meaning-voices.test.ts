@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { linesToPlay, parseVoiceItem, voicesFromNode } from './meaning-voices'
+import { parseVoiceItem, sideRows, voicesFromNode } from './meaning-voices'
 
 const text = (value: string) => ({ type: 'text', value })
 const el = (tagName: string, children: unknown[]) => ({ type: 'element', tagName, children })
@@ -33,18 +33,9 @@ describe('voicesFromNode', () => {
   })
 })
 
-describe('linesToPlay', () => {
-  it('plays the line that just appeared', () => {
-    expect(linesToPlay(2, 3, new Set([0, 1]))).toEqual([2])
-  })
-  it('plays only the newest line after a jump', () => {
-    expect(linesToPlay(0, 6, new Set())).toEqual([5])
-  })
-  it('never replays on the way back up or down again', () => {
-    expect(linesToPlay(5, 4, new Set([4]))).toEqual([])
-    expect(linesToPlay(4, 5, new Set([4]))).toEqual([])
-  })
-  it('plays nothing before the first line', () => {
-    expect(linesToPlay(0, 0, new Set())).toEqual([])
+describe('sideRows', () => {
+  it('stacks each side from the top, so the stage is as tall as the longer side', () => {
+    const sides = ['right', 'left', 'left', 'right', 'right'] as const
+    expect(sideRows(sides.map((side) => ({ side, text: 'x' })))).toEqual({ row: [1, 1, 2, 2, 3], rows: 3 })
   })
 })
