@@ -7,7 +7,7 @@ import (
 	"fmt"
 	"os"
 
-	tea "github.com/charmbracelet/bubbletea"
+	tea "charm.land/bubbletea/v2"
 
 	"novusedge/site-cli/actions"
 	"novusedge/site-cli/tui"
@@ -21,7 +21,7 @@ func main() {
 	}
 	paths := actions.NewPaths(root)
 
-	p := tea.NewProgram(tui.NewApp(paths), tea.WithAltScreen())
+	p := tea.NewProgram(tui.NewApp(paths))
 	if _, err := p.Run(); err != nil {
 		fmt.Fprintln(os.Stderr, "error:", err)
 		os.Exit(1)

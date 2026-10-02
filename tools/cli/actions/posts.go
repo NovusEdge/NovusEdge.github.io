@@ -19,6 +19,8 @@ type PostMeta struct {
 	Date   string
 	Tags   []string
 	Hidden bool
+
+	Description string
 }
 
 // BlogInput is the user-supplied data for creating a new blog post.
@@ -107,6 +109,9 @@ func ListPosts(p Paths) ([]PostMeta, error) {
 			}
 			if date, ok := fm.Get("date"); ok {
 				meta.Date = date
+			}
+			if desc, ok := fm.Get("description"); ok {
+				meta.Description = desc
 			}
 			if tags, ok := fm.Get("tags"); ok {
 				meta.Tags = ParseTagsValue(tags)
