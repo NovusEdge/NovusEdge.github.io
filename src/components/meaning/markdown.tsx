@@ -3,6 +3,7 @@ import remarkGfm from 'remark-gfm'
 import { blogHeadings, headingId } from '../../lib/blog-headings'
 import { MEANING_POSTS, voiceMeta, type Doodle } from '../../lib/meaning-data'
 import { voicesFromNode } from '../../lib/meaning-voices'
+import { rehypeMargin } from '../../lib/meaning-margin'
 import { Drawn } from './drawn'
 import { Voices } from './voices'
 
@@ -84,7 +85,7 @@ export function MeaningMarkdown({ slug, locale, children }: { slug: string; loca
 
   return (
     <div className="ms-col ms-prose">
-      <ReactMarkdown remarkPlugins={[remarkGfm]} components={components}>
+      <ReactMarkdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeMargin]} components={components}>
         {children}
       </ReactMarkdown>
     </div>
