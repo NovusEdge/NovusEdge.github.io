@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Inside the head mockup</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&display=swap" rel="stylesheet">
+<style>
+  @font-face {
+    font-family: 'Supreme';
+    src: url('file:///home/novusedge/Projects/Personal/NovusEdge.github.io/public/fonts/Supreme-Variable.woff2') format('woff2');
+    font-weight: 100 900;
+  }
+  body { --paper: #f5f2eb; --ink: #1a1a1a; --accent: #d4a03c; }
+  body.dark { --paper: #1a1a1a; --ink: #f5f2eb; }
+  html, body { margin: 0; }
+  body { background: var(--paper); color: var(--ink); font: 19px/1.75 Supreme, sans-serif; transition: background .4s, color .4s; }
+  #bg { position: fixed; inset: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 0; }
+  .col { max-width: 640px; margin: 0 auto; padding: 0 20px; position: relative; z-index: 1; }
+  .kicker { font: 600 12px/1 Supreme; letter-spacing: .25em; opacity: .55; padding-top: 22vh; }
+  h1 { font: italic 400 clamp(44px, 8vw, 76px)/1.1 Supreme; margin: 4vh 0 30vh; }
+  /* Paper patches behind the prose so the background tangle never crosses a line of text. */
+  p, h1, h2, .kicker { background: var(--paper); box-shadow: 0 0 28px 22px var(--paper); transition: background .4s, box-shadow .4s; }
+  h2 { font: 600 24px/1.3 Supreme; margin: 2.4em 0 .8em; display: inline-block; }
+  p { margin: 0 0 1.6em; }
+  .end { height: 40vh; }
+
+  .voices { height: 460vh; position: relative; z-index: 1; }
+  .stage { position: sticky; top: 0; height: 100vh; display: grid; grid-template-columns: 1fr 280px 1fr; align-items: center;
+    max-width: 1060px; margin: 0 auto; padding: 0 20px; gap: 24px; }
+  .v-left, .v-right { display: flex; flex-direction: column; gap: 14px; }
+  .v-left { text-align: right; align-items: flex-end; }
+  .v-line { margin: 0; font: 600 26px/1.15 Caveat, cursive; opacity: 0; transition: opacity .35s; max-width: 300px; }
+  .v-right .v-line { color: var(--accent); }
+  .fig { position: relative; width: 280px; height: 380px; }
+  .fig svg { position: absolute; inset: 0; width: 100%; height: 100%; filter: url(#boil); }
+  .fig path { fill: none; stroke: var(--ink); stroke-width: 2.2; stroke-linecap: round; }
+  .tag { position: absolute; left: 50%; bottom: 4vh; transform: translateX(-50%); font: 12px Supreme; opacity: .4; }
+  @media (max-width: 760px) {
+    .stage { grid-template-columns: 1fr; grid-template-rows: 1fr 240px 1fr; justify-items: center; gap: 4px; }
+    .v-left, .v-right { align-items: center; text-align: center; gap: 6px; }
+    .v-left { justify-content: flex-end; height: 100%; } .v-right { justify-content: flex-start; height: 100%; }
+    .v-line { font-size: 22px; }
+    .fig { width: 176px; height: 240px; }
+  }
+  nav { position: fixed; bottom: 14px; right: 14px; z-index: 5; font: 13px system-ui; }
+  nav button { background: var(--ink); color: var(--paper); border: 0; padding: 8px 10px; border-radius: 4px; cursor: pointer; opacity: .7; }
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute">
+  <filter id="boil"><feTurbulence id="turb" type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="1"/><feDisplacementMap in="SourceGraphic" scale="3.2"/></filter>
+</svg>
+<canvas id="bg"></canvas>
+<nav><button id="theme">Dark mode</button></nav>
+
+<div class="col">
+  <div class="kicker">IN SEARCH OF MEANING #1</div>
+  <h1 data-agit="0.1">cogito, ergo sum</h1>
+  <h2 data-agit="0.2">I. The doubt</h2>
+  <p data-agit="0.25">Placeholder text, from Descartes' Meditations (1641). Some years ago I was struck by the large number of falsehoods that I had accepted as true in my childhood, and by the highly doubtful nature of the whole edifice that I had subsequently based on them.</p>
+  <p data-agit="0.55">I realized that it was necessary, once in the course of my life, to demolish everything completely and start again right from the foundations if I wanted to establish anything at all in the sciences that was stable and likely to last.</p>
+  <p data-agit="0.85">Whatever I have up till now accepted as most true I have acquired either from the senses or through the senses. But from time to time I have found that the senses deceive, and it is prudent never to trust completely those who have deceived us even once.</p>
+</div>
+
+<section class="voices">
+  <div class="stage">
+    <div class="v-left"></div>
+    <div class="fig"><svg viewBox="0 0 280 380"><path id="figpath"/></svg></div>
+    <div class="v-right"></div>
+    <div class="tag">placeholder lines</div>
+  </div>
+</section>
+
+<div class="col">
+  <h2 data-agit="0.3">II. The thing that thinks</h2>
+  <p data-agit="0.25">So after considering everything very thoroughly, I must finally conclude that this proposition, I am, I exist, is necessarily true whenever it is put forward by me or conceived in my mind.</p>
+  <p data-agit="0.08">But I do not yet have a sufficient understanding of what this I is, that now necessarily exists. So I must be on my guard against carelessly taking something else to be this I, and so making a mistake in the very item of knowledge that I maintain is the most certain and evident of all.</p>
+  <div class="end"></div>
+</div>
+
+<script src="scribble.js"></script>
+<script>
+document.getElementById('figpath').setAttribute('d', FIGURE_PATH);
+const bg = document.getElementById('bg'), bx = bg.getContext('2d');
+const stage = document.querySelector('.stage'), voicesSec = document.querySelector('.voices'), fig = document.querySelector('.fig');
+const figSvg = fig.querySelector('svg');
+const update = setupVoices(stage);
+const strokes = makeStrokes(80, 110, 5);
+const dpr = Math.min(devicePixelRatio || 1, 2);
+const turb = document.getElementById('turb');
+const marked = [...document.querySelectorAll('[data-agit]')];
+let agit = 0.15, ink = inkColor();
+
+document.getElementById('theme').onclick = e => {
+  document.body.classList.toggle('dark');
+  e.target.textContent = document.body.classList.contains('dark') ? 'Light mode' : 'Dark mode';
+  ink = inkColor();
+};
+
+function proseAgitation() {
+  let best = 0.15, bestD = Infinity;
+  for (const el of marked) {
+    const r = el.getBoundingClientRect(), d = Math.abs(r.top + r.height / 2 - innerHeight / 2);
+    if (d < bestD) { bestD = d; best = +el.dataset.agit; }
+  }
+  return best;
+}
+const lerp = (a, b, t) => a + (b - a) * t;
+const smooth = (a, b, x) => { const t = Math.max(0, Math.min(1, (x - a) / (b - a))); return t * t * (3 - 2 * t); };
+
+(function frame(now) {
+  const W = innerWidth, H = innerHeight;
+  if (bg.width !== W * dpr || bg.height !== H * dpr) { bg.width = W * dpr; bg.height = H * dpr; }
+  const q = sectionProgress(voicesSec);
+  const rect = voicesSec.getBoundingClientRect();
+  const inside = rect.top < H && rect.bottom > 0;
+  // Pull-out: the tangle shrinks from filling the screen into the figure's head,
+  // holds there while the voices argue, then spills back out.
+  const m = inside ? smooth(0, 0.16, q) * (1 - smooth(0.88, 1, q)) : 0;
+  const voiceAgit = update(smooth(0.16, 0.86, q));
+  const target = m > 0.5 ? voiceAgit : proseAgitation();
+  agit += (target - agit) * 0.05;
+
+  const fr = fig.getBoundingClientRect(), s = fr.width / 280;
+  const head = { x: fr.left + 140 * s, y: fr.top + 140 * s, rx: 62 * s, ry: 78 * s };
+  const R = Math.hypot(W, H) * 0.62;
+  const full = { x: W / 2, y: H / 2, rx: R, ry: R };
+  const e = { x: lerp(full.x, head.x, m), y: lerp(full.y, head.y, m), rx: lerp(full.rx, head.rx, m), ry: lerp(full.ry, head.ry, m) };
+  figSvg.style.opacity = smooth(0.6, 1, m);
+
+  const pageBoil = Math.floor(now / 125) % 4;
+  turb.setAttribute('seed', pageBoil + 1);
+  bx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  bx.clearRect(0, 0, W, H);
+  drawScribbles(bx, strokes, e, agit, Math.floor(now / (140 - agit * 85)), ink,
+    lerp(0.07 + agit * 0.12, 0.85, m), lerp(1.4, 1.3, m));
+  requestAnimationFrame(frame);
+})(0);
+</script>
+</body>
+</html>

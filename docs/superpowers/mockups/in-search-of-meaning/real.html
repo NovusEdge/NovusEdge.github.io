@@ -1,0 +1,283 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Real lamp mockup</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+<style>
+  html, body { margin: 0; background: #000; }
+  body { cursor: none; }
+  canvas { position: fixed; inset: 0; width: 100vw; height: 100vh; display: block; }
+  #spacer { width: 1px; }
+  nav { position: fixed; top: 14px; right: 14px; z-index: 5; display: flex; gap: 6px; font: 13px/1 system-ui, sans-serif; }
+  nav button { background: #111; color: #888; border: 1px solid #222; padding: 8px 10px; border-radius: 4px; cursor: pointer; }
+  nav button[aria-pressed="true"] { color: #fff; border-color: #a77; }
+</style>
+</head>
+<body>
+<canvas id="c"></canvas>
+<div id="spacer"></div>
+<nav>
+  <button id="dust" aria-pressed="true">Dust</button>
+  <button id="flicker" aria-pressed="true">Flicker</button>
+</nav>
+<script>
+const TEXT = [
+  "Placeholder text, from Descartes' Meditations (1641). Some years ago I was struck by the large number of falsehoods that I had accepted as true in my childhood, and by the highly doubtful nature of the whole edifice that I had subsequently based on them.",
+  "I realized that it was necessary, once in the course of my life, to demolish everything completely and start again right from the foundations if I wanted to establish anything at all in the sciences that was stable and likely to last.",
+  "Whatever I have up till now accepted as most true I have acquired either from the senses or through the senses. But from time to time I have found that the senses deceive, and it is prudent never to trust completely those who have deceived us even once.",
+  "Yet there are many other beliefs about which doubt is quite impossible, even though they are derived from the senses: for example, that I am here, sitting by the fire, wearing a winter dressing-gown, holding this piece of paper in my hands, and so on.",
+  "So after considering everything very thoroughly, I must finally conclude that this proposition, I am, I exist, is necessarily true whenever it is put forward by me or conceived in my mind.",
+  "But I do not yet have a sufficient understanding of what this I is, that now necessarily exists. So I must be on my guard against carelessly taking something else to be this I, and so making a mistake in the very item of knowledge that I maintain is the most certain and evident of all.",
+];
+
+const VS = `#version 300 es
+in vec2 p; void main(){ gl_Position = vec4(p, 0., 1.); }`;
+
+const FS = `#version 300 es
+precision highp float;
+uniform sampler2D uInk, uH, uPaper;
+uniform vec2 uRes, uTex, uMouse;
+uniform float uScroll, uTime, uDpr, uDust, uFlick, uDebug, uOn;
+out vec4 o;
+
+float hash(vec2 p){ return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453); }
+
+float H(vec2 pix){
+  float letter = texture(uH, pix / uTex).r;
+  float paper = texture(uPaper, pix / (512. * uDpr)).r * 0.7 + texture(uPaper, pix / (97. * uDpr)).g * 0.35;
+  return (-letter * 0.6 + paper * 0.6) * uDpr;
+}
+
+vec3 lin(vec3 c){ return pow(c, vec3(2.2)); }
+
+void main(){
+  vec2 sp = vec2(gl_FragCoord.x, uRes.y - gl_FragCoord.y);
+  vec2 pix = sp + vec2(0., uScroll * uDpr);
+
+  float e = 1.;
+  float h = H(pix);
+  vec3 n = normalize(vec3(H(pix - vec2(e,0)) - H(pix + vec2(e,0)),
+                          H(pix - vec2(0,e)) - H(pix + vec2(0,e)), 2. * e));
+
+  float t = uTime;
+  float fl = mix(1., 0.88 + 0.06 * sin(t * 7.3) + 0.06 * hash(vec2(floor(t * 14.), 1.)), uFlick) * uOn;
+  vec2 jitter = vec2(sin(t * 3.1), cos(t * 2.3)) * 1.5 * uDpr * uFlick;
+  vec2 lsp = uMouse * uDpr + jitter;
+  vec3 L = vec3(lsp + vec2(0., uScroll * uDpr), 150. * uDpr);
+  vec3 P = vec3(pix, h);
+  vec3 Ld = L - P; float dist = length(Ld); vec3 l = Ld / dist;
+
+  float R = 250. * uDpr;
+  float att = fl * (exp(-dist * dist / (R * R)) * 1.4 + 0.012 * exp(-dist / (R * 1.2)));
+
+  float sh = 1.;
+  for (int i = 1; i <= 10; i++) {
+    float s = float(i) * 1.2 * uDpr;
+    vec3 q = P + l * s;
+    sh = min(sh, smoothstep(-0.6 * uDpr, 0.2 * uDpr, q.z - H(q.xy)));
+  }
+  sh = 0.25 + 0.75 * sh;
+
+  vec4 ink = texture(uInk, pix / uTex);
+  float grain = texture(uPaper, pix / (180. * uDpr)).b;
+  vec3 paperCol = lin(vec3(0.83, 0.77, 0.67)) * (0.82 + 0.3 * grain);
+  vec3 inkCol = lin(vec3(0.07, 0.06, 0.055));
+  vec3 foil = lin(vec3(1.0, 0.74, 0.36));
+  vec3 alb = mix(paperCol, inkCol, ink.r * 0.94);
+  alb = mix(alb, foil * 0.25, ink.b);
+
+  vec3 hv = normalize(l + vec3(0, 0, 1));
+  float ndh = max(dot(n, hv), 0.);
+  vec3 spec = vec3(0.03) * pow(ndh, 14.) * (1. - ink.r - ink.b)
+            + vec3(0.015) * pow(ndh, 50.) * ink.r
+            + foil * 3.0 * pow(ndh, 90.) * ink.b;
+  vec3 lightCol = vec3(1.0, 0.72, 0.45);
+  float diff = max(dot(n, l), 0.);
+  vec3 col = (alb * diff + spec) * lightCol * att * sh + alb * 0.004;
+
+  float ds = length(sp - lsp);
+  col += lightCol * 0.018 * exp(-ds * ds / (R * R * 0.5)) * fl;
+
+  if (uDust > 0.5) {
+    for (int k = 0; k < 2; k++) {
+      float sc = (k == 0 ? 22. : 37.) * uDpr;
+      vec2 dp = sp + vec2(sin(t * 0.3 + float(k)) * 30., -t * (k == 0 ? 7. : 4.)) * uDpr;
+      vec2 cell = floor(dp / sc);
+      float r = hash(cell + float(k) * 13.);
+      if (r > 0.93) {
+        vec2 c = (cell + vec2(hash(cell + 3.), hash(cell + 7.))) * sc;
+        float d = length(dp - c);
+        float sz = (0.6 + hash(cell + 11.)) * uDpr;
+        float tw = 0.6 + 0.4 * sin(t * (2. + 3. * r) + r * 40.);
+        col += lightCol * smoothstep(sz, 0., d) * tw * 0.9 * uOn * exp(-ds * ds / (R * R * 0.35));
+      }
+    }
+  }
+
+  col *= 1.5;
+  col = (col * (2.51 * col + 0.03)) / (col * (2.43 * col + 0.59) + 0.14);
+  col = pow(clamp(col, 0., 1.), vec3(1. / 2.2));
+  col += (hash(sp + fract(t) * 100.) - 0.5) * 0.025;
+  o = vec4(col, 1.);
+  if (uDebug > 0.5) o = vec4(ink.r, texture(uH, pix / uTex).r, sh, 1.);
+}`;
+
+const canvas = document.getElementById('c');
+const gl = canvas.getContext('webgl2');
+const dpr = Math.min(devicePixelRatio || 1, 2);
+
+function sh(type, src) {
+  const s = gl.createShader(type); gl.shaderSource(s, src); gl.compileShader(s);
+  if (!gl.getShaderParameter(s, gl.COMPILE_STATUS)) throw new Error(gl.getShaderInfoLog(s));
+  return s;
+}
+const prog = gl.createProgram();
+gl.attachShader(prog, sh(gl.VERTEX_SHADER, VS));
+gl.attachShader(prog, sh(gl.FRAGMENT_SHADER, FS));
+gl.linkProgram(prog); gl.useProgram(prog);
+const buf = gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1, 3,-1, -1,3]), gl.STATIC_DRAW);
+const loc = gl.getAttribLocation(prog, 'p');
+gl.enableVertexAttribArray(loc); gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
+const U = n => gl.getUniformLocation(prog, n);
+
+function tex(unit, src, repeat) {
+  const t = gl.createTexture();
+  gl.activeTexture(gl.TEXTURE0 + unit); gl.bindTexture(gl.TEXTURE_2D, t);
+  gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, src);
+  const w = repeat ? gl.REPEAT : gl.CLAMP_TO_EDGE;
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, w);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, w);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+  return t;
+}
+
+function paperTexture() {
+  const N = 512, c = document.createElement('canvas'); c.width = c.height = N;
+  const x = c.getContext('2d'), img = x.createImageData(N, N);
+  for (let i = 0; i < N * N * 4; i++) img.data[i] = Math.random() * 255;
+  x.putImageData(img, 0, 0);
+  const out = document.createElement('canvas'); out.width = out.height = N;
+  const y = out.getContext('2d');
+  // Blur a 3x3 tiling so the repeated texture has no seams at the edges.
+  y.filter = 'blur(3px)';
+  for (let i = -1; i <= 1; i++) for (let j = -1; j <= 1; j++) y.drawImage(c, i * N, j * N);
+  return out;
+}
+
+let docH = 0, W = 0;
+function layout() {
+  W = innerWidth;
+  const colW = Math.min(640, W - 40), x0 = (W - colW) / 2;
+  const items = [];
+  let y = innerHeight * 0.3;
+  items.push({ text: 'IN SEARCH OF MEANING #1', font: '500 15px "EB Garamond"', x: x0, y, foil: false, spacing: '4px' });
+  y += innerHeight * 0.25;
+  const cog = 'cogito, ergo sum';
+  items.push({ text: cog, font: 'italic 46px "EB Garamond"', x: W / 2, y, foil: true, center: true });
+  y += innerHeight * 0.32;
+  const m = document.createElement('canvas').getContext('2d');
+  const body = '21px "EB Garamond"', lh = 36;
+  m.font = body;
+  for (const para of TEXT) {
+    let line = '';
+    for (const word of para.split(' ')) {
+      const t = line ? line + ' ' + word : word;
+      if (m.measureText(t).width > colW && line) { items.push({ text: line, font: body, x: x0, y }); y += lh; line = word; }
+      else line = t;
+    }
+    items.push({ text: line, font: body, x: x0, y }); y += lh * 1.6;
+  }
+  docH = Math.ceil(y + innerHeight * 0.6);
+  document.getElementById('spacer').style.height = docH + 'px';
+
+  const mk = () => { const c = document.createElement('canvas'); c.width = W * dpr; c.height = docH * dpr; const x = c.getContext('2d'); x.scale(dpr, dpr); x.fillStyle = '#000'; x.fillRect(0, 0, W, docH); return [c, x]; };
+  const [inkC, ink] = mk(), [hC, hx] = mk();
+  hx.filter = `blur(${0.7}px)`;
+  for (const it of items) {
+    for (const [x, col] of [[ink, it.foil ? '#00f' : '#f00'], [hx, '#fff']]) {
+      x.font = it.font; x.letterSpacing = it.spacing || '0px';
+      x.textAlign = it.center ? 'center' : 'left'; x.textBaseline = 'middle';
+      x.fillStyle = col; x.fillText(it.text, it.x, it.y);
+    }
+  }
+  tex(0, inkC, false); tex(1, hC, false);
+  gl.uniform2f(U('uTex'), W * dpr, docH * dpr);
+  canvas.width = innerWidth * dpr; canvas.height = innerHeight * dpr;
+  gl.viewport(0, 0, canvas.width, canvas.height);
+  gl.uniform2f(U('uRes'), canvas.width, canvas.height);
+}
+
+let mx = innerWidth / 2, my = innerHeight * 0.55, dust = 1, flick = 1;
+const mobile = matchMedia('(pointer: coarse)').matches || location.hash === '#mobile';
+addEventListener('pointermove', e => { if (!mobile) { mx = e.clientX; my = e.clientY; } });
+
+// Carried lamp: a spring that trails behind scroll velocity, plus tilt when the OS allows it.
+let lag = 0, lagV = 0, lastY = scrollY, sv = 0, tiltX = 0, tiltY = 0, tiltOn = false;
+function onTilt(e) {
+  if (e.gamma == null) return;
+  tiltOn = true;
+  tiltX = Math.max(-1, Math.min(1, e.gamma / 25));
+  tiltY = Math.max(-1, Math.min(1, (e.beta - 45) / 25));
+}
+addEventListener('touchend', async () => {
+  if (typeof DeviceOrientationEvent !== 'undefined' && DeviceOrientationEvent.requestPermission) {
+    try { if (await DeviceOrientationEvent.requestPermission() === 'granted') addEventListener('deviceorientation', onTilt); } catch {}
+  }
+}, { once: true });
+if (!(typeof DeviceOrientationEvent !== 'undefined' && DeviceOrientationEvent.requestPermission)) addEventListener('deviceorientation', onTilt);
+
+let sx = 0, sy = 0;
+function carriedLamp(dt) {
+  const v = (scrollY - lastY) / Math.max(dt, 1e-3); lastY = scrollY;
+  sv += (v - sv) * Math.min(1, dt * 12);
+  const target = Math.max(-170, Math.min(170, -sv * 0.12));
+  lagV += ((target - lag) * 60 - lagV * 9) * dt;
+  lag += lagV * dt;
+  const tx = innerWidth / 2 + tiltX * innerWidth * 0.38, ty = tiltY * 70;
+  sx += (tx - sx) * Math.min(1, dt * 6); sy += (ty - sy) * Math.min(1, dt * 6);
+  mx = tiltOn ? sx : innerWidth / 2 + Math.sin(performance.now() / 2300) * innerWidth * 0.06;
+  my = innerHeight * 0.36 + lag + sy;
+}
+
+// Ignition: two false starts, then the flame settles.
+function ignition(t) {
+  if (t < 0.5) return 0;
+  if (t < 0.62) return 0.35;
+  if (t < 0.8) return 0.05;
+  if (t < 0.9) return 0.6;
+  if (t < 1.0) return 0.2;
+  return Math.min(1, 0.4 + (t - 1.0) * 1.2);
+}
+document.getElementById('dust').onclick = e => { dust = 1 - dust; e.target.setAttribute('aria-pressed', !!dust); };
+document.getElementById('flicker').onclick = e => { flick = 1 - flick; e.target.setAttribute('aria-pressed', !!flick); };
+
+(async () => {
+  await Promise.all([document.fonts.load('21px "EB Garamond"'), document.fonts.load('italic 46px "EB Garamond"'), document.fonts.load('500 15px "EB Garamond"')]);
+  tex(2, paperTexture(), true);
+  gl.uniform1i(U('uInk'), 0); gl.uniform1i(U('uH'), 1); gl.uniform1i(U('uPaper'), 2);
+  gl.uniform1f(U('uDpr'), dpr);
+  layout();
+  addEventListener('resize', layout);
+  const t0 = performance.now();
+  let prev = t0;
+  (function frame() {
+    const now = performance.now(), dt = (now - prev) / 1000; prev = now;
+    if (mobile) carriedLamp(dt);
+    gl.uniform1f(U('uOn'), ignition((now - t0) / 1000));
+    gl.uniform2f(U('uMouse'), mx, my);
+    gl.uniform1f(U('uScroll'), scrollY);
+    gl.uniform1f(U('uTime'), (performance.now() - t0) / 1000);
+    gl.uniform1f(U('uDust'), dust); gl.uniform1f(U('uFlick'), flick);
+    gl.uniform1f(U('uDebug'), window.DEBUG ? 1 : 0);
+    gl.drawArrays(gl.TRIANGLES, 0, 3);
+    requestAnimationFrame(frame);
+  })();
+})();
+</script>
+</body>
+</html>

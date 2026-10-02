@@ -1,0 +1,362 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pull cord mockup</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital@1&display=swap" rel="stylesheet">
+<style>
+  @font-face {
+    font-family: 'Supreme';
+    src: url('file:///home/novusedge/Projects/Personal/NovusEdge.github.io/public/fonts/Supreme-Variable.woff2') format('woff2');
+    font-weight: 100 900;
+  }
+  html, body { margin: 0; background: #000; }
+  body.dark-room { cursor: none; }
+  canvas { position: fixed; inset: 0; width: 100vw; height: 100vh; display: block; pointer-events: none; }
+  #spacer { width: 1px; }
+  #pull {
+    position: fixed; width: 48px; height: 48px; margin: -24px 0 0 -24px; left: 0; top: 0;
+    background: none; border: 0; padding: 0; cursor: grab; touch-action: none; z-index: 6; border-radius: 50%;
+  }
+  #pull:active { cursor: grabbing; }
+  #pull:focus-visible { outline: 2px solid #d4a03c; outline-offset: 2px; }
+  nav { position: fixed; bottom: 14px; right: 14px; z-index: 5; display: flex; gap: 6px; font: 13px/1 system-ui, sans-serif; }
+  nav button { background: #111; color: #888; border: 1px solid #333; padding: 8px 10px; border-radius: 4px; cursor: pointer; }
+</style>
+</head>
+<body class="dark-room">
+<canvas id="c"></canvas>
+<canvas id="cordc"></canvas>
+<button id="pull" aria-label="Turn on the lights" aria-pressed="false"></button>
+<div id="spacer"></div>
+<nav><button id="dark">Site theme: light</button></nav>
+<script>
+const TEXT = [
+  "Placeholder text, from Descartes' Meditations (1641). Some years ago I was struck by the large number of falsehoods that I had accepted as true in my childhood, and by the highly doubtful nature of the whole edifice that I had subsequently based on them.",
+  "I realized that it was necessary, once in the course of my life, to demolish everything completely and start again right from the foundations if I wanted to establish anything at all in the sciences that was stable and likely to last.",
+  "Whatever I have up till now accepted as most true I have acquired either from the senses or through the senses. But from time to time I have found that the senses deceive, and it is prudent never to trust completely those who have deceived us even once.",
+  "Yet there are many other beliefs about which doubt is quite impossible, even though they are derived from the senses: for example, that I am here, sitting by the fire, wearing a winter dressing-gown, holding this piece of paper in my hands, and so on.",
+  "So after considering everything very thoroughly, I must finally conclude that this proposition, I am, I exist, is necessarily true whenever it is put forward by me or conceived in my mind.",
+  "But I do not yet have a sufficient understanding of what this I is, that now necessarily exists. So I must be on my guard against carelessly taking something else to be this I, and so making a mistake in the very item of knowledge that I maintain is the most certain and evident of all.",
+];
+
+const VS = `#version 300 es
+in vec2 p; void main(){ gl_Position = vec4(p, 0., 1.); }`;
+
+const FS = `#version 300 es
+precision highp float;
+uniform sampler2D uInk, uH, uPaper;
+uniform vec2 uRes, uTex, uMouse;
+uniform float uScroll, uTime, uDpr, uOn, uRoom, uDarkTheme;
+out vec4 o;
+
+float hash(vec2 p){ return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453); }
+
+float H(vec2 pix){
+  float letter = texture(uH, pix / uTex).r;
+  float paper = texture(uPaper, pix / (512. * uDpr)).r * 0.7 + texture(uPaper, pix / (97. * uDpr)).g * 0.35;
+  return (-letter * 0.6 + paper * 0.6) * uDpr;
+}
+
+vec3 lin(vec3 c){ return pow(c, vec3(2.2)); }
+
+void main(){
+  vec2 sp = vec2(gl_FragCoord.x, uRes.y - gl_FragCoord.y);
+  vec2 pix = sp + vec2(0., uScroll * uDpr);
+
+  float e = 1.;
+  float h = H(pix);
+  vec3 n = normalize(vec3(H(pix - vec2(e,0)) - H(pix + vec2(e,0)),
+                          H(pix - vec2(0,e)) - H(pix + vec2(0,e)), 2. * e));
+
+  float t = uTime;
+  float fl = (0.88 + 0.06 * sin(t * 7.3) + 0.06 * hash(vec2(floor(t * 14.), 1.))) * uOn;
+  vec2 lsp = uMouse * uDpr + vec2(sin(t * 3.1), cos(t * 2.3)) * 1.5 * uDpr;
+  vec3 L = vec3(lsp + vec2(0., uScroll * uDpr), 150. * uDpr);
+  vec3 P = vec3(pix, h);
+  vec3 Ld = L - P; float dist = length(Ld); vec3 l = Ld / dist;
+
+  float R = 250. * uDpr;
+  float att = fl * (exp(-dist * dist / (R * R)) * 1.4 + 0.012 * exp(-dist / (R * 1.2)));
+
+  float sh = 1.;
+  for (int i = 1; i <= 10; i++) {
+    float s = float(i) * 1.2 * uDpr;
+    vec3 q = P + l * s;
+    sh = min(sh, smoothstep(-0.6 * uDpr, 0.2 * uDpr, q.z - H(q.xy)));
+  }
+  sh = 0.25 + 0.75 * sh;
+
+  vec4 ink = texture(uInk, pix / uTex);
+  float grain = texture(uPaper, pix / (180. * uDpr)).b;
+  // Site tokens: bone #f5f2eb, charcoal #1a1a1a, gold #d4a03c.
+  vec3 boneS = vec3(0.961, 0.949, 0.922), charS = vec3(0.102), goldS = vec3(0.831, 0.627, 0.235);
+  vec3 paperCol = lin(boneS) * (0.86 + 0.22 * grain);
+  vec3 alb = mix(paperCol, lin(charS), ink.r * 0.95);
+  alb = mix(alb, lin(goldS) * 0.3, ink.b);
+
+  vec3 hv = normalize(l + vec3(0, 0, 1));
+  float ndh = max(dot(n, hv), 0.);
+  vec3 spec = vec3(0.03) * pow(ndh, 14.) * (1. - ink.r - ink.b)
+            + vec3(0.015) * pow(ndh, 50.) * ink.r
+            + lin(goldS) * 3.0 * pow(ndh, 90.) * ink.b;
+  vec3 lightCol = vec3(1.0, 0.76, 0.5);
+  vec3 col = (alb * max(dot(n, l), 0.) + spec) * lightCol * att * sh + alb * 0.004;
+
+  float ds = length(sp - lsp);
+  col += lightCol * 0.018 * exp(-ds * ds / (R * R * 0.5)) * fl;
+
+  for (int k = 0; k < 2; k++) {
+    float sc = (k == 0 ? 22. : 37.) * uDpr;
+    vec2 dp = sp + vec2(sin(t * 0.3 + float(k)) * 30., -t * (k == 0 ? 7. : 4.)) * uDpr;
+    vec2 cell = floor(dp / sc);
+    float r = hash(cell + float(k) * 13.);
+    if (r > 0.93) {
+      vec2 c = (cell + vec2(hash(cell + 3.), hash(cell + 7.))) * sc;
+      float tw = 0.6 + 0.4 * sin(t * (2. + 3. * r) + r * 40.);
+      col += lightCol * smoothstep((0.6 + hash(cell + 11.)) * uDpr, 0., length(dp - c)) * tw * 0.9 * uOn
+           * exp(-ds * ds / (R * R * 0.35)) * (1. - uRoom);
+    }
+  }
+
+  col *= 1.5;
+  col = (col * (2.51 * col + 0.03)) / (col * (2.43 * col + 0.59) + 0.14);
+  col = pow(clamp(col, 0., 1.), vec3(1. / 2.2));
+
+  // Room lights: the page settles into the site's own reading colours, keeping a trace
+  // of the letterpress so the switch reads as light changing, not a different page.
+  float relief = dot(n, normalize(vec3(-0.35, -0.6, 1.))) - dot(vec3(0,0,1), normalize(vec3(-0.35, -0.6, 1.)));
+  vec3 pageBg = mix(boneS, charS, uDarkTheme), pageInk = mix(charS, boneS, uDarkTheme);
+  vec3 lit = mix(pageBg * (0.985 + 0.03 * grain), pageInk, ink.r);
+  lit = mix(lit, goldS, ink.b);
+  lit += relief * 0.25;
+  col = mix(col, lit, uRoom);
+
+  col += (hash(sp + fract(t) * 100.) - 0.5) * 0.025 * (1. - 0.7 * uRoom);
+  o = vec4(col, 1.);
+}`;
+
+const canvas = document.getElementById('c');
+const gl = canvas.getContext('webgl2');
+const dpr = Math.min(devicePixelRatio || 1, 2);
+
+function compile(type, src) {
+  const s = gl.createShader(type); gl.shaderSource(s, src); gl.compileShader(s);
+  if (!gl.getShaderParameter(s, gl.COMPILE_STATUS)) throw new Error(gl.getShaderInfoLog(s));
+  return s;
+}
+const prog = gl.createProgram();
+gl.attachShader(prog, compile(gl.VERTEX_SHADER, VS));
+gl.attachShader(prog, compile(gl.FRAGMENT_SHADER, FS));
+gl.linkProgram(prog); gl.useProgram(prog);
+gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer());
+gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1, 3,-1, -1,3]), gl.STATIC_DRAW);
+const loc = gl.getAttribLocation(prog, 'p');
+gl.enableVertexAttribArray(loc); gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
+const U = n => gl.getUniformLocation(prog, n);
+
+function tex(unit, src, repeat) {
+  const t = gl.createTexture();
+  gl.activeTexture(gl.TEXTURE0 + unit); gl.bindTexture(gl.TEXTURE_2D, t);
+  gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, src);
+  const w = repeat ? gl.REPEAT : gl.CLAMP_TO_EDGE;
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, w);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, w);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+}
+
+function paperTexture() {
+  const N = 512, c = document.createElement('canvas'); c.width = c.height = N;
+  const x = c.getContext('2d'), img = x.createImageData(N, N);
+  for (let i = 0; i < N * N * 4; i++) img.data[i] = Math.random() * 255;
+  x.putImageData(img, 0, 0);
+  const out = document.createElement('canvas'); out.width = out.height = N;
+  const y = out.getContext('2d');
+  // Blur a 3x3 tiling so the repeated texture has no seams at the edges.
+  y.filter = 'blur(3px)';
+  for (let i = -1; i <= 1; i++) for (let j = -1; j <= 1; j++) y.drawImage(c, i * N, j * N);
+  return out;
+}
+
+function layout() {
+  const W = innerWidth, colW = Math.min(640, W - 40), x0 = (W - colW) / 2;
+  const items = [];
+  let y = innerHeight * 0.3;
+  items.push({ text: 'IN SEARCH OF MEANING #1', font: '600 13px Supreme', x: x0, y, spacing: '3px' });
+  y += innerHeight * 0.25;
+  items.push({ text: 'cogito, ergo sum', font: 'italic 40px "Libre Baskerville"', x: W / 2, y, foil: true, center: true });
+  y += innerHeight * 0.32;
+  const m = document.createElement('canvas').getContext('2d');
+  const body = W < 600 ? '17px Supreme' : '19px Supreme', lh = W < 600 ? 30 : 34;
+  m.font = body;
+  for (const para of TEXT) {
+    let line = '';
+    for (const word of para.split(' ')) {
+      const t = line ? line + ' ' + word : word;
+      if (m.measureText(t).width > colW && line) { items.push({ text: line, font: body, x: x0, y }); y += lh; line = word; }
+      else line = t;
+    }
+    items.push({ text: line, font: body, x: x0, y }); y += lh * 1.6;
+  }
+  const docH = Math.ceil(y + innerHeight * 0.6);
+  document.getElementById('spacer').style.height = docH + 'px';
+
+  const mk = () => { const c = document.createElement('canvas'); c.width = W * dpr; c.height = docH * dpr; const x = c.getContext('2d'); x.scale(dpr, dpr); x.fillStyle = '#000'; x.fillRect(0, 0, W, docH); return [c, x]; };
+  const [inkC, ink] = mk(), [hC, hx] = mk();
+  hx.filter = 'blur(0.7px)';
+  for (const it of items) {
+    for (const [x, col] of [[ink, it.foil ? '#00f' : '#f00'], [hx, '#fff']]) {
+      x.font = it.font; x.letterSpacing = it.spacing || '0px';
+      x.textAlign = it.center ? 'center' : 'left'; x.textBaseline = 'middle';
+      x.fillStyle = col; x.fillText(it.text, it.x, it.y);
+    }
+  }
+  tex(0, inkC, false); tex(1, hC, false);
+  gl.uniform2f(U('uTex'), W * dpr, docH * dpr);
+  canvas.width = innerWidth * dpr; canvas.height = innerHeight * dpr;
+  gl.viewport(0, 0, canvas.width, canvas.height);
+  gl.uniform2f(U('uRes'), canvas.width, canvas.height);
+  sizeCord();
+}
+
+let mx = innerWidth / 2, my = innerHeight * 0.55;
+const mobile = matchMedia('(pointer: coarse)').matches || location.hash === '#mobile';
+addEventListener('pointermove', e => { if (!mobile && !drag) { mx = e.clientX; my = e.clientY; } });
+
+let lag = 0, lagV = 0, lastY = scrollY, sv = 0, drift = 0;
+function carriedLamp(dt) {
+  const v = (scrollY - lastY) / Math.max(dt, 1e-3); lastY = scrollY;
+  sv += (v - sv) * Math.min(1, dt * 12);
+  const target = Math.max(-170, Math.min(170, -sv * 0.12));
+  lagV += ((target - lag) * 60 - lagV * 9) * dt;
+  lag += lagV * dt;
+  mx = innerWidth / 2 + Math.sin(performance.now() / 2300) * innerWidth * 0.06;
+  my = innerHeight * 0.36 + lag;
+}
+
+function ignition(t) {
+  if (t < 0.5) return 0;
+  if (t < 0.62) return 0.35;
+  if (t < 0.8) return 0.05;
+  if (t < 0.9) return 0.6;
+  if (t < 1.0) return 0.2;
+  return Math.min(1, 0.4 + (t - 1.0) * 1.2);
+}
+
+// Pull cord: a verlet chain hanging from the top edge. Pulling the bead past
+// PULL px below its rest point and letting go toggles the room light.
+const cc = document.getElementById('cordc'), cx = cc.getContext('2d');
+const pullBtn = document.getElementById('pull');
+const SEG = 12, LEN = 9, PULL = 34;
+let pts = [], anchorX = 0, drag = null, armed = false, room = false, roomV = 0, everPulled = false;
+function sizeCord() {
+  cc.width = innerWidth * dpr; cc.height = innerHeight * dpr;
+  anchorX = innerWidth - (mobile ? 44 : 72);
+  pts = Array.from({ length: SEG + 1 }, (_, i) => ({ x: anchorX, y: i * LEN, px: anchorX, py: i * LEN }));
+}
+function stepCord(dt) {
+  const g = 900 * dt * dt;
+  for (let i = 1; i < pts.length; i++) {
+    const p = pts[i], vx = (p.x - p.px) * 0.985, vy = (p.y - p.py) * 0.985;
+    p.px = p.x; p.py = p.y; p.x += vx; p.y += vy + g;
+  }
+  const end = pts[SEG];
+  if (drag) { end.x = drag.x; end.y = drag.y; }
+  for (let k = 0; k < 10; k++) {
+    pts[0].x = anchorX; pts[0].y = 0;
+    for (let i = 0; i < SEG; i++) {
+      const a = pts[i], b = pts[i + 1];
+      const dx = b.x - a.x, dy = b.y - a.y, d = Math.hypot(dx, dy) || 1;
+      // While held, the cord may stretch a little so the pull has some give.
+      const target = drag ? LEN * 1.25 : LEN;
+      if (d <= target && drag) continue;
+      const diff = (d - target) / d;
+      const wa = i === 0 ? 0 : 0.5, wb = (drag && i + 1 === SEG) ? 0 : 1 - wa;
+      a.x += dx * diff * wa; a.y += dy * diff * wa;
+      b.x -= dx * diff * wb; b.y -= dy * diff * wb;
+    }
+  }
+  if (drag) armed = end.y > SEG * LEN + PULL;
+}
+function drawCord(roomAmt, lampOn) {
+  cx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  cx.clearRect(0, 0, innerWidth, innerHeight);
+  const end = pts[SEG];
+  const d = Math.hypot(end.x - mx, end.y - my);
+  // In the dark the cord is lit only by the lamp, with a floor so it is never lost.
+  const lampLit = Math.max(0.16, Math.exp(-d * d / (260 * 260))) * lampOn;
+  const a = Math.max(lampLit, roomAmt);
+  const dark = darkTheme && roomAmt > 0.5;
+  cx.strokeStyle = dark ? `rgba(245,242,235,${0.35 + 0.4 * a})` : roomAmt > 0.5 ? `rgba(26,26,26,${0.75})` : `rgba(255,214,160,${0.15 + 0.6 * a})`;
+  cx.lineWidth = 1.4; cx.lineCap = 'round'; cx.lineJoin = 'round';
+  cx.beginPath(); cx.moveTo(pts[0].x, pts[0].y);
+  for (let i = 1; i <= SEG; i++) cx.lineTo(pts[i].x, pts[i].y);
+  cx.stroke();
+  const r = 6.5;
+  const grad = cx.createRadialGradient(end.x - 2, end.y - 2, 0.5, end.x, end.y, r);
+  grad.addColorStop(0, `rgba(255,236,190,${0.25 + 0.75 * a})`);
+  grad.addColorStop(0.5, `rgba(212,160,60,${0.3 + 0.7 * a})`);
+  grad.addColorStop(1, `rgba(90,62,20,${0.4 + 0.6 * a})`);
+  cx.fillStyle = grad;
+  cx.beginPath(); cx.arc(end.x, end.y + r * 0.6, r, 0, Math.PI * 2); cx.fill();
+  if (armed) { cx.fillStyle = 'rgba(212,160,60,.9)'; cx.beginPath(); cx.arc(anchorX, 3, 3, 0, Math.PI * 2); cx.fill(); }
+  pullBtn.style.transform = `translate(${end.x}px, ${end.y + r * 0.6}px)`;
+}
+function nudge(f) { const e = pts[SEG]; e.px -= f; pts[SEG - 4].px -= f * 0.5; }
+function toggleRoom() {
+  room = !room; everPulled = true;
+  pullBtn.setAttribute('aria-pressed', room);
+  pullBtn.setAttribute('aria-label', room ? 'Turn off the lights' : 'Turn on the lights');
+  document.body.classList.toggle('dark-room', !room);
+}
+pullBtn.addEventListener('pointerdown', e => { drag = { x: e.clientX, y: e.clientY }; pullBtn.setPointerCapture(e.pointerId); e.preventDefault(); });
+pullBtn.addEventListener('pointermove', e => { if (drag) { drag.x = e.clientX; drag.y = e.clientY; } });
+const release = () => { if (!drag) return; drag = null; if (armed) toggleRoom(); else if (!dragMoved) toggleRoom(); armed = false; };
+let dragMoved = false;
+pullBtn.addEventListener('pointerdown', () => { dragMoved = false; });
+pullBtn.addEventListener('pointermove', () => { if (drag) dragMoved = true; });
+pullBtn.addEventListener('pointerup', release);
+pullBtn.addEventListener('pointercancel', () => { drag = null; armed = false; });
+pullBtn.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); nudge(-6); toggleRoom(); } });
+pullBtn.addEventListener('click', e => e.preventDefault());
+
+let darkTheme = 0;
+document.getElementById('dark').onclick = e => { darkTheme = 1 - darkTheme; e.target.textContent = 'Site theme: ' + (darkTheme ? 'dark' : 'light'); };
+
+(async () => {
+  await Promise.all([document.fonts.load('19px Supreme'), document.fonts.load('600 13px Supreme'), document.fonts.load('italic 40px "Libre Baskerville"')]);
+  tex(2, paperTexture(), true);
+  gl.uniform1i(U('uInk'), 0); gl.uniform1i(U('uH'), 1); gl.uniform1i(U('uPaper'), 2);
+  gl.uniform1f(U('uDpr'), dpr);
+  layout();
+  addEventListener('resize', layout);
+  const t0 = performance.now();
+  let prev = t0, roomAmt = 0, nextHint = 2.4;
+  (function frame() {
+    const now = performance.now(), dt = Math.min(0.05, (now - prev) / 1000), t = (now - t0) / 1000; prev = now;
+    if (mobile) carriedLamp(dt);
+    // Until the reader has pulled it once, the cord sways now and then to get noticed.
+    if (!everPulled && t > nextHint) { nudge(7); nextHint = t + 9; }
+    stepCord(dt);
+    // Incandescent switch-on: a quick overshoot, not a fade.
+    const target = room ? 1 : 0;
+    roomV += ((target - roomAmt) * 260 - roomV * 22) * dt;
+    roomAmt = Math.max(0, Math.min(1, roomAmt + roomV * dt));
+    const on = ignition(t);
+    drawCord(roomAmt, on);
+    gl.uniform1f(U('uOn'), on);
+    gl.uniform1f(U('uRoom'), roomAmt);
+    gl.uniform1f(U('uDarkTheme'), darkTheme);
+    gl.uniform2f(U('uMouse'), mx, my);
+    gl.uniform1f(U('uScroll'), scrollY);
+    gl.uniform1f(U('uTime'), t);
+    gl.drawArrays(gl.TRIANGLES, 0, 3);
+    requestAnimationFrame(frame);
+  })();
+})();
+</script>
+</body>
+</html>

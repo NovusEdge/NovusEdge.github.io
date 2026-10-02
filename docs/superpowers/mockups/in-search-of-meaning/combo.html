@@ -1,0 +1,246 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Combined mockup</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&display=swap" rel="stylesheet">
+<style>
+  @font-face {
+    font-family: 'Supreme';
+    src: url('file:///home/novusedge/Projects/Personal/NovusEdge.github.io/public/fonts/Supreme-Variable.woff2') format('woff2');
+    font-weight: 100 900;
+  }
+  body { --paper: #f5f2eb; --ink: #1a1a1a; --accent: #d4a03c; }
+  body.dark { --paper: #1a1a1a; --ink: #f5f2eb; }
+  html, body { margin: 0; }
+  body { background: var(--paper); color: var(--ink); font: 19px/1.75 Supreme, sans-serif; transition: background .4s, color .4s; }
+  .col { max-width: 640px; margin: 0 auto; padding: 0 20px; position: relative; z-index: 1; }
+  #bg { position: fixed; inset: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 0; }
+  /* Paper patches so the tangle never crosses a line of prose on its way in or out. */
+  .col p, .col h2 { background: var(--paper); box-shadow: 0 0 28px 22px var(--paper); transition: background .4s, box-shadow .4s; }
+  .voices { z-index: 1; }
+  .sound { position: absolute; top: 4vh; left: 50%; transform: translateX(-50%); background: none; border: 1.5px solid var(--ink);
+    color: var(--ink); font: 600 20px/1 Caveat, cursive; padding: 4px 12px 6px; border-radius: 16px; cursor: pointer; opacity: .6; filter: url(#boil); }
+  .sound[aria-pressed="true"] { opacity: 1; border-color: var(--accent); color: var(--accent); }
+  .kicker { font: 600 12px/1 Supreme; letter-spacing: .25em; opacity: .55; padding-top: 18vh; }
+  h1.hand { font: 700 clamp(56px, 11vw, 104px)/1 Caveat, cursive; margin: 6vh 0 0; position: relative; display: inline-block; }
+  h2 { font: 600 24px/1.3 Supreme; margin: 2.4em 0 .8em; position: relative; display: inline-block; }
+  p { margin: 0 0 1.3em; position: relative; }
+  svg.draw { position: absolute; overflow: visible; pointer-events: none; }
+  svg.draw path { fill: none; stroke: var(--ink); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
+    stroke-dasharray: 1; stroke-dashoffset: 1; transition: stroke-dashoffset 1.1s cubic-bezier(.6,.05,.3,1); }
+  svg.draw.accent path { stroke: var(--accent); stroke-width: 2.4; }
+  .drawn path { stroke-dashoffset: 0 !important; }
+  .boil { filter: url(#boil); }
+  .ring { position: relative; white-space: nowrap; }
+  .doodle { position: absolute; width: 70px; height: 70px; }
+  .doodle.l { left: -120px; } .doodle.r { right: -120px; }
+  @media (max-width: 1000px) { .doodle { display: none; } }
+  .divider { height: 40px; position: relative; margin: 3em 0; }
+  .end { height: 60px; position: relative; margin: 3em 0 30vh; }
+
+  .voices { height: 420vh; position: relative; margin: 6vh 0; }
+  .stage { position: sticky; top: 0; height: 100vh; display: grid; grid-template-columns: 1fr 280px 1fr; align-items: center;
+    max-width: 1060px; margin: 0 auto; padding: 0 20px; gap: 24px; }
+  .v-left, .v-right { display: flex; flex-direction: column; gap: 14px; }
+  .v-left { text-align: right; align-items: flex-end; }
+  .v-line { margin: 0; font: 600 26px/1.15 Caveat, cursive; opacity: 0; transform: translateY(6px); transition: opacity .35s, transform .35s; max-width: 300px; }
+  .v-line.on { transform: none; }
+  .v-right .v-line { color: var(--accent); }
+  .fig { position: relative; width: 280px; height: 380px; }
+  .fig svg, .fig canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+  .fig path { fill: none; stroke: var(--ink); stroke-width: 2.2; stroke-linecap: round; }
+  .tag { position: absolute; left: 50%; bottom: 4vh; transform: translateX(-50%); font: 12px Supreme; opacity: .4; }
+  @media (max-width: 760px) {
+    .stage { grid-template-columns: 1fr; grid-template-rows: 1fr 240px 1fr; justify-items: center; gap: 4px; }
+    .v-left, .v-right { align-items: center; text-align: center; gap: 6px; }
+    .v-left { justify-content: flex-end; height: 100%; } .v-right { justify-content: flex-start; height: 100%; }
+    .v-line { font-size: 22px; }
+    .fig { width: 176px; height: 240px; }
+  }
+  nav { position: fixed; bottom: 14px; right: 14px; z-index: 5; font: 13px system-ui; }
+  nav button { background: var(--ink); color: var(--paper); border: 0; padding: 8px 10px; border-radius: 4px; cursor: pointer; opacity: .7; }
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute">
+  <filter id="boil"><feTurbulence id="turb" type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="1"/><feDisplacementMap in="SourceGraphic" scale="3.2"/></filter>
+</svg>
+<canvas id="bg"></canvas>
+<nav><button id="theme">Dark mode</button></nav>
+
+<div class="col">
+  <div class="kicker">IN SEARCH OF MEANING #1</div>
+  <h1 class="hand boil">cogito, ergo sum<svg class="draw accent boil" data-draw="underline" data-delay="400"></svg></h1>
+
+  <h2>I. The doubt<svg class="draw boil" data-draw="underline"></svg></h2>
+  <p><svg class="draw doodle l boil" data-draw="question"></svg>Placeholder text, from Descartes' Meditations (1641). Some years ago I was struck by the large number of falsehoods that I had accepted as true in my childhood, and by the highly doubtful nature of the whole edifice that I had subsequently based on them.</p>
+  <p>I realized that it was necessary, once in the course of my life, to <span class="ring">demolish everything completely<svg class="draw accent boil" data-draw="ring"></svg></span> and start again right from the foundations if I wanted to establish anything at all in the sciences that was stable and likely to last.</p>
+  <p><svg class="draw doodle r boil" data-draw="spiral"></svg>Whatever I have up till now accepted as most true I have acquired either from the senses or through the senses. But from time to time I have found that the senses deceive, and it is prudent never to trust completely those who have deceived us even once.</p>
+  <div class="divider"><svg class="draw boil" data-draw="squiggle"></svg></div>
+</div>
+
+<section class="voices">
+  <div class="stage">
+    <div class="v-left"></div>
+    <div class="fig">
+      <svg viewBox="0 0 280 380" class="boil"><path id="figpath"/></svg>
+    </div>
+    <div class="v-right"></div>
+    <button class="sound" aria-pressed="false">sound off</button>
+    <div class="tag">placeholder lines</div>
+  </div>
+</section>
+
+<div class="col">
+  <h2>II. The thing that thinks<svg class="draw boil" data-draw="underline"></svg></h2>
+  <p><svg class="draw doodle l boil" data-draw="arrow"></svg>So after considering everything very thoroughly, I must finally conclude that this proposition, I am, I exist, is necessarily true whenever it is put forward by me or conceived in my mind.</p>
+  <p>But I do not yet have a sufficient understanding of what this I is, that now necessarily exists. So I must be on my guard against carelessly taking something else to be this I, and so making a mistake in the very item of knowledge that I maintain is the most certain and evident of all.</p>
+  <div class="end"><svg class="draw accent boil" data-draw="star"></svg></div>
+</div>
+
+<script src="scribble.js"></script>
+<script>
+const r = rng(42);
+const j = (a) => (r() - 0.5) * a;
+
+function wobblyLine(w, y, amp) {
+  let d = `M ${j(4)} ${y + j(amp)}`;
+  const n = Math.max(3, Math.round(w / 60));
+  for (let i = 1; i <= n; i++) {
+    const x = (w * i) / n;
+    d += ` Q ${x - w / n / 2 + j(10)} ${y + j(amp * 2)}, ${x + (i === n ? 8 : 0)} ${y + j(amp)}`;
+  }
+  return d;
+}
+// Overshoots its start, the way a quick hand-drawn circle does.
+function ring(w, h) {
+  const cx = w / 2, cy = h / 2, rx = w / 2 + 12, ry = h / 2 + 8;
+  let d = '';
+  for (let i = 0; i <= 44; i++) {
+    const a = -2.6 + (i / 40) * Math.PI * 2;
+    const wob = 1 + j(0.05);
+    const x = cx + Math.cos(a) * rx * wob, y = cy + Math.sin(a) * ry * wob - i * 0.15;
+    d += (i ? ' L ' : 'M ') + x.toFixed(1) + ' ' + y.toFixed(1);
+  }
+  return d;
+}
+function squiggle(w) {
+  let d = `M ${w * 0.3} 20`;
+  for (let x = w * 0.3; x < w * 0.7; x += 14) d += ` q 7 ${-14 + j(4)} 14 0`;
+  return d;
+}
+function spiral() {
+  let d = '';
+  for (let i = 0; i < 90; i++) {
+    const a = i * 0.24, rad = 2 + i * 0.36;
+    d += (i ? ' L ' : 'M ') + (35 + Math.cos(a) * rad).toFixed(1) + ' ' + (35 + Math.sin(a) * rad).toFixed(1);
+  }
+  return d;
+}
+const SHAPES = {
+  question: () => 'M 22 22 C 22 6, 50 6, 50 22 C 50 34, 36 34, 36 46 M 36 58 L 37 60',
+  arrow: () => 'M 6 14 C 24 6, 48 20, 66 34 M 54 34 L 67 35 L 62 22',
+  spiral,
+  star: (w) => { const c = w / 2; return `M ${c - 18} 44 L ${c} 6 L ${c + 18} 44 L ${c - 22} 20 L ${c + 22} 20 Z`; },
+};
+
+function build() {
+  for (const svg of document.querySelectorAll('[data-draw]')) {
+    const kind = svg.dataset.draw, host = svg.parentElement, w = host.offsetWidth, h = host.offsetHeight;
+    let d;
+    if (kind === 'underline') { svg.style.cssText = `left:0;bottom:-10px;width:${w}px;height:14px`; d = wobblyLine(w, 7, 3); }
+    else if (kind === 'ring') { svg.style.cssText = `left:-14px;top:-10px;width:${w + 28}px;height:${h + 20}px`; d = ring(w, h).replace(/(-?\d+\.?\d*) (-?\d+\.?\d*)/g, (_, x, y) => `${(+x + 14).toFixed(1)} ${(+y + 10).toFixed(1)}`); }
+    else if (kind === 'squiggle') { svg.style.cssText = `left:0;top:0;width:${w}px;height:40px`; d = squiggle(w); }
+    else if (kind === 'star') { svg.style.cssText = `left:0;top:0;width:${w}px;height:50px`; d = SHAPES.star(w); }
+    else { d = SHAPES[kind](); svg.style.top = '0'; }
+    svg.innerHTML = `<path pathLength="1" d="${d}"/>`;
+  }
+}
+document.fonts.ready.then(() => {
+  build();
+  const io = new IntersectionObserver(es => es.forEach(e => {
+    if (e.isIntersecting) setTimeout(() => e.target.classList.add('drawn'), +(e.target.dataset.delay || 150));
+  }), { rootMargin: '0px 0px -25% 0px' });
+  document.querySelectorAll('[data-draw]').forEach(s => io.observe(s));
+});
+
+document.getElementById('figpath').setAttribute('d', FIGURE_PATH);
+const stage = document.querySelector('.stage'), voicesSec = document.querySelector('.voices');
+const update = setupVoices(stage);
+const bg = document.getElementById('bg'), bx = bg.getContext('2d');
+const fig = document.querySelector('.fig'), figSvg = fig.querySelector('svg');
+const strokes = makeStrokes(80, 110, 5);
+const dpr = Math.min(devicePixelRatio || 1, 2);
+const turb = document.getElementById('turb');
+let agit = 0.15, ink = inkColor();
+
+// Each voice line can carry a recording (VOICES[i].audio). Until those exist, a short
+// tone stands in, panned to the voice's side.
+const soundBtn = document.querySelector('.sound');
+let actx = null, soundOn = false, lastShown = 0;
+soundBtn.onclick = () => {
+  soundOn = !soundOn;
+  actx = actx || new AudioContext();
+  soundBtn.setAttribute('aria-pressed', soundOn);
+  soundBtn.textContent = soundOn ? 'sound on' : 'sound off';
+};
+function speak(v) {
+  if (!soundOn) return;
+  if (v.audio) { new Audio(v.audio).play(); return; }
+  const o = actx.createOscillator(), g = actx.createGain(), pan = actx.createStereoPanner();
+  o.type = 'triangle';
+  o.frequency.value = v.side === 'L' ? 196 : 262;
+  pan.pan.value = v.side === 'L' ? -0.7 : 0.7;
+  const t = actx.currentTime;
+  g.gain.setValueAtTime(0, t);
+  g.gain.linearRampToValueAtTime(0.12, t + 0.03);
+  g.gain.exponentialRampToValueAtTime(0.001, t + 0.5);
+  o.connect(g).connect(pan).connect(actx.destination);
+  o.start(t); o.stop(t + 0.55);
+}
+
+const lerp = (a, b, t) => a + (b - a) * t;
+const smooth = (a, b, x) => { const t = Math.max(0, Math.min(1, (x - a) / (b - a))); return t * t * (3 - 2 * t); };
+
+document.getElementById('theme').onclick = e => {
+  document.body.classList.toggle('dark');
+  e.target.textContent = document.body.classList.contains('dark') ? 'Light mode' : 'Dark mode';
+  ink = inkColor();
+};
+
+let lastBoil = -1;
+(function frame(now) {
+  const W = innerWidth, H = innerHeight;
+  if (bg.width !== W * dpr || bg.height !== H * dpr) { bg.width = W * dpr; bg.height = H * dpr; }
+  const q = sectionProgress(voicesSec), rect = voicesSec.getBoundingClientRect();
+  // The tangle creeps in over the screen before the section, lives in the head
+  // while the voices argue, then spills out and fades back to a clean page.
+  const presence = smooth(1.3 * H, 0, rect.top) * smooth(0, 0.9 * H, rect.bottom);
+  const m = smooth(0, 0.16, q) * (1 - smooth(0.88, 1, q));
+  const shown = Math.floor(smooth(0.16, 0.86, q) * (VOICES.length + 0.999));
+  if (shown > lastShown && shown <= VOICES.length) speak(VOICES[shown - 1]);
+  lastShown = shown;
+  const voiceAgit = update(smooth(0.16, 0.86, q));
+  const target = m > 0.5 ? voiceAgit : rect.top > 0 ? lerp(0.2, 0.7, presence) : 0.12;
+  agit += (target - agit) * 0.05;
+
+  const fr = fig.getBoundingClientRect(), s = fr.width / 280;
+  const head = { x: fr.left + 140 * s, y: fr.top + 140 * s, rx: 62 * s, ry: 78 * s };
+  const R = Math.hypot(W, H) * 0.62;
+  const e = { x: lerp(W / 2, head.x, m), y: lerp(H / 2, head.y, m), rx: lerp(R, head.rx, m), ry: lerp(R, head.ry, m) };
+  figSvg.style.opacity = smooth(0.5, 1, m);
+
+  const pageBoil = Math.floor(now / 125) % 4;
+  if (pageBoil !== lastBoil) { turb.setAttribute('seed', pageBoil + 1); lastBoil = pageBoil; }
+  bx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  bx.clearRect(0, 0, W, H);
+  const alpha = lerp((0.06 + agit * 0.12) * presence, 0.85, m);
+  if (alpha > 0.005) drawScribbles(bx, strokes, e, agit, Math.floor(now / (140 - agit * 85)), ink, alpha, lerp(1.4, 1.3, m));
+  requestAnimationFrame(frame);
+})(0);
+</script>
+</body>
+</html>
