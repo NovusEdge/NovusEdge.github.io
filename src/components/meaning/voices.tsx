@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { onBoil } from '../../lib/boil'
 import type { VoiceMeta } from '../../lib/meaning-data'
 import { sideRows, type VoiceLine } from '../../lib/meaning-voices'
-import { HEAD, drawTangle, ellipseAt, lerp, makeStrokes, presence, pullToward, rng, smooth } from '../../lib/meaning-tangle'
+import { HEAD, drawTangle, drawTendrils, ellipseAt, lerp, makeStrokes, makeTendrils, presence, pullToward, rng, smooth } from '../../lib/meaning-tangle'
 import { isMobile, prefersReducedMotion } from '../../lib/motion'
 import { jitterPath } from './drawn'
 
@@ -214,6 +214,7 @@ export function Voices({ lines, meta, locale }: { lines: VoiceLine[]; meta: Voic
     if (!ctx) return
     const items = [...list.children] as HTMLElement[]
     const strokes = makeStrokes(80, 110, 5)
+    const tendrils = makeTendrils(16, 9)
     const dpr = Math.min(devicePixelRatio || 1, isMobile() ? 1.5 : 2)
     let ink = inkColor()
     let agit = 0.15
@@ -289,6 +290,10 @@ export function Voices({ lines, meta, locale }: { lines: VoiceLine[]; meta: Voic
         ctx.setTransform(dpr, 0, 0, dpr, 0, 0)
         if (alpha > 0.005) {
           drawTangle(ctx, strokes, e, agit, frame, ink, alpha, lerp(1.4, 1.3, m), stride)
+          if (m > 0.6) {
+            const d = Math.hypot(pull.dx, pull.dy)
+            drawTendrils(ctx, tendrils, e, agit, frame, ink, alpha, 1.3, d ? { x: pull.dx / d, y: pull.dy / d } : { x: 0, y: 0 })
+          }
           if (m < 1 && col) eraseColumn(ctx, col.left - cr.left, col.right - cr.left, vh, 1 - m)
         }
       }

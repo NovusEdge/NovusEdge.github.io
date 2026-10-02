@@ -1,5 +1,30 @@
 import { describe, expect, it } from 'vitest'
-import { drawTangle, ellipseAt, makeStrokes, presence, pullToward, type TangleCtx } from './meaning-tangle'
+import { drawTangle, drawTendrils, ellipseAt, makeStrokes, makeTendrils, presence, pullToward, type TangleCtx } from './meaning-tangle'
+
+describe('tendrils', () => {
+  it('start at the rim and wander outward', () => {
+    const ts = makeTendrils(12, 4)
+    expect(makeTendrils(12, 4)).toEqual(ts)
+    for (const t of ts) {
+      expect(Math.hypot(...t[0])).toBeCloseTo(1, 1)
+      expect(Math.hypot(...t[t.length - 1])).toBeGreaterThan(1.5)
+    }
+  })
+  it('stay inside the head when calm and reach further toward the lean when agitated', () => {
+    const calls: number[] = []
+    const ctx: TangleCtx = {
+      save() {}, restore() {}, beginPath() {}, stroke() {},
+      moveTo: (x: number) => void calls.push(x),
+      quadraticCurveTo: (_cx: number, _cy: number, x: number) => void calls.push(x),
+      strokeStyle: '', globalAlpha: 1, lineWidth: 1, lineCap: 'butt', lineJoin: 'miter',
+    }
+    const e = { x: 0, y: 0, rx: 60, ry: 60 }
+    drawTendrils(ctx, makeTendrils(12, 4), e, 0.2, 0, '#000', 1, 1, { x: 1, y: 0 })
+    expect(calls).toHaveLength(0)
+    drawTendrils(ctx, makeTendrils(12, 4), e, 1, 0, '#000', 1, 1, { x: 1, y: 0 })
+    expect(Math.max(...calls)).toBeGreaterThan(-Math.min(...calls))
+  })
+})
 
 describe('pullToward', () => {
   const head = { x: 100, y: 100, rx: 60, ry: 80 }
