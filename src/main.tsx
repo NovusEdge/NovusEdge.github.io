@@ -2,6 +2,7 @@ import { StrictMode } from 'react'
 import { hydrateRoot, createRoot } from 'react-dom/client'
 import { BrowserRouter } from 'react-router'
 import App from './App'
+import { animateFavicon } from './lib/favicon'
 import './styles/global.css'
 
 // mount synchronously: a top-level `await import(...)` here made the entry an async
@@ -17,6 +18,7 @@ if (typeof window !== 'undefined') {
   )
   if (root.childElementCount > 0) hydrateRoot(root, app)
   else createRoot(root).render(app)
+  void animateFavicon()
 }
 
 export async function prerender(data: { url: string }) {

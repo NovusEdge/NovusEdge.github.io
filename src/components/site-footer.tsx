@@ -121,6 +121,18 @@ export function SiteFooter({ word = 'Creation' }: { word?: string }) {
         {word}
       </span>
 
+      <p className="absolute bottom-3 right-4 z-10 font-mono text-[11px] tracking-wider text-bone/40">
+        {t('footer.faviconCredit')}{' '}
+        <a
+          href="https://numbpill.tumblr.com/post/779519954636685312/rare-obscure-hard-to-find-favicons-round-of"
+          target="_blank"
+          rel="noreferrer"
+          className="underline decoration-bone/20 underline-offset-2 transition-colors hover:text-rose-400"
+        >
+          numbpill
+        </a>
+      </p>
+
       {open && (
         <Suspense fallback={null}>
           <ContactCard onClose={() => setOpen(false)} />
