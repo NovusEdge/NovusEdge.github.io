@@ -10,6 +10,7 @@ export type Post = {
   contentLocale: string
   toc?: boolean
   draft?: boolean
+  pixel?: string
 }
 
 const files = import.meta.glob('../content/blog/*.md', {
@@ -35,6 +36,7 @@ function parsePost(slug: string, raw: string, contentLocale = 'en'): Post {
     contentLocale,
     toc: data.toc === 'true',
     draft: data.draft === 'true',
+    pixel: (data.pixel as string) || undefined,
   }
 }
 

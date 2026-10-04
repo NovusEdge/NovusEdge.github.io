@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import { renderToStaticMarkup } from 'react-dom/server'
 import { I18nextProvider } from 'react-i18next'
+import { MemoryRouter } from 'react-router'
 import { i18nFor } from '../../i18n'
 import { PetPanel } from './pet-panel'
 
@@ -9,7 +10,9 @@ describe('PetPanel', () => {
     expect(
       renderToStaticMarkup(
         <I18nextProvider i18n={i18nFor('en')}>
-          <PetPanel />
+          <MemoryRouter>
+            <PetPanel />
+          </MemoryRouter>
         </I18nextProvider>,
       ),
     ).toBe('')

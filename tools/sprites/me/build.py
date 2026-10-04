@@ -1,7 +1,9 @@
 import json
 from PIL import Image
 from lib import BASE, SKINS, OUTFITS, LAYERS, render, palette, BG
-import front, walk, desk, transitions
+import front, walk, desk, transitions, personas
+
+TEMPO = 1.75  # slow loops play faster, the same rule as the stoat's resting clips
 
 ALL_LAYERS = ['coat', 'collar']
 DEFAULT_SKIN = 'light'
@@ -40,6 +42,17 @@ def build():
     tr = {n: frames(lambda L, n=n: [(r, ms, {}) for r, ms in getattr(transitions, n)(L)])
           for n in ('desk_empty', 'stand_up', 'sit_down')}
     box = {'w': desk.W, 'h': desk.H}
+    ps = {n: frames(lambda L, n=n: [(r, ms, {}) for r, ms in getattr(personas, n)(L)])
+          for n in ('think', 'think_q', 'lab', 'lab_squint')}
+    for n in ('think', 'lab'):
+        for f in ps[n]:
+            f['ms'] = int(f['ms'] / TEMPO + 0.5)
+    assert ps['think_q'][0]['px'] == ps['think'][0]['px'], 'think_q must start on think frame 0'
+    assert ps['think_q'][-1]['px'] == ps['think'][0]['px'], 'think_q must end on think frame 0'
+    assert ps['lab_squint'][0]['px'] == ps['lab'][0]['px'], 'lab_squint must start on lab frame 0'
+    assert ps['lab_squint'][-1]['px'] == ps['lab'][0]['px'], 'lab_squint must end on lab frame 0'
+    think_box = {'w': personas.THINK_W, 'h': personas.THINK_H}
+    lab_box = {'w': personas.LAB_W, 'h': personas.LAB_H}
     base_pal = dict(BASE)
     base_pal.update(SKINS[DEFAULT_SKIN])
     base_pal.update(OUTFITS['sweater'])
@@ -48,7 +61,7 @@ def build():
         'palette': base_pal,
         'palettes': SKINS,
         'outfits': {o: {'palette': OUTFITS[o], 'layers': LAYERS[o]} for o in OUTFITS},
-        'props': desk.PROPS,
+        'props': {**desk.PROPS, **personas.PROPS},
         'animations': {
             'idle': {'loop': True, 'frames': idle},
             'walk': {'loop': True, 'frames': wk},
@@ -56,6 +69,10 @@ def build():
             'desk_empty': {'loop': True, **box, 'frames': tr['desk_empty']},
             'stand_up': {'loop': False, **box, 'standAt': transitions.STAND_AT, 'frames': tr['stand_up']},
             'sit_down': {'loop': False, **box, 'frames': tr['sit_down']},
+            'think': {'loop': True, **think_box, 'frames': ps['think']},
+            'think_q': {'loop': False, **think_box, 'frames': ps['think_q']},
+            'lab': {'loop': True, **lab_box, 'frames': ps['lab']},
+            'lab_squint': {'loop': False, **lab_box, 'frames': ps['lab_squint']},
         },
     }
 
@@ -72,10 +89,11 @@ def compose(fr, outfit):
 
 def contact_sheet(S, path, scale=4, skin=DEFAULT_SKIN):
     gap = 2 * scale
-    per_row = {'idle': 16, 'walk': 16, 'desk': 6, 'desk_empty': 6, 'stand_up': 6, 'sit_down': 6}
+    per_row = {'idle': 16, 'walk': 16, 'desk': 6, 'desk_empty': 6, 'stand_up': 6, 'sit_down': 6,
+               'think': 8, 'think_q': 8, 'lab': 8, 'lab_squint': 8}
     groups = []
     for o in OUTFITS:
-        pal = palette(o, skin, desk.PROPS)
+        pal = palette(o, skin, {**desk.PROPS, **personas.PROPS})
         rows = []
         for name, anim in S['animations'].items():
             fs = anim['frames']

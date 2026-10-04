@@ -1,14 +1,14 @@
 import { useEffect, useRef } from 'react'
-import { useTranslation } from 'react-i18next'
 import { prefersReducedMotion } from '../../lib/motion'
+import type { Side } from '../../lib/pet/corners'
 import { meClips, type MeEvent, type MeState } from '../../lib/pet/me-brain'
-import { usePetPanelOpen } from '../../lib/pet/panel-store'
 import { edgeGlow, NET, pulseLevel } from '../../lib/pet/neural-net'
 import type { Sprite } from '../../lib/pet/sprite'
 import { subscribe } from '../../lib/pet/ticker'
+import { CORNER_INSET, CornerHandle } from './corner-handle'
 import { PixelSprite } from './pixel-sprite'
 
-export const DESK_LEFT = 16
+export const DESK_LEFT = CORNER_INSET
 // the net floats in the clear rows above the laptop
 const NET_X = 40
 // desk frames are fully transparent above this row; clicks there belong to the page
@@ -17,11 +17,17 @@ const NET_Y = 0
 
 // stand_up and sit_down draw pixel-me taller than the desk frames, so the click
 // target has to start at the highest painted row of whichever clip is playing
-export const hitTop = (sprite: Sprite, clip: string) =>
+export const hitTop = (sprite: Sprite, clip: string, cap = CLEAR_ROWS) =>
   sprite.animations[clip].frames.reduce((top, f) => {
     const y = f.px.findIndex((r) => /[^.]/.test(r))
     return y >= 0 ? Math.min(top, y) : top
-  }, CLEAR_ROWS)
+  }, cap)
+
+// position: fixed offsets are measured from the viewport without a classic scrollbar, which innerWidth includes
+export const viewportWidth = () => document.documentElement.clientWidth
+
+export const deskX = (side: Side, x: number, w: number, scale: number, vw: number) =>
+  side === 'left' ? DESK_LEFT + x * scale : vw - DESK_LEFT - (x + w) * scale
 
 function NetCanvas({ scale, typing }: { scale: number; typing: { current: boolean } }) {
   const ref = useRef<HTMLCanvasElement>(null)
@@ -62,6 +68,7 @@ function NetCanvas({ scale, typing }: { scale: number; typing: { current: boolea
 type Props = {
   me: Sprite
   stoat: Sprite
+  side: Side
   scale: number
   state: MeState
   send: (e: MeEvent) => void
@@ -71,9 +78,7 @@ type Props = {
   onOpen: () => void
 }
 
-export function DeskCorner({ me, stoat, scale, state, send, reduced, napping, coat, onOpen }: Props) {
-  const { t } = useTranslation()
-  const open = usePetPanelOpen()
+export function DeskCorner({ me, stoat, side, scale, state, send, reduced, napping, coat, onOpen }: Props) {
   const typing = useRef(false)
   const desk = me.animations.desk
   const [SX, SY, , SH] = desk.stoatSlot!
@@ -84,16 +89,12 @@ export function DeskCorner({ me, stoat, scale, state, send, reduced, napping, co
   const standTop = me.animations.stand_up?.standAt?.[1] ?? DH - me.h
   return (
     <>
-      <button
-        type="button"
-        onClick={onOpen}
-        aria-label={t('pet.settings')}
-        aria-haspopup="dialog"
-        aria-expanded={open}
-        className="group pointer-events-none fixed bottom-0 z-30 block leading-none focus-visible:outline-2 focus-visible:outline-gold"
-        style={{ left: DESK_LEFT, width: DW * scale, height: DH * scale }}
-      >
-        <span aria-hidden="true" className="pointer-events-none relative block" style={{ width: DW * scale, height: DH * scale }}>
+      <CornerHandle side={side} width={DW * scale} height={DH * scale} hitTop={top * scale} onOpen={onOpen}>
+        <span
+          aria-hidden="true"
+          className="pointer-events-none relative block"
+          style={{ width: DW * scale, height: DH * scale, transform: side === 'right' ? 'scaleX(-1)' : undefined }}
+        >
           <PixelSprite
             sprite={me}
             clip={clips.desk}
@@ -111,19 +112,15 @@ export function DeskCorner({ me, stoat, scale, state, send, reduced, napping, co
             <PixelSprite sprite={stoat} clip="sleep" variant={coat} scale={scale} playing={!reduced} style={{ position: 'absolute', left: SX * scale, top: (SY + SH - stoat.h) * scale }} />
           )}
         </span>
-        <span className="absolute left-0 cursor-pointer" style={{ top: top * scale, width: DW * scale, height: (DH - top) * scale, pointerEvents: 'auto' }} />
-        <span className="pointer-events-none absolute bottom-full left-2 mb-1 whitespace-nowrap rounded border border-charcoal/20 bg-bone px-2 py-0.5 font-mono text-xs opacity-0 transition-opacity group-hover:opacity-100 group-focus-visible:opacity-100 dark:border-bone/20 dark:bg-charcoal">
-          {t('pet.settings')}
-        </span>
-      </button>
+      </CornerHandle>
       {clips.walker && (
-        <div style={{ position: 'fixed', left: DESK_LEFT + state.x * scale, bottom: (DH - standTop - me.h) * scale, zIndex: 30, lineHeight: 0, pointerEvents: 'none' }}>
+        <div style={{ position: 'fixed', left: deskX(side, state.x, me.w, scale, viewportWidth()), bottom: (DH - standTop - me.h) * scale, zIndex: 30, lineHeight: 0, pointerEvents: 'none' }}>
           <PixelSprite
             sprite={me}
             clip="walk"
             scale={scale}
-            // me's walk faces right
-            flip={state.dir === -1}
+            // me's walk faces right; a right-corner desk walks away to the left
+            flip={side === 'left' ? state.dir === -1 : state.dir === 1}
             onStep={(n) => send({ type: 'step', px: n * (me.animations.walk.travel ?? 1) })}
           />
         </div>

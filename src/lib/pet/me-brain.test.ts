@@ -91,3 +91,18 @@ describe('desk and walk cycle', () => {
     expect(meClips('sitting')).toEqual({ desk: 'sit_down', walker: false })
   })
 })
+
+describe('persona change', () => {
+  it('snaps a walk back to the desk', () => {
+    const due = run(initMe(0, HOME, false, 0), { type: 'tick', now: WALK_EVERY_MIN, width: 1000, roll: 0 })
+    const walking = run(due, { type: 'wrap' }, { type: 'end', now: 1, roll: 0 }, { type: 'step', px: 8 })
+    expect(walking.mode).toBe('walking')
+    const s = run(walking, { type: 'reset', now: 5000, roll: 0 })
+    expect(s).toMatchObject({ mode: 'desk', x: HOME, target: null, dir: 1, nextWalk: 5000 + WALK_EVERY_MIN })
+  })
+
+  it('leaves a reduced-motion pixel-me alone', () => {
+    const s = initMe(0, HOME, true, 0)
+    expect(run(s, { type: 'reset', now: 5000, roll: 0 })).toBe(s)
+  })
+})

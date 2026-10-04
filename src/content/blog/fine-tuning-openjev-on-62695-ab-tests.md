@@ -5,6 +5,7 @@ updated: 2026-09-24
 tags: [ml, decision-models, calibration, open-weights, benchmarks]
 draft: false
 description: Training a headline ranker on Upworthy's A/B tests, fixing the evaluation, and checking how it compares with Gemini and transfers to Reddit.
+pixel: thinking
 ---
 
 I went through the 26 "scoring and ranking" projects among roughly 300 public projects built on the new decision models. All 26 got their scores by asking a model: rate this article, judge this copy, decide whether this document is relevant.

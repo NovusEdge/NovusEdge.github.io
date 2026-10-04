@@ -1,9 +1,9 @@
+import type { DistributiveOmit } from '../../lib/pet/persona'
 import { clipFor, type PetEvent, type PetState } from '../../lib/pet/pet-brain'
 import type { Sprite } from '../../lib/pet/sprite'
 import { PixelSprite } from './pixel-sprite'
 
 type Send = (e: DistributiveOmit<PetEvent, 'now'>) => void
-type DistributiveOmit<T, K extends string> = T extends unknown ? Omit<T, K> : never
 
 export function StoatRoamer({ sprite, state, send, coat, scale }: { sprite: Sprite; state: PetState; send: Send; coat: string; scale: number }) {
   const clip = clipFor(state.mode)

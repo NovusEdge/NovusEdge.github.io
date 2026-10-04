@@ -5,6 +5,7 @@ tags: [ai, epistemics, robotics, industry, essay]
 description: Thye done did it boys, it's jover y'all ToT
 draft: false
 toc: true
+pixel: thinking
 ---
 
 ## The Million Dollar Joke

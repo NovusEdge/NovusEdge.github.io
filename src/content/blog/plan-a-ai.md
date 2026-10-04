@@ -4,6 +4,7 @@ date: 2026-09-11
 tags: [ai, governance, compute, alignment, policy, essay]
 description: The AI Futures Project wants the US and China to pause superintelligence until 2040. It is a good plan. Sixty days after they published it, ten thousand agents solved Navier-Stokes.
 toc: true
+pixel: thinking
 ---
 
 ## The Timing

@@ -3,14 +3,17 @@ import { useLocation } from 'react-router'
 import meJson from '../../assets/sprites/me.json'
 import stoatJson from '../../assets/sprites/stoat.json'
 import { prefersReducedMotion } from '../../lib/motion'
+import { deskSide } from '../../lib/pet/corners'
 import { initMe, meReducer } from '../../lib/pet/me-brain'
 import { openPetPanel } from '../../lib/pet/panel-store'
+import { atDesk, type DistributiveOmit, PERSONA_CLIPS, stoatOnRoute, usePersona } from '../../lib/pet/persona'
 import { initPet, petReducer, stoatSpot, type PetEvent } from '../../lib/pet/pet-brain'
 import { usePetPrefs } from '../../lib/pet/prefs-store'
 import { stoatCoat } from '../../lib/pet/season'
 import type { Sprite } from '../../lib/pet/sprite'
 import { useStageClaimed } from '../../lib/pet/stage'
-import { DeskCorner, DESK_LEFT } from './desk-corner'
+import { DeskCorner, DESK_LEFT, deskX, viewportWidth } from './desk-corner'
+import { PersonaCorner } from './persona-corner'
 import { StoatRoamer } from './stoat-roamer'
 
 // both JSON files infer tuples (stoatSlot, standAt) as number[]
@@ -22,9 +25,7 @@ const NEAR_RADIUS = 200
 const SCROLL_SETTLE = 600
 const SCROLL_GO_EVERY = 8000
 
-type DistributiveOmit<T, K extends string> = T extends unknown ? Omit<T, K> : never
-
-const stoatRoom = () => Math.max(0, Math.floor(window.innerWidth / STOAT_SCALE) - STOAT.w)
+const stoatRoom = () => Math.max(0, Math.floor(viewportWidth() / STOAT_SCALE) - STOAT.w)
 
 function useDeskScale() {
   const [scale, setScale] = useState(() => (window.matchMedia(NARROW).matches ? 1 : 2))
@@ -55,26 +56,34 @@ function useReducedMotion() {
 }
 
 function Friends({ reduced }: { reduced: boolean }) {
+  const persona = usePersona()
+  const side = deskSide(persona)
+  const desked = atDesk(persona)
   const deskScale = useDeskScale()
   const claimed = useStageClaimed()
   const coat = stoatCoat(new Date())
   const home = ME.animations.stand_up?.standAt?.[0] ?? 0
-  const [pet, petDispatch] = useReducer(petReducer, null, () => initPet(performance.now(), Math.max(0, stoatRoom() - 40), reduced))
+  const [pet, petDispatch] = useReducer(petReducer, null, () => initPet(performance.now(), Math.max(0, stoatRoom() - 40), reduced, persona === 'thinking'))
   const [me, meDispatch] = useReducer(meReducer, null, () => initMe(performance.now(), home, reduced, Math.random()))
   const petNow = (e: DistributiveOmit<PetEvent, 'now'>) => petDispatch({ now: performance.now(), ...e } as PetEvent)
-  const latest = useRef({ pet, deskScale })
-  latest.current = { pet, deskScale }
+  const latest = useRef({ pet, deskScale, side, desked })
+  latest.current = { pet, deskScale, side, desked }
   const { pathname } = useLocation()
   const first = useRef(true)
 
   // stoat px of the desk's stoat slot, and the rightmost x pixel-me may walk to
-  const deskStoatX = () => Math.floor((DESK_LEFT + ME.animations.desk.stoatSlot![0] * latest.current.deskScale) / STOAT_SCALE)
-  const meRoom = () => Math.floor((window.innerWidth - DESK_LEFT) / latest.current.deskScale) - ME.w
+  const deskStoatX = () => {
+    const { side, desked, deskScale } = latest.current
+    if (!desked) return null
+    const [sx, , sw] = ME.animations.desk.stoatSlot!
+    return Math.floor(deskX(side, sx, sw, deskScale, viewportWidth()) / STOAT_SCALE)
+  }
+  const meRoom = () => Math.floor((viewportWidth() - DESK_LEFT) / latest.current.deskScale) - ME.w
 
   useEffect(() => {
     const id = setInterval(() => {
       petNow({ type: 'tick', width: stoatRoom(), roll: Math.random(), desk: deskStoatX() })
-      meDispatch({ type: 'tick', now: performance.now(), width: meRoom(), roll: Math.random() })
+      if (latest.current.desked) meDispatch({ type: 'tick', now: performance.now(), width: meRoom(), roll: Math.random() })
     }, 1000)
     const input = () => petNow({ type: 'input' })
     const move = (e: PointerEvent) => {
@@ -108,24 +117,33 @@ function Friends({ reduced }: { reduced: boolean }) {
     }
   }, [])
 
+  const was = useRef(persona)
   useEffect(() => {
     if (first.current) {
       first.current = false
       return
     }
-    petNow({ type: 'go', target: Math.floor(Math.random() * stoatRoom()) })
+    const prev = was.current
+    was.current = persona
+    if (prev !== persona) meDispatch({ type: 'reset', now: performance.now(), roll: Math.random() })
+    const target = Math.floor(Math.random() * stoatRoom())
+    for (const e of stoatOnRoute(prev, persona, latest.current.pet.mode, stoatRoom(), STOAT.w, target)) petNow(e)
   }, [pathname])
 
   useEffect(() => {
     if (me.mode === 'sitting') petNow({ type: 'unfollow' })
     if (me.mode !== 'walking' || me.target === null) return
-    petNow({ type: 'follow', target: Math.floor((DESK_LEFT + me.target * deskScale) / STOAT_SCALE), roll: Math.random() })
+    petNow({ type: 'follow', target: Math.floor(deskX(side, me.target, ME.w, deskScale, viewportWidth()) / STOAT_SCALE), roll: Math.random() })
   }, [me.mode])
 
   const spot = stoatSpot(pet.mode, claimed)
   return (
     <>
-      <DeskCorner me={ME} stoat={STOAT} scale={deskScale} state={me} send={meDispatch} reduced={reduced} napping={spot === 'desk'} coat={coat} onOpen={openPetPanel} />
+      {desked ? (
+        <DeskCorner me={ME} stoat={STOAT} scale={deskScale} side={side} state={me} send={meDispatch} reduced={reduced} napping={spot === 'desk'} coat={coat} onOpen={openPetPanel} />
+      ) : (
+        <PersonaCorner key={persona} me={ME} {...PERSONA_CLIPS[persona as keyof typeof PERSONA_CLIPS]} scale={deskScale} reduced={reduced} onOpen={openPetPanel} />
+      )}
       {spot === 'floor' && <StoatRoamer sprite={STOAT} state={pet} send={petNow} coat={coat} scale={STOAT_SCALE} />}
     </>
   )

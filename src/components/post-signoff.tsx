@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState, type RefObject } from 'react'
 import { animate, stagger, utils } from 'animejs'
 import { prefersReducedMotion } from '../lib/motion'
+import { usePersona } from '../lib/pet/persona'
 import { StagePet } from './pet/stage-pet'
 
 // End-of-post decorative flourish, a few anime.js variants to pick from.
@@ -203,10 +204,11 @@ function Glitch() {
 const VARIANTS = [Terminal, Spore, Signal, Glitch]
 
 export function PostSignoff({ variant }: { variant: number }) {
+  const thinking = usePersona() === 'thinking'
   const Flourish = VARIANTS[variant] ?? Terminal
   return (
     <div className="mt-20 flex flex-col items-center gap-6 border-t border-charcoal/10 pt-14 dark:border-bone/10">
-      <StagePet clip="happy" scale={2} />
+      {!thinking && <StagePet clip="happy" scale={2} />}
       {/* key remounts on variant switch so the flourish replays */}
       <Flourish key={variant} />
     </div>

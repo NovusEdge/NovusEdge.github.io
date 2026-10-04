@@ -4,6 +4,7 @@ date: 2026-07-11
 tags: [ai, epistemics, misinformation, essay]
 description: Thoughts on synthetic media, the work of checking claims, and why producing more content can overwhelm the people trying to verify it.
 thumbnail: truth-power.jpeg
+pixel: thinking
 ---
 
 Lately my feeds have been full of death-of-truth video essays and dead internet threads. It keeps coming up with friends too: someone shares a thing, someone asks "wait, is that even real?", and we can't tell. I went looking for research on what happens when checking becomes too much work and people stop trying.

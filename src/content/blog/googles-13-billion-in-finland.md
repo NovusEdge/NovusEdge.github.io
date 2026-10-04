@@ -4,6 +4,7 @@ date: 2026-09-12
 tags: [energy, grid, datacenters, finland, ai, essay]
 description: A room of investors spent a morning working out where to put money in energy. They covered generation and regulation. Storage came up about twice, and the grid operator has had a moratorium on connecting it since last year.
 toc: true
+pixel: thinking
 ---
 
 ## The Room
