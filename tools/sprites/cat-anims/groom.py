@@ -114,7 +114,7 @@ def frame(leg, head_dy=1, tongue=False, eyes='open', tail='rest'):
         for x, c in enumerate(r):
             if c != '.':
                 g[idle.HEAD_Y + head_dy + j][x] = c
-    lr, lx, ly = LEGS[leg]
+    lr, lx, ly = LEGS[leg] if isinstance(leg, str) else leg
     px = {(lx + i, ly + j): c for j, r in enumerate(lr) for i, c in enumerate(r) if c != '.'}
     near = shade({p for p, c in px.items() if c == 'n'})
     near.update({p: ('P' if c == 'p' else c) for p, c in px.items() if c != 'n'})

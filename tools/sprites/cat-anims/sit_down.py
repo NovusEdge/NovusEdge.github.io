@@ -5,8 +5,8 @@ import os
 import sys
 
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), 'kit'))
-from catkit import (build, check, ellipse, frag, head, idle, mask_layer, rect, spans, stand,  # noqa: E402
-                    tail_layer, tail_path, walk, walk_leg, SIT)
+from catkit import (build, check, ellipse, frag, head, idle, mask_layer, rect, sit_with_head, spans,  # noqa: E402
+                    stand, tail_layer, tail_path, walk, walk_leg, SIT, TAIL_OUT)
 
 
 def haunch(cx, cy, rx, ry, bottom):
@@ -105,8 +105,8 @@ FRAMES = [
     (110, drawn(DIP)),
     (100, drawn(MID)),
     (110, drawn(DROP)),
-    (130, settle(idle.frame(tail_pose='out'))),
-    (140, idle.frame(tail_pose='out')),
+    (130, settle(sit_with_head(tail=TAIL_OUT))),
+    (140, sit_with_head(tail=TAIL_OUT)),
     (130, idle.frame(tail_pose='mid')),
     (300, SIT),
 ]
