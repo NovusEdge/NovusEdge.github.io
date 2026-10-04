@@ -185,9 +185,27 @@ describe('leaving and coming back', () => {
     expect(petReducer(gone, { type: 'tick', now: 3, width: 50, roll: 0, desk: null })).toBe(gone)
   })
 
-  it('keeps its off-screen position through a resize', () => {
-    const leaving = walkOut(petReducer(initPet(0, 100, false), { type: 'leave', now: 1, width: W, off: OFF }))
-    expect(petReducer(leaving, { type: 'tick', now: 2, width: 200, roll: 0, desk: null }).x).toBe(-OFF)
+  it('keeps a gone stoat off-screen through a resize', () => {
+    const gone = walkOut(petReducer(initPet(0, 100, false), { type: 'leave', now: 1, width: W, off: OFF }))
+    expect(petReducer(gone, { type: 'tick', now: 2, width: 200, roll: 0, desk: null }).x).toBe(-OFF)
+  })
+
+  it('leaves a leaving stoat untouched through a resize', () => {
+    const leaving = petReducer(petReducer(initPet(0, 100, false), { type: 'leave', now: 1, width: W, off: OFF }), { type: 'step', now: 1, px: 40 })
+    expect(petReducer(leaving, { type: 'tick', now: 2, width: 50, roll: 0, desk: null })).toBe(leaving)
+  })
+
+  it('does not snap a returning stoat onto the edge on the first tick', () => {
+    const gone = walkOut(petReducer(initPet(0, 500, false), { type: 'leave', now: 1, width: W, off: OFF }))
+    const back = petReducer(gone, { type: 'return', now: 2, width: W, off: OFF, target: 300 })
+    const ticked = petReducer(back, { type: 'tick', now: 3, width: W, roll: 1, desk: null })
+    expect(ticked).toMatchObject({ x: W + OFF, target: 300 })
+  })
+
+  it('does not snap a walking stoat beyond a narrowed room, and clamps its target', () => {
+    const walking = petReducer(initPet(0, 400, false), { type: 'go', now: 1, target: 500 })
+    const ticked = petReducer(walking, { type: 'tick', now: 2, width: 300, roll: 1, desk: null })
+    expect(ticked).toMatchObject({ x: 400, target: 300 })
   })
 
   it('comes back in from the edge nearer its target', () => {

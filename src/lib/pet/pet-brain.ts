@@ -108,7 +108,8 @@ export function petReducer(s: PetState, e: PetEvent): PetState {
   switch (e.type) {
     case 'tick': {
       const room = Math.max(0, e.width)
-      const x = Math.min(Math.max(0, s.x), room)
+      // a stoat bounding in from off-screen keeps its x; its target is already clamped to the room
+      const x = s.target === null ? Math.min(Math.max(0, s.x), room) : s.x
       if (s.mode === 'parked' || s.mode === 'desk_nap') return { ...s, x }
       const next = { ...s, x, home: Math.min(s.home, room), target: s.target === null ? null : Math.max(0, Math.min(room, s.target)) }
       if (next.mode === 'idle' && e.roll < ZOOMIES_PER_TICK) {
