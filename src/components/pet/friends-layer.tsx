@@ -125,7 +125,7 @@ function Friends({ reduced }: { reduced: boolean }) {
   const spot = stoatSpot(pet.mode, claimed)
   return (
     <>
-      <DeskCorner me={ME} stoat={STOAT} scale={deskScale} state={me} send={meDispatch} reduced={reduced} napping={spot === 'desk'} coat={coat} onOpen={openPetPanel} />
+      <DeskCorner me={ME} stoat={STOAT} side="left" scale={deskScale} state={me} send={meDispatch} reduced={reduced} napping={spot === 'desk'} coat={coat} onOpen={openPetPanel} />
       {spot === 'floor' && <StoatRoamer sprite={STOAT} state={pet} send={petNow} coat={coat} scale={STOAT_SCALE} />}
     </>
   )
