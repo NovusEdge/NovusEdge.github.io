@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sleek Cat Sprites</title>
+<style>
+  :root { --bg:#0f0f13; --card:#17171d; --line:#2a2a33; --fg:#d8d8e0; --dim:#8a8a98; --acc:#ec9440; color-scheme:dark; }
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--bg); color:var(--fg); font:13px/1.4 ui-monospace, "JetBrains Mono", Menlo, monospace; }
+  header { padding:12px 16px; border-bottom:1px solid var(--line); display:flex; gap:16px; align-items:center; flex-wrap:wrap; }
+  h1 { font-size:14px; margin:0; color:var(--acc); }
+  button { background:#202028; color:var(--fg); border:1px solid var(--line); border-radius:4px; padding:4px 9px; font:inherit; cursor:pointer; }
+  main { padding:16px; display:flex; flex-direction:column; gap:16px; }
+  .card { background:var(--card); border:1px solid var(--line); border-radius:6px; padding:12px; max-width:100%; overflow-x:auto; }
+  .card h2 { margin:0 0 8px; font-size:13px; }
+  .live { display:flex; gap:32px; flex-wrap:wrap; }
+  .live > div { display:flex; flex-direction:column; gap:6px; }
+  .row { display:flex; gap:16px; align-items:flex-end; }
+  .strip { display:flex; gap:6px; margin-top:12px; }
+  .strip figure { margin:0; text-align:center; color:var(--dim); font-size:11px; }
+  canvas { display:block; image-rendering:pixelated; }
+  .lbl { color:var(--dim); }
+</style>
+</head>
+<body>
+<header><h1>Cat sprites · sleek</h1><button id="pause">pause</button></header>
+<main id="main"></main>
+<script id="sprites" type="application/json">__JSON__</script>
+<script>
+const S = JSON.parse(document.getElementById('sprites').textContent);
+const main = document.getElementById('main');
+const live = [];
+
+function draw(cv, px, pal, s) {
+  const c = cv.getContext('2d');
+  c.imageSmoothingEnabled = false;
+  c.clearRect(0, 0, cv.width, cv.height);
+  px.forEach((row, y) => [...row].forEach((ch, x) => {
+    if (ch === '.') return;
+    c.fillStyle = pal[ch];
+    c.fillRect(x * s, y * s, s, s);
+  }));
+}
+
+function canvas(s) {
+  const cv = document.createElement('canvas');
+  cv.width = S.w * s; cv.height = S.h * s;
+  return cv;
+}
+
+const state = {};
+for (const [an, anim] of Object.entries(S.animations)) {
+  state[an] = { f: 0, t: 0 };
+  const total = anim.frames.reduce((a, f) => a + f.ms, 0);
+  for (const [name, pal] of Object.entries(S.palettes)) {
+    const card = document.createElement('section');
+    card.className = 'card';
+    card.innerHTML = `<h2>${an} · ${name} <span class="lbl">${anim.frames.length} frames · ${total}ms</span></h2><div class="row"></div><div class="strip"></div>`;
+    for (const s of [1, 2, 4]) {
+      const cv = canvas(s);
+      card.querySelector('.row').appendChild(cv);
+      live.push({ cv, pal, s, an });
+    }
+    anim.frames.forEach((fr, i) => {
+      const f = document.createElement('figure'), cv = canvas(2);
+      draw(cv, fr.px, pal, 2);
+      f.append(cv, `${i + 1} · ${fr.ms}`);
+      card.querySelector('.strip').appendChild(f);
+    });
+    main.appendChild(card);
+  }
+}
+
+let playing = !matchMedia('(prefers-reduced-motion: reduce)').matches, last = performance.now();
+const btn = document.getElementById('pause');
+function show(an) {
+  live.filter(l => l.an === an).forEach(l => draw(l.cv, S.animations[an].frames[state[an].f].px, l.pal, l.s));
+}
+btn.textContent = playing ? 'pause' : 'play';
+btn.onclick = () => { playing = !playing; btn.textContent = playing ? 'pause' : 'play'; };
+Object.keys(state).forEach(show);
+(function loop(now) {
+  const dt = Math.min(now - last, 250); last = now;
+  if (playing) for (const [an, st] of Object.entries(state)) {
+    const fr = S.animations[an].frames;
+    st.t += dt;
+    if (st.t >= fr[st.f].ms) { st.t -= fr[st.f].ms; st.f = (st.f + 1) % fr.length; show(an); }
+  }
+  requestAnimationFrame(loop);
+})(last);
+</script>
+</body>
+</html>
