@@ -5,6 +5,7 @@ export type MeEvent =
   | { type: 'end'; now: number; roll: number }
   | { type: 'step'; px: number }
   | { type: 'wrap' }
+  | { type: 'reset'; now: number; roll: number }
 
 export const WALK_EVERY_MIN = 60_000
 export const WALK_EVERY_MAX = 180_000
@@ -51,6 +52,8 @@ export function meReducer(s: MeState, e: MeEvent): MeState {
     case 'wrap':
       // stand_up is drawn from desk frame 0, so leaving mid-loop would pop
       return s.mode === 'due' ? { ...s, mode: 'standing' } : s
+    case 'reset':
+      return { ...s, mode: 'desk', x: s.home, target: null, dir: 1, nextWalk: nextWalkAt(e.now, e.roll) }
     case 'end':
       if (s.mode === 'standing') return { ...s, mode: 'walking', dir: 1 }
       if (s.mode === 'sitting') return { ...s, mode: 'desk', nextWalk: nextWalkAt(e.now, e.roll) }
