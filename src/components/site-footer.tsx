@@ -1,4 +1,4 @@
-import { lazy, Suspense, useEffect, useRef, useState, type CSSProperties } from 'react'
+import { lazy, Suspense, useCallback, useEffect, useRef, useState, type CSSProperties } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ImageDithering } from '@paper-design/shaders-react'
 import { isMobile } from '../lib/motion'
@@ -8,6 +8,9 @@ import { isMobile } from '../lib/motion'
 
 // the contact card pulls in lottie-backed animated icons; load it only when opened.
 const ContactCard = lazy(() => import('./contact-card'))
+
+// the pet chunk and the footer sprites load after hydration, never with the page
+const FooterFriend = lazy(() => import('./pet/footer-friend').then((m) => ({ default: m.FooterFriend })))
 
 const HAND_PERF = { minPixelRatio: 1, maxPixelCount: 400_000 }
 
@@ -44,6 +47,7 @@ function DitherHand({ src, className = '', active, style = {} }: { src: string; 
 export function SiteFooter({ word = 'Creation' }: { word?: string }) {
   const { t } = useTranslation()
   const [open, setOpen] = useState(false)
+  const openCard = useCallback(() => setOpen(true), [])
   const [near, setNear] = useState(false)
   const ref = useRef<HTMLElement>(null)
   const mobile = useRef(isMobile()).current
@@ -80,6 +84,20 @@ export function SiteFooter({ word = 'Creation' }: { word?: string }) {
   }, [mobile])
 
   const active = near && !mobile
+  const at = (
+    <button
+      onClick={openCard}
+      aria-label={t('footer.getInTouchLabel')}
+      className="group relative z-10 shrink-0 font-body text-6xl font-bold md:absolute md:left-1/2 md:top-1/2 md:-translate-x-1/2 md:-translate-y-1/2"
+    >
+      <span className="animate-neon text-rose-400 group-hover:animate-none group-hover:drop-shadow-[0_0_8px_rgba(251,113,133,0.6)]">
+        @
+      </span>
+      <span className="pointer-events-none absolute left-1/2 top-full mt-2 -translate-x-1/2 whitespace-nowrap rounded-full border border-rose-400/30 bg-charcoal-deep px-3 py-1 font-mono text-xs tracking-wider text-rose-400 opacity-0 transition-opacity group-hover:opacity-100">
+        {t('footer.getInTouch')}
+      </span>
+    </button>
+  )
   return (
     <footer
       ref={ref}
@@ -93,18 +111,9 @@ export function SiteFooter({ word = 'Creation' }: { word?: string }) {
           className="w-[70vw] aspect-[422/257] transition-transform duration-150 md:absolute md:left-0 md:top-1/2 md:w-[47vw] md:-translate-y-1/2"
           style={{ transform: `translateX(${handOffset}px)` }}
         />
-        <button
-          onClick={() => setOpen(true)}
-          aria-label={t('footer.getInTouchLabel')}
-          className="group relative z-10 shrink-0 font-body text-6xl font-bold md:absolute md:left-1/2 md:top-1/2 md:-translate-x-1/2 md:-translate-y-1/2"
-        >
-          <span className="animate-neon text-rose-400 group-hover:animate-none group-hover:drop-shadow-[0_0_8px_rgba(251,113,133,0.6)]">
-            @
-          </span>
-          <span className="pointer-events-none absolute left-1/2 top-full mt-2 -translate-x-1/2 whitespace-nowrap rounded-full border border-rose-400/30 bg-charcoal-deep px-3 py-1 font-mono text-xs tracking-wider text-rose-400 opacity-0 transition-opacity group-hover:opacity-100">
-            {t('footer.getInTouch')}
-          </span>
-        </button>
+        <Suspense fallback={at}>
+          <FooterFriend plain={at} onCard={openCard} />
+        </Suspense>
         <DitherHand
           active={active}
           src="/assets/hand-right.png"
