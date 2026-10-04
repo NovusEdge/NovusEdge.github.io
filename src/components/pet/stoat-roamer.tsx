@@ -10,7 +10,7 @@ export function StoatRoamer({ sprite, state, send, coat, scale }: { sprite: Spri
   const travel = sprite.animations[clip]?.travel ?? 1
   return (
     <div
-      style={{ position: 'fixed', left: state.x * scale, bottom: 0, zIndex: 30, lineHeight: 0, pointerEvents: 'auto' }}
+      style={{ position: 'fixed', left: Math.round(state.x) * scale, bottom: 0, zIndex: 30, lineHeight: 0, pointerEvents: 'auto' }}
       onPointerEnter={() => send({ type: 'hover' })}
       onClick={() => send({ type: 'click', roll: Math.random() })}
     >

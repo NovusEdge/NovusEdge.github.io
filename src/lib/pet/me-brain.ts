@@ -1,14 +1,17 @@
-export type MeMode = 'still' | 'desk' | 'standing' | 'walking' | 'returning' | 'sitting'
+export type MeMode = 'still' | 'desk' | 'due' | 'standing' | 'walking' | 'returning' | 'sitting'
 export type MeState = { mode: MeMode; x: number; home: number; target: number | null; dir: 1 | -1; nextWalk: number }
 export type MeEvent =
   | { type: 'tick'; now: number; width: number; roll: number }
   | { type: 'end'; now: number; roll: number }
   | { type: 'step'; px: number }
+  | { type: 'wrap' }
 
 export const WALK_EVERY_MIN = 60_000
 export const WALK_EVERY_MAX = 180_000
 export const WALK_MIN = 40
 export const WALK_MAX = 120
+// The walk clip is 16 frames at 1 px per frame, so out and back must total whole cycles.
+export const WALK_UNIT = 8
 
 const nextWalkAt = (now: number, roll: number) => now + WALK_EVERY_MIN + roll * (WALK_EVERY_MAX - WALK_EVERY_MIN)
 
@@ -34,12 +37,18 @@ export function meReducer(s: MeState, e: MeEvent): MeState {
     case 'tick': {
       const width = Math.max(s.home, e.width)
       if (s.mode === 'desk' && e.now >= s.nextWalk) {
-        return { ...s, mode: 'standing', target: Math.min(width, Math.round(s.home + WALK_MIN + e.roll * (WALK_MAX - WALK_MIN))) }
+        const room = Math.floor((width - s.home) / WALK_UNIT) * WALK_UNIT
+        if (room < WALK_UNIT) return { ...s, nextWalk: nextWalkAt(e.now, e.roll) }
+        const want = Math.round((WALK_MIN + e.roll * (WALK_MAX - WALK_MIN)) / WALK_UNIT) * WALK_UNIT
+        return { ...s, mode: 'due', target: s.home + Math.min(room, want) }
       }
       if (s.mode === 'walking' && s.x >= width) return { ...s, mode: 'returning', x: width, target: s.home, dir: -1 }
       if (s.mode === 'returning' && s.x > width) return { ...s, x: width }
       return s
     }
+    case 'wrap':
+      // stand_up is drawn from desk frame 0, so leaving mid-loop would pop
+      return s.mode === 'due' ? { ...s, mode: 'standing' } : s
     case 'end':
       if (s.mode === 'standing') return { ...s, mode: 'walking', dir: 1 }
       if (s.mode === 'sitting') return { ...s, mode: 'desk', nextWalk: nextWalkAt(e.now, e.roll) }

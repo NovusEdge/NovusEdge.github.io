@@ -87,6 +87,7 @@ export function DeskCorner({ me, stoat, scale, state, send, reduced, napping, co
             frame={reduced ? 0 : undefined}
             onStep={(_, f) => {
               typing.current = !!f.typing
+              if (f === desk.frames[0]) send({ type: 'wrap' })
             }}
             onEnd={() => send({ type: 'end', now: performance.now(), roll: Math.random() })}
           />

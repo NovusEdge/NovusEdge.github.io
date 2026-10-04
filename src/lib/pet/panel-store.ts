@@ -10,7 +10,7 @@ const set = (v: boolean) => {
 let opener: HTMLElement | null = null
 
 export const openPetPanel = () => {
-  opener = document.activeElement instanceof HTMLElement ? document.activeElement : null
+  if (!open) opener = document.activeElement instanceof HTMLElement ? document.activeElement : null
   set(true)
 }
 export const closePetPanel = () => {
