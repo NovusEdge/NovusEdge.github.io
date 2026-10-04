@@ -12,7 +12,7 @@ Supersedes `2026-10-04-pixel-pets-design.md` for everything about the resident p
 | 2 | Footer: pixel-me floating between the hands, arms spread, holding the "@"; clicking bursts the contact links out as pixel bubbles, replacing the contact card |
 | 3 | Per-route personas: a thinking pose in a corner on special blog posts (no stoat), a scientist on `/research`, the desk bottom-right on `/portfolio` |
 
-Phases 2 and 3 get their own specs.
+Phases 2 and 3 get their own specs. Phase 2's spec (`2026-10-05-pixel-friends-phase2-design.md`) changed the row above: pixel-me levitates under the "@", and the contact card stays as the fallback.
 
 ## Cast and layout
 
