@@ -26,31 +26,23 @@ const throwing: Storage = {
 }
 
 describe('loadPetPrefs', () => {
-  it('picks a random coat on the first visit and remembers it', () => {
-    const s = memory()
-    const first = loadPetPrefs(s, () => 0.99)
-    expect(first).toEqual({ cat: true, coat: 'shiny', stoat: 'normal' })
-    expect(JSON.parse(s.getItem(PREFS_KEY)!).coat).toBe('shiny')
-    expect(loadPetPrefs(s, () => 0).coat).toBe('shiny')
+  it('is on by default', () => {
+    expect(loadPetPrefs(memory())).toEqual({ on: true })
   })
 
-  it('keeps saved values', () => {
-    const s = memory({ [PREFS_KEY]: JSON.stringify({ cat: false, coat: 'black', stoat: 'off' }) })
-    expect(loadPetPrefs(s)).toEqual({ cat: false, coat: 'black', stoat: 'off' })
+  it('keeps a saved off', () => {
+    expect(loadPetPrefs(memory({ [PREFS_KEY]: JSON.stringify({ on: false }) }))).toEqual({ on: false })
   })
 
-  it('replaces an unknown coat or frequency', () => {
-    const s = memory({ [PREFS_KEY]: JSON.stringify({ cat: true, coat: 'calico', stoat: 'always' }) })
-    expect(loadPetPrefs(s, () => 0)).toEqual({ cat: true, coat: 'tuxedo', stoat: 'normal' })
+  it('reads a cat-era off as off', () => {
+    expect(loadPetPrefs(memory({ [PREFS_KEY]: JSON.stringify({ cat: false, coat: 'black', stoat: 'off' }) }))).toEqual({ on: false })
   })
 
-  it('survives garbage JSON', () => {
-    expect(loadPetPrefs(memory({ [PREFS_KEY]: '{nope' }), () => 0).coat).toBe('tuxedo')
-  })
-
-  it('survives storage that throws, and without storage at all', () => {
-    expect(loadPetPrefs(throwing, () => 0)).toEqual({ cat: true, coat: 'tuxedo', stoat: 'normal' })
-    expect(loadPetPrefs(null, () => 0).cat).toBe(true)
-    expect(() => savePetPrefs({ cat: true, coat: 'orange', stoat: 'rare' }, throwing)).not.toThrow()
+  it('survives garbage, non-object JSON, throwing storage and no storage', () => {
+    expect(loadPetPrefs(memory({ [PREFS_KEY]: '{nope' }))).toEqual({ on: true })
+    expect(loadPetPrefs(memory({ [PREFS_KEY]: '5' }))).toEqual({ on: true })
+    expect(loadPetPrefs(throwing)).toEqual({ on: true })
+    expect(loadPetPrefs(null)).toEqual({ on: true })
+    expect(() => savePetPrefs({ on: false }, throwing)).not.toThrow()
   })
 })

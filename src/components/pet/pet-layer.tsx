@@ -31,7 +31,7 @@ type DistributiveOmit<T, K extends string> = T extends unknown ? Omit<T, K> : ne
 
 const roomWidth = () => Math.max(0, Math.floor(window.innerWidth / SCALE) - W)
 
-function Cat({ coat }: { coat: string }) {
+function Cat() {
   const [state, dispatch] = useReducer(catReducer, null, () =>
     initCat(performance.now(), roomWidth() - 8, prefersReducedMotion()),
   )
@@ -97,7 +97,7 @@ function Cat({ coat }: { coat: string }) {
       <PixelSprite
         sprite={SPRITE}
         clip={clip}
-        variant={coat}
+        variant={undefined}
         scale={SCALE}
         // the sit faces left and the walk faces right; look poses are chosen in screen space, so never mirror them
         flip={clip === 'look' ? false : clip === 'walk' || clip === 'run' ? state.dir === -1 : state.dir === 1}
@@ -115,6 +115,6 @@ export function PetLayer() {
   const claimed = useStageClaimed()
   const [mounted, setMounted] = useState(false)
   useEffect(() => setMounted(true), [])
-  if (!mounted || !prefs.cat || claimed) return null
-  return <Cat coat={prefs.coat} />
+  if (!mounted || !prefs.on || claimed) return null
+  return <Cat />
 }

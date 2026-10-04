@@ -21,11 +21,11 @@ export function StageCat({ clip, scale = 3, className }: { clip: string; scale?:
     io.observe(el)
     return () => io.disconnect()
   }, [])
-  const show = mounted && prefs.cat
+  const show = mounted && prefs.on
   useStageClaim(show && visible)
   return (
     <div ref={ref} className={className} style={{ width: SPRITE.w * scale, height: SPRITE.h * scale }}>
-      {show && <PixelSprite sprite={SPRITE} clip={clip} variant={prefs.coat} scale={scale} playing={!prefersReducedMotion()} />}
+      {show && <PixelSprite sprite={SPRITE} clip={clip} variant={undefined} scale={scale} playing={!prefersReducedMotion()} />}
     </div>
   )
 }

@@ -74,7 +74,7 @@ export function DeskScene({ scale = 3 }: { scale?: number }) {
     return () => io.disconnect()
   }, [])
   const reduced = mounted && prefersReducedMotion()
-  const catHere = mounted && prefs.cat
+  const catHere = mounted && prefs.on
   useStageClaim(catHere && visible)
 
   return (
@@ -96,7 +96,7 @@ export function DeskScene({ scale = 3 }: { scale?: number }) {
             <PixelSprite
               sprite={CAT}
               clip="sleep"
-              variant={prefs.coat}
+              variant={undefined}
               scale={scale}
               playing={!reduced}
               style={{ position: 'absolute', left: SX * scale, top: (SY + SH - CAT.h) * scale }}

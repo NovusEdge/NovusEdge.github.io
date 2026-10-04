@@ -83,4 +83,9 @@ describe('resolveClip', () => {
   it('falls back to idle for a clip not drawn yet', () => {
     expect(resolveClip(tiny, 'groom')).toMatchObject({ name: 'idle', fallback: true })
   })
+
+  it('falls back to the first clip when the sprite has no idle', () => {
+    const s: Sprite = { w: 1, h: 1, palette: { A: '#000' }, animations: { bound: { loop: true, frames: [{ ms: 50, px: ['A'] }] } } }
+    expect(resolveClip(s, 'sit')).toMatchObject({ name: 'bound', fallback: true })
+  })
 })

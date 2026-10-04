@@ -6,6 +6,7 @@ export type Clip = {
   w?: number
   h?: number
   catSlot?: [number, number, number, number]
+  standAt?: [number, number]
 }
 export type Sprite = {
   w: number
@@ -19,10 +20,13 @@ export const paletteFor = (s: Sprite, variant?: string) => ({ ...s.palette, ...(
 
 export const clipSize = (s: Sprite, c: Clip) => ({ w: c.w ?? s.w, h: c.h ?? s.h })
 
-// The engine ships before every clip is drawn, so a missing clip plays idle.
+// The engine ships before every clip is drawn, so a missing clip plays idle,
+// or the first clip for a sprite without one (the stoat).
 export function resolveClip(s: Sprite, name: string) {
   const clip = s.animations[name]
-  return clip ? { name, clip, fallback: false } : { name: 'idle', clip: s.animations.idle, fallback: true }
+  if (clip) return { name, clip, fallback: false }
+  const fb = s.animations.idle ? 'idle' : Object.keys(s.animations)[0]
+  return { name: fb, clip: s.animations[fb], fallback: true }
 }
 
 export function validateSprite(s: Sprite): string[] {

@@ -1,10 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { PawPrint, X } from 'lucide-react'
-import { COATS, type PetPrefs } from '../../lib/pet/prefs'
 import { usePetPrefs } from '../../lib/pet/prefs-store'
-
-const FREQS: PetPrefs['stoat'][] = ['off', 'rare', 'normal']
 
 function Choice<T extends string>({ label, value, options, text, onPick }: { label: string; value: T; options: readonly T[]; text: (v: T) => string; onPick: (v: T) => void }) {
   return (
@@ -32,7 +29,6 @@ export function PetPanel() {
   const [open, setOpen] = useState(false)
   const [prefs, setPrefs] = usePetPrefs()
   const toggleRef = useRef<HTMLButtonElement>(null)
-  const set = (patch: Partial<PetPrefs>) => setPrefs({ ...prefs, ...patch })
 
   useEffect(() => {
     if (!open) return
@@ -73,9 +69,7 @@ export function PetPanel() {
                 <X className="h-4 w-4" />
               </button>
             </div>
-            <Choice label={t('pet.cat')} value={prefs.cat ? 'on' : 'off'} options={['on', 'off'] as const} text={(v) => t(`pet.${v}`)} onPick={(v) => set({ cat: v === 'on' })} />
-            <Choice label={t('pet.coat')} value={prefs.coat} options={COATS} text={(v) => t(`pet.coat.${v}`)} onPick={(coat) => set({ coat })} />
-            <Choice label={t('pet.stoat')} value={prefs.stoat} options={FREQS} text={(v) => t(`pet.stoat.${v}`)} onPick={(stoat) => set({ stoat })} />
+            <Choice label={t('pet.cat')} value={prefs.on ? 'on' : 'off'} options={['on', 'off'] as const} text={(v) => t(`pet.${v}`)} onPick={(v) => setPrefs({ on: v === 'on' })} />
           </div>
         </>
       )}
