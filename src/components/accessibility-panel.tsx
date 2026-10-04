@@ -76,7 +76,7 @@ export function AccessibilityPanel() {
         onClick={() => setOpen(!open)}
         aria-label={t('a11y.settings')}
         aria-expanded={open}
-        className="fixed bottom-6 left-6 z-50 flex h-12 w-12 items-center justify-center rounded-full border border-charcoal/20 bg-bone shadow-lg transition-transform hover:scale-105 dark:border-bone/20 dark:bg-charcoal"
+        className="fixed bottom-6 right-6 z-50 flex h-12 w-12 items-center justify-center rounded-full border border-charcoal/20 bg-bone shadow-lg transition-transform hover:scale-105 dark:border-bone/20 dark:bg-charcoal"
       >
         <Accessibility className="h-5 w-5 text-charcoal dark:text-bone" />
       </button>
@@ -84,7 +84,7 @@ export function AccessibilityPanel() {
       {open && (
         <>
           <div className="fixed inset-0 z-40" onClick={() => setOpen(false)} />
-          <div className="fixed bottom-20 left-6 z-50 w-72 rounded-lg border border-charcoal/20 bg-bone p-4 shadow-xl dark:border-bone/20 dark:bg-charcoal">
+          <div className="fixed bottom-20 right-6 z-50 w-72 rounded-lg border border-charcoal/20 bg-bone p-4 shadow-xl dark:border-bone/20 dark:bg-charcoal">
             <div className="mb-4 flex items-center justify-between">
               <h2 className="font-display text-lg font-semibold">{t('a11y.title')}</h2>
               <button

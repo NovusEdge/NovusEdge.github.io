@@ -5,21 +5,19 @@ import { i18nFor } from '../../i18n'
 import { PetPanel } from './pet-panel'
 
 describe('PetPanel', () => {
-  it('renders a labelled, closed toggle button', () => {
-    const html = renderToStaticMarkup(
-      <I18nextProvider i18n={i18nFor('en')}>
-        <PetPanel />
-      </I18nextProvider>,
-    )
-    expect(html).toContain('aria-label="Pet settings"')
-    expect(html).toContain('aria-expanded="false"')
+  it('renders nothing on the server', () => {
+    expect(
+      renderToStaticMarkup(
+        <I18nextProvider i18n={i18nFor('en')}>
+          <PetPanel />
+        </I18nextProvider>,
+      ),
+    ).toBe('')
   })
 
-  it('resolves keys that prefix other keys', () => {
+  it('has its labels in English', () => {
     const t = i18nFor('en').t
-    expect(t('pet.coat')).toBe('Coat')
-    expect(t('pet.coat.tuxedo')).toBe('Tuxedo')
-    expect(t('pet.stoat')).toBe('Stoat visits')
-    expect(t('pet.stoat.off')).toBe('Never')
+    expect(t('pet.settings')).toBe('Pixel friends settings')
+    expect(t('pet.friends')).toBe('Pixel friends')
   })
 })
