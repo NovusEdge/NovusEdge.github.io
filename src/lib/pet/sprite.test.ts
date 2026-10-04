@@ -39,13 +39,18 @@ describe('sprite data', () => {
     const s = stoat as Sprite
     expect(Object.keys(s.animations).sort()).toEqual([
       'bound',
+      'chase_tail',
+      'confused',
       'curl',
       'groom',
+      'happy',
       'peek',
       'periscope',
+      'pounce',
       'sit',
       'sit_down',
       'sleep',
+      'startle',
       'wake',
     ])
     expect(Object.keys(s.palettes!).sort()).toEqual(['summer', 'winter'])

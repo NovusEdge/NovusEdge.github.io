@@ -1,7 +1,7 @@
 """The upright sit every resting clip starts from and returns to, and the bits the
 resting clips share. Faces right like the bound, fore paws on the same pixels as the
 bound's landing frame so a bound can stop into a sit without the paws sliding."""
-from stoat import W, d, stamp, runs, compose
+from stoat import W, GROUND, d, stamp, runs, compose
 from bound import HEAD
 
 # The sit's head box, top-left of bound.HEAD (eye at +5,+2, nose at +8,+3).
@@ -85,7 +85,73 @@ TTS....
 }
 
 
+# Tail carried up off the rump instead of lying on the ground: 'half' is the way up,
+# 'raised' stands behind the back, 'sway_l'/'sway_r' lean its top half a pixel.
+TAIL_RAISED = {
+    'half': '''
+17: 8 LB
+16: 7 LB
+15: 6 LB
+14: 5 LB
+13: 4 TT
+12: 3 TTS
+11: 3 SS
+''',
+    'raised': '''
+17: 9 LB
+16: 8 LB
+15: 7 LB
+14: 7 LB
+13: 7 LB
+12: 7 LB
+11: 7 TT
+10: 7 TTS
+9: 7 TTS
+8: 8 SS
+''',
+    'sway_l': '''
+17: 9 LB
+16: 8 LB
+15: 7 LB
+14: 7 LB
+13: 6 LB
+12: 6 LB
+11: 6 TT
+10: 5 TTS
+9: 5 TTS
+8: 6 SS
+''',
+    'sway_r': '''
+17: 9 LB
+16: 8 LB
+15: 7 LB
+14: 8 LB
+13: 8 LB
+12: 8 LB
+11: 8 TT
+10: 9 TTS
+9: 9 TTS
+8: 10 SS
+''',
+    # Two pixels over at the top: the far end of happy's flick, sway_r its in-between.
+    'sway_r2': '''
+17: 9 LB
+16: 8 LB
+15: 8 LB
+14: 8 LB
+13: 9 LB
+12: 9 LB
+11: 10 TT
+10: 10 TTS
+9: 11 TTS
+8: 12 SS
+''',
+}
+
+
 def tail(tip='rest'):
+    if tip in TAIL_RAISED:
+        return runs(TAIL_RAISED[tip])
     rows = TAIL_TIP[tip]
     return {**runs(TAIL_SHAFT), **stamp(rows, 1, 19 - len(rows) + 1, 0, 0)}
 
@@ -130,4 +196,40 @@ def sit(eye='open', tip='rest', breath=0):
                 head(hx, hy, eye), runs(SIT_NAPE))
     if breath == 2:
         lift(g, 1, 12, 18)
+    return g
+
+
+def shift(g, dx, dy):
+    """The whole drawing moved dx right and dy down; whatever leaves the work canvas
+    is dropped."""
+    out = [['.'] * len(g[0]) for _ in g]
+    for y, r in enumerate(g):
+        for x, c in enumerate(r):
+            if c != '.' and 0 <= x + dx < len(r) and 0 <= y + dy < len(g):
+                out[y + dy][x + dx] = c
+    return out
+
+
+def puff(g, spikes=True, front=22):
+    """Fur standing on end: a pixel of coat grows round the back, rump and tail, and
+    with spikes every other pixel of the top edge stands a pixel higher. Everything
+    from column `front` on (head, chest, forelegs) and the ground row stay as drawn."""
+    coat, tip = 'LBD', 'TS'
+    grow = {}
+    for y in range(1, GROUND):
+        for x in range(1, front):
+            if g[y][x] != '.':
+                continue
+            below, above = g[y + 1][x], g[y - 1][x]
+            near = [g[y + dy][x + dx] for dx, dy in ((1, 0), (-1, 0), (0, 1), (0, -1))]
+            if any(c in tip for c in near):
+                grow[(x, y)] = 'S' if below in tip else 'T'
+            elif any(c in coat for c in near) and above not in coat:
+                grow[(x, y)] = 'L' if below in coat else 'B'
+    for (x, y), c in grow.items():
+        g[y][x] = c
+    if spikes:
+        for (x, y), c in grow.items():
+            if x % 2 == 0 and c in 'LS' and g[y - 1][x] == '.' and y > 1:
+                g[y - 1][x] = c
     return g

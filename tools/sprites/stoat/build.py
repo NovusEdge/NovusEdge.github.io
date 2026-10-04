@@ -5,11 +5,14 @@ from PIL import Image, ImageDraw, ImageFont
 OUT = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, OUT)
 import bound, periscope, peek, sit, sit_down, groom, curl, sleep, wake  # noqa: E402
-from stoat import PALETTES, W, H, GROUND, BG, render, finish  # noqa: E402
+import startle, pounce, chase_tail, confused, happy  # noqa: E402
+from stoat import PALETTES, EFFECTS, W, H, GROUND, BG, render, finish  # noqa: E402
 
 CLIPS = {'bound': bound, 'periscope': periscope, 'peek': peek, 'sit': sit, 'sit_down': sit_down,
-         'groom': groom, 'curl': curl, 'sleep': sleep, 'wake': wake}
-LOOP = {'bound': True, 'sit': True, 'groom': True, 'curl': True, 'sleep': True}
+         'groom': groom, 'curl': curl, 'sleep': sleep, 'wake': wake, 'startle': startle,
+         'pounce': pounce, 'chase_tail': chase_tail, 'confused': confused, 'happy': happy}
+LOOP = {'bound': True, 'sit': True, 'groom': True, 'curl': True, 'sleep': True,
+        'chase_tail': True, 'confused': True, 'happy': True}
 # Playback speed per clip, as the client asked for it: every frame's ms is divided by
 # the clip's tempo (half rounds up). The slow loops play faster than they were keyed
 # and groom a little slower; sit_down and wake got more drawings
@@ -64,9 +67,14 @@ def check_ends(r):
     s0 = r['sit'][0]
     assert r['sit_down'][0] == r['bound'][0], 'sit_down starts on the bound landing'
     assert r['wake'][0] == r['sleep'][0], 'wake starts on sleep frame 0'
-    for name in ('sit_down', 'wake'):
+    for name in ('sit_down', 'wake', 'startle', 'pounce'):
         assert r[name][-1] == s0, (name, 'ends on sit frame 0')
-    assert r['groom'][0] == s0, 'groom starts on sit frame 0'
+    for name in ('groom', 'startle', 'pounce', 'happy'):
+        assert r[name][0] == s0, (name, 'starts on sit frame 0')
+    assert r['happy'][-1] == s0, 'happy ends on sit frame 0'
+    # confused carries its "?" from the first frame; under it, it is the sit.
+    bare = [''.join('.' if c in EFFECTS else c for c in row) for row in r['confused'][0]]
+    assert bare == s0, 'confused starts on sit frame 0'
 
 
 def font(sz):

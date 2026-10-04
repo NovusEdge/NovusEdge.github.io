@@ -21,10 +21,11 @@ PALETTES = {
                'K': '#0b0807', 'N': '#3a2a2a', 'I': '#e8c8c2'},
 }
 # Effect letters, the same in both coats: Z sleep z's, Q "?", R heart. They float
-# free of the outline (see finish), so Z is dark enough to read on the light page.
+# free of the outline (see finish), so Z and Q are dark enough to read on the light
+# page.
 EFFECTS = 'ZQR'
 for _pal in PALETTES.values():
-    _pal.update({'Z': '#7f88aa', 'Q': '#f2c94c', 'R': '#ff6b80'})
+    _pal.update({'Z': '#7f88aa', 'Q': '#d99a14', 'R': '#ff6b80'})
 
 
 def d(s):
