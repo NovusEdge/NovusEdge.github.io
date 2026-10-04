@@ -2,12 +2,17 @@ import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { PawPrint, X } from 'lucide-react'
 import { closePetPanel, openPetPanel, usePetPanelOpen } from '../../lib/pet/panel-store'
+import { panelSide, pawSide } from '../../lib/pet/corners'
+import { usePersona } from '../../lib/pet/persona'
 import { usePetPrefs } from '../../lib/pet/prefs-store'
 
 export function PetPanel() {
   const { t } = useTranslation()
   const open = usePetPanelOpen()
   const [prefs, setPrefs] = usePetPrefs()
+  const persona = usePersona()
+  const paw = pawSide(persona) === 'left' ? 'left-6' : 'right-6'
+  const panel = panelSide(persona, prefs.on) === 'left' ? 'left-4' : 'right-4'
   const [mounted, setMounted] = useState(false)
   useEffect(() => setMounted(true), [])
 
@@ -29,7 +34,7 @@ export function PetPanel() {
           aria-expanded={open}
           data-pet-paw
           onClick={() => (open ? closePetPanel() : openPetPanel())}
-          className="fixed bottom-6 left-6 z-50 flex h-12 w-12 items-center justify-center rounded-full border border-charcoal/20 bg-bone shadow-lg transition-transform hover:scale-105 dark:border-bone/20 dark:bg-charcoal"
+          className={`fixed bottom-6 ${paw} z-50 flex h-12 w-12 items-center justify-center rounded-full border border-charcoal/20 bg-bone shadow-lg transition-transform hover:scale-105 dark:border-bone/20 dark:bg-charcoal`}
         >
           <PawPrint className="h-5 w-5 text-charcoal dark:text-bone" />
         </button>
@@ -40,7 +45,7 @@ export function PetPanel() {
           <div
             role="dialog"
             aria-label={t('pet.title')}
-            className="fixed bottom-32 left-4 z-50 w-64 max-w-[calc(100vw-2rem)] rounded-lg border border-charcoal/20 bg-bone p-4 shadow-xl dark:border-bone/20 dark:bg-charcoal"
+            className={`fixed bottom-32 ${panel} z-50 w-64 max-w-[calc(100vw-2rem)] rounded-lg border border-charcoal/20 bg-bone p-4 shadow-xl dark:border-bone/20 dark:bg-charcoal`}
           >
             <div className="flex items-center justify-between">
               <h2 className="font-mono text-sm font-semibold uppercase tracking-wider">{t('pet.title')}</h2>
