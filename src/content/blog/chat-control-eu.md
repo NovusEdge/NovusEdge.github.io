@@ -4,6 +4,7 @@ date: 2026-07-14
 tags: [privacy, surveillance, eu, encryption, p2p, essay]
 description: Why Chat Control bothers me, what other forms of surveillance have to do with it, and the privacy tools I want people to build.
 toc: true
+pixel: thinking
 ---
 
 ## 314 > 276, But Who's Counting

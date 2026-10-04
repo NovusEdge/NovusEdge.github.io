@@ -5,6 +5,7 @@ tags: [labour, education, economics, epistemics, ai, essay]
 description: Industrial capacity outgrew the need for universal work decades ago and nobody updated the institutions. School kept issuing credentials for a queue that was already shrinking. Now the answers are free too, and the kids can't read.
 draft: true
 toc: true
+pixel: thinking
 ---
 
 <!--

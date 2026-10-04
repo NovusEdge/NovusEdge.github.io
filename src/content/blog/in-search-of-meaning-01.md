@@ -4,6 +4,7 @@ date: 2026-10-02
 tags: [essay, thoughts, existential, rant]
 description: A brief note on meaning and purpose
 draft: false
+pixel: thinking
 ---
 
 [](#doodle-wall-right)My best friend and I had a falling-out recently. They were worried I'm working myself to death, and they didn't mean it as a figure of speech. They weren't wrong, either. Since then I've taken to pondering why I do the things I do.
