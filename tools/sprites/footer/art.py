@@ -2,9 +2,10 @@
 (tools/sprites/me/front.py): same HEAD, torso stamp, back hair and palette, with the
 hanging arms cut off the torso so each concept can place its own."""
 import math
+import os
 import sys
 
-ME = '/home/novusedge/Projects/Personal/NovusEdge.github.io/tools/sprites/me'
+ME = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'me')
 sys.path.insert(0, ME)
 
 from PIL import Image
