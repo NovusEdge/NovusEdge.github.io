@@ -2,7 +2,7 @@ import { useTranslation } from 'react-i18next'
 import { TLink } from '../components/page-transition'
 import { Meta } from '../lib/meta'
 import { MonoTag } from '../components/motifs'
-import { StageCat } from '../components/pet/stage-cat'
+import { StagePet } from '../components/pet/stage-pet'
 import Magnetic from '../components/react-bits/Magnetic'
 import { useLocalePath } from '../i18n/use-locale-path'
 
@@ -13,7 +13,7 @@ export default function NotFound() {
     <>
       <Meta title="404" />
       <section className="flex min-h-screen flex-col items-center justify-center px-6">
-        <StageCat clip="confused" scale={3} className="mb-6" />
+        <StagePet clip="confused" scale={3} className="mb-6" />
         <MonoTag>{t('notFound.tag')}</MonoTag>
         <h1 className="mt-4 font-display text-7xl font-black">
           迷子<span className="text-gold">.</span>

@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState, type RefObject } from 'react'
 import { animate, stagger, utils } from 'animejs'
 import { prefersReducedMotion } from '../lib/motion'
-import { StageCat } from './pet/stage-cat'
+import { StagePet } from './pet/stage-pet'
 
 // End-of-post decorative flourish, a few anime.js variants to pick from.
 // Dev switcher lives in post.tsx; once chosen, set DEFAULT_SIGNOFF and drop the picker.
@@ -206,7 +206,7 @@ export function PostSignoff({ variant }: { variant: number }) {
   const Flourish = VARIANTS[variant] ?? Terminal
   return (
     <div className="mt-20 flex flex-col items-center gap-6 border-t border-charcoal/10 pt-14 dark:border-bone/10">
-      <StageCat clip="happy" scale={2} />
+      <StagePet clip="happy" scale={2} />
       {/* key remounts on variant switch so the flourish replays */}
       <Flourish key={variant} />
     </div>
