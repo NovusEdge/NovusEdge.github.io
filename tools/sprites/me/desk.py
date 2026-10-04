@@ -29,7 +29,6 @@ HANDS = {
     'type': ["SS.", "SSZ"],
     'type_up': ["SSZ", "..."],
     'chin': [".S", "SS", "SZ"],
-    'ear': ["SS", "SS", "Z."],
     'grip': ["SS", "SZ"],
 }
 
@@ -202,9 +201,6 @@ def scene(pose, layers=()):
     g.stamp(HEAD, 8 + DX, 2 + DY)
     if pose.get('blink'):
         g.set(8 + DX + 11, 2 + DY + 7, 'Z')
-    if pose.get('tucked'):
-        hx, hy = 8 + DX, 2 + DY
-        g.stamp(["GZS", "GZS", ".GZ"], hx + 5, hy + 6)
     if 'collar' in layers:
         g.stamp("CC", 19 + DX, 17 + DY)
     b = pose['beat']
@@ -220,10 +216,6 @@ def scene(pose, layers=()):
         arm(g, sh, (sh[0] + 4, sh[1] + 4.5), (30, 2 + DY + 11 + pose.get('stroke', 0)), True, 'chin')
     elif b == 'mid':
         arm(g, sh, (sh[0] + 3, sh[1] + 5.5), (30.5, 2 + DY + 15), True, 'chin')
-    elif b == 'ear_mid':
-        arm(g, sh, (sh[0] + 4, sh[1] + 4), (8 + DX + 10, 2 + DY + 10), True, 'ear')
-    elif b == 'ear':
-        arm(g, sh, (sh[0] + 4, sh[1] + 3), (8 + DX + 6, 2 + DY + 6), True, 'ear')
     elif b == 'reach':
         arm(g, sh, (sh[0] + 2, sh[1] + 5.5), (MUG_AT[0], MUG_AT[1] + 3), True, 'grip')
     elif b == 'lift':
@@ -256,11 +248,10 @@ DESK = [
     (dict(beat='chin', stroke=0), 240), (dict(beat='chin', stroke=1), 320), (dict(beat='mid'), 120),
     (dict(beat=T, far_up=1), 130), (dict(beat=T, near_up=1), 120), (dict(beat=T, far_up=1), 110),
     (dict(beat=T, near_up=1), 140), (dict(beat=T), 380),
-    (dict(beat='ear_mid', hair=0), 120), (dict(beat='ear', hair=1), 160), (dict(beat='ear', tucked=1, hair=2), 300),
-    (dict(beat='ear_mid', tucked=1, hair=3), 120), (dict(beat=T, tucked=1, near_up=1, hair=4), 130),
-    (dict(beat=T, tucked=1, far_up=1, hair=5), 120), (dict(beat=T, tucked=1, near_up=1), 130),
-    (dict(beat=T, tucked=1, blink=1), 90), (dict(beat=T, tucked=1), 420),
-    (dict(beat=T, far_up=1, hair=6), 140), (dict(beat=T, near_up=1, hair=7), 130),
+    (dict(beat=T, far_up=1), 130), (dict(beat=T, near_up=1), 120), (dict(beat=T, far_up=1), 110),
+    (dict(beat=T, near_up=1), 140), (dict(beat=T), 110), (dict(beat=T, near_up=1, far_up=1), 130),
+    (dict(beat=T, blink=1), 90), (dict(beat=T), 420),
+    (dict(beat=T, far_up=1), 140), (dict(beat=T, near_up=1), 130),
     (dict(beat=T, far_up=1), 120), (dict(beat=T), 360),
     (dict(beat='reach'), 160), (dict(beat='lift'), 150), (dict(beat='sip', blink=1), 380),
     (dict(beat='sip', blink=1), 520), (dict(beat='sip'), 260), (dict(beat='lift'), 150),
@@ -286,7 +277,7 @@ def desk(layers=()):
 if __name__ == '__main__':
     from lib import render, palette
     pal = palette('coat', 'light', PROPS)
-    poses = [dict(beat='type'), dict(beat='type', near_up=1), dict(beat='chin'), dict(beat='ear', tucked=1)]
+    poses = [dict(beat='type'), dict(beat='type', near_up=1), dict(beat='chin'), dict(beat='sip')]
     from PIL import Image
     ims = [render(scene(p, ['coat']).rows(), pal, 5) for p in poses]
     out = Image.new('RGB', (ims[0].width * 2 + 10, ims[0].height * 2 + 10), (15, 15, 19))

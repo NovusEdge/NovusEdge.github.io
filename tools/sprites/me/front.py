@@ -108,7 +108,7 @@ def body_grid(layers):
     return g
 
 
-def figure(layers=(), breath=0, sway=0, blink=False, tuck=None):
+def figure(layers=(), breath=0, sway=0, blink=False):
     g = Grid(W, H)
     for j, r in enumerate(BACK_HAIR):
         g.stamp([r], 6 + round(sway * BACK_SHIFT[j]), 13 + j)

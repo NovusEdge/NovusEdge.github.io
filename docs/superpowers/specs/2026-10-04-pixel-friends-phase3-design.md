@@ -59,8 +59,9 @@ Pixel-me keeps the approved look: long black hair behind the back, beard, light 
 
 | Batch | Clip | Kind | Content |
 |---|---|---|---|
-| 1 | `think` | loop | floor-sit, chin in hand; blink and hair-tuck beats |
-| 1 | `think_q` | one-shot | a "?" bubble pops above his head and fades; played from the loop at random |
+| 1 | `think` | loop | floor-sit, chin in hand; a thought bubble rises and fills with "..." one dot at a time, then fades; blink and chin-tap beats |
+| 1 | `think_q` | one-shot | a "?" in the same thought-bubble style pops and fades; played from the loop at random |
+| 1 | `desk` | loop | the hair-tuck beat is removed (client, 2026-10-05); no clip has one |
 | 2 | `lab` | loop | standing, lab coat, goggles pushed up, clipboard; writing and pen-tap beats |
 | 2 | `lab_squint` | one-shot | holds the clipboard up, squints, goggles down and back up; played at random |
 | 2 if needed | desk laptop screen | frames | readable code on the mirrored desk |
