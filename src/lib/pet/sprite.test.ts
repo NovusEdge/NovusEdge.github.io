@@ -1,6 +1,8 @@
 import { describe, expect, it } from 'vitest'
 import me from '../../assets/sprites/me.json'
 import stoat from '../../assets/sprites/stoat.json'
+import footerJson from '../../assets/sprites/footer.json'
+import bubbleJson from '../../assets/sprites/bubble.json'
 import { STOAT_SIZE } from './stoat-sprite'
 import { clipSize, paletteFor, resolveClip, validateSprite, type Sprite } from './sprite'
 
@@ -56,6 +58,36 @@ describe('sprite data', () => {
     const a = (me as unknown as Sprite).animations
     for (const n of ['desk_empty', 'stand_up', 'sit_down']) expect(a[n]).toMatchObject({ w: 99, h: 57 })
     expect(a.stand_up.standAt).toHaveLength(2)
+  })
+})
+
+describe('footer sprites', () => {
+  const footer = footerJson as unknown as Sprite
+  const bubble = bubbleJson as unknown as Sprite
+
+  it('validate', () => {
+    expect(validateSprite(footer)).toEqual([])
+    expect(validateSprite(bubble)).toEqual([])
+  })
+
+  it('carry the glyph anchor and the bob on every levitate frame', () => {
+    expect(footer.anchor).toEqual([24, 7])
+    expect(footer.animations.levitate.loop).toBe(true)
+    for (const f of footer.animations.levitate.frames) expect(typeof f.g).toBe('number')
+  })
+
+  it('flare before emit, once each, in the burst', () => {
+    const evs = footer.animations.levitate_burst.frames.map((f) => f.ev ?? null).filter(Boolean)
+    expect(evs).toEqual(['flare', 'emit'])
+    expect(footer.animations.levitate_burst.loop).toBe(false)
+  })
+
+  it('has the nine bubble clips, looping only the held ones', () => {
+    expect(Object.keys(bubble.animations).sort()).toEqual(
+      ['focus', 'focus_in', 'focus_out', 'grow', 'idle', 'pop', 'recede', 'recede_in', 'recede_out'],
+    )
+    const loops = Object.entries(bubble.animations).filter(([, c]) => c.loop).map(([k]) => k).sort()
+    expect(loops).toEqual(['focus', 'idle', 'recede'])
   })
 })
 

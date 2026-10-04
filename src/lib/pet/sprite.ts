@@ -1,4 +1,4 @@
-export type Frame = { ms: number; px: string[]; typing?: boolean }
+export type Frame = { ms: number; px: string[]; typing?: boolean; g?: number; ev?: 'flare' | 'emit' }
 export type Clip = {
   loop: boolean
   frames: Frame[]
@@ -11,6 +11,7 @@ export type Clip = {
 export type Sprite = {
   w: number
   h: number
+  anchor?: [number, number]
   palette: Record<string, string>
   palettes?: Record<string, Record<string, string>>
   animations: Record<string, Clip>

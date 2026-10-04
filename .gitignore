@@ -42,3 +42,5 @@ TONE.md
 .env
 __pycache__/
 tools/sprites/**/png/
+tools/sprites/footer/index.html
+tools/sprites/footer/data.json

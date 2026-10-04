@@ -2,6 +2,7 @@
 import base64
 import io
 import json
+import os
 import subprocess
 from PIL import Image
 import concepts as C
@@ -71,7 +72,7 @@ if __name__ == '__main__':
     # the same simple-icons paths contact-card.tsx imports
     si = json.loads(subprocess.check_output(
         ['node', '-e', "const s=require('simple-icons');console.log(JSON.stringify([s.siHuggingface.path,s.siKofi.path]))"],
-        cwd='/home/novusedge/Projects/Personal/NovusEdge.github.io'))
+        cwd=os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', '..')))
     tpl = tpl.replace('/*HF*/', si[0]).replace('/*KOFI*/', si[1])
     open('index.html', 'w').write(tpl.replace('/*DATA*/null', js.replace('</', '<\\/')))
     for k, c in d['concepts'].items():

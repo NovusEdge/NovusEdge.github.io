@@ -2,16 +2,15 @@ import { useEffect, useRef } from 'react'
 import { animate, stagger } from 'animejs'
 import UseAnimations from 'react-useanimations'
 import mail from 'react-useanimations/lib/mail'
-import twitter from 'react-useanimations/lib/twitter'
 import github from 'react-useanimations/lib/github'
 import linkedin from 'react-useanimations/lib/linkedin'
-import { siHuggingface, siKofi } from 'simple-icons'
+import { siHuggingface, siKofi, siX } from 'simple-icons'
 import { X } from './icons'
+import { CONTACT_LINKS, opensNewTab, type ContactId } from '../lib/contact-links'
 
 // animated contact orbit. lazy-loaded from the footer so lottie-web only ships
 // once someone actually opens it.
 
-const EMAIL = 'khimanialiasgar@gmail.com'
 const ICON = '#e8e4da' // bone-tint, resting
 
 // static icons (no lottie glyph available)
@@ -37,14 +36,14 @@ function StaticIcon({ path, size = 32 }: { path: string; size?: number }) {
   )
 }
 
-const ALL_SOCIALS = [
-  { name: 'Email', href: `mailto:${EMAIL}`, anim: mail },
-  { name: 'Twitter', href: 'https://twitter.com/0kaliasgar', anim: twitter },
-  { name: 'GitHub', href: 'https://github.com/NovusEdge', anim: github },
-  { name: 'LinkedIn', href: 'https://www.linkedin.com/in/aliasgarkhimani/', anim: linkedin },
-  { name: 'Hugging Face', href: 'https://huggingface.co/NovusEdge', icon: siHuggingface.path },
-  { name: 'Ko-fi', href: 'https://ko-fi.com/aliasgarkhimani', icon: siKofi.path },
-]
+const CARD_ICONS: Record<ContactId, { anim?: unknown; icon?: string }> = {
+  email: { anim: mail },
+  x: { icon: siX.path },
+  github: { anim: github },
+  linkedin: { anim: linkedin },
+  huggingface: { icon: siHuggingface.path },
+  kofi: { icon: siKofi.path },
+}
 
 function ContactOrbit({ onClose }: { onClose: () => void }) {
   const container = useRef<HTMLDivElement>(null)
@@ -60,7 +59,7 @@ function ContactOrbit({ onClose }: { onClose: () => void }) {
     })
   }, [])
 
-  const n = ALL_SOCIALS.length
+  const n = CONTACT_LINKS.length
   const radius = 100
   const center = 144 // half of 288px container
   const itemSize = 56 // h-14 = 56px
@@ -75,25 +74,26 @@ function ContactOrbit({ onClose }: { onClose: () => void }) {
         <X className="h-6 w-6" />
       </button>
       {/* orbiting items */}
-      {ALL_SOCIALS.map((s, i) => {
+      {CONTACT_LINKS.map((s, i) => {
         const angle = ((i / n) * 2 * Math.PI) - Math.PI / 2
         const x = center + radius * Math.cos(angle) - itemSize / 2
         const y = center + radius * Math.sin(angle) - itemSize / 2
+        const { anim, icon } = CARD_ICONS[s.id]
         return (
           <a
             key={s.href}
             href={s.href}
-            target={s.name === 'Email' ? undefined : '_blank'}
+            target={opensNewTab(s) ? '_blank' : undefined}
             rel="noopener noreferrer"
             data-orbit
             className="group absolute flex h-14 w-14 items-center justify-center rounded-full border border-bone/15 bg-charcoal/90 transition-all hover:scale-110 hover:border-gold"
             style={{ left: x, top: y }}
             title={s.name}
           >
-            {s.anim ? (
-              <UseAnimations animation={s.anim as never} size={28} strokeColor={ICON} autoplay={false} />
-            ) : s.icon ? (
-              <StaticIcon path={s.icon} size={28} />
+            {anim ? (
+              <UseAnimations animation={anim as never} size={28} strokeColor={ICON} autoplay={false} />
+            ) : icon ? (
+              <StaticIcon path={icon} size={28} />
             ) : null}
           </a>
         )

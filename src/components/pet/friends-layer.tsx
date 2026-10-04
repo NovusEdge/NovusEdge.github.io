@@ -2,13 +2,14 @@ import { useEffect, useReducer, useRef, useState } from 'react'
 import { useLocation } from 'react-router'
 import meJson from '../../assets/sprites/me.json'
 import stoatJson from '../../assets/sprites/stoat.json'
-import { prefersReducedMotion } from '../../lib/motion'
 import { deskSide } from '../../lib/pet/corners'
+import { useFooterInView } from '../../lib/pet/footer-view'
 import { initMe, meReducer } from '../../lib/pet/me-brain'
 import { openPetPanel } from '../../lib/pet/panel-store'
 import { atDesk, type DistributiveOmit, PERSONA_CLIPS, stoatOnRoute, usePersona } from '../../lib/pet/persona'
 import { initPet, petReducer, stoatSpot, type PetEvent } from '../../lib/pet/pet-brain'
 import { usePetPrefs } from '../../lib/pet/prefs-store'
+import { useReducedMotion } from '../../lib/pet/reduced-motion'
 import { stoatCoat } from '../../lib/pet/season'
 import type { Sprite } from '../../lib/pet/sprite'
 import { useStageClaimed } from '../../lib/pet/stage'
@@ -38,29 +39,13 @@ function useDeskScale() {
   return scale
 }
 
-function useReducedMotion() {
-  const [reduced, setReduced] = useState(prefersReducedMotion)
-  useEffect(() => {
-    const check = () => setReduced(prefersReducedMotion())
-    const mq = window.matchMedia('(prefers-reduced-motion: reduce)')
-    mq.addEventListener('change', check)
-    const mo = new MutationObserver(check)
-    mo.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] })
-    check()
-    return () => {
-      mq.removeEventListener('change', check)
-      mo.disconnect()
-    }
-  }, [])
-  return reduced
-}
-
 function Friends({ reduced }: { reduced: boolean }) {
   const persona = usePersona()
   const side = deskSide(persona)
   const desked = atDesk(persona)
   const deskScale = useDeskScale()
   const claimed = useStageClaimed()
+  const away = useFooterInView()
   const coat = stoatCoat(new Date())
   const home = ME.animations.stand_up?.standAt?.[0] ?? 0
   const [pet, petDispatch] = useReducer(petReducer, null, () => initPet(performance.now(), Math.max(0, stoatRoom() - 40), reduced, persona === 'thinking'))
@@ -139,11 +124,13 @@ function Friends({ reduced }: { reduced: boolean }) {
   const spot = stoatSpot(pet.mode, claimed)
   return (
     <>
-      {desked ? (
-        <DeskCorner me={ME} stoat={STOAT} scale={deskScale} side={side} state={me} send={meDispatch} reduced={reduced} napping={spot === 'desk'} coat={coat} onOpen={openPetPanel} />
-      ) : (
-        <PersonaCorner key={persona} me={ME} {...PERSONA_CLIPS[persona as keyof typeof PERSONA_CLIPS]} scale={deskScale} reduced={reduced} onOpen={openPetPanel} />
-      )}
+      <div className="transition-opacity duration-300" style={{ opacity: away ? 0 : 1 }} inert={away} aria-hidden={away || undefined}>
+        {desked ? (
+          <DeskCorner me={ME} stoat={STOAT} scale={deskScale} side={side} state={me} send={meDispatch} reduced={reduced} napping={spot === 'desk'} coat={coat} onOpen={openPetPanel} />
+        ) : (
+          <PersonaCorner key={persona} me={ME} {...PERSONA_CLIPS[persona as keyof typeof PERSONA_CLIPS]} scale={deskScale} reduced={reduced} onOpen={openPetPanel} />
+        )}
+      </div>
       {spot === 'floor' && <StoatRoamer sprite={STOAT} state={pet} send={petNow} coat={coat} scale={STOAT_SCALE} />}
     </>
   )

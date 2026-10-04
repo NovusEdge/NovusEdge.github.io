@@ -50,7 +50,38 @@ def me():
     return {'w': s['w'], 'h': s['h'], 'palette': palette, 'animations': anims}
 
 
+def footer():
+    """Pixel-me levitating under the footer's @, and the contact bubbles. The drawing
+    code is the approved mockup's, used as is."""
+    sys.path.insert(0, os.path.join(ROOT, 'footer'))
+    import concepts  # noqa: E402
+    import bubbles2  # noqa: E402
+    from art import PAL  # noqa: E402
+
+    def frames(seq):
+        return [{k: f[k] for k in ('ms', 'px', 'g', 'ev') if k in f} for f in seq]
+
+    me = {
+        'w': 48, 'h': 66, 'palette': PAL,
+        # where the CSS glyph's centre sits, in sprite px
+        'anchor': [concepts.LEV_GLYPH[0], concepts.LEV_GLYPH[1] + concepts.LEV_OY],
+        'animations': {
+            'levitate': {'loop': True, 'frames': frames(concepts.lev_idle())},
+            'levitate_burst': {'loop': False, 'frames': frames(concepts.lev_burst())},
+        },
+    }
+    held = ('idle', 'focus', 'recede')
+    bubble = {
+        'w': bubbles2.BW, 'h': bubbles2.BH, 'palette': PAL,
+        'animations': {k: {'loop': k in held, 'frames': frames(v)} for k, v in bubbles2.clips().items()},
+    }
+    return me, bubble
+
+
 if __name__ == '__main__':
     write('me.json', me())
     write('stoat.json', load('stoat/stoat.json'))
+    fm, fb = footer()
+    write('footer.json', fm)
+    write('bubble.json', fb)
     print('wrote', OUT)
