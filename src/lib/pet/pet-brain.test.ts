@@ -20,6 +20,14 @@ describe('idle chain', () => {
   })
 })
 
+describe('input throttling', () => {
+  it('returns the same state for a burst of input while idle', () => {
+    const s = initPet(0, 100, false)
+    expect(petReducer(s, { type: 'input', now: 100 })).toBe(s)
+    expect(petReducer(s, { type: 'input', now: 300 })).not.toBe(s)
+  })
+})
+
 describe('desk nap', () => {
   it('sometimes walks to the desk to sleep instead of sleeping where it is', () => {
     const going = run(initPet(0, 100, false), tick(61_000, 0.1, 500, 30))
@@ -82,6 +90,23 @@ describe('moving', () => {
     expect(run(s, { type: 'follow', now: 1, target: 200, roll: 0.1 })).toMatchObject({ mode: 'run', target: 200 })
     expect(run(s, { type: 'follow', now: 1, target: 200, roll: 0.9 }).mode).toBe('idle')
     expect(run(s, tick(61_000), { type: 'follow', now: 61_500, target: 200, roll: 0.1 }).mode).toBe('sleep')
+  })
+
+  it('goes back to where it was once pixel-me sits down again', () => {
+    const away = run(initPet(0, 100, false), { type: 'follow', now: 1, target: 200, roll: 0.1 })
+    expect(away.returnTo).toBe(100)
+    const arrived = run(away, { type: 'step', now: 2, px: 200 })
+    expect(run(arrived, { type: 'unfollow', now: 3 })).toMatchObject({ mode: 'run', target: 100, dir: -1, returnTo: null })
+    // a second follow before the return keeps the original spot
+    expect(run(away, { type: 'follow', now: 2, target: 220, roll: 0.1 }).returnTo).toBe(100)
+  })
+
+  it('does not drag a sleeper or a stoat that was sent elsewhere back', () => {
+    const away = run(initPet(0, 100, false), { type: 'follow', now: 1, target: 200, roll: 0.1 })
+    expect(run(away, { type: 'go', now: 2, target: 300 }).returnTo).toBeNull()
+    const slept = run(away, { type: 'step', now: 2, px: 200 }, { type: 'end', now: 3 }, tick(70_000))
+    expect(run(slept, { type: 'unfollow', now: 70_001 })).toMatchObject({ mode: 'sleep', returnTo: null })
+    expect(run(initPet(0, 100, false), { type: 'unfollow', now: 1 }).mode).toBe('idle')
   })
 
   it('clamps into a viewport that shrank under it, even when parked', () => {

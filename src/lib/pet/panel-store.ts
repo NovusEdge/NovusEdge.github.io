@@ -15,7 +15,8 @@ export const openPetPanel = () => {
 }
 export const closePetPanel = () => {
   set(false)
-  if (opener?.isConnected) opener.focus()
+  // switching the friends off unmounts the desk button that opened the panel
+  ;(opener?.isConnected ? opener : document.querySelector<HTMLElement>('[data-pet-paw]'))?.focus()
   opener = null
 }
 

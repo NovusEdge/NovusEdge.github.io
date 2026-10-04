@@ -27,6 +27,7 @@ export function PetPanel() {
           type="button"
           aria-label={t('pet.settings')}
           aria-expanded={open}
+          data-pet-paw
           onClick={() => (open ? closePetPanel() : openPetPanel())}
           className="fixed bottom-6 left-6 z-50 flex h-12 w-12 items-center justify-center rounded-full border border-charcoal/20 bg-bone shadow-lg transition-transform hover:scale-105 dark:border-bone/20 dark:bg-charcoal"
         >

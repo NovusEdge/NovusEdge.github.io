@@ -37,8 +37,24 @@ function useDeskScale() {
   return scale
 }
 
-function Friends() {
-  const reduced = useRef(prefersReducedMotion()).current
+function useReducedMotion() {
+  const [reduced, setReduced] = useState(prefersReducedMotion)
+  useEffect(() => {
+    const check = () => setReduced(prefersReducedMotion())
+    const mq = window.matchMedia('(prefers-reduced-motion: reduce)')
+    mq.addEventListener('change', check)
+    const mo = new MutationObserver(check)
+    mo.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] })
+    check()
+    return () => {
+      mq.removeEventListener('change', check)
+      mo.disconnect()
+    }
+  }, [])
+  return reduced
+}
+
+function Friends({ reduced }: { reduced: boolean }) {
   const deskScale = useDeskScale()
   const claimed = useStageClaimed()
   const coat = stoatCoat(new Date())
@@ -101,6 +117,7 @@ function Friends() {
   }, [pathname])
 
   useEffect(() => {
+    if (me.mode === 'sitting') petNow({ type: 'unfollow' })
     if (me.mode !== 'walking' || me.target === null) return
     petNow({ type: 'follow', target: Math.floor((DESK_LEFT + me.target * deskScale) / STOAT_SCALE), roll: Math.random() })
   }, [me.mode])
@@ -117,7 +134,8 @@ function Friends() {
 export function FriendsLayer() {
   const [prefs] = usePetPrefs()
   const [mounted, setMounted] = useState(false)
+  const reduced = useReducedMotion()
   useEffect(() => setMounted(true), [])
   if (!mounted || !prefs.on) return null
-  return <Friends />
+  return <Friends key={String(reduced)} reduced={reduced} />
 }

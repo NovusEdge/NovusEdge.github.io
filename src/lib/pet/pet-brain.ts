@@ -11,6 +11,7 @@ export type PetState = {
   zoomLeg: 0 | 1
   home: number
   napAtDesk: boolean
+  returnTo: number | null
 }
 export type PetEvent =
   | { type: 'tick'; now: number; width: number; roll: number; desk: number | null }
@@ -20,6 +21,7 @@ export type PetEvent =
   | { type: 'click'; now: number; roll: number }
   | { type: 'go'; now: number; target: number }
   | { type: 'follow'; now: number; target: number; roll: number }
+  | { type: 'unfollow'; now: number }
   | { type: 'step'; now: number; px: number }
   | { type: 'end'; now: number }
 
@@ -61,6 +63,7 @@ export const initPet = (now: number, x: number, reduced: boolean): PetState => (
   zoomLeg: 0,
   home: x,
   napAtDesk: false,
+  returnTo: null,
 })
 
 const restingMode = (idleFor: number): Mode =>
@@ -68,9 +71,9 @@ const restingMode = (idleFor: number): Mode =>
 
 const heading = (from: number, to: number): 1 | -1 => (to >= from ? 1 : -1)
 
-function moveTo(s: PetState, target: number, now: number): PetState {
+function moveTo(s: PetState, target: number, now: number, returnTo: number | null = null): PetState {
   const d = Math.abs(target - s.x)
-  return { ...s, mode: d > RUN_OVER ? 'run' : 'walk', target, dir: heading(s.x, target), lastInput: now, napAtDesk: false }
+  return { ...s, mode: d > RUN_OVER ? 'run' : 'walk', target, dir: heading(s.x, target), lastInput: now, napAtDesk: false, returnTo }
 }
 
 export function petReducer(s: PetState, e: PetEvent): PetState {
@@ -94,6 +97,8 @@ export function petReducer(s: PetState, e: PetEvent): PetState {
       return { ...next, mode }
     }
     case 'input':
+      // pointermove and scroll fire at frame rate; an unchanged state skips the re-render
+      if (s.mode === 'idle' && e.now - s.lastInput < 250) return s
       if (s.mode === 'sleep' || s.mode === 'desk_nap') return { ...s, mode: 'wake', lastInput: e.now }
       if (RESTING.includes(s.mode)) return { ...s, mode: 'idle', lastInput: e.now }
       return { ...s, lastInput: e.now, napAtDesk: false }
@@ -114,7 +119,13 @@ export function petReducer(s: PetState, e: PetEvent): PetState {
     case 'follow': {
       if (!AWAKE_RESTING.includes(s.mode) || e.roll >= FOLLOW_CHANCE) return s
       const target = Math.max(0, e.target)
-      return Math.abs(target - s.x) < 1 ? s : moveTo(s, target, e.now)
+      return Math.abs(target - s.x) < 1 ? s : moveTo(s, target, e.now, s.returnTo ?? s.x)
+    }
+    case 'unfollow': {
+      if (s.returnTo === null) return s
+      const free = AWAKE_RESTING.includes(s.mode) || s.mode === 'walk' || s.mode === 'run' || s.mode === 'sit_down'
+      if (!free || Math.abs(s.returnTo - s.x) < 1) return { ...s, returnTo: null }
+      return moveTo(s, s.returnTo, e.now)
     }
     case 'step': {
       if (s.target === null) return s

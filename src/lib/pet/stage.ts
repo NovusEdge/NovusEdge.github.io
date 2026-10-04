@@ -6,7 +6,7 @@ const emit = () => listeners.forEach((l) => l())
 
 export const stageClaimed = () => claims > 0
 
-// A micro-moment cat claims the stage so the wandering cat hides; never two cats.
+// A micro-moment stoat claims the stage so the wandering stoat hides; never two stoats.
 export function claimStage() {
   claims++
   emit()

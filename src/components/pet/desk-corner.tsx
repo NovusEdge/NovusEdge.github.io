@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { prefersReducedMotion } from '../../lib/motion'
 import { meClips, type MeEvent, type MeState } from '../../lib/pet/me-brain'
+import { usePetPanelOpen } from '../../lib/pet/panel-store'
 import { edgeGlow, NET, pulseLevel } from '../../lib/pet/neural-net'
 import type { Sprite } from '../../lib/pet/sprite'
 import { subscribe } from '../../lib/pet/ticker'
@@ -10,6 +11,8 @@ import { PixelSprite } from './pixel-sprite'
 export const DESK_LEFT = 16
 // the net floats in the clear rows above the laptop
 const NET_X = 40
+// desk frames are fully transparent above this row; clicks there belong to the page
+const CLEAR_ROWS = 12
 const NET_Y = 0
 
 function NetCanvas({ scale, typing }: { scale: number; typing: { current: boolean } }) {
@@ -62,6 +65,7 @@ type Props = {
 
 export function DeskCorner({ me, stoat, scale, state, send, reduced, napping, coat, onOpen }: Props) {
   const { t } = useTranslation()
+  const open = usePetPanelOpen()
   const typing = useRef(false)
   const desk = me.animations.desk
   const [SX, SY, , SH] = desk.catSlot!
@@ -75,10 +79,12 @@ export function DeskCorner({ me, stoat, scale, state, send, reduced, napping, co
         type="button"
         onClick={onOpen}
         aria-label={t('pet.settings')}
-        className="group fixed bottom-0 z-30 block leading-none focus-visible:outline-2 focus-visible:outline-gold"
+        aria-haspopup="dialog"
+        aria-expanded={open}
+        className="group pointer-events-none fixed bottom-0 z-30 block leading-none focus-visible:outline-2 focus-visible:outline-gold"
         style={{ left: DESK_LEFT, width: DW * scale, height: DH * scale }}
       >
-        <span aria-hidden="true" className="relative block" style={{ width: DW * scale, height: DH * scale }}>
+        <span aria-hidden="true" className="pointer-events-none relative block" style={{ width: DW * scale, height: DH * scale }}>
           <PixelSprite
             sprite={me}
             clip={clips.desk}
@@ -96,6 +102,7 @@ export function DeskCorner({ me, stoat, scale, state, send, reduced, napping, co
             <PixelSprite sprite={stoat} clip="sleep" variant={coat} scale={scale} playing={!reduced} style={{ position: 'absolute', left: SX * scale, top: (SY + SH - stoat.h) * scale }} />
           )}
         </span>
+        <span className="absolute left-0 cursor-pointer" style={{ top: CLEAR_ROWS * scale, width: DW * scale, height: (DH - CLEAR_ROWS) * scale, pointerEvents: 'auto' }} />
         <span className="pointer-events-none absolute bottom-full left-2 mb-1 whitespace-nowrap rounded border border-charcoal/20 bg-bone px-2 py-0.5 font-mono text-xs opacity-0 transition-opacity group-hover:opacity-100 group-focus-visible:opacity-100 dark:border-bone/20 dark:bg-charcoal">
           {t('pet.settings')}
         </span>

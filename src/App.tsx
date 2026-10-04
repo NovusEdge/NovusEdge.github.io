@@ -1,4 +1,4 @@
-import { Suspense, useEffect } from 'react'
+import { lazy, Suspense, useEffect } from 'react'
 import { Routes, Route, useLocation } from 'react-router'
 import { I18nextProvider } from 'react-i18next'
 import { Header } from './components/header'
@@ -15,7 +15,6 @@ import BlipsPage from './routes/blips/index'
 import NotFound from './routes/not-found'
 import { SiteFooter } from './components/site-footer'
 import { AccessibilityPanel } from './components/accessibility-panel'
-import { FriendsLayer } from './components/pet/friends-layer'
 import { PetPanel } from './components/pet/pet-panel'
 import { StagePet } from './components/pet/stage-pet'
 import ClickSpark from './components/react-bits/ClickSpark'
@@ -24,6 +23,8 @@ import { LocaleContext } from './i18n/context'
 import { i18nFor } from './i18n'
 import { headState } from './lib/meta'
 import { OPENJEV_SLUG } from './lib/openjev-data'
+
+const FriendsLayer = lazy(() => import('./components/pet/friends-layer').then((m) => ({ default: m.FriendsLayer })))
 
 function LocaleTree({ locale }: { locale: Locale }) {
   const { pathname } = useLocation()
@@ -93,7 +94,9 @@ function LocaleTree({ locale }: { locale: Locale }) {
         {/* universal footer; /stack carries its own colophon (editorial) or runs immersive (graph) */}
         {!bare.startsWith('/stack') && <SiteFooter />}
         <AccessibilityPanel />
-        <FriendsLayer />
+        <Suspense fallback={null}>
+          <FriendsLayer />
+        </Suspense>
         <PetPanel />
       </LocaleContext>
     </I18nextProvider>
