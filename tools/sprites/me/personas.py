@@ -5,16 +5,18 @@ a finger taps the chin and he glances up at it, the bubble dithers away, quiet p
 think_q is a one-shot over the same figure with a '?' in the same cloud. Both start and
 end on think frame 0, which has no bubble."""
 from lib import Grid
-from rig import paint
+from rig import capsule, paint, shade
 import transitions as T
-from walk import HEAD, TORSO, hair_tail
+from walk import HEAD, TORSO, hair_tail, separate
 
 THINK_W, THINK_H = 34, 47
 SOLE = THINK_H - 2                 # sole row; the shadow takes the last row
 HIP = (13.5, SOLE - 2)
 
-# f = bubble fill, 1 = bubble ink
-PROPS = {'f': '#f4efe4', '1': '#2b2840'}
+# f = bubble fill, 1 = bubble ink; 2/3/4 = lab coat light/shade/fold, 5 = goggle lens,
+# 6 = goggle frame and strap. The clipboard reuses the desk's j (board) and y (clip).
+PROPS = {'f': '#f4efe4', '1': '#2b2840', '2': '#ecebf3', '3': '#c5c3d3', '4': '#9795ad',
+         '5': '#8fd3e8', '6': '#7a7896'}
 
 KNEE, ANKLE = (HIP[0] + 7.5, HIP[1] - 8), (HIP[0] + 11.5, HIP[1])
 FAR_KNEE, FAR_ANKLE = (HIP[0] + 6, HIP[1] - 8.5), (HIP[0] + 9.5, HIP[1])
@@ -147,3 +149,147 @@ THINK_Q = [
 def think_q(layers=()):
     base = figure({}, layers).rows()
     return [(bubble(base, *b) if b else base, ms) for b, ms in THINK_Q]
+
+
+LAB_W, LAB_H = 34, 49
+LAB_HIP = (16.5, 29.5)
+LAB_GROUND = LAB_H - 4             # ankle row; foot takes the next two, shadow the last
+BOARD_REST = (22, 22)
+BOARD_W, BOARD_H = 7, 9
+
+
+def lab_arm(g, sh, el, wr, near, hand='S'):
+    cells = capsule(sh, el, 2.0, 1.8) | capsule(el, wr, 1.8, 1.5)
+    cm = shade(cells, '2', None, '3') if near else shade(cells, '3', None, '4')
+    if near:
+        separate(g, set(cm), over='23', ch='4')
+    paint(g, cm)
+    # fist: 2x2 skin past the cuff
+    for dx, dy in ((0, -1), (1, -1), (0, 0), (1, 0)):
+        c = (round(wr[0]) + dx, round(wr[1]) + dy)
+        g.set(*c, 'S' if near else 'Z')
+    return cm
+
+
+def clipboard(g, bx, by):
+    for j in range(BOARD_H):
+        for i in range(BOARD_W):
+            edge = i in (0, BOARD_W - 1) or j in (0, BOARD_H - 1)
+            g.set(bx + i, by + j, 'j' if edge else 'f')
+    g.stamp("yyy", bx + 2, by)
+    # three lines of handwriting
+    for j, n in ((3, 4), (5, 3), (7, 4)):
+        for i in range(n):
+            g.set(bx + 1 + i, by + j, '1')
+
+
+def goggles(g, hdx, hdy, pos):
+    """pos: 'up' resting on the forehead, 'mid' halfway, 'down' over the eyes."""
+    top = {'up': 3, 'mid': 4, 'down': 5}[pos]
+    for j, r in enumerate(["66666", "65556", "65556", "66666"][:3 if pos == 'up' else 4]):
+        for i, ch in enumerate(r):
+            g.set(hdx + 10 + i, hdy + top + j, ch)
+    for x in range(hdx + 4, hdx + 10):
+        g.set(x, hdy + top + 1, '6')
+    if pos == 'down':
+        g.set(hdx + 11, hdy + 7, 'E')
+
+
+def lab_figure(P, layers):
+    g = Grid(LAB_W, LAB_H)
+    hx, hy = LAB_HIP
+    gy = LAB_GROUND
+    iy = int(hy)
+    far, ffoot = T.leg(None, (hx - 1, hy), (hx - 0.5, hy + 8), (hx - 2.5, gy), 'flat', False, False)
+    near, nfoot = T.leg(None, (hx, hy), (hx + 0.8, hy + 8), (hx + 1, gy), 'flat', True, False)
+    paint(g, far)
+    paint(g, ffoot)
+    paint(g, near)
+    paint(g, nfoot)
+    g.stamp(TORSO, round(hx - 4.5), round(hy - 14.5))
+    # white coat buttoned over the sweater
+    for y in range(iy - 11, iy + 10):
+        t = (y - (iy - 11)) / 20
+        x0, x1 = round(12 - t), round(21 + t)
+        for x in range(x0, x1 + 1):
+            g.set(x, y, '4' if y == iy + 9 else '3' if x >= x1 - 1 else '2')
+    for y in (iy - 8, iy - 4, iy):
+        g.set(19, y, '4')
+    for x in (14, 15):
+        g.set(x, iy + 4, '3')
+    hdx, hdy = round(hx - 8.5), round(hy - 28.5) + P.get('duck', 0)
+    hair_tail(g, 4, 0, top=hdy + 15, x0=hdx, back=hdx + 4)
+    bx, by = P.get('board', BOARD_REST)
+    clipboard(g, bx, by)
+    sh = (hx, hy - 9)
+    # near arm holds the board's lower left corner
+    wr = (bx + 1, by + BOARD_H - 2)
+    el = ((sh[0] + wr[0]) / 2 - 1, (sh[1] + wr[1]) / 2 + 3)
+    lab_arm(g, sh, el, wr, True)
+    g.stamp(HEAD, hdx, hdy)
+    if P.get('blink'):
+        g.set(hdx + 11, hdy + 7, 'Z')
+    if P.get('squint'):
+        g.set(hdx + 12, hdy + 6, 'J')
+        g.set(hdx + 11, hdy + 7, 'Z')
+    goggles(g, hdx, hdy, P.get('gog', 'up'))
+    if 'collar' in layers:
+        g.stamp("CC", hdx + 11, hdy + 15)
+    # far arm: writing on the board or reaching to the goggles
+    fsh = (hx + 2.5, hy - 10)
+    if P.get('reach') is not None:
+        lab_arm(g, fsh, (hx + 7, hy - 10), (hdx + 13, hdy + P['reach']), False)
+    else:
+        px, py = P.get('pen', (0, 0))
+        wr = (bx + 4 + px, by + 3 + py)
+        lab_arm(g, fsh, (hx + 4, hy - 1), wr, False)
+        g.set(round(wr[0]) + 2, round(wr[1]) - 2, '1')
+        g.set(round(wr[0]) + 1, round(wr[1]) - 1, '1')
+    for x in range(round(hx - 7), round(hx + 9)):
+        g.set(x, LAB_H - 1, 's')
+    g.outline()
+    return g
+
+
+LAB = [
+    (dict(), 900),
+    (dict(pen=(0, 0), blink=1), 90), (dict(pen=(0, 0)), 300),
+    (dict(duck=1, pen=(0, 0)), 70), (dict(duck=1, pen=(1, 0)), 70), (dict(duck=1, pen=(2, 0)), 70),
+    (dict(duck=1, pen=(3, 0)), 70), (dict(duck=1, pen=(2, 1)), 70), (dict(duck=1, pen=(1, 1)), 70),
+    (dict(duck=1, pen=(2, 1)), 70), (dict(duck=1, pen=(3, 1)), 70), (dict(duck=1, pen=(1, 1)), 70),
+    (dict(pen=(1, 0)), 300),
+    (dict(pen=(1, -2)), 60), (dict(pen=(1, 0)), 60), (dict(pen=(1, -2)), 60), (dict(pen=(1, 0)), 60),
+    (dict(pen=(1, -2)), 60), (dict(pen=(1, 0)), 400),
+    (dict(pen=(0, 0), blink=1), 90), (dict(pen=(0, 0)), 600),
+]
+
+
+def lab(layers=()):
+    return [(lab_figure(p, layers).rows(), ms) for p, ms in LAB]
+
+
+BOARD_UP = (25, 8)
+BOARD_MID = [(23, 17), (24, 12)]
+# hand reaches the goggles at wrist row hdy+reach; reach=None writes with the pen
+SQUINT = [
+    (dict(), 200),
+    (dict(board=BOARD_MID[0]), 50), (dict(board=BOARD_MID[1]), 50), (dict(board=BOARD_UP), 120),
+    (dict(board=BOARD_UP, squint=1, duck=1), 350),
+    (dict(board=BOARD_UP, squint=1, duck=1, reach=9), 50),
+    (dict(board=BOARD_UP, duck=1, reach=4), 60),
+    (dict(board=BOARD_UP, duck=1, reach=5, gog='mid'), 60),
+    (dict(board=BOARD_UP, duck=1, reach=6, gog='down'), 60),
+    (dict(board=BOARD_UP, duck=1, reach=10, gog='down'), 50),
+    (dict(board=BOARD_UP, duck=1, gog='down', reach=11), 600),
+    (dict(board=BOARD_UP, duck=1, reach=9, gog='down'), 50),
+    (dict(board=BOARD_UP, duck=1, reach=6, gog='down'), 60),
+    (dict(board=BOARD_UP, duck=1, reach=5, gog='mid'), 60),
+    (dict(board=BOARD_UP, duck=1, reach=4), 60),
+    (dict(board=BOARD_UP, reach=9), 50),
+    (dict(board=BOARD_MID[1], reach=14), 50), (dict(board=BOARD_MID[0]), 50),
+    (dict(), 200),
+]
+
+
+def lab_squint(layers=()):
+    return [(lab_figure(p, layers).rows(), ms) for p, ms in SQUINT]
