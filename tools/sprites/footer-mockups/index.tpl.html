@@ -1,0 +1,569 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Footer pixel-me mockups</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700&display=swap" rel="stylesheet">
+<link href="https://api.fontshare.com/v2/css?f[]=amulya@900&display=swap" rel="stylesheet">
+<style>
+  :root { --charcoal: #1a1a1a; --deep: #111; --bone: #f5f2eb; --rose: #fb7185; --gold: #d4a03c; }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: #0c0c0e; color: var(--bone); font-family: Satoshi, sans-serif; }
+  .page { width: 1480px; margin: 0 auto; padding: 32px 20px 80px; }
+  h1 { font-size: 28px; margin: 0 0 6px; font-weight: 700; }
+  .lede { color: #f5f2eb99; max-width: 900px; margin: 0 0 12px; line-height: 1.5; font-size: 15px; }
+  .global { display: flex; gap: 10px; align-items: center; font: 12px 'JetBrains Mono', monospace; color: #f5f2eb88; margin-bottom: 28px; }
+  section.concept { margin: 0 0 72px; }
+  details.earlier { margin-top: 24px; border-top: 1px solid #f5f2eb1f; padding-top: 18px; }
+  details.earlier summary { cursor: pointer; font: 13px 'JetBrains Mono', monospace; color: #f5f2eb99; margin-bottom: 28px; }
+
+  /* round two bubbles: pixel body, vector logo, HTML label */
+  a.bub2 { position: absolute; left: 0; top: 0; z-index: 6; display: block; outline: none; transition: opacity .18s ease; }
+  a.bub2.behind { z-index: 3; }
+  a.bub2 canvas { position: static; display: block; transition: opacity .18s ease; }
+  /* depth dims the bubble, never the label: labels stay readable on the far side */
+  a.bub2.behind canvas, a.bub2.behind .logo { opacity: .5; }
+  a.bub2 .logo { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%) scale(1); transition: transform .18s ease, color .18s ease;
+    color: #e8e4da; display: block; pointer-events: none; }
+  a.bub2 .logo svg { display: block; width: 100%; height: 100%; }
+  a.bub2 .lbl2 { position: absolute; left: 50%; top: calc(100% - 4px); transform: translateX(-50%); white-space: nowrap; pointer-events: none;
+    font: 500 13px/1 'JetBrains Mono', monospace; letter-spacing: .02em; color: #f5f2eb; background: #141414; border: 1px solid #f5f2eb24;
+    padding: 4px 8px 5px; border-radius: 999px; opacity: 0; transition: opacity .18s ease, color .18s ease, border-color .18s ease; }
+  .phone a.bub2 .lbl2 { font-size: 12px; padding: 3px 7px 4px; }
+  a.bub2.ready .lbl2 { opacity: 1; }
+  .stage.focusing a.bub2 canvas, .stage.focusing a.bub2 .logo { opacity: .35; }
+  .stage.focusing a.bub2 .logo { transform: translate(-50%, -50%) scale(.9); }
+  .stage.focusing a.bub2 .lbl2 { opacity: .45; }
+  .stage.focusing a.bub2.focus { z-index: 8; }
+  .stage.focusing a.bub2.focus canvas, .stage.focusing a.bub2.focus .logo { opacity: 1; }
+  .stage.focusing a.bub2.focus .logo { transform: translate(-50%, -50%) scale(1.2); color: #fb7185; }
+  .stage.focusing a.bub2.focus .lbl2 { opacity: 1; color: #fb7185; border-color: #fb718599; }
+  section.concept > header { display: flex; align-items: flex-end; justify-content: space-between; gap: 24px; margin-bottom: 14px; }
+  h2 { font-size: 22px; margin: 0 0 6px; }
+  h2 small { font: 13px 'JetBrains Mono', monospace; color: var(--rose); margin-right: 10px; }
+  .desc { margin: 0; color: #f5f2ebcc; max-width: 980px; line-height: 1.5; font-size: 15px; }
+  .trade { margin: 4px 0 0; color: #f5f2eb88; font-size: 14px; }
+  .ctl { display: flex; gap: 8px; flex-shrink: 0; }
+  button.b { font: 500 13px 'JetBrains Mono', monospace; color: var(--bone); background: #242424; border: 1px solid #f5f2eb26;
+    border-radius: 999px; padding: 8px 16px; cursor: pointer; }
+  button.b:hover { border-color: var(--rose); color: var(--rose); }
+  button.b.on { border-color: var(--rose); color: var(--rose); }
+  .label { font: 11px 'JetBrains Mono', monospace; color: #f5f2eb66; letter-spacing: .08em; text-transform: uppercase; margin: 0 0 6px; }
+  .phonerow { display: flex; gap: 32px; margin-top: 22px; align-items: flex-start; }
+  .phone { border: 10px solid #2a2a2e; border-radius: 44px; overflow: hidden; width: 410px; flex-shrink: 0; }
+  .notes { font-size: 14px; line-height: 1.6; color: #f5f2ebaa; max-width: 560px; }
+  .notes b { color: var(--bone); font-weight: 500; }
+
+  /* the footer, recreated from site-footer.tsx at fixed px */
+  .stage { position: relative; overflow: hidden; background: var(--charcoal); }
+  .hand { position: absolute; display: block; pointer-events: none; user-select: none; }
+  .word { position: absolute; left: 0; right: 0; text-align: center; white-space: nowrap; pointer-events: none; user-select: none;
+    font-family: Amulya, 'Zen Kaku Gothic New', sans-serif; font-weight: 900; font-style: italic; line-height: 1;
+    letter-spacing: .06em; color: rgba(245, 242, 235, .07); }
+  .credit { position: absolute; bottom: 12px; right: 16px; font: 11px 'JetBrains Mono', monospace; letter-spacing: .05em; color: #f5f2eb66; z-index: 5; }
+  .credit a { color: inherit; text-decoration: underline; text-decoration-color: #f5f2eb33; text-underline-offset: 2px; }
+  canvas.px { position: absolute; image-rendering: pixelated; image-rendering: crisp-edges; }
+  .me { cursor: pointer; z-index: 4; }
+  .glyph { position: absolute; z-index: 5; font-family: Satoshi, sans-serif; font-weight: 700; font-size: 60px; line-height: 1;
+    color: var(--rose); transform: translate(-50%, -50%); pointer-events: none; animation: neon 2s ease-in-out infinite; }
+  .glyph.static { animation: none; filter: drop-shadow(0 0 3px currentColor); }
+  .glyph.flare { animation: flare .5s ease-out; }
+  @keyframes neon {
+    0%, 100% { opacity: 1; filter: drop-shadow(0 0 3px currentColor); }
+    10% { opacity: .85; filter: drop-shadow(0 0 1px currentColor); }
+    20% { opacity: 1; filter: drop-shadow(0 0 5px currentColor); }
+    30% { opacity: .9; filter: drop-shadow(0 0 2px currentColor); }
+    50% { opacity: 1; filter: drop-shadow(0 0 4px currentColor); }
+    70% { opacity: .88; filter: drop-shadow(0 0 2px currentColor); }
+    90% { opacity: 1; filter: drop-shadow(0 0 6px currentColor); }
+  }
+  @keyframes flare {
+    0% { filter: drop-shadow(0 0 3px currentColor); color: var(--rose); }
+    25% { filter: drop-shadow(0 0 14px currentColor) drop-shadow(0 0 4px #fff); color: #ffe4e6; }
+    100% { filter: drop-shadow(0 0 3px currentColor); color: var(--rose); }
+  }
+  a.bub { position: absolute; left: 0; top: 0; z-index: 6; text-decoration: none; display: block; }
+  a.bub.behind { z-index: 3; }
+  a.bub canvas { position: static; display: block; }
+  a.bub .lbl { position: absolute; left: 50%; top: 100%; transform: translate(-50%, -2px); white-space: nowrap;
+    font: 11px 'JetBrains Mono', monospace; letter-spacing: .06em; color: #f5f2ebb3; opacity: 0; transition: opacity .2s, color .15s;
+    background: rgba(17, 17, 17, .82); padding: 1px 7px 2px; border-radius: 999px; }
+  a.bub.ready .lbl { opacity: 1; }
+  a.bub:hover .lbl { color: var(--rose); }
+  a.bub.behind .lbl { opacity: .35; }
+  .phone a.bub .lbl { font-size: 10px; }
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute">
+  <!-- ordered dither of the hand photos, gold on #141414 like the ImageDithering shader -->
+  <filter id="dither" x="0" y="0" width="100%" height="100%" color-interpolation-filters="sRGB" primitiveUnits="userSpaceOnUse">
+    <feColorMatrix in="SourceGraphic" type="matrix" result="L"
+      values=".2126 .7152 .0722 0 0  .2126 .7152 .0722 0 0  .2126 .7152 .0722 0 0  0 0 0 0 1"/>
+    <feImage id="bayer" x="0" y="0" width="16" height="16" result="B" preserveAspectRatio="none"/>
+    <feTile in="B" result="BT"/>
+    <feComposite in="L" in2="BT" operator="arithmetic" k1="0" k2="1.15" k3="-1" k4="0.32" result="D"/>
+    <feComponentTransfer in="D" result="T">
+      <feFuncR type="discrete" tableValues="0 1"/>
+      <feFuncG type="discrete" tableValues="0 1"/>
+      <feFuncB type="discrete" tableValues="0 1"/>
+      <feFuncA type="linear" slope="0" intercept="1"/>
+    </feComponentTransfer>
+    <feColorMatrix in="T" type="matrix" result="C"
+      values=".753 0 0 0 .078  .549 0 0 0 .078  .157 0 0 0 .078  0 0 0 0 1"/>
+    <feComponentTransfer in="SourceAlpha" result="M"><feFuncA type="discrete" tableValues="0 1"/></feComponentTransfer>
+    <feComposite in="C" in2="M" operator="in"/>
+  </filter>
+  <!-- phones never mount the shader: flat-gold silhouette -->
+  <filter id="flatgold" x="0" y="0" width="100%" height="100%" color-interpolation-filters="sRGB">
+    <feFlood flood-color="#d4a03c" result="g"/>
+    <feComposite in="g" in2="SourceAlpha" operator="in"/>
+  </filter>
+</svg>
+
+<div class="page">
+  <h1>Footer pixel-me: Levitate</h1>
+  <p class="lede">Each stage is the site footer rebuilt at 1440 px (hands, faint word, credit line), with pixel-me at 3x where the "@" button sits today, and below it the 390 px phone layout where the hands stack (pixel-me at 2x, flat-gold hands as the site renders them on phones). Click pixel-me or press Burst; click again to put the links away.</p>
+  <div class="global">speed
+    <button class="b sp" data-s="0.25">0.25x</button><button class="b sp" data-s="0.5">0.5x</button><button class="b sp on" data-s="1">1x</button>
+  </div>
+  <div id="featured"></div>
+  <details class="earlier">
+    <summary>Earlier round: the three original concepts, unchanged</summary>
+    <div id="concepts"></div>
+  </details>
+</div>
+
+<script>
+const DATA = /*DATA*/null;
+const HAND_L = 'file:///home/novusedge/Projects/Personal/NovusEdge.github.io/public/assets/hand-left.png';
+const HAND_R = 'file:///home/novusedge/Projects/Personal/NovusEdge.github.io/public/assets/hand-right.png';
+document.getElementById('bayer').setAttribute('href', DATA.bayer);
+
+const FEATURED = { key: 'lev', id: 'lev2', v2: true, n: 'v2', name: 'Levitate, round two',
+  desc: 'Same pose, glyph and burst as round one. The bubbles stay pixel art but now carry the contact card\'s vector logos and real HTML labels. Pointing at a bubble (or tabbing to it) focuses it: the orbit pauses, it grows two pixels with a white rim and its logo turns rose, while the other five shrink a pixel and fade back. Moving between bubbles hands the focus over directly; leaving restores all six.',
+  trade: 'Labels and logos are now crisp at both sizes, and focus makes the moving targets easy to pin down. Motion is unchanged from round one: the orbit still runs until something is hovered.',
+  note: '<b>Logos</b> Feather-style stroke icons (mail, twitter, github, linkedin) standing in for the card\'s react-useanimations glyphs, and the simple-icons paths for Hugging Face and Ko-fi, in bone-tint #e8e4da. <b>Labels</b> JetBrains Mono 13 px on desktop, 12 px on phones, bone on a charcoal pill. <b>Focus</b> pixel frames at 40 ms (an in-between, a 1 px overshoot, then the held size); logo scale and the dimming of the others ease over 180 ms. Keyboard focus uses the same states.' };
+
+const CONCEPTS = [
+  { key: 'halo', n: '01', name: 'Halo',
+    desc: 'He floats where the "@" is today, holding a pixel "@" in front of him like a hoop, arms spread. On click he squeezes it, lets go and flings his arms wide; a ring of light leaves the "@" and six bubbles spring out into a fixed arc over his head, bobbing gently. The "@" hangs in the air for a beat and he catches it again.',
+    trade: 'Most readable: bubbles stop in fixed slots with labels; low motion once settled. The arc needs ~210 px of headroom, which is tight on phones where the upper hand sits right above him.',
+    note: '<b>@</b> pixel art, 16 px, 2 px stroke, with a pixel glow that flickers like the neon. <b>Idle</b> 12 frames, slow float bob with hair lag, played at 1.75x. <b>Burst</b> 8 frames at 1x (squeeze, fling, ring, catch); bubbles overshoot into place. <b>Close</b>: bubbles fly back into the "@".' },
+  { key: 'lev', n: '02', name: 'Levitate',
+    desc: 'The site\'s own neon "@" stays exactly where it is; pixel-me sits cross-legged in the air below it, palms up, holding it aloft by levitation, fingers twitching. On click he dips and thrusts both palms up, the glyph flares, and the six bubbles spiral out into a slow orbit around him; hovering any bubble or him pauses the orbit.',
+    trade: 'Keeps the existing glyph and its neon CSS untouched, and the lotus pose is the shortest figure, so it fits the stacked phone layout best. Orbiting targets are the hardest to click and it is the most motion (orbit pauses on hover).',
+    note: '<b>@</b> the existing font glyph (Satoshi bold, text-6xl, animate-neon) moved by the sprite\'s bob. <b>Idle</b> 13 frames, palms wiggle, played at 1.75x. <b>Burst</b> 7 frames at 1x. <b>Orbit</b> 18 s per turn; bubbles on the far side drop behind him and dim. On phones the glyph is static, as the site\'s CSS already does under 768 px, and drops to 40 px to keep its gap to his head at 2x.' },
+  { key: 'wand', n: '03', name: 'Bubble wand',
+    desc: 'The "@" is a bubble wand: a small pixel "@" ring on a stick in one hand, the other arm out for balance. On click he brings it to his mouth, puffs his cheeks and blows six bubbles one at a time; they drift up into a loose cloud on the wand side, sway, and pop by themselves after about ten seconds unless you hover them.',
+    trade: 'Most character and the most story, but the timed pop means a slow reader can lose a link (hover holds them; click blows again). One-sided cloud reads well on desktop and needs care on phones.',
+    note: '<b>@</b> pixel art, 11 px, 1 px stroke, flashes white on each puff. <b>Idle</b> 12 frames: float bob, glance at the wand, wand twitch, played at 1.75x. <b>Burst</b> 18 frames at 1x, one bubble per puff (~170 ms apart). <b>Pop</b> 3 frames at 50-60 ms.' },
+];
+
+// stand-ins for the contact card's icons: Feather-style strokes for the four
+// react-useanimations glyphs, simple-icons paths for Hugging Face and Ko-fi
+const STROKE = 'viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"';
+const LOGOS = {
+  email: `<svg ${STROKE}><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>`,
+  twitter: `<svg ${STROKE}><path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"/></svg>`,
+  github: `<svg ${STROKE}><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>`,
+  linkedin: `<svg ${STROKE}><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>`,
+  hf: `<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="/*HF*/"/></svg>`,
+  kofi: `<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="/*KOFI*/"/></svg>`,
+};
+
+// slot layouts, px from the stage centre, per concept and viewport
+const SLOTS = {
+  halo: {
+    desk: { around: [0, -24], arc: { r: 205, from: -155, to: -25 } },
+    phone: { around: [0, -10], arc: { r: 140, from: -168, to: -12 } },
+  },
+  lev: { desk: { around: [0, 80], rx: 260, ry: 100 }, phone: { around: [0, 10], rx: 150, ry: 80 } },
+  wand: {
+    desk: [[60, -180], [140, -240], [215, -165], [300, -232], [365, -150], [175, -95]],
+    phone: [[-118, -150], [-52, -192], [18, -150], [92, -186], [140, -118], [70, -96]],
+  },
+};
+
+let SPEED = 1;
+document.querySelectorAll('.sp').forEach(b => b.onclick = () => {
+  SPEED = +b.dataset.s;
+  document.querySelectorAll('.sp').forEach(o => o.classList.toggle('on', o === b));
+});
+
+// frames are drawn once to 1x canvases and blitted
+const cache = new Map();
+function frameCanvas(f) {
+  let c = cache.get(f.key);
+  if (c) return c;
+  const px = f.px;
+  const h = px.length, w = px[0].length;
+  c = document.createElement('canvas');
+  c.width = w; c.height = h;
+  const ctx = c.getContext('2d');
+  for (let y = 0; y < h; y++) {
+    const row = px[y];
+    for (let x = 0; x < w; x++) {
+      const ch = row[x];
+      if (ch === '.') continue;
+      ctx.fillStyle = DATA.palette[ch];
+      ctx.fillRect(x, y, 1, 1);
+    }
+  }
+  cache.set(f.key, c);
+  return c;
+}
+const key = f => f.px.join('\n');
+function prep(frames) { for (const f of frames) f.key = key(f); return frames; }
+
+class Player {
+  constructor(canvas) { this.c = canvas; this.ctx = canvas.getContext('2d'); this.frames = null; }
+  play(frames, { loop = false, onEnd = null, onFrame = null, reverse = false } = {}) {
+    this.frames = reverse ? frames.slice().reverse() : frames;
+    this.loop = loop; this.onEnd = onEnd; this.onFrame = onFrame;
+    this.i = 0; this.t = 0; this.done = false;
+    this.draw();
+  }
+  draw() {
+    const f = this.frames[this.i];
+    this.ctx.clearRect(0, 0, this.c.width, this.c.height);
+    this.ctx.drawImage(frameCanvas(f), 0, 0);
+    this.onFrame && this.onFrame(f, this.i);
+  }
+  tick(dt) {
+    if (!this.frames || this.done) return;
+    this.t += dt;
+    let changed = false;
+    while (this.t >= this.frames[this.i].ms) {
+      this.t -= this.frames[this.i].ms;
+      if (this.i + 1 < this.frames.length) { this.i++; changed = true; }
+      else if (this.loop) { this.i = 0; changed = true; }
+      else { this.done = true; this.onEnd && this.onEnd(); return; }
+      if (changed) this.draw();
+    }
+  }
+}
+
+const ease = {
+  outBack: t => { const c = 1.9; return 1 + (c + 1) * Math.pow(t - 1, 3) + c * Math.pow(t - 1, 2); },
+  outCubic: t => 1 - Math.pow(1 - t, 3),
+  inCubic: t => t * t * t,
+};
+const clamp01 = t => Math.max(0, Math.min(1, t));
+
+for (const k in DATA.concepts) { prep(DATA.concepts[k].idle); prep(DATA.concepts[k].burst); }
+for (const k in DATA.bubble.clips) for (const c in DATA.bubble.clips[k]) prep(DATA.bubble.clips[k][c]);
+for (const c in DATA.bubble2.clips) prep(DATA.bubble2.clips[c]);
+
+// one footer: geometry from site-footer.tsx at a fixed width
+function buildStage(el, conceptKey, mode, v2 = false) {
+  const C = DATA.concepts[conceptKey];
+  const desk = mode === 'desk';
+  const W = desk ? 1440 : 390, H = desk ? 630 : 720, vw = W / 100;
+  const S = desk ? 3 : 2;
+  el.style.width = W + 'px'; el.style.height = H + 'px';
+  let cx = W / 2, cy = H / 2;
+
+  const hl = document.createElement('img'), hr = document.createElement('img');
+  hl.src = HAND_L; hr.src = HAND_R; hl.className = hr.className = 'hand';
+  hl.style.filter = hr.style.filter = desk ? 'url(#dither)' : 'url(#flatgold)';
+  if (desk) {
+    const wl = 47 * vw, hlh = wl * 257 / 422, hrh = wl * 237 / 436;
+    Object.assign(hl.style, { width: wl + 'px', height: hlh + 'px', left: '0px', top: (cy - hlh / 2) + 'px' });
+    Object.assign(hr.style, { width: wl + 'px', height: hrh + 'px', right: '0px', top: (cy - hrh / 2) + 'px' });
+  } else {
+    // flex column: py-8, hand, gap-4, (pixel-me slot), gap-4, hand
+    const w = 70 * vw, lh = w * 257 / 422, rh = w * 237 / 436, M = 150;
+    const total = 32 + lh + 16 + M + 16 + rh + 32, top = (H - total) / 2;
+    Object.assign(hl.style, { width: w + 'px', height: lh + 'px', left: (W - w) / 2 + 'px', top: top + 32 + 'px' });
+    Object.assign(hr.style, { width: w + 'px', height: rh + 'px', left: (W - w) / 2 + 'px', top: top + 32 + lh + 16 + M + 16 + 'px' });
+    cy = top + 32 + lh + 16 + M / 2;
+  }
+  el.append(hl, hr);
+
+  const word = document.createElement('span');
+  word.className = 'word'; word.textContent = 'Creation';
+  Object.assign(word.style, { fontSize: 17 * vw + 'px', bottom: -5 * vw + 'px' });
+  el.append(word);
+  const credit = document.createElement('p');
+  credit.className = 'credit'; credit.innerHTML = 'tab critters by <a href="#">numbpill</a>';
+  el.append(credit);
+
+  // sprite placement: desktop pins the anchor (the @) to the old @ spot; phones
+  // centre the figure's box in the slot between the stacked hands
+  const cv = document.createElement('canvas');
+  cv.width = C.w; cv.height = C.h; cv.className = 'px me';
+  cv.style.width = C.w * S + 'px'; cv.style.height = C.h * S + 'px';
+  let ax = C.anchor[0], ay = C.anchor[1];
+  if (!desk) {
+    const px = C.idle[0].px;
+    let y0 = 1e9, y1 = -1;
+    px.forEach((r, y) => { if (/[^.]/.test(r)) { y0 = Math.min(y0, y); y1 = y; } });
+    if (conceptKey === 'lev') y0 = Math.min(y0, C.anchor[1] - 9);
+    ay = (y0 + y1 + 1) / 2;
+  }
+  const sx = Math.round(cx - ax * S), sy = Math.round(cy - ay * S);
+  cv.style.left = sx + 'px'; cv.style.top = sy + 'px';
+  el.append(cv);
+  const spr = (x, y) => [sx + x * S, sy + y * S];
+
+  let glyph = null;
+  if (conceptKey === 'lev') {
+    glyph = document.createElement('span');
+    glyph.className = 'glyph' + (desk ? '' : ' static');
+    // the glyph is sized with the sprite so its gap to his head holds at 2x
+    glyph.style.fontSize = 20 * S + 'px';
+    // far-side labels pass over the glyph; under it they were unreadable
+    if (v2) glyph.style.zIndex = 2;
+    glyph.textContent = '@';
+    el.append(glyph);
+  }
+  const placeGlyph = g => {
+    if (!glyph) return;
+    const [x, y] = spr(C.anchor[0], C.anchor[1] + g);
+    glyph.style.left = x + 'px'; glyph.style.top = y + 'px';
+  };
+  placeGlyph(0);
+
+  const me = new Player(cv);
+  let state = 'idle', bubbles = [], emitted = 0, hover = false, orbitT = 0, lastG = 0;
+  const center = SLOTS[conceptKey][mode].around || [0, 0];
+
+  function slotOf(i) {
+    const L = SLOTS[conceptKey][mode];
+    if (conceptKey === 'halo') {
+      const a = (L.arc.from + (L.arc.to - L.arc.from) * i / 5) * Math.PI / 180;
+      return [cx + center[0] + L.arc.r * Math.cos(a), cy + center[1] + L.arc.r * Math.sin(a)];
+    }
+    if (conceptKey === 'wand') return [cx + L[i][0], cy + L[i][1]];
+    return null;
+  }
+  function emitPoint() {
+    if (conceptKey === 'wand') return spr(C.emit[0], C.emit[1]);
+    if (conceptKey === 'lev') return spr(C.anchor[0], C.anchor[1] + lastG);
+    return spr(C.anchor[0], C.anchor[1]);
+  }
+
+  function idle() { state = state === 'closing' ? 'idle' : state; me.play(C.idle, { loop: true, onFrame: f => { lastG = f.g || 0; placeGlyph(lastG); } }); }
+
+  let hoverB = null, keyB = null;
+  function refocus() {
+    const f = hoverB || keyB;
+    el.classList.toggle('focusing', !!f);
+    for (const b of bubbles) {
+      b.a.classList.toggle('focus', b === f);
+      setMode(b, !f ? 'normal' : b === f ? 'focus' : 'recede');
+    }
+  }
+  // pixel size changes are drawn frames: transition clips, then the held loop
+  const LEAVE = { focus: 'focus_out', recede: 'recede_out', normal: null };
+  const ENTER = { focus: ['focus_in', 'focus'], recede: ['recede_in', 'recede'], normal: [null, 'idle'] };
+  function setMode(b, m) {
+    b.want = m;
+    if (b.phase !== 'idle' || b.mode === m) return;
+    const K = DATA.bubble2.clips, seq = [];
+    if (LEAVE[b.mode]) seq.push(...K[LEAVE[b.mode]]);
+    if (ENTER[m][0]) seq.push(...K[ENTER[m][0]]);
+    b.mode = m;
+    const hold = () => b.p.play(K[ENTER[m][1]], { loop: true });
+    seq.length ? b.p.play(seq, { onEnd: hold }) : hold();
+  }
+
+  function spawnV2(i) {
+    const L = DATA.links[i], B = DATA.bubble2;
+    const a = document.createElement('a');
+    a.className = 'bub2'; a.href = L.href; a.target = '_blank'; a.setAttribute('aria-label', L.label);
+    a.onclick = e => e.preventDefault();
+    const c = document.createElement('canvas');
+    c.width = B.w; c.height = B.h; c.className = 'px';
+    c.style.width = B.w * S + 'px'; c.style.height = B.h * S + 'px';
+    const logo = document.createElement('span');
+    logo.className = 'logo'; logo.innerHTML = LOGOS[L.id];
+    logo.style.width = logo.style.height = (desk ? 30 : 20) + 'px';
+    const lbl = document.createElement('span'); lbl.className = 'lbl2'; lbl.textContent = L.label;
+    a.append(c, logo, lbl);
+    el.append(a);
+    const p = new Player(c);
+    const b = { i, a, p, clips: B.clips, from: emitPoint(), age: 0, phase: 'fly', delay: i * 45, x: 0, y: 0, life: 0,
+                hw: B.w * S / 2, mode: 'normal', want: 'normal' };
+    a.onmouseenter = () => { hoverB = b; refocus(); };
+    // leaving waits a tick so a direct move to the next bubble hands focus over
+    // without the whole ring flashing back to normal in between
+    a.onmouseleave = () => setTimeout(() => { if (hoverB === b) { hoverB = null; refocus(); } });
+    a.onfocus = () => { keyB = b; refocus(); };
+    a.onblur = () => setTimeout(() => { if (keyB === b) { keyB = null; refocus(); } });
+    p.play(B.clips.grow, { onEnd: () => p.play(B.clips.idle, { loop: true }) });
+    a.style.visibility = 'hidden';
+    bubbles.push(b);
+    return b;
+  }
+
+  function spawn(i) {
+    if (v2) return spawnV2(i);
+    const L = DATA.links[i];
+    const a = document.createElement('a');
+    a.className = 'bub'; a.href = L.href; a.target = '_blank'; a.title = L.label;
+    a.onclick = e => e.preventDefault();
+    const c = document.createElement('canvas');
+    c.width = DATA.bubble.w; c.height = DATA.bubble.h; c.className = 'px';
+    c.style.width = DATA.bubble.w * S + 'px'; c.style.height = DATA.bubble.h * S + 'px';
+    const lbl = document.createElement('span'); lbl.className = 'lbl'; lbl.textContent = L.label;
+    a.append(c, lbl);
+    a.onmouseenter = () => hover = true; a.onmouseleave = () => hover = false;
+    el.append(a);
+    const p = new Player(c);
+    const clips = DATA.bubble.clips[L.id];
+    const b = { i, a, p, clips, from: emitPoint(), age: 0, phase: 'fly', delay: conceptKey === 'wand' ? 0 : i * 45, x: 0, y: 0, life: 0 };
+    p.play(clips.grow, { onEnd: () => p.play(clips.idle, { loop: true }) });
+    b.a.style.visibility = 'hidden';
+    bubbles.push(b);
+    return b;
+  }
+
+  function burst() {
+    if (state === 'open' || state === 'bursting') return close();
+    clear();
+    state = 'bursting'; emitted = 0;
+    me.play(C.burst, {
+      onFrame: f => {
+        lastG = f.g || 0; placeGlyph(lastG);
+        if (f.ev === 'emit') for (let i = 0; i < 6; i++) spawn(i);
+        if (f.ev === 'emit1' && emitted < 6) spawn(emitted++);
+        if (f.ev === 'flare' && glyph) { glyph.classList.remove('flare'); void glyph.offsetWidth; glyph.classList.add('flare'); setTimeout(() => glyph.classList.remove('flare'), 520); }
+      },
+      onEnd: () => { state = 'open'; idle(); },
+    });
+  }
+
+  function close() {
+    if (!bubbles.length) return;
+    state = 'closing';
+    bubbles.forEach((b, k) => {
+      if (b.phase === 'gone') return;
+      b.phase = 'out'; b.age = 0; b.delay = k * 40; b.start = [b.x, b.y];
+      if (conceptKey === 'wand') { b.delay = k * 70; }
+    });
+  }
+
+  function clear() { bubbles.forEach(b => b.a.remove()); bubbles = []; hover = false; hoverB = keyB = null; el.classList.remove('focusing'); }
+  function reset() { clear(); state = 'idle'; idle(); }
+
+  function pop(b) {
+    if (b.phase === 'pop' || b.phase === 'gone') return;
+    b.phase = 'pop'; b.a.classList.remove('ready');
+    b.p.play(b.clips.pop, { onEnd: () => { b.phase = 'gone'; b.a.style.visibility = 'hidden'; } });
+  }
+
+  const snap = v => Math.round(v / S) * S;
+
+  function tick(dt) {
+    me.tick(dt);
+    const paused = hover || !!(hoverB || keyB);
+    if (!paused) orbitT += dt;
+    for (const b of bubbles) {
+      b.p.tick(dt);
+      if (b.phase === 'gone') continue;
+      b.age += dt;
+      const t = b.age - b.delay;
+      if (t < 0) continue;
+      b.a.style.visibility = 'visible';
+      const [ex, ey] = b.from;
+      let x, y;
+      if (conceptKey === 'lev') {
+        const L = SLOTS.lev[mode];
+        const ocx = cx + center[0], ocy = cy + center[1];
+        const ang = (-90 + b.i * 60) * Math.PI / 180 + orbitT / 18000 * 2 * Math.PI + (b.phase === 'fly' ? (1 - ease.outCubic(clamp01(t / 900))) * -2.4 : 0);
+        let k = 1;
+        if (b.phase === 'fly') { k = ease.outCubic(clamp01(t / 900)); if (t >= 900) { b.phase = 'idle'; b.a.classList.add('ready'); if (v2) setMode(b, b.want); } }
+        if (b.phase === 'out') { k = 1 - ease.inCubic(clamp01(t / 420)); if (t >= 420) { b.phase = 'gone'; b.a.style.visibility = 'hidden'; } }
+        const ox = L.rx * Math.cos(ang), oy = L.ry * Math.sin(ang);
+        x = ex + (ocx + ox - ex) * k; y = ey + (ocy + oy - ey) * k;
+        const behind = Math.sin(ang) < -0.15 && k > 0.6;
+        b.a.classList.toggle('behind', behind);
+        if (!v2) b.a.style.opacity = behind ? 0.6 : 1;
+      } else {
+        const [tx, ty] = slotOf(b.i);
+        if (b.phase === 'fly') {
+          if (conceptKey === 'halo') {
+            const e = ease.outBack(clamp01(t / 560));
+            x = ex + (tx - ex) * e; y = ey + (ty - ey) * e;
+            if (t >= 560) { b.phase = 'idle'; b.age = 0; b.delay = 0; b.a.classList.add('ready'); }
+          } else {
+            const e = ease.outCubic(clamp01(t / 1500));
+            const sway = Math.sin(t / 130) * 7 * (1 - e);
+            x = ex + (tx - ex) * e + sway; y = ey + (ty - ey) * e;
+            if (t >= 1500) { b.phase = 'idle'; b.age = 0; b.delay = 0; b.life = 0; b.a.classList.add('ready'); }
+          }
+        }
+        if (b.phase === 'idle') {
+          if (conceptKey === 'halo') { x = tx; y = ty + Math.sin(t / 520 + b.i * 1.1) * 4; }
+          else {
+            x = tx + Math.sin(t / 900 + b.i * 2) * 7; y = ty + Math.sin(t / 650 + b.i) * 5;
+            if (!paused) b.life += dt;
+            if (b.life > 9500 + b.i * 650) pop(b);
+          }
+        }
+        if (b.phase === 'pop') { x = b.x; y = b.y; }
+        if (b.phase === 'out') {
+          if (conceptKey === 'wand') { pop(b); x = b.x; y = b.y; }
+          else {
+            const e = ease.inCubic(clamp01(t / 300));
+            x = b.start[0] + (ex - b.start[0]) * e; y = b.start[1] + (ey - b.start[1]) * e;
+            if (t >= 300) { b.phase = 'gone'; b.a.style.visibility = 'hidden'; }
+          }
+        }
+      }
+      if (x === undefined) continue;
+      b.x = x; b.y = y;
+      const hw = b.hw || DATA.bubble.w * S / 2;
+      b.a.style.transform = `translate(${snap(x - hw)}px, ${snap(y - hw)}px)`;
+    }
+    if (bubbles.length && bubbles.every(b => b.phase === 'gone')) { clear(); if (state !== 'bursting') state = 'idle'; }
+  }
+
+  cv.onclick = burst;
+  cv.onmouseenter = () => { if (conceptKey === 'lev') hover = true; };
+  cv.onmouseleave = () => { if (conceptKey === 'lev') hover = false; };
+  idle();
+  return { tick, burst, reset };
+}
+
+const stages = [];
+for (const c of [FEATURED, ...CONCEPTS]) {
+  const root = document.getElementById(c.v2 ? 'featured' : 'concepts');
+  const sec = document.createElement('section');
+  sec.className = 'concept'; sec.id = c.id || c.key;
+  sec.innerHTML = `
+    <header><div><h2><small>${c.n}</small>${c.name}</h2><p class="desc">${c.desc}</p><p class="trade">Trade-off: ${c.trade}</p></div>
+    <div class="ctl"><button class="b burst">Burst</button><button class="b reset">Reset</button></div></header>
+    <p class="label">desktop, 1440 px</p><div class="stage desk"></div>
+    <div class="phonerow"><div><p class="label">phone, 390 px</p><div class="phone"><div class="stage ph"></div></div></div>
+    <div class="notes"><p class="label">art and timing</p>${c.note}</div></div>`;
+  root.append(sec);
+  const d = buildStage(sec.querySelector('.stage.desk'), c.key, 'desk', !!c.v2);
+  const p = buildStage(sec.querySelector('.stage.ph'), c.key, 'phone', !!c.v2);
+  stages.push(d, p);
+  sec.querySelector('.burst').onclick = () => { d.burst(); p.burst(); };
+  sec.querySelector('.reset').onclick = () => { d.reset(); p.reset(); };
+}
+
+let last = performance.now(), held = false;
+function loop(now) {
+  const dt = Math.min(100, now - last) * SPEED;
+  last = now;
+  if (!held) for (const s of stages) s.tick(dt);
+  requestAnimationFrame(loop);
+}
+requestAnimationFrame(loop);
+// for review screenshots: hold the clock, then step it by exact milliseconds
+window.MOCK = {
+  stages,
+  hold(on = true) { held = on; },
+  advance(ms) { for (let t = 0; t < ms; t += 10) for (const s of stages) s.tick(10); },
+};
+</script>
+</body>
+</html>
