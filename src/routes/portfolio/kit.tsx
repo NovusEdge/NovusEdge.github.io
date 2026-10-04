@@ -1,5 +1,3 @@
-import type { ReactNode } from 'react'
-
 /* Shared marks for project bodies. Each one sits inside a `prose` container,
    so every wrapper carries `not-prose` and states its own type scale. */
 
@@ -32,17 +30,5 @@ export function Figures({ items }: { items: Figure[] }) {
         </div>
       ))}
     </dl>
-  )
-}
-
-/* For the one sentence a section is built around. Keep it to a sentence or
-   two: a long pull quote reads as a second paragraph, not as emphasis. */
-export function Pull({ children }: { children: ReactNode }) {
-  return (
-    <div className="not-prose my-8 border-l-2 border-gold py-1 pl-5">
-      <p className="font-display text-xl font-medium leading-snug text-charcoal dark:text-bone sm:text-2xl">
-        {children}
-      </p>
-    </div>
   )
 }
