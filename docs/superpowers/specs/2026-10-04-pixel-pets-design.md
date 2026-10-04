@@ -1,6 +1,6 @@
 # Pixel pets and pixel-me
 
-Date: 2026-10-04. Status: spec, awaiting review.
+Date: 2026-10-04. Status: superseded for the resident pet by `2026-10-04-pixel-friends-phase1-design.md` (the stoat replaced the cat). The engine sections still describe what was built.
 
 A resident pixel cat that lives on every page, a rare stoat visitor, and a pixel version of the site owner at a desk. Project spot icons are a separate, later spec.
 
