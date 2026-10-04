@@ -1,6 +1,6 @@
 export type Mode =
   | 'idle' | 'groom' | 'loaf' | 'sleep' | 'wake' | 'walk' | 'run' | 'sit_down'
-  | 'startle' | 'pounce' | 'peek' | 'periscope' | 'zoomies' | 'parked' | 'desk_nap'
+  | 'startle' | 'pounce' | 'peek' | 'periscope' | 'zoomies' | 'parked' | 'desk_nap' | 'gone'
 export type PetState = {
   mode: Mode
   x: number
@@ -12,6 +12,8 @@ export type PetState = {
   home: number
   napAtDesk: boolean
   returnTo: number | null
+  leaving: boolean
+  still: boolean
 }
 export type PetEvent =
   | { type: 'tick'; now: number; width: number; roll: number; desk: number | null }
@@ -24,6 +26,8 @@ export type PetEvent =
   | { type: 'unfollow'; now: number }
   | { type: 'step'; now: number; px: number }
   | { type: 'end'; now: number }
+  | { type: 'leave'; now: number; width: number; off: number }
+  | { type: 'return'; now: number; width: number; off: number; target: number }
 
 export const GROOM_AFTER = 20_000
 export const LOAF_AFTER = 40_000
@@ -51,10 +55,10 @@ const CLIPS: Partial<Record<Mode, string>> = {
 
 export const clipFor = (m: Mode) => CLIPS[m] ?? m
 
-export const stoatSpot = (m: Mode, claimed: boolean) => (claimed ? null : m === 'desk_nap' ? 'desk' : 'floor')
+export const stoatSpot = (m: Mode, claimed: boolean) => (claimed || m === 'gone' ? null : m === 'desk_nap' ? 'desk' : 'floor')
 
-export const initPet = (now: number, x: number, reduced: boolean): PetState => ({
-  mode: reduced ? 'parked' : 'idle',
+export const initPet = (now: number, x: number, reduced: boolean, away = false): PetState => ({
+  mode: away ? 'gone' : reduced ? 'parked' : 'idle',
   x,
   dir: -1,
   target: null,
@@ -64,6 +68,8 @@ export const initPet = (now: number, x: number, reduced: boolean): PetState => (
   home: x,
   napAtDesk: false,
   returnTo: null,
+  leaving: false,
+  still: reduced,
 })
 
 const restingMode = (idleFor: number): Mode =>
@@ -76,7 +82,28 @@ function moveTo(s: PetState, target: number, now: number, returnTo: number | nul
   return { ...s, mode: d > RUN_OVER ? 'run' : 'walk', target, dir: heading(s.x, target), lastInput: now, napAtDesk: false, returnTo }
 }
 
+const offEdge = (toward: number, width: number, off: number) => (toward < width / 2 ? -off : width + off)
+
+function leave(s: PetState, e: Extract<PetEvent, { type: 'leave' }>): PetState {
+  if (s.mode === 'gone' || s.leaving) return s
+  if (s.still) return { ...s, mode: 'gone', target: null, returnTo: null }
+  return { ...moveTo(s, offEdge(s.x, e.width, e.off), e.now), mode: 'run', leaving: true }
+}
+
+function comeBack(s: PetState, e: Extract<PetEvent, { type: 'return' }>): PetState {
+  if (s.mode !== 'gone' && !s.leaving) return s
+  const target = Math.max(0, Math.min(e.width, e.target))
+  if (s.still) return { ...s, mode: 'parked', x: target, target: null }
+  const x = s.leaving ? s.x : offEdge(target, e.width, e.off)
+  return moveTo({ ...s, x, leaving: false }, target, e.now)
+}
+
 export function petReducer(s: PetState, e: PetEvent): PetState {
+  if (e.type === 'leave') return leave(s, e)
+  if (e.type === 'return') return comeBack(s, e)
+  if (s.mode === 'gone') return s
+  // the tick clamp would pull a leaving stoat back on screen
+  if (s.leaving && e.type !== 'step') return s
   if (s.mode === 'parked' && e.type !== 'tick') return s
   switch (e.type) {
     case 'tick': {
@@ -131,6 +158,7 @@ export function petReducer(s: PetState, e: PetEvent): PetState {
       if (s.target === null) return s
       const x = s.dir === 1 ? Math.min(s.target, s.x + e.px) : Math.max(s.target, s.x - e.px)
       if (x !== s.target) return { ...s, x }
+      if (s.leaving) return { ...s, x, mode: 'gone', target: null, leaving: false }
       if (s.mode === 'zoomies' && s.zoomLeg === 0) return { ...s, x, zoomLeg: 1, target: s.home, dir: heading(x, s.home) }
       if (s.napAtDesk) return { ...s, x, mode: 'desk_nap', target: null, napAtDesk: false, zoomLeg: 0 }
       return { ...s, x, mode: 'sit_down', target: null, zoomLeg: 0, lastInput: e.now }
