@@ -72,3 +72,29 @@ Art agents run on Sonnet. Each batch is shown to the client playing in a Chromiu
 - Sprite JSON tests cover the new clips' frame sizes and palette letters.
 - The existing prerender test still finds nothing rendered on the server.
 - Browser check at 1440 and 390 px: a thinking post, `/research`, `/portfolio` with options A and B side by side, reduced motion, and the panel opening from each persona.
+
+## Known minor gaps
+
+Found in review and judged safe to ship (2026-10-05). None changes behaviour a visitor would notice today; each says when it would start to matter.
+
+Stoat brain (`src/lib/pet/pet-brain.ts`):
+
+- `tick` skips the x clamp whenever the stoat has a target, so the code relies on every resting mode clearing `target`. True today (`step` arrival and `desk_nap` set it to `null`); no test pins it. A new resting mode that keeps a target would let the stoat drift off-screen on resize.
+- Resizing the window mid-walk leaves `dir` stale, so the stoat snaps to its clamped target on the next step instead of walking there.
+- Widening the window while the stoat leaves to the right leaves its exit target at the old `width + off`, which can be on screen: it stops visibly, then vanishes.
+- Under reduced motion, `return` parks the stoat but leaves `home` and `lastInput` from before it left. Harmless while a parked stoat ignores everything but ticks.
+- `stoatRoom()` is called twice in the friends layer's `[pathname]` effect. Cheap and pure.
+
+Corners and sprites:
+
+- `PersonaCorner` sizes its box and hit area from the loop clip only. Fine while each beat matches its loop (`think_q` 34x47, `lab_squint` 34x49); a larger beat would paint outside the box.
+- `PersonaCorner`'s beat cut-in, return to the loop and reduced-motion frame are covered only by the browser check, not by tests.
+- The desk reads the viewport width during render. Safe only because the layer mounts after hydration.
+- The napping stoat is mirrored along with the right-hand desk. The client accepted the look.
+
+Tests and process:
+
+- The me-brain reduced-motion `reset` test passed before `reset` existed; it guards the early return for `still`, not the new case.
+- The `hitTop` test for the think clip mentions the desk's clear rows in its title but never reads `CLEAR_ROWS`.
+- The lift option's class literals were tied to `DESK_LIFT_PX` only by a comment. Moot: lift was deleted.
+- One batch of pet-brain tests was appended with a shell heredoc instead of the edit tools. No code consequence.
