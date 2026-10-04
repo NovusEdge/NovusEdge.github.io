@@ -7,8 +7,17 @@ const set = (v: boolean) => {
   listeners.forEach((l) => l())
 }
 
-export const openPetPanel = () => set(true)
-export const closePetPanel = () => set(false)
+let opener: HTMLElement | null = null
+
+export const openPetPanel = () => {
+  opener = document.activeElement instanceof HTMLElement ? document.activeElement : null
+  set(true)
+}
+export const closePetPanel = () => {
+  set(false)
+  if (opener?.isConnected) opener.focus()
+  opener = null
+}
 
 export const usePetPanelOpen = () =>
   useSyncExternalStore(

@@ -15,7 +15,7 @@ import BlipsPage from './routes/blips/index'
 import NotFound from './routes/not-found'
 import { SiteFooter } from './components/site-footer'
 import { AccessibilityPanel } from './components/accessibility-panel'
-import { PetLayer } from './components/pet/pet-layer'
+import { FriendsLayer } from './components/pet/friends-layer'
 import { PetPanel } from './components/pet/pet-panel'
 import { StagePet } from './components/pet/stage-pet'
 import ClickSpark from './components/react-bits/ClickSpark'
@@ -93,7 +93,7 @@ function LocaleTree({ locale }: { locale: Locale }) {
         {/* universal footer; /stack carries its own colophon (editorial) or runs immersive (graph) */}
         {!bare.startsWith('/stack') && <SiteFooter />}
         <AccessibilityPanel />
-        <PetLayer />
+        <FriendsLayer />
         <PetPanel />
       </LocaleContext>
     </I18nextProvider>
