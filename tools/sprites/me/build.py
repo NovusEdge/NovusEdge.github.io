@@ -1,13 +1,14 @@
 import json
 from PIL import Image
 from lib import BASE, SKINS, OUTFITS, LAYERS, render, palette, BG
-import front, walk, desk
+import front, walk, desk, transitions
 
 ALL_LAYERS = ['coat', 'collar']
 DEFAULT_SKIN = 'light'
 
 # Walk: contact poses held a touch longer than the in-betweens.
-WALK_MS = [115, 95, 95, 100, 105, 95, 95, 100] * 2
+# The client approved the walk at 2x, so the drawn timing is halved (rounded half up).
+WALK_MS = [int(ms / 2 + 0.5) for ms in [115, 95, 95, 100, 105, 95, 95, 100] * 2]
 
 
 def diff(base, full):
@@ -36,6 +37,9 @@ def build():
     idle = frames(lambda L: [(r, ms, {}) for r, ms in front.idle(L)])
     wk = frames(lambda L: [(walk.frame(i, L).rows(), WALK_MS[i], {'dx': 1}) for i in range(walk.N)])
     dk = frames(lambda L: [(r, ms, {}) for r, ms in desk.desk(L)])
+    tr = {n: frames(lambda L, n=n: [(r, ms, {}) for r, ms in getattr(transitions, n)(L)])
+          for n in ('desk_empty', 'stand_up', 'sit_down')}
+    box = {'w': desk.W, 'h': desk.H}
     base_pal = dict(BASE)
     base_pal.update(SKINS[DEFAULT_SKIN])
     base_pal.update(OUTFITS['sweater'])
@@ -49,6 +53,9 @@ def build():
             'idle': {'loop': True, 'frames': idle},
             'walk': {'loop': True, 'frames': wk},
             'desk': {'loop': True, 'w': desk.W, 'h': desk.H, 'catSlot': desk.CAT_SLOT, 'frames': dk},
+            'desk_empty': {'loop': True, **box, 'frames': tr['desk_empty']},
+            'stand_up': {'loop': False, **box, 'standAt': transitions.STAND_AT, 'frames': tr['stand_up']},
+            'sit_down': {'loop': False, **box, 'frames': tr['sit_down']},
         },
     }
 
@@ -65,7 +72,7 @@ def compose(fr, outfit):
 
 def contact_sheet(S, path, scale=4, skin=DEFAULT_SKIN):
     gap = 2 * scale
-    per_row = {'idle': 16, 'walk': 16, 'desk': 6}
+    per_row = {'idle': 16, 'walk': 16, 'desk': 6, 'desk_empty': 6, 'stand_up': 6, 'sit_down': 6}
     groups = []
     for o in OUTFITS:
         pal = palette(o, skin, desk.PROPS)

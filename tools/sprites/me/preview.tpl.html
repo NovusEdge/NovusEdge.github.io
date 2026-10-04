@@ -3,125 +3,161 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Pixel Portrait</title>
+<title>Pixel-me Desk Transitions</title>
 <style>
-  :root { --bg: #0f0f13; --fg: #d8d6e0; --dim: #7c7890; --line: #26242f; --on: #4a4560; }
+  :root { --bg: #f5f1ea; --fg: #2a2630; --dim: #5f5965; --line: #d8d0c4; --on: #2a2630; }
   body { background: var(--bg); color: var(--fg); font: 13px/1.4 ui-monospace, Menlo, monospace; margin: 0; padding: 24px 16px; }
-  h1 { font-size: 14px; font-weight: 600; margin: 0 0 16px; }
-  .bar { display: flex; flex-wrap: wrap; gap: 16px; margin-bottom: 20px; }
-  fieldset { border: 1px solid var(--line); border-radius: 6px; padding: 6px 8px; margin: 0; }
+  h1 { font-size: 14px; font-weight: 600; margin: 0 0 12px; }
+  h2 { font-size: 13px; font-weight: 600; margin: 28px 0 8px; }
+  .bar { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; margin-bottom: 16px; }
+  fieldset { border: 1px solid var(--line); border-radius: 6px; padding: 4px 8px; margin: 0; }
   legend { color: var(--dim); padding: 0 4px; }
-  button { background: none; color: var(--fg); border: 1px solid var(--line); border-radius: 4px; padding: 3px 8px; font: inherit; cursor: pointer; margin: 2px; }
-  button[aria-pressed="true"] { background: var(--on); border-color: var(--on); }
-  .stage { display: flex; align-items: flex-end; gap: 24px; flex-wrap: wrap; margin-bottom: 24px; }
-  .stage figure { margin: 0; text-align: center; color: var(--dim); }
+  button { background: none; color: var(--fg); border: 1px solid var(--line); border-radius: 4px; padding: 3px 9px; font: inherit; cursor: pointer; margin: 2px; }
+  button[aria-pressed="true"] { background: var(--on); border-color: var(--on); color: var(--bg); }
   canvas { image-rendering: pixelated; display: block; }
-  .strip { display: flex; flex-wrap: wrap; gap: 6px; }
+  .scroll { overflow-x: auto; max-width: 100%; }
+  #readout { color: var(--dim); min-height: 1.4em; }
+  .strip { display: flex; flex-wrap: wrap; gap: 8px; }
   .strip figure { margin: 0; color: var(--dim); font-size: 11px; text-align: center; }
   .strip canvas { outline: 1px solid var(--line); }
-  .strip .cur canvas { outline-color: #8a84a8; }
-  p.note { color: var(--dim); max-width: 70ch; }
+  .strip .cur canvas { outline: 2px solid #c0563c; }
+  p.note { color: var(--dim); max-width: 80ch; }
 </style>
 </head>
 <body>
-<h1>pixel portrait: idle / walk / desk</h1>
+<h1>pixel-me: desk, stand_up, desk_empty + walker out and back, sit_down</h1>
 <div class="bar">
-  <fieldset id="anim"><legend>animation</legend></fieldset>
-  <fieldset id="outfit"><legend>outfit</legend></fieldset>
-  <fieldset id="skin"><legend>skin</legend></fieldset>
-  <fieldset id="opts"><legend>options</legend></fieldset>
+  <fieldset id="speed"><legend>speed</legend></fieldset>
+  <fieldset id="zoom"><legend>zoom</legend></fieldset>
+  <fieldset><legend>play</legend><button id="pause" aria-pressed="false">pause</button><button id="step">step</button><button id="restart">restart</button></fieldset>
 </div>
-<div class="stage" id="stage"></div>
-<div class="strip" id="strip"></div>
-<p class="note" id="note"></p>
+<div class="scroll"><canvas id="stage"></canvas></div>
+<p id="readout"></p>
+<p class="note">The walker is the separate 32x52 walk sprite, placed at standAt and moved 1 desk pixel per frame like the site does, flipped while it walks home.
+It walks 64 px out so it comes home on walk frame 0, the pose sit_down opens with. The strips below highlight the frame on screen.</p>
+<div id="strips"></div>
 <script id="sprites" type="application/json">/*SPRITES*/</script>
 <script>
 const S = JSON.parse(document.getElementById('sprites').textContent);
-const state = { anim: 'idle', outfit: 'sweater', skin: 'light', slot: false, walkAcross: true };
-let t0 = performance.now(), frameIdx = 0, acc = 0, xoff = 0;
+const A = S.animations;
+const P = Object.assign({}, S.palette, S.outfits.sweater.palette, S.props);
+const DW = A.desk.w, DH = A.desk.h, [SAX, SAY] = A.stand_up.standAt;
+const OUT = 64, ROOM = SAX + OUT + S.w + 8;
+const state = { speed: 1, zoom: 5, paused: false };
 
-function pal() {
-  return Object.assign({}, S.palette, S.palettes[state.skin], S.outfits[state.outfit].palette, S.props);
-}
-function dims(a) { return [a.w || S.w, a.h || S.h]; }
-function compose(fr) {
+function flat(fr) {
   const rows = fr.px.map(r => r.split(''));
-  for (const L of S.outfits[state.outfit].layers) {
+  for (const L of S.outfits.sweater.layers) {
     const lay = fr.layers && fr.layers[L];
-    if (!lay) continue;
-    lay.forEach((r, y) => { for (let x = 0; x < r.length; x++) if (r[x] !== '.') rows[y][x] = r[x]; });
+    if (lay) lay.forEach((r, y) => { for (let x = 0; x < r.length; x++) if (r[x] !== '.') rows[y][x] = r[x]; });
   }
   return rows;
 }
-function draw(cv, fr, scale, ox = 0) {
-  const a = S.animations[state.anim], [w, h] = dims(a), P = pal(), c = cv.getContext('2d');
-  c.imageSmoothingEnabled = false;
-  c.fillStyle = '#0f0f13'; c.fillRect(0, 0, cv.width, cv.height);
-  compose(fr).forEach((r, y) => r.forEach((ch, x) => {
+const cache = new Map();
+function rows(clip, i) {
+  const k = clip + i;
+  if (!cache.has(k)) cache.set(k, flat(A[clip].frames[i]));
+  return cache.get(k);
+}
+function paint(c, px, ox, oy, s, flip, w) {
+  px.forEach((r, y) => r.forEach((ch, x) => {
     if (ch === '.') return;
-    c.fillStyle = P[ch]; c.fillRect((x + ox) * scale, y * scale, scale, scale);
+    c.fillStyle = P[ch];
+    c.fillRect((ox + (flip ? w - 1 - x : x)) * s, (oy + y) * s, s, s);
   }));
-  if (state.slot && a.catSlot) {
-    const [sx, sy, sw, sh] = a.catSlot;
-    c.strokeStyle = '#9bd46a'; c.setLineDash([scale, scale]); c.lineWidth = 1;
-    c.strokeRect(sx * scale + .5, sy * scale + .5, sw * scale - 1, sh * scale - 1);
-  }
 }
-const live = [];
-function buildStage() {
-  const a = S.animations[state.anim], [w, h] = dims(a), st = document.getElementById('stage');
-  st.innerHTML = ''; live.length = 0;
-  for (const s of [1, 2, 4]) {
-    const f = document.createElement('figure'), cv = document.createElement('canvas');
-    const across = state.anim === 'walk' && state.walkAcross;
-    cv.width = (across ? w * 4 : w) * s; cv.height = h * s;
-    f.append(cv, document.createTextNode(s + 'x')); st.append(f); live.push({ cv, s });
+
+// The sequence as a list of beats; each beat is a clip played over some frames.
+function* sequence() {
+  for (let i = 30; i < A.desk.frames.length; i++) yield { desk: ['desk', i] };
+  yield { desk: ['desk', 0] };
+  for (let i = 0; i < A.stand_up.frames.length; i++) yield { desk: ['stand_up', i] };
+  let e = 0, f = 0, x = SAX;
+  for (let n = 0; n <= OUT; n++) {
+    yield { desk: ['desk_empty', e], walker: [f, x, false], ms: A.walk.frames[f].ms };
+    if (n === OUT) break;
+    f = (f + 1) % 16; x += A.walk.frames[f].dx || 1;
   }
-  const strip = document.getElementById('strip'); strip.innerHTML = '';
-  a.frames.forEach((fr, i) => {
-    const f = document.createElement('figure'), cv = document.createElement('canvas');
-    cv.width = w * 2; cv.height = h * 2; draw(cv, fr, 2);
-    f.append(cv, document.createTextNode(i + ' · ' + fr.ms + 'ms')); strip.append(f);
-  });
-  const total = a.frames.reduce((s, f) => s + f.ms, 0);
-  document.getElementById('note').textContent =
-    `${a.frames.length} frames, ${total} ms per loop.` + (a.catSlot ? ` catSlot [${a.catSlot}] is the empty desk space for the cat.` : '');
-  frameIdx = 0; acc = 0; xoff = 0;
+  for (let n = 0; n < OUT; n++) {
+    f = (f + 1) % 16; x -= A.walk.frames[f].dx || 1;
+    if (x === SAX) break;
+    yield { desk: ['desk_empty', e], walker: [f, x, true], ms: A.walk.frames[f].ms };
+  }
+  for (let i = 0; i < A.sit_down.frames.length; i++) yield { desk: ['sit_down', i] };
+  for (let i = 1; i < 10; i++) yield { desk: ['desk', i] };
 }
+let seq = [], k = 0, acc = 0, emptyAcc = 0, emptyIdx = 0;
+function build() { seq = [...sequence()]; k = 0; acc = 0; }
+
+const cv = document.getElementById('stage'), cx = cv.getContext('2d');
+function resize() { cv.width = ROOM * state.zoom; cv.height = DH * state.zoom; }
+function draw() {
+  const b = seq[k], s = state.zoom;
+  cx.fillStyle = '#f5f1ea'; cx.fillRect(0, 0, cv.width, cv.height);
+  let [clip, i] = b.desk;
+  if (clip === 'desk_empty') i = emptyIdx;
+  paint(cx, rows(clip, i), 0, 0, s, false, DW);
+  if (b.walker) {
+    const [f, x, flip] = b.walker;
+    paint(cx, rows('walk', f), x, SAY, s, flip, S.w);
+  }
+  document.getElementById('readout').textContent =
+    `${clip} frame ${i} · ${msOf(b)} ms` + (b.walker ? ` · walk frame ${b.walker[0]}${b.walker[2] ? ' (flipped)' : ''} at x ${b.walker[1]}` : '');
+  document.querySelectorAll('.strip figure').forEach(el => el.classList.toggle('cur',
+    (el.dataset.clip === clip && +el.dataset.i === i) || (!!b.walker && el.dataset.clip === 'walk' && +el.dataset.i === b.walker[0])));
+}
+function msOf(b) { return b.ms || A[b.desk[0]].frames[b.desk[1]].ms; }
+function advance() {
+  k = (k + 1) % seq.length;
+  if (seq[k].desk[0] === 'desk_empty' && seq[(k + seq.length - 1) % seq.length].desk[0] !== 'desk_empty') { emptyIdx = 0; emptyAcc = 0; }
+}
+let t0 = performance.now();
 function tick(now) {
-  const a = S.animations[state.anim], dt = now - t0; t0 = now; acc += dt;
-  while (acc >= a.frames[frameIdx].ms) {
-    acc -= a.frames[frameIdx].ms;
-    xoff += a.frames[frameIdx].dx || 0;
-    frameIdx = (frameIdx + 1) % a.frames.length;
+  const dt = (now - t0) * state.speed; t0 = now;
+  if (!state.paused) {
+    acc += dt;
+    if (seq[k].desk[0] === 'desk_empty') {
+      emptyAcc += dt;
+      while (emptyAcc >= A.desk_empty.frames[emptyIdx].ms) { emptyAcc -= A.desk_empty.frames[emptyIdx].ms; emptyIdx = (emptyIdx + 1) % A.desk_empty.frames.length; }
+    }
+    while (acc >= msOf(seq[k])) { acc -= msOf(seq[k]); advance(); }
   }
-  const [w] = dims(a), across = state.anim === 'walk' && state.walkAcross;
-  const ox = across ? (xoff % (w * 4 + w)) - w : 0;
-  live.forEach(l => draw(l.cv, a.frames[frameIdx], l.s, ox));
-  [...document.getElementById('strip').children].forEach((el, i) => el.classList.toggle('cur', i === frameIdx));
+  draw();
   requestAnimationFrame(tick);
 }
-function picker(id, keys, key, after) {
+function picker(id, opts, key, label, after) {
   const fs = document.getElementById(id);
-  keys.forEach(k => {
-    const b = document.createElement('button'); b.textContent = k;
-    b.setAttribute('aria-pressed', state[key] === k);
-    b.onclick = () => { state[key] = k; [...fs.querySelectorAll('button')].forEach(x => x.setAttribute('aria-pressed', x === b)); after(); };
+  opts.forEach(v => {
+    const b = document.createElement('button'); b.textContent = label(v);
+    b.setAttribute('aria-pressed', state[key] === v);
+    b.onclick = () => { state[key] = v; fs.querySelectorAll('button').forEach(x => x.setAttribute('aria-pressed', x === b)); after && after(); };
     fs.append(b);
   });
 }
-function toggle(id, label, key) {
-  const b = document.createElement('button'); b.textContent = label; b.setAttribute('aria-pressed', state[key]);
-  b.onclick = () => { state[key] = !state[key]; b.setAttribute('aria-pressed', state[key]); buildStage(); };
-  document.getElementById(id).append(b);
+picker('speed', [0.5, 1, 1.5, 2], 'speed', v => v + 'x');
+picker('zoom', [4, 5, 6], 'zoom', v => v + 'x', resize);
+const pause = document.getElementById('pause');
+pause.onclick = () => { state.paused = !state.paused; pause.setAttribute('aria-pressed', state.paused); };
+document.getElementById('step').onclick = () => { state.paused = true; pause.setAttribute('aria-pressed', true); advance(); acc = 0; };
+document.getElementById('restart').onclick = () => { build(); };
+
+const strips = document.getElementById('strips');
+for (const [clip, x0, x1] of [['stand_up', 0, 48], ['sit_down', 0, 48], ['desk_empty', 0, DW], ['walk', 0, S.w]]) {
+  const a = A[clip], w = a.w || S.w, h = a.h || S.h, sc = 3;
+  const h2 = document.createElement('h2');
+  h2.textContent = `${clip}: ${a.frames.length} frames, ${a.frames.reduce((s, f) => s + f.ms, 0)} ms` + (a.standAt ? `, standAt [${a.standAt}]` : '') + (clip.endsWith('_up') || clip.endsWith('_down') ? ' (left 48 px shown)' : '');
+  const st = document.createElement('div'); st.className = 'strip';
+  a.frames.forEach((fr, i) => {
+    const f = document.createElement('figure'), c = document.createElement('canvas');
+    f.dataset.clip = clip; f.dataset.i = i;
+    c.width = (x1 - x0) * sc; c.height = h * sc;
+    const g = c.getContext('2d'); g.fillStyle = '#f5f1ea'; g.fillRect(0, 0, c.width, c.height);
+    paint(g, rows(clip, i), -x0, 0, sc, false, w);
+    f.append(c, document.createTextNode(i + ' · ' + fr.ms + 'ms')); st.append(f);
+  });
+  strips.append(h2, st);
 }
-picker('anim', Object.keys(S.animations), 'anim', buildStage);
-picker('outfit', Object.keys(S.outfits), 'outfit', buildStage);
-picker('skin', Object.keys(S.palettes), 'skin', buildStage);
-toggle('opts', 'show catSlot', 'slot');
-toggle('opts', 'walk across', 'walkAcross');
-buildStage();
-requestAnimationFrame(tick);
+build(); resize(); requestAnimationFrame(tick);
 </script>
 </body>
 </html>

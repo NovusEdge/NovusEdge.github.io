@@ -50,6 +50,12 @@ describe('sprite data', () => {
     ])
     expect(Object.keys(s.palettes!).sort()).toEqual(['summer', 'winter'])
   })
+
+  it('has the desk transitions for pixel-me', () => {
+    const a = (me as unknown as Sprite).animations
+    for (const n of ['desk_empty', 'stand_up', 'sit_down']) expect(a[n]).toMatchObject({ w: 99, h: 57 })
+    expect(a.stand_up.standAt).toHaveLength(2)
+  })
 })
 
 describe('validateSprite', () => {
