@@ -9,6 +9,8 @@ import { prefersReducedMotion } from '../../lib/motion'
 import { PixelSprite } from './pixel-sprite'
 
 export const SCALE = 2
+const SCROLL_SETTLE = 600
+const SCROLL_GO_EVERY = 8000
 const SPRITE = cat as Sprite
 const W = SPRITE.w
 
@@ -47,13 +49,26 @@ function Cat({ coat }: { coat: string }) {
     }
     window.addEventListener('pointermove', move, { passive: true })
     window.addEventListener('keydown', input)
-    window.addEventListener('scroll', input, { passive: true })
+    let settle: ReturnType<typeof setTimeout> | undefined
+    let lastGo = -Infinity
+    const scroll = () => {
+      input()
+      clearTimeout(settle)
+      settle = setTimeout(() => {
+        const now = performance.now()
+        if (now - lastGo < SCROLL_GO_EVERY) return
+        lastGo = now
+        send({ type: 'go', target: Math.floor(Math.random() * roomWidth()) })
+      }, SCROLL_SETTLE)
+    }
+    window.addEventListener('scroll', scroll, { passive: true })
     const off = catBus.on((e) => send({ type: 'stoat', dir: e.dir, roll: Math.random() }))
     return () => {
       clearInterval(id)
       window.removeEventListener('pointermove', move)
       window.removeEventListener('keydown', input)
-      window.removeEventListener('scroll', input)
+      window.removeEventListener('scroll', scroll)
+      clearTimeout(settle)
       off()
     }
   }, [])
@@ -75,7 +90,7 @@ function Cat({ coat }: { coat: string }) {
 
   return (
     <div
-      style={{ position: 'fixed', left, bottom: 0, zIndex: 30, pointerEvents: 'auto' }}
+      style={{ position: 'fixed', left, bottom: 0, zIndex: 30, lineHeight: 0, pointerEvents: 'auto' }}
       onPointerEnter={() => send({ type: 'hover' })}
       onClick={() => send({ type: 'click', roll: Math.random() })}
     >
@@ -84,8 +99,8 @@ function Cat({ coat }: { coat: string }) {
         clip={clip}
         variant={coat}
         scale={SCALE}
-        // the sit faces left and the walk faces right
-        flip={clip === 'walk' || clip === 'run' ? state.dir === -1 : state.dir === 1}
+        // the sit faces left and the walk faces right; look poses are chosen in screen space, so never mirror them
+        flip={clip === 'look' ? false : clip === 'walk' || clip === 'run' ? state.dir === -1 : state.dir === 1}
         playing={state.mode !== 'parked'}
         frame={clip === 'look' ? lookFrame : undefined}
         onStep={(n) => state.target !== null && send({ type: 'step', px: n * travel })}
