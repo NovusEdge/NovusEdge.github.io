@@ -15,6 +15,14 @@ const NET_X = 40
 const CLEAR_ROWS = 12
 const NET_Y = 0
 
+// stand_up and sit_down draw pixel-me taller than the desk frames, so the click
+// target has to start at the highest painted row of whichever clip is playing
+export const hitTop = (sprite: Sprite, clip: string) =>
+  sprite.animations[clip].frames.reduce((top, f) => {
+    const y = f.px.findIndex((r) => /[^.]/.test(r))
+    return y >= 0 ? Math.min(top, y) : top
+  }, CLEAR_ROWS)
+
 function NetCanvas({ scale, typing }: { scale: number; typing: { current: boolean } }) {
   const ref = useRef<HTMLCanvasElement>(null)
   useEffect(() => {
@@ -68,10 +76,11 @@ export function DeskCorner({ me, stoat, scale, state, send, reduced, napping, co
   const open = usePetPanelOpen()
   const typing = useRef(false)
   const desk = me.animations.desk
-  const [SX, SY, , SH] = desk.catSlot!
+  const [SX, SY, , SH] = desk.stoatSlot!
   const DW = desk.w!
   const DH = desk.h!
   const clips = meClips(state.mode)
+  const top = hitTop(me, clips.desk)
   const standTop = me.animations.stand_up?.standAt?.[1] ?? DH - me.h
   return (
     <>
@@ -102,7 +111,7 @@ export function DeskCorner({ me, stoat, scale, state, send, reduced, napping, co
             <PixelSprite sprite={stoat} clip="sleep" variant={coat} scale={scale} playing={!reduced} style={{ position: 'absolute', left: SX * scale, top: (SY + SH - stoat.h) * scale }} />
           )}
         </span>
-        <span className="absolute left-0 cursor-pointer" style={{ top: CLEAR_ROWS * scale, width: DW * scale, height: (DH - CLEAR_ROWS) * scale, pointerEvents: 'auto' }} />
+        <span className="absolute left-0 cursor-pointer" style={{ top: top * scale, width: DW * scale, height: (DH - top) * scale, pointerEvents: 'auto' }} />
         <span className="pointer-events-none absolute bottom-full left-2 mb-1 whitespace-nowrap rounded border border-charcoal/20 bg-bone px-2 py-0.5 font-mono text-xs opacity-0 transition-opacity group-hover:opacity-100 group-focus-visible:opacity-100 dark:border-bone/20 dark:bg-charcoal">
           {t('pet.settings')}
         </span>

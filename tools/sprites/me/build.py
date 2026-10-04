@@ -52,7 +52,7 @@ def build():
         'animations': {
             'idle': {'loop': True, 'frames': idle},
             'walk': {'loop': True, 'frames': wk},
-            'desk': {'loop': True, 'w': desk.W, 'h': desk.H, 'catSlot': desk.CAT_SLOT, 'frames': dk},
+            'desk': {'loop': True, 'w': desk.W, 'h': desk.H, 'stoatSlot': desk.STOAT_SLOT, 'frames': dk},
             'desk_empty': {'loop': True, **box, 'frames': tr['desk_empty']},
             'stand_up': {'loop': False, **box, 'standAt': transitions.STAND_AT, 'frames': tr['stand_up']},
             'sit_down': {'loop': False, **box, 'frames': tr['sit_down']},

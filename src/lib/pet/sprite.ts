@@ -5,7 +5,7 @@ export type Clip = {
   travel?: number
   w?: number
   h?: number
-  catSlot?: [number, number, number, number]
+  stoatSlot?: [number, number, number, number]
   standAt?: [number, number]
 }
 export type Sprite = {

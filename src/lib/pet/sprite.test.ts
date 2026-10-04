@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import me from '../../assets/sprites/me.json'
 import stoat from '../../assets/sprites/stoat.json'
+import { STOAT_SIZE } from './stoat-sprite'
 import { clipSize, paletteFor, resolveClip, validateSprite, type Sprite } from './sprite'
 
 const tiny: Sprite = {
@@ -19,11 +20,11 @@ describe('sprite data', () => {
     expect(validateSprite(s as Sprite)).toEqual([])
   })
 
-  it('marks typing frames on the desk and keeps the cat slot', () => {
+  it('marks typing frames on the desk and keeps the stoat slot', () => {
     const desk = (me as unknown as Sprite).animations.desk
     expect(desk.frames.some((f) => f.typing)).toBe(true)
     expect(desk.frames.some((f) => !f.typing)).toBe(true)
-    expect(desk.catSlot).toHaveLength(4)
+    expect(desk.stoatSlot).toHaveLength(4)
   })
 
   it('ships the stoat clips in both coats', () => {
@@ -45,6 +46,10 @@ describe('sprite data', () => {
       'wake',
     ])
     expect(Object.keys(s.palettes!).sort()).toEqual(['summer', 'winter'])
+  })
+
+  it('reserves the stoat box at the size of the sprite', () => {
+    expect(STOAT_SIZE).toEqual({ w: stoat.w, h: stoat.h })
   })
 
   it('has the desk transitions for pixel-me', () => {
