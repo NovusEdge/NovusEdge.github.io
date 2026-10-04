@@ -4,11 +4,28 @@ from PIL import Image, ImageDraw, ImageFont
 
 OUT = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, OUT)
-import bound, periscope, peek  # noqa: E402
+import bound, periscope, peek, sit, sit_down, groom, curl, sleep, wake  # noqa: E402
 from stoat import PALETTES, W, H, GROUND, BG, render, finish  # noqa: E402
 
-CLIPS = {'bound': bound, 'periscope': periscope, 'peek': peek}
-LOOP = {'bound': True}
+CLIPS = {'bound': bound, 'periscope': periscope, 'peek': peek, 'sit': sit, 'sit_down': sit_down,
+         'groom': groom, 'curl': curl, 'sleep': sleep, 'wake': wake}
+LOOP = {'bound': True, 'sit': True, 'groom': True, 'curl': True, 'sleep': True}
+# Playback speed per clip, as the client asked for it: every frame's ms is divided by
+# the clip's tempo (half rounds up). The slow loops play faster than they were keyed
+# and groom a little slower; sit_down and wake got more drawings
+# instead. Clips not listed play as keyed.
+TEMPO = {'sit': 1.75, 'curl': 1.75, 'sleep': 1.75, 'groom': 0.8}
+
+# The client wants the stoat to cover ground faster without the bound cycling faster:
+# the site moves it travel px per frame, so it goes 1.75 px a frame while the drawing
+# keys its planted paws 1 px apart (bound.TRAVEL, which check_bound holds to). The
+# paws skid forward 0.75 px a frame as a result.
+BOUND_GROUND_SPEED = 1.75
+
+
+def timings(name, mod):
+    t = TEMPO.get(name, 1)
+    return [int(ms / t + 0.5) for ms in mod.MS]
 CAT = os.path.join(OUT, '..', 'walk-sleek', 'cat.json')
 
 
@@ -40,6 +57,16 @@ def check_rise(name, fs):
     for i in (0, -1):
         filled = sum(c not in '.O' for r in fs[i] for c in r)
         assert filled <= 12, (name, i, filled)
+
+
+def check_ends(r):
+    """Resting clips hand over to each other on sit frame 0."""
+    s0 = r['sit'][0]
+    assert r['sit_down'][0] == r['bound'][0], 'sit_down starts on the bound landing'
+    assert r['wake'][0] == r['sleep'][0], 'wake starts on sleep frame 0'
+    for name in ('sit_down', 'wake'):
+        assert r[name][-1] == s0, (name, 'ends on sit frame 0')
+    assert r['groom'][0] == s0, 'groom starts on sit frame 0'
 
 
 def font(sz):
@@ -104,13 +131,14 @@ def main():
             check_frame(px, (name, i))
         rendered[name] = fs
         clip = {'loop': LOOP.get(name, False),
-                'frames': [{'ms': ms, 'px': px} for ms, px in zip(mod.MS, fs)]}
+                'frames': [{'ms': ms, 'px': px} for ms, px in zip(timings(name, mod), fs)]}
         if name == 'bound':
-            clip['travel'] = bound.TRAVEL
+            clip['travel'] = bound.TRAVEL * BOUND_GROUND_SPEED
         anims[name] = clip
     check_bound(rendered['bound'])
     check_rise('periscope', rendered['periscope'])
     check_rise('peek', rendered['peek'])
+    check_ends(rendered)
     letters = set()
     for a in anims.values():
         for fr in a['frames']:
@@ -125,11 +153,15 @@ def main():
 
     os.makedirs(os.path.join(OUT, 'sheets'), exist_ok=True)
     for name, mod in CLIPS.items():
-        sheet(rendered[name], mod.MS, os.path.join(OUT, 'sheets', f'{name}.png'))
+        sheet(rendered[name], timings(name, mod), os.path.join(OUT, 'sheets', f'{name}.png'))
     b = rendered['bound']
     versus([(b[6], 'summer', 'bound 07 arch, summer'), (b[16], 'summer', 'bound 17 stretch, summer'),
             (b[6], 'winter', 'bound 07, winter')],
            os.path.join(OUT, 'sheets', 'stoat-vs-cat.png'))
+    with open(os.path.join(OUT, 'preview.tpl.html')) as f:
+        page = f.read().replace('/*SPRITE*/', json.dumps(data, separators=(',', ':')))
+    with open(os.path.join(OUT, 'preview.html'), 'w') as f:
+        f.write(page)
     for name, a in anims.items():
         print(name, len(a['frames']), 'frames', sum(f['ms'] for f in a['frames']), 'ms')
 

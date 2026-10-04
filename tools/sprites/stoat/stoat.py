@@ -20,6 +20,11 @@ PALETTES = {
                'W': '#f3ead0', 'P': '#ddd8d6', 'p': '#a29eb3', 'T': '#2f2725', 'S': '#54463f',
                'K': '#0b0807', 'N': '#3a2a2a', 'I': '#e8c8c2'},
 }
+# Effect letters, the same in both coats: Z sleep z's, Q "?", R heart. They float
+# free of the outline (see finish), so Z is dark enough to read on the light page.
+EFFECTS = 'ZQR'
+for _pal in PALETTES.values():
+    _pal.update({'Z': '#7f88aa', 'Q': '#f2c94c', 'R': '#ff6b80'})
 
 
 def d(s):
@@ -60,9 +65,10 @@ def compose(*layers):
 
 def finish(g):
     """1px O outline on empty pixels touching fill (4-neighbour), then crop to H rows.
-    Outlining before the crop means a body cut by the page edge stays open there."""
+    Outlining before the crop means a body cut by the page edge stays open there.
+    Effect letters get no outline: a 3px z filled in with black stops reading as a z."""
     add = [(x, y) for y in range(WORK_H) for x in range(W) if g[y][x] == '.' and any(
-        0 <= x + dx < W and 0 <= y + dy < WORK_H and g[y + dy][x + dx] not in '.O'
+        0 <= x + dx < W and 0 <= y + dy < WORK_H and g[y + dy][x + dx] not in '.O' + EFFECTS
         for dx, dy in ((1, 0), (-1, 0), (0, 1), (0, -1)))]
     for x, y in add:
         g[y][x] = 'O'

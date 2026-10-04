@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Stoat Clips</title>
+<style>
+  :root { --bg: #f5f1ea; --fg: #2a2622; --dim: #6b635a; --line: #ddd5c9; --on: #2a2622; }
+  body { background: var(--bg); color: var(--fg); font: 13px/1.4 ui-monospace, Menlo, monospace; margin: 0; padding: 24px 16px; }
+  h1 { font-size: 14px; font-weight: 600; margin: 0 0 16px; }
+  .bar { display: flex; flex-wrap: wrap; gap: 16px; margin-bottom: 20px; align-items: center; }
+  fieldset { border: 1px solid var(--line); border-radius: 6px; padding: 6px 8px; margin: 0; }
+  legend { color: var(--dim); padding: 0 4px; }
+  button { background: none; color: var(--fg); border: 1px solid var(--line); border-radius: 4px; padding: 3px 8px; font: inherit; cursor: pointer; margin: 2px; }
+  button[aria-pressed="true"] { background: var(--on); border-color: var(--on); color: var(--bg); }
+  canvas { image-rendering: pixelated; display: block; }
+  .strip { border-bottom: 1px solid var(--dim); margin-bottom: 8px; overflow: hidden; }
+  .strip canvas { width: 100%; }
+  .note { color: var(--dim); margin: 0 0 28px; }
+  .grid { display: flex; flex-wrap: wrap; gap: 28px 32px; }
+  .clip h2 { font-size: 13px; margin: 0; }
+  .clip .meta { color: var(--dim); margin-bottom: 6px; }
+  .coats { display: flex; gap: 12px; flex-wrap: wrap; }
+  .coats canvas { border-bottom: 1px solid var(--dim); }
+  .coats figure { margin: 0; color: var(--dim); font-size: 11px; }
+</style>
+</head>
+<body>
+<h1>stoat clips</h1>
+<div class="bar">
+  <fieldset id="speed"><legend>speed</legend></fieldset>
+  <fieldset id="strip-mode"><legend>strip</legend></fieldset>
+  <fieldset id="strip-coat"><legend>strip coat</legend></fieldset>
+</div>
+<div class="strip"><canvas id="strip"></canvas></div>
+<p class="note" id="strip-note"></p>
+<div class="grid" id="grid"></div>
+<script id="sprite" type="application/json">/*SPRITE*/</script>
+<script>
+const S = JSON.parse(document.getElementById('sprite').textContent);
+const A = S.animations, SCALE = 6, GAP = 900;
+const state = { speed: 1, mode: 'bound across', coat: 'summer' };
+
+function paint(c, px, pal, ox, oy, s) {
+  px.forEach((r, y) => { for (let x = 0; x < r.length; x++) {
+    const ch = r[x]; if (ch === '.') continue;
+    c.fillStyle = pal[ch]; c.fillRect((ox + x) * s, (oy + y) * s, s, s);
+  } });
+}
+
+// A player walks a list of [clip, times] steps. In a card a one-shot holds its last
+// frame for GAP ms and replays.
+function player(steps) {
+  return { steps, step: 0, rep: 0, f: 0, acc: 0, x: 0, hold: false };
+}
+function advance(p, dt, card) {
+  p.acc += dt;
+  for (;;) {
+    if (p.hold) {
+      if (p.acc < GAP) return;
+      p.acc -= GAP; p.hold = false; p.f = 0; continue;
+    }
+    const [name, times] = p.steps[p.step], a = A[name];
+    if (p.acc < a.frames[p.f].ms) return;
+    p.acc -= a.frames[p.f].ms;
+    p.x += a.travel || 0;
+    if (++p.f < a.frames.length) continue;
+    if (card && !a.loop) { p.f = a.frames.length - 1; p.hold = true; continue; }
+    p.f = 0;
+    if (++p.rep < times) continue;
+    p.rep = 0; p.step = (p.step + 1) % p.steps.length;
+  }
+}
+function current(p) {
+  const [name] = p.steps[p.step];
+  return [name, A[name].frames[p.f]];
+}
+
+const cards = [];
+for (const name of Object.keys(A)) {
+  const a = A[name], el = document.createElement('div');
+  el.className = 'clip';
+  const total = a.frames.reduce((s, f) => s + f.ms, 0);
+  el.innerHTML = `<h2>${name}</h2><div class="meta">${a.loop ? 'loop' : 'one-shot, replays after ' + GAP + ' ms'} · ${a.frames.length} frames · ${total} ms · <span></span></div>`;
+  const row = document.createElement('div'); row.className = 'coats';
+  const cvs = Object.keys(S.palettes).map(coat => {
+    const f = document.createElement('figure'), cv = document.createElement('canvas');
+    cv.width = S.w * SCALE; cv.height = S.h * SCALE;
+    f.append(cv, document.createTextNode(coat)); row.append(f);
+    return [coat, cv];
+  });
+  el.append(row); document.getElementById('grid').append(el);
+  cards.push({ p: player([[name, 1]]), cvs, label: el.querySelector('.meta span') });
+}
+
+const MODES = {
+  'bound across': [['bound', 1]],
+  'stop and sit': [['bound', 3], ['sit_down', 1], ['sit', 2], ['groom', 1], ['sit', 1], ['bound', 4]],
+  'wake up': [['sleep', 3], ['wake', 1], ['sit', 2]],
+};
+let strip = player(MODES[state.mode]);
+const scv = document.getElementById('strip');
+function sizeStrip() {
+  const w = Math.max(S.w * 2, Math.floor(scv.parentElement.clientWidth / SCALE));
+  scv.width = w * SCALE; scv.height = S.h * SCALE; scv.style.width = scv.width + 'px';
+}
+function drawStrip() {
+  const c = scv.getContext('2d'), w = scv.width / SCALE;
+  c.clearRect(0, 0, scv.width, scv.height);
+  const [name, fr] = current(strip);
+  const still = strip.steps.every(([n]) => !A[n].travel);
+  const x = still ? Math.floor((w - S.w) / 2) : ((strip.x % (w + S.w)) + w + S.w) % (w + S.w) - S.w;
+  paint(c, fr.px, S.palettes[state.coat], Math.round(x), 0, SCALE);
+  document.getElementById('strip-note').textContent = `${state.mode}: ${name}, frame ${strip.f + 1}/${A[name].frames.length}` + (A[name].travel ? `, travel ${A[name].travel} px/frame` : '');
+}
+
+let last = performance.now();
+function tick(now) {
+  const dt = (now - last) * state.speed; last = now;
+  for (const card of cards) {
+    advance(card.p, dt, true);
+    const [name, fr] = current(card.p);
+    for (const [coat, cv] of card.cvs) {
+      const c = cv.getContext('2d'); c.clearRect(0, 0, cv.width, cv.height);
+      paint(c, fr.px, S.palettes[coat], 0, 0, SCALE);
+    }
+    card.label.textContent = `frame ${card.p.f + 1}`;
+  }
+  advance(strip, dt, false);
+  drawStrip();
+  requestAnimationFrame(tick);
+}
+
+function picker(id, keys, key, after, fmt = k => k) {
+  const fs = document.getElementById(id);
+  keys.forEach(k => {
+    const b = document.createElement('button'); b.textContent = fmt(k);
+    b.setAttribute('aria-pressed', state[key] === k);
+    b.onclick = () => { state[key] = k; [...fs.querySelectorAll('button')].forEach(x => x.setAttribute('aria-pressed', x === b)); after(); };
+    fs.append(b);
+  });
+}
+picker('speed', [0.5, 1, 1.75, 2], 'speed', () => {}, k => k + 'x');
+picker('strip-mode', Object.keys(MODES), 'mode', () => { strip = player(MODES[state.mode]); });
+picker('strip-coat', Object.keys(S.palettes), 'coat', () => {});
+addEventListener('resize', sizeStrip);
+sizeStrip();
+requestAnimationFrame(tick);
+</script>
+</body>
+</html>
