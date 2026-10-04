@@ -32,7 +32,20 @@ describe('deskX', () => {
 })
 
 describe('hitTop cap', () => {
-  it('can search the whole clip when no cap applies', () => {
-    expect(hitTop(ME, 'desk', Infinity)).toBeLessThanOrEqual(hitTop(ME, 'desk'))
+  it('starts the search from the cap', () => {
+    expect(hitTop(ME, 'desk', 0)).toBe(0)
+  })
+
+  it("finds the think clip's highest painted row, which is above the desk's clear rows", () => {
+    const frames = ME.animations.think.frames
+    const first = Math.min(...frames.map((f) => f.px.findIndex((r) => /[^.]/.test(r))))
+    expect(first).toBe(0)
+    expect(hitTop(ME, 'think', ME.animations.think.h)).toBe(first)
+  })
+
+  it('lets a clip drawn below the clear rows lower the target only when the cap allows', () => {
+    const low = { animations: { low: { frames: [{ ms: 1, px: ['....', '....', '.#..'] }] } } } as unknown as Sprite
+    expect(hitTop(low, 'low', 3)).toBe(2)
+    expect(hitTop(low, 'low', 1)).toBe(1)
   })
 })

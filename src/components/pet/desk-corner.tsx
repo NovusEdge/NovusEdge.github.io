@@ -1,15 +1,14 @@
 import { useEffect, useRef } from 'react'
-import { useTranslation } from 'react-i18next'
 import { prefersReducedMotion } from '../../lib/motion'
 import type { Side } from '../../lib/pet/corners'
 import { meClips, type MeEvent, type MeState } from '../../lib/pet/me-brain'
-import { usePetPanelOpen } from '../../lib/pet/panel-store'
 import { edgeGlow, NET, pulseLevel } from '../../lib/pet/neural-net'
 import type { Sprite } from '../../lib/pet/sprite'
 import { subscribe } from '../../lib/pet/ticker'
+import { CORNER_INSET, CornerHandle } from './corner-handle'
 import { PixelSprite } from './pixel-sprite'
 
-export const DESK_LEFT = 16
+export const DESK_LEFT = CORNER_INSET
 // the net floats in the clear rows above the laptop
 const NET_X = 40
 // desk frames are fully transparent above this row; clicks there belong to the page
@@ -77,8 +76,6 @@ type Props = {
 }
 
 export function DeskCorner({ me, stoat, side, scale, state, send, reduced, napping, coat, onOpen }: Props) {
-  const { t } = useTranslation()
-  const open = usePetPanelOpen()
   const typing = useRef(false)
   const desk = me.animations.desk
   const [SX, SY, , SH] = desk.stoatSlot!
@@ -89,15 +86,7 @@ export function DeskCorner({ me, stoat, side, scale, state, send, reduced, nappi
   const standTop = me.animations.stand_up?.standAt?.[1] ?? DH - me.h
   return (
     <>
-      <button
-        type="button"
-        onClick={onOpen}
-        aria-label={t('pet.settings')}
-        aria-haspopup="dialog"
-        aria-expanded={open}
-        className="group pointer-events-none fixed bottom-0 z-30 block leading-none focus-visible:outline-2 focus-visible:outline-gold"
-        style={{ [side]: DESK_LEFT, width: DW * scale, height: DH * scale }}
-      >
+      <CornerHandle side={side} width={DW * scale} height={DH * scale} hitTop={top * scale} onOpen={onOpen}>
         <span
           aria-hidden="true"
           className="pointer-events-none relative block"
@@ -120,11 +109,7 @@ export function DeskCorner({ me, stoat, side, scale, state, send, reduced, nappi
             <PixelSprite sprite={stoat} clip="sleep" variant={coat} scale={scale} playing={!reduced} style={{ position: 'absolute', left: SX * scale, top: (SY + SH - stoat.h) * scale }} />
           )}
         </span>
-        <span className="absolute left-0 cursor-pointer" style={{ top: top * scale, width: DW * scale, height: (DH - top) * scale, pointerEvents: 'auto' }} />
-        <span className={`pointer-events-none absolute bottom-full ${side === 'left' ? 'left-2' : 'right-2'} mb-1 whitespace-nowrap rounded border border-charcoal/20 bg-bone px-2 py-0.5 font-mono text-xs opacity-0 transition-opacity group-hover:opacity-100 group-focus-visible:opacity-100 dark:border-bone/20 dark:bg-charcoal`}>
-          {t('pet.settings')}
-        </span>
-      </button>
+      </CornerHandle>
       {clips.walker && (
         <div style={{ position: 'fixed', left: deskX(side, state.x, me.w, scale, window.innerWidth), bottom: (DH - standTop - me.h) * scale, zIndex: 30, lineHeight: 0, pointerEvents: 'none' }}>
           <PixelSprite
