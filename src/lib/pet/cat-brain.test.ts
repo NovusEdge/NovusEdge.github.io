@@ -68,6 +68,18 @@ describe('moving', () => {
     expect(back).toMatchObject({ mode: 'zoomies', target: 100, dir: -1 })
     expect(run(back, { type: 'step', now: 3_000, px: 400 }).mode).toBe('sit_down')
   })
+
+  it('walks to a negative target with viewport shrink and arrives when clamped', () => {
+    const walking = run(initCat(0, 100, false), { type: 'go', now: 1, target: -10 })
+    expect(walking.target).toBe(0)
+    const s = run(walking, { type: 'step', now: 2, px: 100 })
+    expect(s).toMatchObject({ mode: 'sit_down', x: 0, target: null })
+  })
+
+  it('clamps zoomies target with negative viewport width', () => {
+    const z = run(initCat(0, 100, false), tick(1_000, 0, -10))
+    expect(z).toMatchObject({ mode: 'zoomies', target: 0 })
+  })
 })
 
 describe('stoat', () => {
@@ -89,6 +101,12 @@ describe('reduced motion', () => {
     const after = run(s, tick(90_000, 0), { type: 'hover', now: 1 }, { type: 'go', now: 2, target: 0 }, { type: 'click', now: 3, roll: 0.5 })
     expect(after.mode).toBe('parked')
     expect(clipFor('parked')).toBe('sleep')
+  })
+
+  it('clamps parked cat position when viewport shrinks', () => {
+    const s = run(initCat(0, 900, true), tick(1, 1, 300))
+    expect(s.mode).toBe('parked')
+    expect(s.x).toBe(300)
   })
 })
 
