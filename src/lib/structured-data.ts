@@ -31,7 +31,7 @@ const PERSON = {
     'https://github.com/NovusEdge',
     'https://github.com/engrammic-ai',
     'https://www.linkedin.com/in/aliasgarkhimani/',
-    'https://twitter.com/0kaliasgar',
+    'https://x.com/0kaliasgar',
     'https://huggingface.co/NovusEdge',
     'https://ko-fi.com/aliasgarkhimani',
   ],
