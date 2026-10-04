@@ -16,6 +16,7 @@ import NotFound from './routes/not-found'
 import { SiteFooter } from './components/site-footer'
 import { AccessibilityPanel } from './components/accessibility-panel'
 import { PetLayer } from './components/pet/pet-layer'
+import { PetPanel } from './components/pet/pet-panel'
 import ClickSpark from './components/react-bits/ClickSpark'
 import { DEFAULT_LOCALE, PREFIXED_LOCALES, stripLocale, type Locale } from './i18n/paths'
 import { LocaleContext } from './i18n/context'
@@ -92,6 +93,7 @@ function LocaleTree({ locale }: { locale: Locale }) {
         {!bare.startsWith('/stack') && <SiteFooter />}
         <AccessibilityPanel />
         <PetLayer />
+        <PetPanel />
       </LocaleContext>
     </I18nextProvider>
   )
