@@ -4,7 +4,7 @@ Date: 2026-10-05. Status: revised after an Opus review; awaiting the client's wr
 
 Builds on the phase 1 and phase 3 specs (`2026-10-04-pixel-friends-phase1-design.md`, `2026-10-04-pixel-friends-phase3-design.md`). Everything there holds unless this spec says otherwise. Phase 1 said the bubbles would replace the contact card; this spec keeps the card as the fallback.
 
-The client picked the "Levitate" concept from three Opus mockups and approved a second round with hover focus, readable labels and vector logos. The mockup sources live in `tools/sprites/footer-mockups/`: `python3 build.py` regenerates `index.html`, which plays every concept in a recreated footer at 1440 and 390 px. Levitate is `concepts.py` (pixel-me) plus `bubbles2.py` (the bubble body), and `index.tpl.html` holds the motion and focus logic this spec quotes. Judge the art from that page playing, not from the PNGs in `out/`.
+The client picked the "Levitate" concept from three Opus mockups and approved a second round with hover focus, readable labels and vector logos. The mockup sources live in `tools/sprites/footer/` (named `footer-mockups/` until the implementation renames it): `python3 build.py` regenerates `index.html`, which plays every concept in a recreated footer at 1440 and 390 px. Levitate is `concepts.py` (pixel-me) plus `bubbles2.py` (the bubble body), and `index.tpl.html` holds the motion and focus logic this spec quotes. Judge the art from that page playing, not from the PNGs in `out/`.
 
 ## What it looks like
 
@@ -100,7 +100,7 @@ A bubble is far-side when `sin(angle) < -0.15` and its fly-out is past 60%. Far-
 ## Architecture
 
 - `src/lib/contact-links.ts` (new) holds the six links as `{ id, name, href }`. The card maps each id to its lottie clip or simple-icon and the bubbles map it to a vector icon, so the card's lazy imports stay out of the footer.
-- `src/components/pet/footer-friend.tsx` (new): `FooterFriend` is loaded with `lazy()`, the same way `FriendsLayer` is, so `me.json` and the pet code never reach the main bundle. It renders `null` on the server and until mounted, reads `usePetPrefs` and the reduced-motion hook, draws pixel-me with `PixelSprite`, and owns the state machine and focus state.
+- `src/components/pet/footer-friend.tsx` (new): `FooterFriend` is loaded with `lazy()`, the same way `FriendsLayer` is, so the footer sprites and the pet code never reach the main bundle. It renders `null` on the server and until mounted, reads `usePetPrefs` and the reduced-motion hook, draws pixel-me with `PixelSprite`, and owns the state machine and focus state.
 - `src/lib/pet/reduced-motion.ts` (new): the `useReducedMotion` hook moves here from `friends-layer.tsx` and is exported for both layers.
 - `src/lib/pet/orbit.ts` (new): a pure function from time, bubble index, bubble count, the ellipse and the fly-out progress to a bubble's position and its far-side flag.
 - `src/lib/pet/footer-view.ts` (new): a small store that `FooterFriend` sets from its own IntersectionObserver. `FriendsLayer` reads it to fade the corner pixel-me out while the footer friend is in view.
@@ -108,11 +108,10 @@ A bubble is far-side when `sin(angle) < -0.15` and its fly-out is past 60%. Far-
 
 ## Sprite pipeline
 
-- Pixel-me clips `levitate` (loop) and `levitate_burst` (one-shot) are ported from `concepts.py` into `tools/sprites/me/` and built with `build.py`.
-- Each frame carries two extra fields the code needs: `g` (the "@" bob in art px) and `ev` (`'flare'` or `'emit'`, the moments the glyph flares and the bubbles leave). `export.py` copies both, and the `Frame` type in `src/lib/pet/sprite.ts` gains them as optional fields.
-- The bubble generator moves from `bubbles2.py` to `tools/sprites/bubble/`, and `export.py` writes `src/assets/sprites/bubble.json`.
+- `tools/sprites/footer-mockups/` is renamed `tools/sprites/footer/` and becomes the art's source of truth: the approved drawing code is used as is, not ported. `export.py` gains a footer step that writes two new sprites: `src/assets/sprites/footer.json` (pixel-me's `levitate` loop and `levitate_burst` one-shot from `concepts.py`, 48 x 66 art px, plus the glyph anchor) and `src/assets/sprites/bubble.json` (the nine clips from `bubbles2.py`). The footer never loads `me.json`.
+- Each frame carries two extra fields the code needs: `g` (the "@" bob in art px) and `ev` (`'flare'` or `'emit'`, the moments the glyph flares and the bubbles leave). `export.py` copies both, and the `Frame` type in `src/lib/pet/sprite.ts` gains them as optional fields; `Sprite` gains an optional `anchor`.
 - Art follows the earlier phases: true in-betweens at 40 to 60 ms per motion frame, slow loops at 1.75x, short one-shots at 1x with extra in-betweens. No hair tuck.
-- Code can land before the art: a missing pixel-me clip falls back to `idle`, a missing one-shot ends at once, and a stub `bubble.json` stands in until the real one is exported.
+- The art is already approved, so the export lands first and the code builds on the real sprites.
 
 ## Testing
 
@@ -124,5 +123,5 @@ A bubble is far-side when `sin(angle) < -0.15` and its fly-out is past 60%. Far-
 - The card and the bubbles render the same links in the same order from `contact-links.ts`.
 - `FooterFriend` renders nothing on the server.
 - Sprite tests cover the new clips, the `g`/`ev` fields and `bubble.json`.
-- A build check that `me.json` is not in the entry chunk.
+- A build check that the footer sprites are not in the entry chunk.
 - Browser check at 1440 and 390 px: idle, burst, hover focus, Tab through all six, Esc and click-outside close, the corner pixel-me fading out at the footer, pixel friends off, reduced motion.
