@@ -4,7 +4,7 @@ Date: 2026-10-04. Status: spec, awaiting review.
 
 A resident pixel cat that lives on every page, a rare stoat visitor, and a pixel version of the site owner at a desk. Project spot icons are a separate, later spec.
 
-Approved art and its generators are in `docs/superpowers/specs/2026-10-04-pixel-pets/`. The spec refers to them as the reference set.
+Approved art and its generators are in `tools/sprites/`. The spec refers to them as the reference set.
 
 ## Decisions already made
 
@@ -66,7 +66,7 @@ These play in fixed places on a page, separate from the wandering cat. While one
 
 ### Animation list
 
-Approved: idle, walk. To draw in the sleek style, hand-keyed, using the chibi draft (`chibi-suite-draft.json`) only as a motion reference: run, sit_down, loaf, sleep, wake, groom, look, swat, startle, pounce, chase_tail, confused, happy, zoomies (can reuse run). Each one is checked against the sitting idle side by side for mass and proportion before it is accepted.
+Approved: idle, walk. To draw in the sleek style, hand-keyed, using the chibi draft (`tools/sprites/chibi-suite-draft.json`) only as a motion reference: run, sit_down, loaf, sleep, wake, groom, look, swat, startle, pounce, chase_tail, confused, happy, zoomies (can reuse run). Each one is checked against the sitting idle side by side for mass and proportion before it is accepted.
 
 ## The stoat
 

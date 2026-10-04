@@ -40,3 +40,5 @@ TONE.md
 .impeccable/
 
 .env
+__pycache__/
+tools/sprites/**/png/
