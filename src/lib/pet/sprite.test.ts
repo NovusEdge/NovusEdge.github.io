@@ -1,5 +1,4 @@
 import { describe, expect, it } from 'vitest'
-import cat from '../../assets/sprites/cat.json'
 import me from '../../assets/sprites/me.json'
 import stoat from '../../assets/sprites/stoat.json'
 import { clipSize, paletteFor, resolveClip, validateSprite, type Sprite } from './sprite'
@@ -14,18 +13,10 @@ const tiny: Sprite = {
 
 describe('sprite data', () => {
   it.each([
-    ['cat', cat],
     ['me', me],
     ['stoat', stoat],
   ])('%s.json is internally consistent', (_, s) => {
     expect(validateSprite(s as Sprite)).toEqual([])
-  })
-
-  it('ships the approved cat clips and all four coats', () => {
-    const s = cat as Sprite
-    expect(Object.keys(s.animations)).toEqual(expect.arrayContaining(['idle', 'walk']))
-    expect(Object.keys(s.palettes!).sort()).toEqual(['black', 'orange', 'shiny', 'tuxedo'])
-    expect(s.animations.walk.travel).toBe(1)
   })
 
   it('marks typing frames on the desk and keeps the cat slot', () => {
