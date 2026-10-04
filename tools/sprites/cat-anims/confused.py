@@ -5,7 +5,7 @@ import os
 import sys
 
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), 'kit'))
-from catkit import check, frag, head, sit_with_head, TAIL_OUT  # noqa: E402
+from catkit import check, frag, head, sit_with_head  # noqa: E402
 
 # Tilted toward the viewer's left: the left half of the face drops a row, the
 # right ear folds out sideways.
@@ -71,7 +71,7 @@ FRAMES = [
     (700, frame(TILT_R, 2, 1)),
     (300, frame(TILT_R, 2, 0)),
     (300, frame(TILT_R, 2, 1, tail_pose='mid')),
-    (300, frame(TILT_R, 2, 0, tail=TAIL_OUT)),
+    (300, frame(TILT_R, 2, 0, tail_pose='out')),
     (180, frame(CENTER, 3, 1, tail_pose='mid')),
     (400, frame(CENTER, 3, 0)),
     (220, frame(CENTER, 3, 1, breathe=True)),

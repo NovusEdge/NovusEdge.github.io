@@ -59,12 +59,6 @@ SIT = idle.frame()                      # idle frame 0: every resting clip start
 GROUND = 29                             # paw row shared by idle and walk
 
 
-# The idle's 'out' tail reaches column 31 and loses its outline on rows 21-22
-# (the approved idle frames 04-06 have this too). Clips that swing the tail out
-# use this one, a column further in.
-TAIL_OUT = [(21, 28), (25, 28), (27, 27), (28, 25), (29, 23), (29, 20), (30, 17)]
-
-
 def sit_with_head(rows_=None, y=None, tail=None, **kw):
     """The idle sit with its head swapped for a hand-drawn one and/or its tail
     drawn along `tail` (idle tail points)."""
