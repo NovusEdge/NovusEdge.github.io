@@ -23,6 +23,9 @@ export const hitTop = (sprite: Sprite, clip: string, cap = CLEAR_ROWS) =>
     return y >= 0 ? Math.min(top, y) : top
   }, cap)
 
+// position: fixed offsets are measured from the viewport without a classic scrollbar, which innerWidth includes
+export const viewportWidth = () => document.documentElement.clientWidth
+
 export const deskX = (side: Side, x: number, w: number, scale: number, vw: number) =>
   side === 'left' ? DESK_LEFT + x * scale : vw - DESK_LEFT - (x + w) * scale
 
@@ -111,7 +114,7 @@ export function DeskCorner({ me, stoat, side, scale, state, send, reduced, nappi
         </span>
       </CornerHandle>
       {clips.walker && (
-        <div style={{ position: 'fixed', left: deskX(side, state.x, me.w, scale, window.innerWidth), bottom: (DH - standTop - me.h) * scale, zIndex: 30, lineHeight: 0, pointerEvents: 'none' }}>
+        <div style={{ position: 'fixed', left: deskX(side, state.x, me.w, scale, viewportWidth()), bottom: (DH - standTop - me.h) * scale, zIndex: 30, lineHeight: 0, pointerEvents: 'none' }}>
           <PixelSprite
             sprite={me}
             clip="walk"

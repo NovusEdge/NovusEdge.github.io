@@ -4,7 +4,7 @@ import { posts, type Post } from '../posts'
 import type { Mode, PetEvent } from './pet-brain'
 
 export type Persona = 'desk' | 'desk-right' | 'thinking' | 'scientist'
-type DistributiveOmit<T, K extends string> = T extends unknown ? Omit<T, K> : never
+export type DistributiveOmit<T, K extends string> = T extends unknown ? Omit<T, K> : never
 export type RouteEvent = DistributiveOmit<PetEvent, 'now'>
 
 const POST_PERSONAS: Persona[] = ['thinking', 'scientist']
