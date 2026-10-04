@@ -38,8 +38,8 @@ export function ContactBubble({ ref, sprite, scale, logo, href, newTab, label, i
         target={newTab ? '_blank' : undefined}
         rel="noopener noreferrer"
         className="relative block outline-none"
-        onMouseEnter={onEnter}
-        onMouseLeave={onLeave}
+        onPointerEnter={(e) => e.pointerType === 'mouse' && onEnter()}
+        onPointerLeave={(e) => e.pointerType === 'mouse' && onLeave()}
         onFocus={onFocus}
         onBlur={onBlur}
       >

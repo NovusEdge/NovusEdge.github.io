@@ -125,11 +125,13 @@ function Levitate({ reduced, onCard }: { reduced: boolean; onCard: () => void })
     if (state === 'bursting' && from === 'closing') {
       setSpawned(false)
       bubs.current = []
+      hoverB.current = keyB.current = focusedRef.current = null
+      setFocused(null)
     }
     if (state === 'closing') {
       if (!bubs.current.length) return send('closeEnd')
       // hiding the last bubble would make Chrome drop focus to body, so move it now
-      if (root.current?.querySelector('nav')?.contains(document.activeElement)) button.current?.focus()
+      if (root.current?.querySelector('nav')?.contains(document.activeElement)) button.current?.focus({ preventScroll: true })
       bubs.current.forEach((b, i) => {
         if (b.phase === 'gone') return
         if (b.phase === 'fly') {
@@ -152,7 +154,8 @@ function Levitate({ reduced, onCard }: { reduced: boolean; onCard: () => void })
       bubs.current = []
       hoverB.current = keyB.current = focusedRef.current = null
       setFocused(null)
-      if (hadFocus) button.current?.focus()
+      hoverMe.current = false
+      if (hadFocus) button.current?.focus({ preventScroll: true })
     }
   }, [state])
 
@@ -256,8 +259,8 @@ function Levitate({ reduced, onCard }: { reduced: boolean; onCard: () => void })
           className="absolute z-[4] cursor-pointer"
           style={{ left: -ax * S, top: -ay * S }}
           onClick={() => (reduced ? onCard() : send('toggle'))}
-          onMouseEnter={() => (hoverMe.current = true)}
-          onMouseLeave={() => (hoverMe.current = false)}
+          onPointerEnter={(e) => e.pointerType === 'mouse' && (hoverMe.current = true)}
+          onPointerLeave={(e) => e.pointerType === 'mouse' && (hoverMe.current = false)}
         >
           <PixelSprite
             sprite={ME}
