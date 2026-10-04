@@ -1,5 +1,10 @@
 # blips - short-form updates
 
+- date: 2026-10-04
+  text: "gotta be cute asf with yo homies sometimes lmao"
+  media: cute-with-the-homies.jpg
+  tags: [life]
+
 - date: 2026-10-03
   text: "checked with Cabin just rn for analytics"
   media: cabin-analytics-china.jpg
@@ -134,6 +139,10 @@
 
 - date: 2025-11-20
   text: "good coffee, warm socks, cant complain"
+  tags: [life]
+
+- date: 2024-09-01
+  media: red-cap-2024.jpg
   tags: [life]
 
 # 2023 - old era

@@ -13,7 +13,7 @@ import { DeskScene } from '../../components/pet/desk-scene'
 
 const building = projects.filter((p) => p.phase === 'building')
 
-const PHOTOS = ['/photos/profile1.JPG', '/photos/profile2.JPG', '/photos/profile3.JPG', '/photos/profile4.JPG', '/photos/profile5.JPG']
+const PHOTOS = ['/photos/profile1.JPG', '/photos/profile2.JPG', '/photos/profile3.JPG','/photos/profile5.JPG', '/photos/profile6.jpg', '/photos/profile7.jpg']
 
 const DOSSIER_KEYS = [
   { keyI18n: 'about.dossier.codingSince', val: '2013' },
