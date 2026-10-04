@@ -9,6 +9,7 @@ import { projects, type Project } from '../../content/projects'
 import { revealCards } from '../../lib/reveals'
 import { RedactedCard } from '../../components/redacted-card'
 import { useLocalePath } from '../../i18n/use-locale-path'
+import { DeskScene } from '../../components/pet/desk-scene'
 
 const building = projects.filter((p) => p.phase === 'building')
 
@@ -233,6 +234,11 @@ export default function AboutPage() {
           <span className="rounded bg-gold/10 px-2 py-1 text-gold">{t('about.now')}</span>
           <span className="text-charcoal/70 dark:text-bone/70">{t('about.nowText')}</span>
           <span className="text-charcoal/30 dark:text-bone/30">({NOW_UPDATED})</span>
+        </div>
+
+        {/* Desk */}
+        <div data-card className="mt-10 flex justify-center">
+          <DeskScene scale={3} />
         </div>
 
         {/* 03 - Building Now */}
