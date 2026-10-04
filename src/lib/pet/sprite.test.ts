@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import cat from '../../assets/sprites/cat.json'
 import me from '../../assets/sprites/me.json'
+import stoat from '../../assets/sprites/stoat.json'
 import { clipSize, paletteFor, resolveClip, validateSprite, type Sprite } from './sprite'
 
 const tiny: Sprite = {
@@ -15,6 +16,7 @@ describe('sprite data', () => {
   it.each([
     ['cat', cat],
     ['me', me],
+    ['stoat', stoat],
   ])('%s.json is internally consistent', (_, s) => {
     expect(validateSprite(s as Sprite)).toEqual([])
   })
@@ -31,6 +33,12 @@ describe('sprite data', () => {
     expect(desk.frames.some((f) => f.typing)).toBe(true)
     expect(desk.frames.some((f) => !f.typing)).toBe(true)
     expect(desk.catSlot).toHaveLength(4)
+  })
+
+  it('ships the stoat clips in both coats', () => {
+    const s = stoat as Sprite
+    expect(Object.keys(s.animations).sort()).toEqual(['bound', 'peek', 'periscope'])
+    expect(Object.keys(s.palettes!).sort()).toEqual(['summer', 'winter'])
   })
 })
 

@@ -72,4 +72,5 @@ def me():
 if __name__ == '__main__':
     write('cat.json', cat())
     write('me.json', me())
+    write('stoat.json', load('stoat/stoat.json'))
     print('wrote', OUT)
