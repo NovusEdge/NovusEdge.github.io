@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { PawPrint, X } from 'lucide-react'
 import { closePetPanel, openPetPanel, usePetPanelOpen } from '../../lib/pet/panel-store'
-import { panelSide, pawSide } from '../../lib/pet/corners'
+import { deskSide } from '../../lib/pet/corners'
 import { usePersona } from '../../lib/pet/persona'
 import { usePetPrefs } from '../../lib/pet/prefs-store'
 
@@ -11,8 +11,9 @@ export function PetPanel() {
   const open = usePetPanelOpen()
   const [prefs, setPrefs] = usePetPrefs()
   const persona = usePersona()
-  const paw = pawSide(persona) === 'left' ? 'left-6' : 'right-6'
-  const panel = panelSide(persona, prefs.on) === 'left' ? 'left-4' : 'right-4'
+  const onLeft = deskSide(persona) === 'left'
+  const paw = onLeft ? 'left-6' : 'right-6'
+  const panel = onLeft ? 'left-4' : 'right-4'
   const [mounted, setMounted] = useState(false)
   useEffect(() => setMounted(true), [])
 
