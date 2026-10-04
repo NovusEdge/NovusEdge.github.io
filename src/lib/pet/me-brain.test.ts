@@ -63,7 +63,17 @@ describe('desk and walk cycle', () => {
 
   it('turns back if the viewport shrinks under a walk', () => {
     const walking = run(initMe(0, HOME, false, 0), { type: 'tick', now: WALK_EVERY_MIN, width: 1000, roll: 1 }, { type: 'wrap' }, { type: 'end', now: 61_000, roll: 0 }, { type: 'step', px: 48 })
-    expect(run(walking, { type: 'tick', now: 62_000, width: HOME + 20, roll: 0 })).toMatchObject({ mode: 'returning', x: HOME + 20, target: HOME })
+    expect(run(walking, { type: 'tick', now: 62_000, width: HOME + 20, roll: 0 })).toMatchObject({ mode: 'returning', x: HOME + 16, target: HOME })
+  })
+
+  it('turns back on a whole 8 px multiple so sit_down starts on walk frame 0', () => {
+    const walking = run(initMe(0, HOME, false, 0), { type: 'tick', now: WALK_EVERY_MIN, width: 1000, roll: 1 }, { type: 'wrap' }, { type: 'end', now: 61_000, roll: 0 }, { type: 'step', px: 48 })
+    for (const width of [HOME + 8, HOME + 15, HOME + 23, HOME + 47]) {
+      const turned = run(walking, { type: 'tick', now: 62_000, width, roll: 0 })
+      expect(turned.mode).toBe('returning')
+      expect((turned.x - HOME) % 8).toBe(0)
+      expect(turned.x).toBeLessThanOrEqual(width)
+    }
   })
 
   it('never leaves the desk under reduced motion', () => {

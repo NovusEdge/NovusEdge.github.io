@@ -29,7 +29,6 @@ BOUND_GROUND_SPEED = 1.75
 def timings(name, mod):
     t = TEMPO.get(name, 1)
     return [int(ms / t + 0.5) for ms in mod.MS]
-CAT = os.path.join(OUT, '..', 'walk-sleek', 'cat.json')
 
 
 def frames(mod):
@@ -101,36 +100,6 @@ def sheet(fs, ms, path, s=6, gap=10, lab=34):
     im.save(path)
 
 
-def versus(stoats, path, s=6, gap=16):
-    """The cat's sitting idle next to stoat frames, all bottom-anchored to one line
-    the way the site anchors them to the viewport edge."""
-    with open(CAT) as f:
-        cat = json.load(f)
-    sit = cat['animations']['idle']['frames'][0]['px']
-    pal = cat['palettes']['tuxedo']
-    cw, ch = len(sit[0]), len(sit)
-    width = gap + cw * s + len(stoats) * (gap + W * s) + gap
-    im = Image.new('RGB', (width, ch * s + 2 * gap + 24), BG)
-    cimg = Image.new('RGB', (cw * s, ch * s), BG)
-    d = ImageDraw.Draw(cimg)
-    for y, r in enumerate(sit):
-        for x, c in enumerate(r):
-            if c != '.':
-                v = pal[c]
-                d.rectangle([x * s, y * s, x * s + s - 1, y * s + s - 1],
-                            fill=tuple(int(v[i:i + 2], 16) for i in (1, 3, 5)))
-    base = gap + ch * s
-    im.paste(cimg, (gap, gap))
-    dr = ImageDraw.Draw(im)
-    labels = ['cat, sitting idle']
-    for i, (px, coat, label) in enumerate(stoats):
-        im.paste(render(px, PALETTES[coat], s), (gap + cw * s + gap + i * (gap + W * s), base - H * s))
-        labels.append(label)
-    dr.line([gap, base, width - gap, base], fill=(60, 60, 72))
-    dr.text((gap, base + 6), '  |  '.join(labels), fill=(130, 130, 145), font=font(13))
-    im.save(path)
-
-
 def main():
     anims, rendered = {}, {}
     for name, mod in CLIPS.items():
@@ -162,10 +131,6 @@ def main():
     os.makedirs(os.path.join(OUT, 'sheets'), exist_ok=True)
     for name, mod in CLIPS.items():
         sheet(rendered[name], timings(name, mod), os.path.join(OUT, 'sheets', f'{name}.png'))
-    b = rendered['bound']
-    versus([(b[6], 'summer', 'bound 07 arch, summer'), (b[16], 'summer', 'bound 17 stretch, summer'),
-            (b[6], 'winter', 'bound 07, winter')],
-           os.path.join(OUT, 'sheets', 'stoat-vs-cat.png'))
     with open(os.path.join(OUT, 'preview.tpl.html')) as f:
         page = f.read().replace('/*SPRITE*/', json.dumps(data, separators=(',', ':')))
     with open(os.path.join(OUT, 'preview.html'), 'w') as f:

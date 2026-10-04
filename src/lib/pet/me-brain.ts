@@ -35,9 +35,11 @@ export function meReducer(s: MeState, e: MeEvent): MeState {
   if (s.mode === 'still') return s
   switch (e.type) {
     case 'tick': {
-      const width = Math.max(s.home, e.width)
+      // Floored to a whole walk cycle past home: turning back anywhere else leaves
+      // sit_down starting mid-stride when the viewport shrinks under a walk.
+      const width = s.home + Math.floor((Math.max(s.home, e.width) - s.home) / WALK_UNIT) * WALK_UNIT
       if (s.mode === 'desk' && e.now >= s.nextWalk) {
-        const room = Math.floor((width - s.home) / WALK_UNIT) * WALK_UNIT
+        const room = width - s.home
         if (room < WALK_UNIT) return { ...s, nextWalk: nextWalkAt(e.now, e.roll) }
         const want = Math.round((WALK_MIN + e.roll * (WALK_MAX - WALK_MIN)) / WALK_UNIT) * WALK_UNIT
         return { ...s, mode: 'due', target: s.home + Math.min(room, want) }

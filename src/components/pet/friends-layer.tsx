@@ -13,7 +13,7 @@ import { useStageClaimed } from '../../lib/pet/stage'
 import { DeskCorner, DESK_LEFT } from './desk-corner'
 import { StoatRoamer } from './stoat-roamer'
 
-// both JSON files infer tuples (catSlot, standAt) as number[]
+// both JSON files infer tuples (stoatSlot, standAt) as number[]
 const ME = meJson as unknown as Sprite
 const STOAT = stoatJson as unknown as Sprite
 export const STOAT_SCALE = 2
@@ -68,7 +68,7 @@ function Friends({ reduced }: { reduced: boolean }) {
   const first = useRef(true)
 
   // stoat px of the desk's stoat slot, and the rightmost x pixel-me may walk to
-  const deskStoatX = () => Math.floor((DESK_LEFT + ME.animations.desk.catSlot![0] * latest.current.deskScale) / STOAT_SCALE)
+  const deskStoatX = () => Math.floor((DESK_LEFT + ME.animations.desk.stoatSlot![0] * latest.current.deskScale) / STOAT_SCALE)
   const meRoom = () => Math.floor((window.innerWidth - DESK_LEFT) / latest.current.deskScale) - ME.w
 
   useEffect(() => {

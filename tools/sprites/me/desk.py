@@ -8,7 +8,7 @@ CROP = 7                            # keeps 12 clear rows above the head for sit
 DESK_Y = 44
 FLOOR = 59
 DESK_END = 96
-CAT_SLOT = [64, DESK_Y - 20 - CROP, 32, 20]   # x, y, w, h in exported coords
+STOAT_SLOT =[64, DESK_Y - 20 - CROP, 32, 20]   # x, y, w, h in exported coords
 MUG_AT = (31, DESK_Y - 7)           # handle faces the sitter
 
 PROPS = {
