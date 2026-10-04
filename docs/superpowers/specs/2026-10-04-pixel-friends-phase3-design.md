@@ -36,14 +36,11 @@ Thinking and scientist are ambient loops. They do not react to scrolling or read
 
 ## /portfolio: corner swap
 
-The desk moving bottom-right collides with the accessibility button. Two options are built behind one constant and shown side by side at the browser check; the client picks one and the other is deleted.
+The desk moving bottom-right collides with the accessibility button. At the browser check the client chose to swap sides: on `desk-right` routes the accessibility button moves to the bottom-left, and the paw button and the pet panel move to the bottom-right with the desk. The alternative, lifting the accessibility button above the desk, was dropped.
 
-- A, swap sides: on `desk-right` routes the accessibility button moves to the bottom-left and the paw button moves to the bottom-right with the desk.
-- B, lift the button: the accessibility button stays bottom-right and sits above the desk's top edge.
+The sides come from `deskSide` and `a11ySide` in `src/lib/pet/corners.ts`. The friends layer, the accessibility panel and the pet panel all read them, so they cannot disagree.
 
-The side comes from one hook, `useCornerSide()`, read by both the friends layer and `accessibility-panel.tsx`, so the two cannot disagree.
-
-The mirrored desk is the phase 1 desk drawn with `flip`. The laptop's scrolling code then reads backwards. If that looks wrong at the check, only the laptop screen frames are redrawn; the rest of the desk stays flipped.
+The mirrored desk is the phase 1 desk drawn with `flip`. The laptop's scrolling code then reads backwards. The client accepted the mirrored laptop text at the check, so the laptop screen frames were not redrawn.
 
 ## Unchanged from phase 1
 
