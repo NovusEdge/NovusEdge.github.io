@@ -128,7 +128,23 @@ function Levitate({ reduced, onCard }: { reduced: boolean; onCard: () => void })
     }
     if (state === 'closing') {
       if (!bubs.current.length) return send('closeEnd')
-      for (const b of bubs.current) if (b.phase !== 'gone') Object.assign(b, { phase: 'return', age: 0 })
+      // hiding the last bubble would make Chrome drop focus to body, so move it now
+      if (root.current?.querySelector('nav')?.contains(document.activeElement)) button.current?.focus()
+      bubs.current.forEach((b, i) => {
+        if (b.phase === 'gone') return
+        if (b.phase === 'fly') {
+          const t = b.age - i * FLY_STAGGER_MS
+          if (t < 0) {
+            b.phase = 'gone'
+            return
+          }
+          // start the return from the reach the bubble has now, not from full orbit
+          const t0 = RETURN_MS * Math.cbrt(1 - reach({ kind: 'fly', t }))
+          Object.assign(b, { phase: 'return', age: t0 + i * RETURN_STAGGER_MS })
+          return
+        }
+        Object.assign(b, { phase: 'return', age: 0 })
+      })
     }
     if (state === 'idle') {
       const hadFocus = !!root.current?.querySelector('nav')?.contains(document.activeElement)
