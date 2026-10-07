@@ -3,6 +3,7 @@ import type { TFunction } from 'i18next'
 import { blogHeadings, headingId as slugify } from '../lib/blog-headings'
 import ReactMarkdown, { type Components } from 'react-markdown'
 import remarkGfm from 'remark-gfm'
+import { withSlash } from '../i18n/paths'
 
 /** Document reference the whole page hangs off. Modules are DOC/NN. */
 export const PORTAL_DOC = 'OP-2609'
@@ -77,7 +78,7 @@ function buildComponents(mods: Map<number, PortalModule>, t: TFunction): Compone
     a({ href, children, ...props }) {
       const external = !!href && /^https?:\/\//.test(href)
       return (
-        <a href={href} {...(external ? { target: '_blank', rel: 'noreferrer noopener' } : {})} {...props}>
+        <a href={href && withSlash(href)} {...(external ? { target: '_blank', rel: 'noreferrer noopener' } : {})} {...props}>
           {children}
         </a>
       )

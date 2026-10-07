@@ -126,7 +126,7 @@ export default function StackPage() {
   const lp = useLocalePath()
   const reduced = prefersReducedMotion()
 
-  const view: View = pathname.endsWith('/graph') ? 'graph' : 'editorial'
+  const view: View = /\/graph\/?$/.test(pathname) ? 'graph' : 'editorial'
   const idx = VIEWS.indexOf(view)
 
   // track travel direction so the slide matches the edge you clicked

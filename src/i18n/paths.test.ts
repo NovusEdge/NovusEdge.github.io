@@ -6,6 +6,7 @@ import {
   localeFromPath,
   stripLocale,
   localePath,
+  withSlash,
 } from './paths'
 
 const de = LOCALES.find((l) => l.code === 'de')!
@@ -60,14 +61,31 @@ describe('stripLocale', () => {
 
 describe('localePath', () => {
   it('adds a prefix', () => {
-    expect(localePath('/about', de)).toBe('/de/about')
-    expect(localePath('/', zh)).toBe('/zh')
+    expect(localePath('/about', de)).toBe('/de/about/')
+    expect(localePath('/', zh)).toBe('/zh/')
   })
   it('swaps one prefix for another', () => {
-    expect(localePath('/de/about', zh)).toBe('/zh/about')
+    expect(localePath('/de/about', zh)).toBe('/zh/about/')
+    expect(localePath('/de/about/', zh)).toBe('/zh/about/')
   })
   it('strips back to bare for the default locale', () => {
-    expect(localePath('/de/about', DEFAULT_LOCALE)).toBe('/about')
+    expect(localePath('/de/about', DEFAULT_LOCALE)).toBe('/about/')
     expect(localePath('/de', DEFAULT_LOCALE)).toBe('/')
+    expect(localePath('/de/', DEFAULT_LOCALE)).toBe('/')
+  })
+})
+
+describe('withSlash', () => {
+  it('adds the slash before a fragment or query', () => {
+    expect(withSlash('/blog/plan-a-ai')).toBe('/blog/plan-a-ai/')
+    expect(withSlash('/blog/plan-a-ai#sources')).toBe('/blog/plan-a-ai/#sources')
+    expect(withSlash('/stack?x=1')).toBe('/stack/?x=1')
+  })
+  it('leaves files, fragments, external and slashed links alone', () => {
+    expect(withSlash('/feed.xml')).toBe('/feed.xml')
+    expect(withSlash('/assets/pandora-regnier.jpg')).toBe('/assets/pandora-regnier.jpg')
+    expect(withSlash('#ring')).toBe('#ring')
+    expect(withSlash('https://example.com/a')).toBe('https://example.com/a')
+    expect(withSlash('/about/')).toBe('/about/')
   })
 })

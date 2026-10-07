@@ -9,6 +9,7 @@ import { ShaderCanvas } from './shader-canvas'
 import { CodeCompare } from './code-compare'
 import { HueDiagram } from './hue-diagram'
 import { Spoiler } from './spoiler'
+import { withSlash } from '../i18n/paths'
 
 // hast -> plain text, just enough to sniff a marker
 function nodeText(node: unknown): string {
@@ -107,6 +108,9 @@ const components: Components = {
       )
     }
     return <pre>{children}</pre>
+  },
+  a({ node, href, ...props }) {
+    return <a href={href && withSlash(href)} {...props} />
   },
   // ponytail: YouTube embeds via ![alt](youtube-url) syntax
   img({ src, alt, ...props }) {

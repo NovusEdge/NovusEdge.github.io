@@ -4,6 +4,7 @@ import { blogHeadings, headingId as slugify } from '../lib/blog-headings'
 import { Children, type ReactNode } from 'react'
 import ReactMarkdown, { type Components } from 'react-markdown'
 import remarkGfm from 'remark-gfm'
+import { withSlash } from '../i18n/paths'
 
 /**
  * Editorial, not derived: the chip names what the section does to the argument,
@@ -98,7 +99,7 @@ function buildComponents(heads: Map<number, GridHeading>): Components {
     a({ href, children, ...props }) {
       const external = !!href && /^https?:\/\//.test(href)
       return (
-        <a href={href} {...(external ? { target: '_blank', rel: 'noreferrer noopener' } : {})} {...props}>
+        <a href={href && withSlash(href)} {...(external ? { target: '_blank', rel: 'noreferrer noopener' } : {})} {...props}>
           {markMoney(children)}
         </a>
       )

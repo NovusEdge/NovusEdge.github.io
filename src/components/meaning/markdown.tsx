@@ -1,5 +1,6 @@
 import ReactMarkdown, { type Components } from 'react-markdown'
 import remarkGfm from 'remark-gfm'
+import { withSlash } from '../../i18n/paths'
 import { blogHeadings, headingId } from '../../lib/blog-headings'
 import { DOODLE_KINDS, MEANING_POSTS, voiceMeta, type Doodle, type DoodleKind } from '../../lib/meaning-data'
 import { nodeText, voicesFromNode } from '../../lib/meaning-voices'
@@ -77,7 +78,7 @@ export function MeaningMarkdown({ slug, locale, children }: { slug: string; loca
       }
       const external = !!href && /^https?:\/\//.test(href)
       return (
-        <a href={href} {...(external ? { target: '_blank', rel: 'noreferrer noopener' } : {})} {...props}>
+        <a href={href && withSlash(href)} {...(external ? { target: '_blank', rel: 'noreferrer noopener' } : {})} {...props}>
           {kids}
         </a>
       )

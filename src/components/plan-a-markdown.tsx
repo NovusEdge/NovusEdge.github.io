@@ -4,6 +4,7 @@ import { Children, isValidElement, useEffect, useId, useRef, useState, type Reac
 import ReactMarkdown, { type Components } from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import rehypeHighlight from 'rehype-highlight'
+import { withSlash } from '../i18n/paths'
 
 function flattenText(node: ReactNode): string {
   if (node === null || node === undefined || typeof node === 'boolean') return ''
@@ -320,7 +321,7 @@ function buildComponents(cites: Map<string, number>, heads: Map<number, string>,
     },
     a({ href, children, ...props }) {
       if (!href || !isExternal(href)) {
-        return <a href={href} {...props}>{children}</a>
+        return <a href={href && withSlash(href)} {...props}>{children}</a>
       }
       const num = cites.get(href)
       // A link whose text carries markup arrives as React nodes, and
