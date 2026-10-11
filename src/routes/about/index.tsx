@@ -151,7 +151,7 @@ export default function AboutPage() {
 
   return (
     <>
-      <Meta title={`${t('about.title')} · NovusEdge`} description="Aliasgar Khimani (NovusEdge), an engineer in Finland. Infrastructure for accountable AI agents (docket, Engrammic, stoat), Claude Code tools like glowup, and an offensive-security background." />
+      <Meta title={`${t('about.title')} · NovusEdge`} description="Aliasgar Khimani (NovusEdge), an AI infrastructure engineer in Finland. Tools that keep AI agents accountable (docket, Engrammic, stoat, midwire), Claude Code tools like glowup, and an offensive-security background." />
       <section ref={scope} className="relative mx-auto max-w-4xl px-6 pb-24 pt-36">
 
         {/* 00 - Header */}

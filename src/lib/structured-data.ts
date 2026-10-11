@@ -16,6 +16,7 @@ const PERSON = {
   url: `${ORIGIN}/`,
   image: `${ORIGIN}/photos/headshot.jpg`,
   email: 'mailto:khimanialiasgar@gmail.com',
+  jobTitle: 'AI Infrastructure Engineer',
   description: 'Builds infrastructure for accountable AI agents and tools for Claude Code.',
   homeLocation: { '@type': 'Country', name: 'Finland' },
   knowsAbout: [
