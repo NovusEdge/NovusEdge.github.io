@@ -1,10 +1,10 @@
 # Aliasgar Khimani (@NovusEdge)
 
-> Personal portfolio and writing by a systems architect in Finland. I build AI infrastructure, agent memory and decision-tracking tools, evals, systems software, and hardware projects.
+> Personal portfolio and writing by Aliasgar Khimani (NovusEdge), founding engineer at BotSpot in Finland. I build infrastructure for accountable AI agents, tools for Claude Code, and hardware projects.
 
-Coding since 2013. My background is offensive security: CTFs, malware development, and pentesting. I work on storing agents' claims, supporting evidence, and decisions so later sessions can retrieve and revise them.
+Coding since 2013. My background is offensive security: CTFs, malware development, and pentesting. Most of my current work records what agents decide, believe and change, so later sessions and people can check and revise it: docket for decisions, Engrammic for claims and evidence, stoat for disposable VMs to run agents in, and midwire for checking an action's real effect.
 
-Updated: 2026-09-24. Consult the linked project pages and repositories for implementation details.
+Updated: 2026-10-11. Consult the linked project pages and repositories for implementation details.
 
 ## Site directory
 
@@ -14,6 +14,7 @@ Updated: 2026-09-24. Consult the linked project pages and repositories for imple
 - [Research](https://khimani.dev/research/): Research interests and work.
 - [Stack](https://khimani.dev/stack/): Tools and technologies I use.
 - [Blog](https://khimani.dev/blog/): Essays on AI, energy, governance, systems, and security, alongside older tutorials and personal posts.
+- [Blips](https://khimani.dev/blips/): Short dated updates, photos, and small news between posts.
 - [RSS](https://khimani.dev/feed.xml): Published posts.
 - [Sitemap](https://khimani.dev/sitemap.xml): Public page URLs, including localized routes.
 
@@ -22,18 +23,23 @@ English is the default language. Localized routes use `/fi/` for Finnish, `/de/`
 ## Selected projects
 
 - [Docket](https://khimani.dev/portfolio/docket/): Decision tracking for agents and complex agent workflows. Keeps settled choices, rejected options, and open questions outside the conversation, with supporting reasons and a history of superseded decisions. [Repository](https://github.com/NovusEdge/docket).
+- [glowup](https://glowup.khimani.dev/): A Claude Code mod with a side pane for changed files, subagents and context use, an activity line above the prompt, JSON packs and themes, and a pixel pet. [Repository](https://github.com/NovusEdge/glowup).
+- [a2a-mod](https://github.com/NovusEdge/a2a-mod): An Agent2Agent (A2A) client for Claude Code that hands tasks to non-Claude agents and returns their results. [Website](https://a2a.khimani.dev), [repository](https://github.com/NovusEdge/a2a-mod).
+- [midwire](https://github.com/NovusEdge/midwire): Early work on closed-loop agents: measuring what an action actually changed before the agent continues. No release yet.
 - [Engrammic](https://khimani.dev/portfolio/engrammic/): Epistemic memory for AI agents. Models claims, evidence, provenance, and decay so observations and beliefs can be traced to their sources. [Website](https://engrammic.ai), [repository](https://github.com/engrammic-ai/engrammic).
 - [Veil](https://khimani.dev/portfolio/veil/): A coding agent forked from Pi, with local SQLite memory, scored context eviction, and records of failed attempts. The memory store is local; a configured remote model provider can receive prompt context. [Repository](https://github.com/engrammic-ai/veil), [npm package](https://www.npmjs.com/package/@engrammic/veil).
 - [Primitives](https://github.com/engrammic-ai/primitives): Python schemas and rules for observations, claims, facts, and beliefs. [Repository](https://github.com/engrammic-ai/primitives), [PyPI package](https://pypi.org/project/engrammic-primitives/).
 - [stoat](https://khimani.dev/portfolio/stoat/): Local QEMU virtual machines on Linux, managed through a Go TUI and CLI. [Repository](https://github.com/NovusEdge/stoat).
-- [ØCLOAK](https://khimani.dev/portfolio/ocloak/): Research into a home reflector, portable devices, and software decoys intended to interfere with sensing and profiling. The planned 2.4 GHz reflector experiment has not established efficacy, and no hardware has shipped. [Repository](https://github.com/NovusEdge/ocloak).
-- [money-mesh](https://khimani.dev/portfolio/): An experimental autonomous-agent system with bounded budgets, node-owned business code, and a protected runtime. Self-sustaining operation is a design goal, not a claim of demonstrated profitability.
+- [ØCLOAK](https://khimani.dev/portfolio/ocloak/): Research into a home reflector, portable devices, and software decoys intended to interfere with sensing and profiling. The planned 2.4 GHz reflector experiment has not established efficacy, and no hardware has shipped. The repository is private.
+- [money-mesh](https://khimani.dev/portfolio/): An experimental autonomous-agent system with bounded budgets, node-owned business code, and a protected runtime. Self-sustaining operation is a design goal, not a claim of demonstrated profitability. Private.
 - [Curt](https://github.com/NovusEdge/curt): A Claude Code plugin with prose and code review skills, session hooks, and a linter. Writing guidance focuses on clarity, supported claims, and preserving the author's voice. [Repository](https://github.com/NovusEdge/curt).
+- [polished-artifacts](https://github.com/NovusEdge/polished-artifacts) and [software-architecture](https://github.com/NovusEdge/software-architecture): Claude Code plugins for a consistent artifact design language and a sourced architecture reference with a design-review command.
 - [goob](https://github.com/NovusEdge/goob): A Godot desktop pet that wanders, naps, and comments on desktop activity, with support for custom spritesheets. [Repository](https://github.com/NovusEdge/goob).
 - [Palpatine](https://khimani.dev/portfolio/palpatine/): A tongue-in-cheek strategic-advisor plugin for pursuing goals. [Repository](https://github.com/NovusEdge/palpatine).
 
 ## Recent posts
 
+- [In Search of Meaning #1](https://khimani.dev/blog/in-search-of-meaning-01/): October 2, 2026. A short note on meaning, purpose, and overwork, the first in a series.
 - [Fine-tuning OpenJev on 62,695 A/B Tests](https://khimani.dev/blog/fine-tuning-openjev-on-62695-ab-tests/): September 23, 2026. Training a headline ranker on Upworthy's A/B tests, correcting the evaluation, comparing it with Gemini, and testing transfer to Reddit.
 - [What Did We All Miss?](https://khimani.dev/blog/what-did-we-all-miss/): September 12, 2026. Reflections on AI progress, research, robotics, and the gap between technical developments and public attention.
 - [Google's €13 Billion in Finland](https://khimani.dev/blog/googles-13-billion-in-finland/): September 12, 2026. An essay on energy investment in Finland, grid constraints, and the attention given to generation versus storage.
@@ -79,6 +85,7 @@ Hardware and games: ESP32, Raspberry Pi, Arduino, RF, P2P, Godot.
 I'm interested in agent memory, eval systems, multi-agent coordination, distributed systems, and hardware interfaces. For roles, I look for staff, founding, or research engineering work with technical depth and room to shape the problem. Remote, async-friendly small teams are a good fit. Open to the right contract or full-time opportunity.
 
 - [GitHub](https://github.com/NovusEdge)
+- [X](https://x.com/0kaliasgar)
 - [Email](mailto:khimanialiasgar@gmail.com)
 
 ## Using this information

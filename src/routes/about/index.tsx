@@ -29,7 +29,7 @@ const PRINCIPLE_KEYS = [
   'about.principles.5',
 ]
 
-const NOW_UPDATED = '2026-08'
+const NOW_UPDATED = '2026-10'
 
 const OSS = [
   { org: 'Microsoft', project: 'DeepSpeed', whatI18n: 'about.oss.deepspeed', prs: 'https://github.com/deepspeedai/DeepSpeed/pulls?q=author%3ANovusEdge' },
@@ -151,7 +151,7 @@ export default function AboutPage() {
 
   return (
     <>
-      <Meta title={t('about.title')} description="Aliasgar Khimani's background in offensive security, research interests in AI alignment and recursive self-improvement, and work on agent memory and systems software." />
+      <Meta title={`${t('about.title')} · NovusEdge`} description="Aliasgar Khimani (NovusEdge), founding engineer at BotSpot in Finland. Infrastructure for accountable AI agents (docket, Engrammic, stoat), Claude Code tools like glowup, and an offensive-security background." />
       <section ref={scope} className="relative mx-auto max-w-4xl px-6 pb-24 pt-36">
 
         {/* 00 - Header */}
@@ -166,6 +166,7 @@ export default function AboutPage() {
               <h1 className="font-display text-5xl font-black text-charcoal dark:text-bone">
                 <DecryptedText text={t('about.title')} speed={50} delay={100} />
               </h1>
+              <p className="mt-2 font-mono text-sm text-charcoal/50 dark:text-bone/50">Aliasgar Khimani · @NovusEdge</p>
             </div>
           </div>
           <Rule className="mt-4" />
@@ -177,20 +178,14 @@ export default function AboutPage() {
             <p>
               <Trans i18nKey="about.bio.intro" components={{ strong: <strong className="text-charcoal dark:text-bone" /> }} />
             </p>
+            <p>{t('about.bio.building')}</p>
+            <p>{t('about.bio.shipping')}</p>
             <p>
               <Trans
                 i18nKey="about.bio.research"
                 components={{
                   ai: <a href="https://en.wikipedia.org/wiki/AI_alignment" target="_blank" rel="noopener noreferrer" className="italic text-charcoal hover:text-gold dark:text-bone" />,
                   rsi: <a href="https://en.wikipedia.org/wiki/Recursive_self-improvement" target="_blank" rel="noopener noreferrer" className="italic text-charcoal hover:text-gold dark:text-bone" />,
-                  emergence: <a href="https://en.wikipedia.org/wiki/Emergence" target="_blank" rel="noopener noreferrer" className="italic text-charcoal hover:text-gold dark:text-bone" />,
-                }}
-              />
-            </p>
-            <p>
-              <Trans
-                i18nKey="about.bio.epistemics"
-                components={{
                   epistemics: <a href="https://en.wikipedia.org/wiki/Epistemology" target="_blank" rel="noopener noreferrer" className="italic text-charcoal hover:text-gold dark:text-bone" />,
                 }}
               />

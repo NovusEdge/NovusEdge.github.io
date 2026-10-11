@@ -3,8 +3,8 @@
  *   ALIASGAR KHIMANI                                                          *
  *   @NovusEdge                                                                *
  *                                                                             *
- *   Systems Architect                                                         *
- *   AI Infrastructure | Agent Evals | Distributed Systems | Hardware          *
+ *   Founding Engineer @ BotSpot                                               *
+ *   Agent Infrastructure | Claude Code Tools | Hardware                       *
  *                                                                             *
  *   khimani.dev | github.com/NovusEdge | engrammic.ai                         *
  *                                                                             *
@@ -18,7 +18,8 @@ Location: Finland
 Coding since: 2013
 
 /* WHAT I BUILD */
-AI infrastructure, agent memory and decision tracking, evals, and systems software.
+Founding engineer at BotSpot. On the side: infrastructure for keeping AI agents
+honest (decisions, memory, sandboxes), and a pile of Claude Code tools.
 I'm also researching privacy hardware through ØCLOAK.
 
 /* SELECTED PROJECTS */
@@ -38,6 +39,9 @@ https://khimani.dev/portfolio/stoat/
 Hardware is experimental; none has shipped.
 https://khimani.dev/portfolio/ocloak/
 
+glowup: a side pane, theme packs and a pixel pet for Claude Code.
+https://glowup.khimani.dev/
+
 Curt: a Claude Code plugin for reviewing and editing prose and code.
 https://github.com/NovusEdge/curt
 
@@ -49,6 +53,7 @@ Translation coverage varies by page; English copy is updated first.
 
 Portfolio: https://khimani.dev/portfolio/
 Writing: https://khimani.dev/blog/
+Blips: https://khimani.dev/blips/
 RSS: https://khimani.dev/feed.xml
 
 /* LANGUAGES */
@@ -71,10 +76,11 @@ Godot
 
 /* LINKS */
 GitHub: https://github.com/NovusEdge
+X: https://x.com/0kaliasgar
 Engrammic: https://engrammic.ai
 Email: khimanialiasgar@gmail.com
 
-Updated: 2026-09-24
+Updated: 2026-10-11
 
 /* NOTE */
 hey, you actually read these. coffee's on me if we ever meet.

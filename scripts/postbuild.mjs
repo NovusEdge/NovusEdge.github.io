@@ -66,7 +66,7 @@ writeFileSync(
 <rss version="2.0"><channel>
   <title>NovusEdge</title>
   <link>${ORIGIN}</link>
-  <description>Security, systems, and writeups.</description>
+  <description>Essays and notes on AI agents, systems, hardware and the rest, by Aliasgar Khimani.</description>
 ${items}
 </channel></rss>`,
 )

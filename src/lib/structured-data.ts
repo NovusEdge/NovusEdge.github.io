@@ -16,8 +16,8 @@ const PERSON = {
   url: `${ORIGIN}/`,
   image: `${ORIGIN}/photos/headshot.jpg`,
   email: 'mailto:khimanialiasgar@gmail.com',
-  jobTitle: 'Systems Architect',
-  description: 'Building cognitive infrastructure for AI agents',
+  jobTitle: 'Founding Engineer',
+  description: 'Founding engineer at BotSpot. Builds infrastructure for accountable AI agents and tools for Claude Code.',
   homeLocation: { '@type': 'Country', name: 'Finland' },
   knowsAbout: [
     'AI Agents', 'Epistemic Memory', 'Agent Evals', 'LLM-as-Judge',
@@ -36,7 +36,7 @@ const PERSON = {
     'https://huggingface.co/NovusEdge',
     'https://ko-fi.com/aliasgarkhimani',
   ],
-  worksFor: { '@type': 'Organization', name: 'Engrammic', url: 'https://engrammic.ai' },
+  worksFor: { '@type': 'Organization', name: 'BotSpot' },
 }
 
 const SECTIONS: Record<string, string> = {

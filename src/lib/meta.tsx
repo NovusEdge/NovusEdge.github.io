@@ -5,7 +5,7 @@ export const HOME_TITLE = 'Aliasgar Khimani | NovusEdge | Systems Architect'
 export const DEFAULT_SHARE_IMAGE = '/assets/og-default.jpg'
 
 // ponytail: module-global head state — single render pass per prerendered page, no context needed
-const DEFAULT_DESCRIPTION = 'Security, systems, and writeups. Personal site of NovusEdge.'
+const DEFAULT_DESCRIPTION = 'Aliasgar Khimani (NovusEdge): infrastructure for accountable AI agents, Claude Code tools, hardware, and essays.'
 export const headState = {
   title: HOME_TITLE,
   pageTitle: null as string | null,
