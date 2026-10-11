@@ -197,7 +197,8 @@ export const PROJECTS: { slug: string; name: string; tech: string[] }[] = [
   { slug: 'stoat', name: 'stoat', tech: ['Go', 'QEMU', 'Nix', 'Linux'] },
   { slug: 'ocloak', name: 'ØCLOAK', tech: ['ESP32', 'C', 'Rust', 'P2P', 'RF'] },
   { slug: 'money-mesh', name: 'money-mesh', tech: ['Python', 'Cedar', 'LiteLLM', 'Pydantic AI', 'SQLite', 'Stripe', 'uv', 'MCP'] },
-  { slug: 'anti-slop', name: 'anti-slop', tech: ['Claude', 'JavaScript', 'Python'] },
+  { slug: 'glowup', name: 'glowup', tech: ['Claude', 'TypeScript'] },
+  { slug: 'curt', name: 'Curt', tech: ['Claude', 'JavaScript', 'Python'] },
   { slug: 'goob', name: 'goob', tech: ['Godot', 'Python', 'Go'] },
   { slug: 'palpatine', name: 'palpatine', tech: ['Claude', 'TypeScript', 'JavaScript'] },
 ]

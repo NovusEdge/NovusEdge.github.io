@@ -318,7 +318,7 @@ const GROUPS = [
 ] as const
 
 // carousel curation + order: strongest work first
-const CAROUSEL = ['docket', 'engrammic', 'ocloak', 'stoat', 'palpatine', 'veil']
+const CAROUSEL = ['docket', 'glowup', 'engrammic', 'ocloak', 'stoat', 'palpatine', 'veil']
 
 function matches(p: Project, q: string) {
   return (
