@@ -14,7 +14,6 @@ import { HeroBackground } from './hero-bg'
 import { useLocalePath } from '../../i18n/use-locale-path'
 import { useLocale } from '../../i18n/context'
 
-const primaryLink = (p: Project) => p.links[0]?.href ?? '#'
 
 // creation from void: the first mark that makes a world
 const POEM_LINES = ['無の淵に', '筆を落とせば', '世界立つ']
@@ -296,14 +295,18 @@ function InfoCard({ p }: { p: Project }) {
   )
   const cls =
     'group relative flex h-full flex-col border border-bone/12 bg-charcoal-tint/20 p-5 transition-colors hover:border-gold/40'
-  return outbound ? (
-    <a href={primaryLink(p)} target="_blank" rel="noopener noreferrer" className={cls}>
-      {inner}
-    </a>
-  ) : (
+  if (!outbound) return (
     <TLink to={lp(`/portfolio/${p.slug}`)} className={cls}>
       {inner}
     </TLink>
+  )
+  const href = p.links[0]?.href
+  return href ? (
+    <a href={href} target="_blank" rel="noopener noreferrer" className={cls}>
+      {inner}
+    </a>
+  ) : (
+    <div className={cls}>{inner}</div>
   )
 }
 
@@ -315,7 +318,7 @@ const GROUPS = [
 ] as const
 
 // carousel curation + order: strongest work first
-const CAROUSEL = ['docket', 'engrammic', 'ocloak', 'stoat', 'palpatine', 'veil', 'money-mesh']
+const CAROUSEL = ['docket', 'engrammic', 'ocloak', 'stoat', 'palpatine', 'veil']
 
 function matches(p: Project, q: string) {
   return (
