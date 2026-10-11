@@ -2,6 +2,7 @@ import { useEffect } from 'react'
 
 export const SITE_NAME = 'Aliasgar Khimani'
 export const HOME_TITLE = 'Aliasgar Khimani | NovusEdge | Systems Architect'
+export const DEFAULT_SHARE_IMAGE = '/assets/og-default.jpg'
 
 // ponytail: module-global head state — single render pass per prerendered page, no context needed
 const DEFAULT_DESCRIPTION = 'Security, systems, and writeups. Personal site of NovusEdge.'

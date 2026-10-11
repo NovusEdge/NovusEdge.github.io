@@ -123,9 +123,16 @@ for (const route of shippedRoutes) {
   clusters.get(bare).set(locale.code, route)
 }
 
+// Only post dates are real edit dates; a build-time mtime on every other page
+// would read as "everything changed today" and Google discounts lastmod that lies.
+const postDates = new Map(posts.map((p) => [`/blog/${p.slug}`, p.date]))
+if (posts[0]) postDates.set('/blog', posts[0].date)
+
 const urls = shippedRoutes
   .map((route) => {
     const { bare } = split(route)
+    const date = postDates.get(bare)
+    const lastmod = date ? `\n    <lastmod>${new Date(date).toISOString().slice(0, 10)}</lastmod>` : ''
     const cluster = clusters.get(bare)
     const alternates = [...cluster.entries()]
       .map(([code, url]) => {
@@ -137,7 +144,7 @@ const urls = shippedRoutes
     const fallback = xDefault
       ? `\n    <xhtml:link rel="alternate" hreflang="x-default" href="${pageUrl(xDefault)}"/>`
       : ''
-    return `  <url>\n    <loc>${pageUrl(route)}</loc>\n${alternates}${fallback}\n  </url>`
+    return `  <url>\n    <loc>${pageUrl(route)}</loc>${lastmod}\n${alternates}${fallback}\n  </url>`
   })
   .join('\n')
 

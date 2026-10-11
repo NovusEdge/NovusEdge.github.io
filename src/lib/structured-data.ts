@@ -14,6 +14,7 @@ const PERSON = {
   name: 'Aliasgar Khimani',
   alternateName: 'NovusEdge',
   url: `${ORIGIN}/`,
+  image: `${ORIGIN}/photos/headshot.jpg`,
   email: 'mailto:khimanialiasgar@gmail.com',
   jobTitle: 'Systems Architect',
   description: 'Building cognitive infrastructure for AI agents',

@@ -55,6 +55,15 @@ describe('blog prerendering', () => {
     })
   })
 
+  it('falls back to the default share image on pages without their own', async () => {
+    const page = await prerender({ url: '/about' })
+
+    expect([...page.head.elements]).toContainEqual({
+      type: 'meta',
+      props: { property: 'og:image', content: 'https://khimani.dev/assets/og-default.jpg' },
+    })
+  })
+
   it('renders the OpenJev board inline for readers without the rail', async () => {
     const page = await prerender({ url: `/blog/${OPENJEV_SLUG}` })
 

@@ -24,7 +24,7 @@ if (typeof window !== 'undefined') {
 export async function prerender(data: { url: string }) {
   const { prerender: renderStatic } = await import('react-dom/static')
   const { StaticRouter } = await import('react-router')
-  const { headState } = await import('./lib/meta')
+  const { headState, DEFAULT_SHARE_IMAGE } = await import('./lib/meta')
   const { getPost } = await import('./lib/posts')
   const { LOCALES, localeFromPath, stripLocale } = await import('./i18n/paths')
   const { structuredData } = await import('./lib/structured-data')
@@ -54,7 +54,7 @@ export async function prerender(data: { url: string }) {
     { type: 'meta', props: { property: 'og:type', content: post ? 'article' : 'website' } },
     { type: 'meta', props: { name: 'twitter:title', content: headState.title } },
     { type: 'meta', props: { name: 'twitter:description', content: headState.description } },
-    { type: 'meta', props: { name: 'twitter:card', content: headState.image ? 'summary_large_image' : 'summary' } },
+    { type: 'meta', props: { name: 'twitter:card', content: 'summary_large_image' } },
   ]
   if (post) {
     for (const alternate of LOCALES) {
@@ -85,8 +85,8 @@ export async function prerender(data: { url: string }) {
       }),
     })
   }
-  if (headState.image) {
-    const imageUrl = `${origin}${headState.image}`
+  if (headState.pageTitle !== '404') {
+    const imageUrl = `${origin}${headState.image ?? DEFAULT_SHARE_IMAGE}`
     elements.push(
       { type: 'meta', props: { property: 'og:image', content: imageUrl } },
       { type: 'meta', props: { name: 'twitter:image', content: imageUrl } },
