@@ -3,7 +3,6 @@
  *   ALIASGAR KHIMANI                                                          *
  *   @NovusEdge                                                                *
  *                                                                             *
- *   Founding Engineer @ BotSpot                                               *
  *   Agent Infrastructure | Claude Code Tools | Hardware                       *
  *                                                                             *
  *   khimani.dev | github.com/NovusEdge | engrammic.ai                         *
@@ -18,8 +17,8 @@ Location: Finland
 Coding since: 2013
 
 /* WHAT I BUILD */
-Founding engineer at BotSpot. On the side: infrastructure for keeping AI agents
-honest (decisions, memory, sandboxes), and a pile of Claude Code tools.
+Infrastructure for keeping AI agents honest (decisions, memory, sandboxes),
+and a pile of Claude Code tools.
 I'm also researching privacy hardware through ØCLOAK.
 
 /* SELECTED PROJECTS */

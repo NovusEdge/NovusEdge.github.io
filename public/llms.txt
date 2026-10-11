@@ -1,6 +1,6 @@
 # Aliasgar Khimani (@NovusEdge)
 
-> Personal portfolio and writing by Aliasgar Khimani (NovusEdge), founding engineer at BotSpot in Finland. I build infrastructure for accountable AI agents, tools for Claude Code, and hardware projects.
+> Personal portfolio and writing by Aliasgar Khimani (NovusEdge), an engineer in Finland. I build infrastructure for accountable AI agents, tools for Claude Code, and hardware projects.
 
 Coding since 2013. My background is offensive security: CTFs, malware development, and pentesting. Most of my current work records what agents decide, believe and change, so later sessions and people can check and revise it: docket for decisions, Engrammic for claims and evidence, stoat for disposable VMs to run agents in, and midwire for checking an action's real effect.
 
