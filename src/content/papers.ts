@@ -17,13 +17,13 @@ export const papers: Paper[] = [
     title: 'Where Should Elapsed Time Enter a Pretrained Model?',
     venue: 'Preprint · Zenodo',
     date: '2026',
-    url: 'https://zenodo.org/records/23919659',
+    url: 'https://zenodo.org/records/23921544',
     thumb: '/assets/elapsed-time.mp4',
     abstract:
       "LLM agents log what happens in a session but have no sense of how much time has passed; frameworks pass time in only as timestamps in the text. This paper sorts the ways elapsed time can enter a pretrained model into three levels: as written text, as a separate conditioning input, or as an argument to the operations that update and read the model's memory, which it calls chronoaware. Qwen3.5-2B is adapted eight ways at equal trainable parameters and tested against four pre-registered hypotheses on time-dependent agent decisions. Plain text with fine-tuning wins, only one hypothesis passes, and elapsed time turns out to be linearly decodable even from a shuffled-time control, so decodability alone does not show a learned clock.",
     links: [
-      { label: 'zenodo', href: 'https://zenodo.org/records/23919659' },
-      { label: 'doi', href: 'https://doi.org/10.5281/zenodo.23919659' },
+      { label: 'zenodo', href: 'https://zenodo.org/records/23921544' },
+      { label: 'doi', href: 'https://doi.org/10.5281/zenodo.23921544' },
       { label: 'hugging face', href: 'https://huggingface.co/NovusEdge/sundial-qwen3.5-2b-T-int' },
     ],
   },
