@@ -207,3 +207,6 @@
 - date: 2026-08-26
   text: "Man... signal jammers huh?"
   tags: [RF]
+- date: 2026-11-13
+  text: "welp. we gave nimblefox a real shot and it just didn't work out. rushed releases on a 2/10 codebase that was never gonna scale, and you can only patch a sinking boat for so long before you admit it's a submarine now. they got their money's worth out of me tho, that's for sure"
+  tags: [work, life]
