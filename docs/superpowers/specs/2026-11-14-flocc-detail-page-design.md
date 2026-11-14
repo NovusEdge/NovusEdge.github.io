@@ -133,6 +133,36 @@ The page is styled as an old US patent (the IBM patents of the 1960s to 80s). Li
 - **Close.** Unchanged copy, set as the sheet's foot.
 - **Agentation.** Add `agentation` as a devDependency and mount `<Agentation />` once at the app root under `import.meta.env.DEV`, so the owner can annotate the page in dev. It must not ship in the production bundle.
 
+## Revision 3: owner feedback (supersedes copy and FIG. 2 layout above)
+
+**Footer.** The site footer stays charcoal and clashes with the sheet. Follow the `plan-a-paper` precedent (`src/styles/global.css` ~L268, `src/routes/blog/plan-a-page.tsx` L55): the page adds a class `flocc-sheet` to `<html>` on mount and removes it on unmount; global.css repaints `.flocc-sheet .site-footer` to a slightly deeper paper (`#e8e2d3`) with ink text and `.footer-word` at 10% ink in light, and to a deeper cyanotype (`#10304f`) with the dark ink in dark. Also repaint any top/bottom chrome that plan-a-paper repaints, so the sheet does not read as a floating card.
+
+**FIG. 2, lifecycle.** Too cramped and hard to read. Redraw as a vertical patent flowchart at every width: one column of boxes joined by downward arrows, each box wide (max ~420px) holding the stage name; the caption sits to the right of the box in muted serif (below it under 650px); the reference numeral (102 to 118) sits left of the box on a short leader line. Owner boxes (Spec, Todo, Merge) stay hatched, legend unchanged. Group the seven flocc stages with a bracket on the right labelled `flocc`. The scroll marker travels the vertical flow line.
+
+**Copy.** The owner said the copy sounds like Claude wrote it. Replace with these strings verbatim (lowercase sentence starts are intentional):
+
+- Abstract/lede: `flocc picks up my Linear issues and runs Claude Code on them. I write the spec, it gets the issue from Todo to a draft PR, and I read it and merge. that's the whole deal.`
+- Detailed description, para 1: `I've been on Claude Code pretty much since it came out, and if there's one thing I've learned it's that I can't hand off the thinking. brainstorming, the spec, what "done" even means, that's all me, usually going back and forth with a separate agent until the acceptance criteria stop changing.`
+- Para 2: `the executing tho, that's where all my time was actually going, so flocc does that and only that. if an issue shows up with no acceptance criteria it skips it and leaves a comment saying why, and specs have to be merged into the repo first cause a session won't open links.`
+- References intro: `everyone's calling this a software factory now, and a lot of the talk this year has been about running one with the lights off, where nobody reads the code.`
+- Between [1] and [2]: `her factory owns the whole loop, spec included, which is exactly the bit I won't give up. Horthy's team actually tried the nobody-reads-the-code thing and spent the next few months digging through it. his line on why stuck with me: "the cost function of bad architecture is measured in months and years." no test is gonna catch that, so someone has to be thinking about it, and I'd rather it be me.`
+- After [3]: `that's pretty much how flocc got built. anywhere I could turn an instruction into something the system just enforces, I did.`
+- FIG. 3 caption: `flocc sits at four on purpose. getting to five means something has to tell bad design apart from code that works, and right now that's still a person.`
+- Close: `A Go command on my desktop and a plain-Python service on each host. it's built for me running a few hosts, not a team sharing one. the repo's private.`
+- Claims (title, then body):
+  1. `Unattended agents can't ask.` `Permission dialogs, AskUserQuestion and plan mode are all switched off. anything that needs me goes out as a question when the run ends, cause otherwise a session asking something at 3am just sits there till I wake up.`
+  2. `Agents don't push.` `Sessions commit in their worktree and that's it. the service runs the check, pushes and opens the draft PR, so an agent saying it's done doesn't count until the check passes.`
+  3. `Tests come from a different session.` `A tester session writes the tests first. if the executor touches the tester's files, the run gets rejected.`
+  4. `Check main before blaming the branch.` `When a check fails, the same check runs on main. if main's broken too, the repo gets held and nobody burns a fix round on it.`
+  5. `Every loop has a cap.` `Two check-fix rounds, one review-fix round, three comment fixes a week, and usage limits before anything even starts.`
+  6. `Done means running flocc done.` `A session only ends by running flocc done, and finishing with no commits blocks as no-changes.`
+  7. `State lives outside the context window.` `Commits, a summary file and the Linear issue carry the run, so a crash or a compaction doesn't lose anything.`
+  8. `The reviewer is a separate session.` `A fresh, read-only session reads the diff against each acceptance criterion. nothing grades its own work.`
+  9. `No acceptance criteria, no run.` `An issue without an acceptance-criteria list gets skipped with a comment. specs live in the repo since sessions don't open attachments or follow links.`
+  10. `Hooks aren't the security boundary.` `The guard hook just tells an agent early why a call got refused. the real wall is Unix users: the agent runs as its own user and can't read the Linear key, the push token or the ledger.`
+
+The h1, headings and the three quoted talk lines stay as they are. Keep `flocc done` and `no-changes` in code formatting.
+
 ## Quality bar
 
 - Light and dark themes, 375px to 1440px, no horizontal scroll.

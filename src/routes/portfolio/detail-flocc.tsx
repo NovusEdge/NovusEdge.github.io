@@ -25,6 +25,9 @@ const stages = [
   { name: 'Merge', yours: true, caption: 'I read it and merge by hand' },
 ]
 
+const FIRST = stages.findIndex((s) => !s.yours)
+const LAST = stages.length - 1 - [...stages].reverse().findIndex((s) => !s.yours)
+const BRACKET_LABEL = Math.floor((FIRST + LAST) / 2)
 const NUMERALS = [102, 104, 106, 108, 110, 112, 114, 116, 118]
 
 const quotes = [
@@ -55,17 +58,24 @@ const rungs = [
 ]
 
 const notes = [
-  ['Unattended agents can’t ask.', 'Permission dialogs, AskUserQuestion and plan mode are denied by managed settings. Anything that needs me goes out as a question when the run ends, because a session waiting on an answer at 3am waits until morning.'],
-  ['Agents don’t push.', 'Sessions commit in their worktree. The service runs the check, pushes and opens the draft PR, so “done” means nothing until the check passes.'],
-  ['Tests come from someone else.', 'A tester session writes the tests first. If the executor touches the tester’s files, the run is rejected.'],
-  ['Check main before blaming the branch.', 'When a check fails, the same check runs on the base branch. If main is broken too, the repo is held and no fixer burns a round on it.'],
-  ['Every loop has a cap.', 'Two check-fix rounds, one review-fix round, three comment fixes a week, and usage thresholds before anything starts.'],
-  ['Done is a command.', <>A session ends only by running <code>flocc done</code>. Finishing with no commits blocks as <code>no-changes</code>.</>],
-  ['State lives outside the context window.', 'Commits, a summary file and the Linear issue carry the run, so a crash or a compaction loses nothing.'],
-  ['Nobody grades their own work.', 'The reviewer is a fresh, read-only session on the same worktree, checking the diff against each acceptance criterion.'],
-  ['No criteria, no run.', 'An issue without an acceptance-criteria list is skipped with a comment. Specs live in the repo because sessions don’t open attachments or follow links.'],
-  ['Hooks are a courtesy; users are the wall.', 'The guard hook tells an agent early why a call is refused. The real boundary is Unix: the agent runs as its own user and cannot read the Linear key, the push token or the ledger.'],
+  ['Unattended agents can’t ask.', 'Permission dialogs, AskUserQuestion and plan mode are all switched off. anything that needs me goes out as a question when the run ends, cause otherwise a session asking something at 3am just sits there till I wake up.'],
+  ['Agents don’t push.', 'Sessions commit in their worktree and that’s it. the service runs the check, pushes and opens the draft PR, so an agent saying it’s done doesn’t count until the check passes.'],
+  ['Tests come from a different session.', 'A tester session writes the tests first. if the executor touches the tester’s files, the run gets rejected.'],
+  ['Check main before blaming the branch.', 'When a check fails, the same check runs on main. if main’s broken too, the repo gets held and nobody burns a fix round on it.'],
+  ['Every loop has a cap.', 'Two check-fix rounds, one review-fix round, three comment fixes a week, and usage limits before anything even starts.'],
+  [<>Done means running <code>flocc done</code>.</>, <>A session only ends by running <code>flocc done</code>, and finishing with no commits blocks as <code>no-changes</code>.</>],
+  ['State lives outside the context window.', 'Commits, a summary file and the Linear issue carry the run, so a crash or a compaction doesn’t lose anything.'],
+  ['The reviewer is a separate session.', 'A fresh, read-only session reads the diff against each acceptance criterion. nothing grades its own work.'],
+  ['No acceptance criteria, no run.', 'An issue without an acceptance-criteria list gets skipped with a comment. specs live in the repo since sessions don’t open attachments or follow links.'],
+  ['Hooks aren’t the security boundary.', 'The guard hook just tells an agent early why a call got refused. the real wall is Unix users: the agent runs as its own user and can’t read the Linear key, the push token or the ledger.'],
 ] as const
+
+function useSheetClass() {
+  useEffect(() => {
+    document.documentElement.classList.add('flocc-sheet')
+    return () => document.documentElement.classList.remove('flocc-sheet')
+  }, [])
+}
 
 function Lifecycle() {
   const scope = useRef<HTMLOListElement>(null)
@@ -85,13 +95,14 @@ function Lifecycle() {
       <ol ref={scope} className="fl-life" aria-label="Lifecycle of an issue">
         <i className="fl-marker" aria-hidden="true" />
         {stages.map((s, i) => (
-          <li key={s.name} className={s.yours ? 'fl-yours' : 'fl-flocc'}>
+          <li key={s.name} className={s.yours ? 'fl-yours' : `fl-flocc${i === FIRST ? ' fl-first' : ''}${i === LAST ? ' fl-last' : ''}`}>
             <span className="fl-num" aria-hidden="true">{NUMERALS[i]}</span>
             <div className="fl-box">
               <span className="fl-sr">{s.yours ? 'yours' : 'flocc'}: </span>
               <h3>{s.name}</h3>
-              <p>{s.caption}</p>
             </div>
+            <p className="fl-cap">{s.caption}</p>
+            {i === BRACKET_LABEL && <span className="fl-brk" aria-hidden="true">flocc</span>}
           </li>
         ))}
       </ol>
@@ -149,6 +160,7 @@ function Fig1() {
 
 export default function Flocc({ c }: LayoutProps) {
   const lp = useLocalePath()
+  useSheetClass()
   return (
     <main className="fl">
       <div className="fl-shell">
@@ -175,8 +187,8 @@ export default function Flocc({ c }: LayoutProps) {
           <div className="fl-section-marker"><h2>Detailed description</h2><p>Who does what</p></div>
           <div className="fl-editorial-body">
             <h3>The thinking stays with me</h3>
-            <p>I&rsquo;ve been using Claude Code since it came out, and the part I&rsquo;m surest about is that the thinking doesn&rsquo;t hand off. Brainstorming, the spec, what &ldquo;done&rdquo; means: those happen with me in the room, usually arguing with a separate agent until the acceptance criteria stop moving.</p>
-            <p>flocc started because the part after that, the executing, was where my time was actually going. So it does that part and nothing else. An issue without acceptance criteria gets skipped with a comment saying why, and specs live in the repo, merged, because a session never follows a link.</p>
+            <p>I&rsquo;ve been on Claude Code pretty much since it came out, and if there&rsquo;s one thing I&rsquo;ve learned it&rsquo;s that I can&rsquo;t hand off the thinking. brainstorming, the spec, what &ldquo;done&rdquo; even means, that&rsquo;s all me, usually going back and forth with a separate agent until the acceptance criteria stop changing.</p>
+            <p>the executing tho, that&rsquo;s where all my time was actually going, so flocc does that and only that. if an issue shows up with no acceptance criteria it skips it and leaves a comment saying why, and specs have to be merged into the repo first cause a session won&rsquo;t open links.</p>
           </div>
         </section>
 
@@ -186,12 +198,12 @@ export default function Flocc({ c }: LayoutProps) {
           <div className="fl-section-marker"><h2>References cited</h2><p>The dark factory</p></div>
           <div className="fl-editorial-body">
             <h3>Not a dark factory</h3>
-            <p>The word for this in 2026 is a software factory, and most of the talk this year has been about turning the lights off.</p>
+            <p>everyone&rsquo;s calling this a software factory now, and a lot of the talk this year has been about running one with the lights off, where nobody reads the code.</p>
             <Quote q={quotes[0]} n={1} />
-            <p>T&iacute;&#382;kov&aacute;&rsquo;s factory owns the whole loop, spec included. Horthy tried running one with nobody reading the code and spent the following months digging through it. His reason is the one I keep coming back to: &ldquo;the cost function of bad architecture is measured in months and years.&rdquo; No test catches that, so somebody has to be thinking about it, and that somebody is me.</p>
+            <p>her factory owns the whole loop, spec included, which is exactly the bit I won&rsquo;t give up. Horthy&rsquo;s team actually tried the nobody-reads-the-code thing and spent the next few months digging through it. his line on why stuck with me: &ldquo;the cost function of bad architecture is measured in months and years.&rdquo; no test is gonna catch that, so someone has to be thinking about it, and I&rsquo;d rather it be me.</p>
             <Quote q={quotes[1]} n={2} />
             <Quote q={quotes[2]} n={3} />
-            <p>That line is most of flocc&rsquo;s design. Where I could turn an instruction into something the system enforces, I did.</p>
+            <p>that&rsquo;s pretty much how flocc got built. anywhere I could turn an instruction into something the system just enforces, I did.</p>
 
             <figure className="fl-fig fl-ladder">
               <ol>
@@ -208,7 +220,7 @@ export default function Flocc({ c }: LayoutProps) {
               </ol>
               <figcaption>
                 <b>FIG. 3</b>
-                flocc stops at four on purpose. Five needs something that can tell bad design from working code, and that is still a person.
+                flocc sits at four on purpose. getting to five means something has to tell bad design apart from code that works, and right now that&rsquo;s still a person.
                 <a href="https://www.danshapiro.com/blog/2026/01/the-five-levels-from-spicy-autocomplete-to-the-software-factory/" target="_blank" rel="noopener noreferrer">Dan Shapiro, the five levels <span aria-hidden="true">↗</span></a>
               </figcaption>
             </figure>
@@ -219,8 +231,8 @@ export default function Flocc({ c }: LayoutProps) {
           <h2>What is claimed is</h2>
           <h3>What running agents taught me</h3>
           <ol className="fl-claims">
-            {notes.map(([title, body]) => (
-              <li key={title}>
+            {notes.map(([title, body], i) => (
+              <li key={i}>
                 <b>{title}</b> {body}
               </li>
             ))}
@@ -230,7 +242,7 @@ export default function Flocc({ c }: LayoutProps) {
         <footer className="fl-close">
           <div>
             <h2>flocc<span lang="ja">群</span></h2>
-            <p>A Go command on my desktop and a standard-library Python service on each host. Built for one owner running a few hosts, not a team sharing one service. The repo is private.</p>
+            <p>A Go command on my desktop and a plain-Python service on each host. it&rsquo;s built for me running a few hosts, not a team sharing one. the repo&rsquo;s private.</p>
             <p className="fl-stack">Go · Python · Claude Code · Linear · systemd · tmux · Tailscale · Incus</p>
           </div>
           <div className="fl-close-links">

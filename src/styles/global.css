@@ -265,13 +265,29 @@
   background-color: var(--pa-ground);
   color: var(--pa-ink);
 }
+.flocc-sheet {
+  --pa-ink: #141414;
+  --pa-ground: #f3efe4;
+  --pa-footer: #e8e2d3;
+  --pa-ox: #141414;
+  color-scheme: light;
+}
+.flocc-sheet.dark {
+  --pa-ink: #eef3f8;
+  --pa-ground: #163a63;
+  --pa-footer: #10304f;
+  --pa-ox: #eef3f8;
+  color-scheme: dark;
+}
 /* The site chrome sits on charcoal everywhere else, so both ends of the page
    have to be repainted or the cream column reads as a floating card. */
-.plan-a-paper .site-footer {
+.plan-a-paper .site-footer,
+.flocc-sheet .site-footer {
   background-color: var(--pa-footer);
   color: var(--pa-ink);
 }
-.plan-a-paper .site-footer .footer-word {
+.plan-a-paper .site-footer .footer-word,
+.flocc-sheet .site-footer .footer-word {
   color: color-mix(in srgb, var(--pa-ink) 10%, transparent);
 }
 .plan-a-paper ::selection {
@@ -282,28 +298,39 @@
 /* Scoped to header.fixed, which is the site's floating nav. A bare `header`
    would also catch the page's own masthead element and grey out its links. */
 .plan-a-paper header.fixed nav,
-.plan-a-paper header.fixed > div > div {
+.flocc-sheet header.fixed nav,
+.plan-a-paper header.fixed > div > div,
+.flocc-sheet header.fixed > div > div {
   background-color: color-mix(in srgb, var(--pa-ground) 85%, transparent);
   border-color: color-mix(in srgb, var(--pa-ink) 14%, transparent);
   box-shadow: 0 6px 24px color-mix(in srgb, var(--pa-ink) 6%, transparent);
 }
 .plan-a-paper header.fixed a,
+.flocc-sheet header.fixed a,
 .plan-a-paper header.fixed button,
-.plan-a-paper header.fixed span:not(.sr-only) {
+.flocc-sheet header.fixed button,
+.plan-a-paper header.fixed span:not(.sr-only),
+.flocc-sheet header.fixed span:not(.sr-only) {
   color: color-mix(in srgb, var(--pa-ink) 62%, transparent);
 }
 .plan-a-paper header.fixed a:hover,
-.plan-a-paper header.fixed button:hover {
+.flocc-sheet header.fixed a:hover,
+.plan-a-paper header.fixed button:hover,
+.flocc-sheet header.fixed button:hover {
   color: var(--pa-ox);
 }
 /* The active-route link and the hamburger bars are painted from the gold and
    charcoal tokens, which both read as foreign objects on the paper. */
 .plan-a-paper header.fixed a[aria-current],
-.plan-a-paper header.fixed .text-gold {
+.flocc-sheet header.fixed a[aria-current],
+.plan-a-paper header.fixed .text-gold,
+.flocc-sheet header.fixed .text-gold {
   color: var(--pa-ox);
 }
 .plan-a-paper header.fixed .bg-charcoal,
-.plan-a-paper header.fixed .dark\:bg-bone {
+.flocc-sheet header.fixed .bg-charcoal,
+.plan-a-paper header.fixed .dark\:bg-bone,
+.flocc-sheet header.fixed .dark\:bg-bone {
   background-color: var(--pa-ink);
 }
 /* The nav is fixed at top-5 and about 44px tall, so the masthead starts below it. */
