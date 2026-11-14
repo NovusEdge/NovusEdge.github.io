@@ -6,11 +6,13 @@ import Engrammic from './detail-engrammic'
 import Palpatine from './detail-palpatine'
 import Veil from './detail-veil'
 import Docket from './detail-docket'
+import Flocc from './detail-flocc'
 
 // Per-project fully-custom detail pages. A slug present here overrides the
 // shared Dossier layout; absent slugs keep the dossier.
 export const CUSTOM_PAGES: Record<string, ComponentType<LayoutProps>> = {
   docket: Docket,
+  flocc: Flocc,
   stoat: Stoat,
   ocloak: Ocloak,
   engrammic: Engrammic,
