@@ -8,6 +8,7 @@ import Veil from './detail-veil'
 import Docket from './detail-docket'
 import Flocc from './detail-flocc'
 import Folo from './detail-folo'
+import Sundial from './detail-sundial'
 
 // Per-project fully-custom detail pages. A slug present here overrides the
 // shared Dossier layout; absent slugs keep the dossier.
@@ -15,6 +16,7 @@ export const CUSTOM_PAGES: Record<string, ComponentType<LayoutProps>> = {
   docket: Docket,
   flocc: Flocc,
   folo: Folo,
+  sundial: Sundial,
   stoat: Stoat,
   ocloak: Ocloak,
   engrammic: Engrammic,

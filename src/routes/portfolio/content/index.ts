@@ -7,6 +7,7 @@ import { palpatine } from './palpatine'
 import { docket } from './docket'
 import { flocc } from './flocc'
 import { folo } from './folo'
+import { sundial } from './sundial'
 
 // A project appears here once it has a written page. The portfolio index reads
 // the same map to decide which cards link out instead of flipping.
@@ -14,6 +15,7 @@ export const PROJECT_PAGES: Record<string, ProjectContent> = {
   docket,
   flocc,
   folo,
+  sundial,
   stoat,
   engrammic,
   veil,
