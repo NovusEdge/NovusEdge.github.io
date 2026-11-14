@@ -1,9 +1,8 @@
 ---
 title: "学校についての愚痴"
-date: 2026-09-13
+date: 2026-09-14
 tags: [education, epistemics, ai, essay]
 description: "学校や人に教えること、そして良い成績を取ることが本当に何かを学んでいることを意味するのかについての雑感。"
-draft: true
 toc: true
 ---
 

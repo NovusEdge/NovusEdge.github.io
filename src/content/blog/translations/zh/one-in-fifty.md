@@ -1,9 +1,8 @@
 ---
 title: "关于学校的吐槽"
-date: 2026-09-13
+date: 2026-09-14
 tags: [education, epistemics, ai, essay]
 description: "关于学校、教学，以及好成绩是否真的代表我们学到了东西的一些想法。"
-draft: true
 toc: true
 ---
 

@@ -1,9 +1,8 @@
 ---
 title: A Rant About School
-date: 2026-09-13
+date: 2026-09-14
 tags: [education, epistemics, ai, essay]
 description: Some thoughts on school, teaching, and whether good grades actually mean we're learning anything.
-draft: true
 toc: true
 ---
 

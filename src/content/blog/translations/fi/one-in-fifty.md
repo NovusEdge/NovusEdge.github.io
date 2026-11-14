@@ -1,9 +1,8 @@
 ---
 title: "Avautuminen koulusta"
-date: 2026-09-13
+date: 2026-09-14
 tags: [education, epistemics, ai, essay]
 description: "Ajatuksia koulusta, opettamisesta ja siitä, tarkoittavatko hyvät arvosanat oikeasti sitä, että opimme jotain."
-draft: true
 toc: true
 ---
 

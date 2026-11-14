@@ -1,9 +1,8 @@
 ---
 title: "En rant om skolan"
-date: 2026-09-13
+date: 2026-09-14
 tags: [education, epistemics, ai, essay]
 description: "Några tankar om skolan, undervisning och om bra betyg faktiskt betyder att vi lär oss något."
-draft: true
 toc: true
 ---
 

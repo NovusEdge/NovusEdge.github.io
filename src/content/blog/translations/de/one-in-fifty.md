@@ -1,9 +1,8 @@
 ---
 title: "Ein Rant über die Schule"
-date: 2026-09-13
+date: 2026-09-14
 tags: [education, epistemics, ai, essay]
 description: "Einige Gedanken über Schule, Unterrichten und die Frage, ob gute Noten wirklich bedeuten, dass wir etwas lernen."
-draft: true
 toc: true
 ---
 
