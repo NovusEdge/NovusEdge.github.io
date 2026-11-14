@@ -23,7 +23,7 @@ export function Flock() {
     const count = isMobile() ? 70 : 150
     let w = 0
     let h = 0
-    let accent = '#916210'
+    let ink = '#141414'
     let birds: Bird[] = []
     let raf = 0
     let last = 0
@@ -31,8 +31,8 @@ export function Flock() {
     let onScreen = true
     const pointer = { x: -1e4, y: -1e4 }
 
-    const readAccent = () => {
-      accent = getComputedStyle(canvas).getPropertyValue('--fl-accent').trim() || accent
+    const readInk = () => {
+      ink = getComputedStyle(canvas).getPropertyValue('--fl-ink').trim() || ink
     }
     let boxes: { x0: number; y0: number; x1: number; y1: number }[] = []
     let lanePx: number[] = []
@@ -68,7 +68,7 @@ export function Flock() {
 
     const draw = () => {
       ctx.clearRect(0, 0, w, h)
-      ctx.fillStyle = accent
+      ctx.fillStyle = ink
       for (const b of birds) {
         ctx.globalAlpha = boxes.some((r) => b.x > r.x0 && b.x < r.x1 && b.y > r.y0 && b.y < r.y1) ? 0.15 : 0.55
         ctx.save()
@@ -159,14 +159,14 @@ export function Flock() {
     }
     const onLeave = () => { pointer.x = pointer.y = -1e4 }
 
-    readAccent()
+    readInk()
     resize()
     const ro = new ResizeObserver(resize)
     ro.observe(host)
     const io = new IntersectionObserver(([e]) => { onScreen = e.isIntersecting; start() })
     io.observe(canvas)
     const theme = new MutationObserver(() => {
-      readAccent()
+      readInk()
       const now = prefersReducedMotion()
       if (now !== reduced) {
         reduced = now

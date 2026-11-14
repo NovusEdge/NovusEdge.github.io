@@ -24,6 +24,11 @@ import { i18nFor } from './i18n'
 import { headState } from './lib/meta'
 import { OPENJEV_SLUG } from './lib/openjev-data'
 
+// import.meta.env.DEV is replaced at build time, so the whole branch (and the package) drops out of production
+const Agentation = import.meta.env.DEV
+  ? lazy(() => import('agentation').then((m) => ({ default: m.Agentation })))
+  : null
+
 const FriendsLayer = lazy(() => import('./components/pet/friends-layer').then((m) => ({ default: m.FriendsLayer })))
 
 function LocaleTree({ locale }: { locale: Locale }) {
@@ -112,6 +117,11 @@ export default function App() {
         ))}
         <Route path="/*" element={<LocaleTree locale={DEFAULT_LOCALE} />} />
       </Routes>
+      {Agentation && (
+        <Suspense fallback={null}>
+          <Agentation />
+        </Suspense>
+      )}
     </ClickSpark>
   )
 }

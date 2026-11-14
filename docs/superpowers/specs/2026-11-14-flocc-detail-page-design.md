@@ -117,6 +117,22 @@ Ten cards in a two-column grid (one column on mobile), the portfolio's proof-she
 
 Label `Built for one`. `flocc 群`. Text: `A Go command on my desktop and a standard-library Python service on each host. Built for one owner running a few hosts, not a team sharing one service. The repo is private.` Stack line in mono: `Go · Python · Claude Code · Linear · systemd · tmux · Tailscale · Incus`. Link: `Back to portfolio`.
 
+## Revision 2: patent sheet + Aero Shards (supersedes the palette and section styling above; copy and section order stand)
+
+The page is styled as an old US patent (the IBM patents of the 1960s to 80s). Light theme is the printed sheet; dark theme is the blueprint (cyanotype) of the same drawing.
+
+- **Palette.** Light: paper `#f3efe4`, ink `#141414`, muted ink `#5b574e`, hairline `color-mix(ink 22%)`. Dark (cyanotype): ground `#163a63`, ink `#eef3f8`, muted `#a9bdd3`. No accent colour in either; distinction comes from line weight, hatching and dashes.
+- **Type.** IBM Plex Serif for body and headings, IBM Plex Mono for numerals, captions and the header strip. Load them the way the site already loads fonts (check for @fontsource or the existing font setup), scoped to this page.
+- **Sheet frame.** A running header across the top in mono: `U.S. Patent   Nov. 14, 2026   Sheet 1 of 3   flocc`. Below it, a front-page block with bracketed INID codes: `[54]` title `SYSTEM FOR EXECUTING SPECIFIED SOFTWARE WORK WITH UNATTENDED AGENTS`, `[76] Inventor: A. Khimani, Finland`, `[57] ABSTRACT` holding the lede. The h1 (`I do the thinking. / flocc does the rest.`) stays as the big type; the second line in muted ink rather than an accent.
+- **FIG. 1, hero.** React Bits Aero Shards (WebGPU, `vgpu`), vendored like the other react-bits components in `src/components/react-bits/bg/`, lazy-loaded on this page only. Monochrome: shards in ink, `lightMode` on the light theme, `markers: 'plus'`, `placement: 'full'`, glow low, vignette 0. Caption under the band: `FIG. 1`. If `navigator.gpu` is missing, `onError` fires, or reduced motion is on, render the existing flock instead (recoloured to ink, static under reduced motion).
+- **Section headings** become patent headings in small caps serif: `DETAILED DESCRIPTION` (the split prose), `REFERENCES CITED` / prior art (the talks), `WHAT IS CLAIMED IS` (field notes).
+- **FIG. 2, lifecycle.** A flowchart drawn as boxes with arrows and patent reference numerals (`102` Spec, `104` Todo, `106` Worktree ... `118` Merge), leader lines from numerals to boxes. The owner's boxes (Spec, Todo, Merge) are drawn with diagonal hatching and a legend: `hatched: performed by the inventor`. Horizontal on desktop, vertical under 1050px. The scroll marker becomes a small filled arrowhead travelling the flow line.
+- **Prior art.** The three pull quotes are set as cited references, numbered `[1] [2] [3]`, quote in serif italic, citation line in mono. The connecting prose stays.
+- **FIG. 3, ladder.** An elevation drawing: six rungs as horizontal lines with level numerals; a dimension line with arrowheads marks level 4 `flocc`; level 5 is drawn dashed (unbuilt). Shapiro quotes stay.
+- **Claims.** The ten field notes become a numbered claims list in serif, all visible (no details toggles): number, the title in small caps, then the mechanism sentence. Copy unchanged.
+- **Close.** Unchanged copy, set as the sheet's foot.
+- **Agentation.** Add `agentation` as a devDependency and mount `<Agentation />` once at the app root under `import.meta.env.DEV`, so the owner can annotate the page in dev. It must not ship in the production bundle.
+
 ## Quality bar
 
 - Light and dark themes, 375px to 1440px, no horizontal scroll.
