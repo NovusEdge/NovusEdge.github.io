@@ -79,9 +79,10 @@ function Lifecycle() {
   return (
     <ol ref={scope} className="fl-life" aria-label="Lifecycle of an issue">
       <i className="fl-marker" aria-hidden="true" />
-      {stages.map((s) => (
+      {stages.map((s, i) => (
         <li key={s.name} className={s.yours ? 'fl-yours' : 'fl-flocc'}>
-          <span className="fl-tag">{s.yours ? 'yours' : 'flocc'}</span>
+          {(i === 0 || stages[i - 1].yours !== s.yours) && <span className="fl-tag fl-seg" aria-hidden="true">{s.yours ? 'yours' : 'flocc'}</span>}
+          <span className="fl-sr">{s.yours ? 'yours' : 'flocc'}: </span>
           <h3>{s.name}</h3>
           <p>{s.caption}</p>
         </li>
@@ -155,7 +156,6 @@ export default function Flocc({ c }: LayoutProps) {
         </section>
 
         <section id="notes" className="fl-notes">
-          <div className="fl-section-marker"><span>03</span><p>Field notes</p></div>
           <h2>What running agents taught me</h2>
           <div className="fl-cards">
             {notes.map(([title, body], i) => (
@@ -169,13 +169,12 @@ export default function Flocc({ c }: LayoutProps) {
 
         <footer className="fl-close">
           <div>
-            <p className="fl-label">Built for one</p>
             <h2>flocc<span lang="ja">群</span></h2>
             <p>A Go command on my desktop and a standard-library Python service on each host. Built for one owner running a few hosts, not a team sharing one service. The repo is private.</p>
             <p className="fl-stack">Go · Python · Claude Code · Linear · systemd · tmux · Tailscale · Incus</p>
           </div>
           <div className="fl-close-links">
-            <TLink to={lp('/portfolio')}>Back to portfolio <span aria-hidden="true">↗</span></TLink>
+            <TLink to={lp('/portfolio')}>← Back to portfolio</TLink>
           </div>
         </footer>
       </div>
@@ -186,7 +185,7 @@ export default function Flocc({ c }: LayoutProps) {
 function Quote({ q }: { q: (typeof quotes)[number] }) {
   return (
     <figure className="fl-quote">
-      <blockquote>&ldquo;{q.text}&rdquo;</blockquote>
+      <blockquote><span className="fl-q">&ldquo;</span>{q.text}&rdquo;</blockquote>
       <figcaption>
         {q.by}
         <a href={q.href} target="_blank" rel="noopener noreferrer">Source <span aria-hidden="true">↗</span></a>

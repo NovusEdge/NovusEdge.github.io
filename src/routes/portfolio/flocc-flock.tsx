@@ -19,7 +19,7 @@ export function Flock() {
     const ctx = canvas?.getContext('2d')
     if (!canvas || !host || !ctx) return
 
-    const reduced = prefersReducedMotion()
+    let reduced = prefersReducedMotion()
     const count = isMobile() ? 70 : 150
     let w = 0
     let h = 0
@@ -34,7 +34,28 @@ export function Flock() {
     const readAccent = () => {
       accent = getComputedStyle(canvas).getPropertyValue('--fl-accent').trim() || accent
     }
-    const laneY = (y: number) => LANES.map((l) => l * h).reduce((a, b) => (Math.abs(b - y) < Math.abs(a - y) ? b : a))
+    let boxes: { x0: number; y0: number; x1: number; y1: number }[] = []
+    let lanePx: number[] = []
+    const laneY = (y: number) => lanePx.reduce((a, b) => (Math.abs(b - y) < Math.abs(a - y) ? b : a))
+
+    const measure = () => {
+      const o = canvas.getBoundingClientRect()
+      boxes = [host.querySelector('h1'), host.querySelector('.fl-hero-bottom > p')].flatMap((el) => {
+        if (!el) return []
+        const r = el.getBoundingClientRect()
+        return [{ x0: r.left - o.left, y0: r.top - o.top, x1: r.right - o.left, y1: r.bottom - o.top }]
+      })
+      const fractions = LANES.map((l) => l * h)
+      if (!reduced) { lanePx = fractions; return }
+      // Static frame only: lanes go in the vertical gaps between text boxes, not through the type.
+      const cand: number[] = []
+      for (let y = 10; y < h - 10; y += 14) {
+        if (!boxes.some((b) => y > b.y0 - 10 && y < b.y1 + 10)) cand.push(y)
+      }
+      lanePx = cand.length >= LANES.length
+        ? LANES.map((_, i) => cand[Math.round((i * (cand.length - 1)) / (LANES.length - 1))])
+        : cand.length ? cand : fractions
+    }
 
     const spawn = () => {
       birds = Array.from({ length: count }, () => {
@@ -48,8 +69,8 @@ export function Flock() {
     const draw = () => {
       ctx.clearRect(0, 0, w, h)
       ctx.fillStyle = accent
-      ctx.globalAlpha = 0.55
       for (const b of birds) {
+        ctx.globalAlpha = boxes.some((r) => b.x > r.x0 && b.x < r.x1 && b.y > r.y0 && b.y < r.y1) ? 0.15 : 0.55
         ctx.save()
         ctx.translate(b.x, b.y)
         ctx.rotate(Math.atan2(b.vy, b.vx))
@@ -126,6 +147,7 @@ export function Flock() {
       canvas.width = Math.round(w * dpr)
       canvas.height = Math.round(h * dpr)
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0)
+      measure()
       spawn()
       draw()
     }
@@ -143,7 +165,19 @@ export function Flock() {
     ro.observe(host)
     const io = new IntersectionObserver(([e]) => { onScreen = e.isIntersecting; start() })
     io.observe(canvas)
-    const theme = new MutationObserver(() => { readAccent(); draw() })
+    const theme = new MutationObserver(() => {
+      readAccent()
+      const now = prefersReducedMotion()
+      if (now !== reduced) {
+        reduced = now
+        cancelAnimationFrame(raf)
+        raf = 0
+        measure()
+        spawn()
+        start()
+      }
+      draw()
+    })
     theme.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] })
     document.addEventListener('visibilitychange', start)
     window.addEventListener('pointermove', onMove)
