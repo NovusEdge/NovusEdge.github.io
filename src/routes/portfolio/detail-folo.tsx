@@ -49,13 +49,14 @@ function Phone({ time, children, className = '' }: { time: string; children: Rea
   )
 }
 
+const UNPROMPTED = 'folo, unprompted'
 const stops = [
-  { time: '07:30', title: 'Morning call' },
-  { time: '09:58', title: 'It calls you first' },
-  { time: '10:48', title: 'Notes in, follow-up sent' },
-  { time: '13:10', title: 'Inbox handled' },
-  { time: '16:40', title: 'Asked, answered, cited' },
-  { time: '18:30', title: 'Your day, handled' },
+  { time: '07:30', title: 'Morning call', tag: UNPROMPTED },
+  { time: '09:58', title: 'It calls you first', tag: UNPROMPTED },
+  { time: '10:48', title: 'Notes in, follow-up sent', tag: UNPROMPTED },
+  { time: '13:10', title: 'Inbox handled', tag: UNPROMPTED },
+  { time: '16:40', title: 'Asked, answered, cited', tag: 'I asked' },
+  { time: '18:30', title: 'Your day, handled', tag: UNPROMPTED },
 ]
 
 const inbox = [
@@ -176,8 +177,7 @@ function Day() {
   return (
     <section className="fo-day" aria-labelledby="fo-day-h">
       <div className="fo-head">
-        <h2 id="fo-day-h">One day, as folo runs it</h2>
-        <p>here&rsquo;s a normal day with folo running it.</p>
+        <h2 id="fo-day-h">The same day, up close</h2>
       </div>
       <div ref={scope} className={`fo-day-grid${reduced ? ' fo-stacked' : ''}`}>
         <ol className="fo-rail">
@@ -185,6 +185,7 @@ function Day() {
             <li key={s.time} className={`fo-stop${i === active ? ' is-on' : ''}`}>
               <time className="fo-time">{s.time}</time>
               <h3>{s.title}</h3>
+              <span className={`fo-tag${s.tag === 'I asked' ? ' fo-asked' : ''}`}>{s.tag}</span>
               <Phone time={s.time} className="fo-inline">
                 <Scene i={i} />
               </Phone>
@@ -203,66 +204,107 @@ function Day() {
   )
 }
 
-const beats = ['Hey folo, call Bob.', 'folo puts Alice through.', 'Then their agents sort out the rest.']
+const T0 = 420
+const SPAN = 690
+const pct = (t: string) => {
+  const [h, m] = t.split(':').map(Number)
+  return ((h * 60 + m - T0) / SPAN) * 100
+}
+const ticks = ['07:00', '09:00', '11:00', '13:00', '15:00', '17:00']
 
-const exchange = [
-  ['Alice’s folo', 'Sharing notes from the call', 'l'],
-  ['Bob’s folo', 'Got them. Follow-up Thursday?', 'r'],
-  ['Alice’s folo', 'Thursday 14:00, on both calendars.', 'l'],
-] as const
+type Ev = { t: string; me?: string; text: string; chip?: string; ask?: boolean }
 
-function CallPhone({ name, state, live, dim }: { name: string; state: string; live?: boolean; dim?: boolean }) {
+const turnBased: Ev[] = [
+  { t: '09:52', me: 'what’s my day look like?', text: 'You have 3 meetings: Sana at 10:00, Leah at 14:00, investor update at 17:00.', ask: true },
+  { t: '11:20', me: 'write a follow-up to Sana', text: 'Here’s a draft. Want me to change anything?', ask: true },
+  { t: '14:05', me: 'did Leah reply?', text: 'I don’t see a reply yet.', ask: true },
+  { t: '16:40', me: 'what did Sana say about pricing?', text: 'I don’t have access to that call.', ask: true },
+]
+
+const foloDay: Ev[] = [
+  { t: '07:30', text: 'Morning call: three things today, Sana’s the one that matters.' },
+  { t: '09:58', text: 'Calls me two minutes before Sana.' },
+  { t: '10:48', text: 'Notes shared, follow-up to Sana sent.' },
+  { t: '13:10', text: 'Inbox handled: 4 replied, 2 filed.' },
+  { t: '15:20', text: 'Leah’s 1:1 moved to Thursday.' },
+  { t: '16:40', me: 'what did they say about pricing?', text: '€2k a month works for the pilot.', chip: 'call 10:14', ask: true },
+]
+
+function Plot({ events, gaps, label, side }: { events: Ev[]; gaps?: boolean; label: string; side: 'l' | 'r' }) {
+  const edges = [...events.map((e) => pct(e.t)), 100]
   return (
-    <Phone time={live ? '14:02' : '14:00'} className={`fo-sm${dim ? ' is-dim' : ''}`}>
-      <div className="fo-scene fo-callscene">
-        <div className="fo-call">
-          <div className="fo-av">{name[0]}</div>
-          <div className="fo-name">{name}</div>
-          <div className="fo-sub">{state}</div>
+    <div className={`fo-plot fo-${side}`} role="group" aria-label={label}>
+      {ticks.map((t) => (
+        <span key={t} className="fo-tick" style={{ top: `${pct(t)}%` }} aria-hidden="true"><time>{t}</time></span>
+      ))}
+      {gaps && (
+        <>
+          <span className="fo-gap" style={{ top: 0, bottom: `${100 - edges[0]}%` }} aria-hidden="true"><i>nothing happens</i></span>
+          {events.map((e, i) => (
+            <span key={e.t} className="fo-gap fo-gap-after" style={{ top: `${edges[i]}%`, bottom: `${100 - edges[i + 1]}%` }} aria-hidden="true"><i>nothing happens</i></span>
+          ))}
+        </>
+      )}
+      {events.map((e) => (
+        <div key={e.t} className="fo-ev" style={{ top: `${pct(e.t)}%` }} data-ask={e.ask ? '' : undefined}>
+          <time>{e.t}</time>
+          {e.me && <p className="fo-q">{e.me}</p>}
+          <p className="fo-a">{e.text}</p>
+          {e.chip && <small className="fo-chip">{e.chip}</small>}
         </div>
-        <div className="fo-end"><PhoneIcon /></div>
-      </div>
-    </Phone>
+      ))}
+    </div>
   )
 }
 
-function SayWho() {
+function Versus() {
+  const scope = useRef<HTMLDivElement>(null)
   const reduced = useReduced()
-  const [beat, setBeat] = useState(0)
-  useEffect(() => { if (reduced) setBeat(2) }, [reduced])
-  useEffect(() => {
+  useGSAP(() => {
     if (reduced) return
-    const t = setTimeout(() => setBeat((b) => (b + 1) % 3), 3400)
-    return () => clearTimeout(t)
-  }, [beat, reduced])
-  const state = ['Calling…', 'Connected · 00:04', 'Call ended · 04:12'][beat]
+    const mm = gsap.matchMedia()
+    const fill = (plots: Element[], counters: Element[], trigger: Element) => {
+      const tl = gsap.timeline({ paused: true })
+      plots.forEach((plot, c) => {
+        let n = 0
+        const counter = counters[c]
+        counter.textContent = '0'
+        plot.querySelectorAll<HTMLElement>('.fo-ev, .fo-gap').forEach((el) => {
+          const top = parseFloat(el.style.top) || 0
+          const at = (top / 100) * 3
+          tl.fromTo(el, { autoAlpha: 0, y: 10 }, { autoAlpha: 1, y: 0, duration: 0.5, ease: 'power2.out' }, at)
+          if (el.hasAttribute('data-ask')) tl.call(() => { counter.textContent = String(++n) }, [], at)
+        })
+      })
+      ScrollTrigger.create({ trigger, start: 'top 65%', once: true, onEnter: () => tl.play() })
+    }
+    const all = gsap.utils.toArray<Element>('.fo-plot', scope.current!)
+    const counters = gsap.utils.toArray<Element>('.fo-count', scope.current!)
+    mm.add('(min-width: 900px)', () => fill(all, counters, scope.current!.querySelector('.fo-plot')!))
+    mm.add('(max-width: 899px)', () => all.forEach((p, i) => fill([p], [counters[i]], p)))
+    return () => {
+      mm.revert()
+      counters.forEach((el, i) => { el.textContent = i ? '1' : '4' })
+    }
+  }, { scope, dependencies: [reduced] })
+
   return (
-    <section className="fo-say-who" aria-labelledby="fo-who-h">
+    <section className="fo-vs" aria-labelledby="fo-vs-h">
       <div className="fo-head">
-        <h2 id="fo-who-h">Say who. folo puts you through.</h2>
-        <p>you just say who, folo puts the call through, and after you hang up the two agents sort out the rest between themselves.</p>
+        <h2 id="fo-vs-h">Same day, two assistants</h2>
       </div>
-      <div className="fo-stage">
-        <p className="fo-beat" key={beat}>{beats[beat]}</p>
-        <div className="fo-pair">
-          <CallPhone name="Bob" state={state} live={beat > 0} />
-          <ol className={`fo-ex${beat === 2 ? ' is-on' : ''}`} aria-hidden={beat !== 2}>
-            {exchange.map(([who, text, side]) => (
-              <li key={text} className={`fo-ex-${side}`}>
-                <small>{who}</small>
-                <span>{text}</span>
-              </li>
-            ))}
-          </ol>
-          <CallPhone name="Alice" state={beat === 0 ? '' : state} live={beat > 0} dim={beat === 0} />
+      <div ref={scope} className="fo-vs-grid">
+        <div className="fo-vs-h fo-l">
+          <h3>a turn-based assistant</h3>
+          <p>illustrative, not any one product</p>
         </div>
-        <div className="fo-steps" role="group" aria-label="Steps">
-          {beats.map((b, i) => (
-            <button key={b} type="button" aria-pressed={i === beat} aria-label={`Step ${i + 1}: ${b}`} onClick={() => setBeat(i)}>
-              0{i + 1}
-            </button>
-          ))}
+        <Plot events={turnBased} gaps side="l" label="A turn-based assistant" />
+        <p className="fo-counter fo-l"><b className="fo-count">4</b> times I had to ask</p>
+        <div className="fo-vs-h fo-r">
+          <h3>folo</h3>
         </div>
+        <Plot events={foloDay} side="r" label="folo" />
+        <p className="fo-counter fo-r"><b className="fo-count">1</b> times I had to ask</p>
       </div>
     </section>
   )
@@ -277,9 +319,9 @@ const rules = [
 
 function Under() {
   return (
-    <section className="fo-under" aria-labelledby="fo-under-h">
-      <div className="fo-head">
-        <h2 id="fo-under-h">What&rsquo;s under it</h2>
+    <div className="fo-under">
+      <div className="fo-sub-head">
+        <h3>What&rsquo;s under it</h3>
         <p>under the app it&rsquo;s a handful of small services, and most of my time so far has gone into the parts nobody sees: who&rsquo;s allowed to see what, and where every answer came from.</p>
       </div>
       <div className="fo-flow">
@@ -308,6 +350,21 @@ function Under() {
         {rules.map((r) => <li key={r}>{r}</li>)}
       </ol>
       <p className="fo-status">it&rsquo;s in private beta, so none of this has run at scale yet.</p>
+    </div>
+  )
+}
+
+function Rogue() {
+  return (
+    <section className="fo-rogue" aria-labelledby="fo-rogue-h">
+      <div className="fo-head">
+        <h2 id="fo-rogue-h">Moving first, without going rogue</h2>
+      </div>
+      <div className="fo-prose">
+        <p>the scary part of an assistant that acts on its own is that it acts on its own, so most of the work has gone into deciding where it&rsquo;s allowed to.</p>
+        <p>routine stuff, follow-ups, holds, reschedules and replies, goes out without asking, each with its sources attached. it checks with me first before writing to someone new, or when a message has text in it that came from outside. and when the other person has folo too, the two agents sort out the follow-up between themselves after the call.</p>
+      </div>
+      <Under />
     </section>
   )
 }
@@ -326,8 +383,8 @@ export default function Folo({ c }: LayoutProps) {
 
         <header className="fo-hero">
           <div className="fo-hero-copy">
-            <h1>Need something done?<br /><span>Just talk to your folo.</span></h1>
-            <p className="fo-sub1">An on-call COO for founders.</p>
+            <h1>I wanted an assistant<br /><span>that moves first.</span></h1>
+            <p className="fo-sub1">folo, an on-call COO for founders.</p>
             <p className="fo-lede">{c.lede}</p>
             <a className="fo-btn" href={WAITLIST} target="_blank" rel="noopener noreferrer">Join the waitlist <span aria-hidden="true">↗</span></a>
           </div>
@@ -336,9 +393,9 @@ export default function Folo({ c }: LayoutProps) {
           </div>
         </header>
 
+        <Versus />
         <Day />
-        <SayWho />
-        <Under />
+        <Rogue />
 
         <footer className="fo-close">
           <div>

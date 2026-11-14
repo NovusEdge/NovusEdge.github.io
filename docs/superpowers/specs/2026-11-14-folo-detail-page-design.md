@@ -75,6 +75,50 @@ Status line under it: `it's in private beta, so none of this has run at scale ye
 
 `folo` wordmark. Text: `the code's private. if you're a founder and this sounds useful, get on the waitlist.` Link `askfolo.com ↗`. Stack in mono: `Python · FastAPI · Postgres + pgvector · Expo · Cloudflare Workers · ElevenLabs · Twilio · Nango · MCP`. Link `← Back to portfolio`.
 
+## Revision 2: personal, "moves first" (supersedes Sections 1 to 4 above; Look, Wiring and Close stand)
+
+The owner found the first build too close to askfolo.com. The page is now the owner's argument: the tools they tried (Inception and the rest) still felt turn-based, you type, it answers, nothing happens till you type again; folo is meant to move first. Copy below is exact; lowercase sentence starts are intentional.
+
+### 1. Hero
+- h1: `I wanted an assistant` / `that moves first.` (second line in ink 3)
+- Sub: `folo, an on-call COO for founders.`
+- Lede: `I tried Inception and pretty much everything else out there, and they all still felt turn-based. you type, it answers, and then nothing happens till you type again. so I started building folo.`
+- `Join the waitlist ↗` (https://askfolo.com). Keep the tilted hero phone if it still fits; give the sub and lede proper spacing under the h1 (the first build crowded them).
+
+### 2. Turn-based vs folo
+Heading: `Same day, two assistants`. Two columns sharing one vertical time axis 07:00 to 18:30 (stacked on mobile: turn-based first). Each event is placed at its time, so the empty stretches are visible as empty space. Under each column a counter: `times I had to ask`.
+
+Left, label `a turn-based assistant` with a small note `illustrative, not any one product`:
+- `09:52` me: `what's my day look like?` / it: `You have 3 meetings: Sana at 10:00, Leah at 14:00, investor update at 17:00.`
+- `11:20` me: `write a follow-up to Sana` / it: `Here's a draft. Want me to change anything?`
+- `14:05` me: `did Leah reply?` / it: `I don't see a reply yet.`
+- `16:40` me: `what did Sana say about pricing?` / it: `I don't have access to that call.`
+- Between events, a faint dashed gap label `nothing happens`. Counter: `4`.
+
+Right, label `folo`:
+- `07:30` `Morning call: three things today, Sana's the one that matters.`
+- `09:58` `Calls me two minutes before Sana.`
+- `10:48` `Notes shared, follow-up to Sana sent.`
+- `13:10` `Inbox handled: 4 replied, 2 filed.`
+- `15:20` `Leah's 1:1 moved to Thursday.`
+- `16:40` me: `what did they say about pricing?` / folo: `€2k a month works for the pilot.` with citation chip `call 10:14`.
+- Counter: `1`.
+
+On scroll into view, the two columns fill top to bottom in sync (GSAP ScrollTrigger, once, not scrubbed); reduced motion shows them filled.
+
+### 3. The day, up close
+Heading: `The same day, up close`. Keep the existing sticky-phone timeline and its six screens. Each stop gets a small tag: `folo, unprompted` for 07:30, 09:58, 10:48, 13:10, 18:30, and `I asked` for 16:40 (accent red only on the `I asked` tag). Reduce the empty scroll distance between stops on desktop so the rail does not leave screen-high blank gaps (roughly 60vh per stop).
+
+### 4. Moving first, without going rogue
+Heading: `Moving first, without going rogue`. Body:
+- `the scary part of an assistant that acts on its own is that it acts on its own, so most of the work has gone into deciding where it's allowed to.`
+- `routine stuff, follow-ups, holds, reschedules and replies, goes out without asking, each with its sources attached. it checks with me first before writing to someone new, or when a message has text in it that came from outside. and when the other person has folo too, the two agents sort out the follow-up between themselves after the call.`
+
+Then the existing "What's under it" diagram and four rules (unchanged copy), with its intro line and the status line `it's in private beta, so none of this has run at scale yet.`
+
+### Removed
+The "Say who. folo puts you through." two-phone section is removed.
+
 ## Quality bar
 
 - 375px to 1440px, no horizontal scroll. Light only.

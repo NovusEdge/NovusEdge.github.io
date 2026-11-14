@@ -1,6 +1,6 @@
 import type { ProjectContent } from './types'
 
 export const folo: ProjectContent = {
-  lede: 'this is the thing I\'m building right now. folo\'s a personal agent for founders: you talk to it, and it briefs you, follows up, reschedules, replies and puts your calls through. it\'s in private beta, and the waitlist\'s open.',
+  lede: "I tried Inception and pretty much everything else out there, and they all still felt turn-based. you type, it answers, and then nothing happens till you type again. so I started building folo.",
   sections: [],
 }
