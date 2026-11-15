@@ -12,6 +12,7 @@ import ProjectPage from './routes/portfolio/project'
 import ResearchIndex from './routes/research/index'
 import StackPage from './routes/stack/index'
 import BlipsPage from './routes/blips/index'
+import OutreachPrivacy from './routes/privacy/outreach'
 import NotFound from './routes/not-found'
 import { SiteFooter } from './components/site-footer'
 import { AccessibilityPanel } from './components/accessibility-panel'
@@ -93,6 +94,7 @@ function LocaleTree({ locale }: { locale: Locale }) {
             <Route path="stack/editorial" element={<StackPage />} />
             <Route path="stack/graph" element={<StackPage />} />
             <Route path="blips" element={<BlipsPage />} />
+            <Route path="privacy/outreach" element={<OutreachPrivacy />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </div>

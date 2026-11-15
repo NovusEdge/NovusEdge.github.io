@@ -48,11 +48,15 @@ export default defineConfig({
           ...projectSlugs.map((s) => `/portfolio/${s}`),
         ]
         // the plugin prerenders '/' on its own, so the bare root would be a duplicate
-        return locales.flatMap((l) =>
-          bare
-            .filter((r) => !(l.default && r === '/'))
-            .map((r) => (r === '/' ? l.prefix : `${l.prefix}${r}`)),
-        )
+        return [
+          ...locales.flatMap((l) =>
+            bare
+              .filter((r) => !(l.default && r === '/'))
+              .map((r) => (r === '/' ? l.prefix : `${l.prefix}${r}`)),
+          ),
+          // English-only legal page, so no locale copies (see src/routes/privacy/outreach.tsx)
+          '/privacy/outreach',
+        ]
       })(),
     }),
     {
