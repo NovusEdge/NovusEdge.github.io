@@ -1,5 +1,9 @@
 {
   "fi": {
+    "a-computer-can-never-be-held-accountable": {
+      "title": "Tietokonetta ei voi koskaan saattaa vastuuseen",
+      "description": "IBM:n kalvo vuodelta 1979 sanoo, ettei tietokone saa koskaan tehdä johdon päätöstä. Vuonna 2026 tietokoneet tekevät niitä joka tapauksessa, ja yhdellä niistä saattaa olla kipuakseli."
+    },
     "building-vs-creating": {
       "title": "Rakentaminen vs. luominen",
       "description": "Kunhan pyörittelen yhtä satunnaista ajatusta, joka heräsi hiljattain"
@@ -126,6 +130,10 @@
     }
   },
   "de": {
+    "a-computer-can-never-be-held-accountable": {
+      "title": "Ein Computer kann niemals zur Rechenschaft gezogen werden",
+      "description": "Eine IBM-Folie von 1979 besagt, dass ein Computer niemals eine Managemententscheidung treffen darf. 2026 treffen Computer sie trotzdem, und einer von ihnen hat vielleicht eine Schmerzachse."
+    },
     "building-vs-creating": {
       "title": "Bauen vs. Erschaffen",
       "description": "Einfach mal ein zufälliger Gedanke, der mir neulich durch den Kopf ging"
@@ -252,6 +260,10 @@
     }
   },
   "ja": {
+    "a-computer-can-never-be-held-accountable": {
+      "title": "コンピュータに責任を負わせることは決してできない",
+      "description": "1979年のIBMのスライドには、コンピュータは決して経営判断を下してはならないと書かれている。2026年、コンピュータはどうあれ判断を下すようになっており、そのうちの1台には苦痛の軸が存在しているかもしれない。"
+    },
     "building-vs-creating": {
       "title": "Building vs. Creating",
       "description": "最近ふと考えたことについての雑記"
@@ -378,6 +390,10 @@
     }
   },
   "sv": {
+    "a-computer-can-never-be-held-accountable": {
+      "title": "En dator kan aldrig ställas till svars",
+      "description": "En IBM-slide från 1979 säger att en dator aldrig får fatta ett ledningsbeslut. År 2026 fattar datorerna dem ändå, och en av dem har kanske en smärtaxel."
+    },
     "building-vs-creating": {
       "title": "Bygga vs. skapa",
       "description": "Går bara igenom en slumpmässig tanke jag hade nyligen"
@@ -504,6 +520,10 @@
     }
   },
   "zh": {
+    "a-computer-can-never-be-held-accountable": {
+      "title": "计算机永远无法被追究责任",
+      "description": "一张 1979 年的 IBM 幻灯片写道，计算机绝不能做出管理决策。到了 2026 年，计算机反正已经在做决策了，而且其中某一个可能还拥有了痛苦轴。"
+    },
     "building-vs-creating": {
       "title": "Building vs. Creating（构建与创造）",
       "description": "随笔聊聊最近脑子里冒出的一个碎碎念"
