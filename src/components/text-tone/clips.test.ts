@@ -69,4 +69,27 @@ describe('clips', () => {
     expect(onEnd).toHaveBeenCalledOnce()
     expect(ctx.createBufferSource).toHaveBeenCalledOnce()
   })
+
+  it('close() ends the playing clip and closes the context', async () => {
+    const { ctx } = fakeContext()
+    const c = createClips(() => ok(4), () => ctx)
+    const onEnd = vi.fn()
+    await c.play({}, 'i.mp3', vi.fn(), onEnd)
+    c.close()
+    expect(onEnd).toHaveBeenCalledOnce()
+    expect(ctx.close).toHaveBeenCalledOnce()
+  })
+
+  it('a clip still loading when close() runs never starts', async () => {
+    const { ctx, started } = fakeContext()
+    let release!: () => void
+    const slow = new Promise<Response>((done) => (release = () => done(new Response(new ArrayBuffer(1)))))
+    const c = createClips(() => slow, () => ctx)
+    const pending = c.play({}, 'i.mp3', vi.fn(), vi.fn())
+    c.close()
+    release()
+    await pending
+    expect(started).toEqual([])
+    expect(ctx.createBufferSource).not.toHaveBeenCalled()
+  })
 })

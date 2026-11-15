@@ -76,7 +76,7 @@ export function useLoop(host: RefObject<HTMLElement | null>, build: () => gsap.c
         s.current.tl = null
       }
     },
-    { dependencies: [mode, ready], scope: host },
+    { dependencies: [mode, ready], scope: host, revertOnUpdate: true },
   )
   const toggle = () => {
     s.current.user = !s.current.user

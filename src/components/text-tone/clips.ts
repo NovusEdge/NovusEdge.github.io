@@ -23,15 +23,17 @@ export function createClips(
       let p = cache.get(src)
       if (!p) {
         const c = ctx ?? api.unlock()
-        p = load(clipUrl(src))
+        const mine: Promise<AudioBuffer> = load(clipUrl(src))
           .then((r) => {
             if (!r.ok) throw new Error(`${src}: ${r.status}`)
             return r.arrayBuffer()
           })
           .then((b) => c.decodeAudioData(b))
-        cache.set(src, p)
-        // A failed load is dropped, so the next tap fetches again.
-        p.catch(() => cache.delete(src))
+        p = mine
+        cache.set(src, mine)
+        // A failed load is dropped so the next tap fetches again; the identity check keeps a stale
+        // rejection that outlives close() from deleting a newer entry.
+        mine.catch(() => cache.get(src) === mine && cache.delete(src))
       }
       return p
     },
