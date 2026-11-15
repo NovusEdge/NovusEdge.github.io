@@ -35,7 +35,9 @@ export function ClosingStage() {
     const line = el.querySelector<HTMLElement>('.tt-line')!
     const chars = [...line.querySelectorAll<HTMLElement>('.tt-c')]
     const w = el.clientWidth, h = el.clientHeight, s = w / 1000, top = Math.round(h * (1 - FRAC))
-    el.querySelector('svg')!.setAttribute('viewBox', `0 0 ${w} ${h}`)
+    const svg = el.querySelector('svg')!
+    svg.setAttribute('viewBox', `0 0 ${w} ${h}`)
+    svg.setAttribute('data-laid', '')
     el.querySelector('.tt-space')!.setAttribute('transform', `translate(0 ${top}) scale(${s})`)
     gsap.set(chars, { clearProps: 'transform' })
     line.style.fontSize = '100px'
@@ -108,7 +110,7 @@ export function ClosingStage() {
               <feDropShadow dx="0" dy="-5" stdDeviation="7" floodOpacity=".34" />
             </filter>
             {/* Long, thin noise reads as paper fibre once it is multiplied over a flat colour. */}
-            <filter id="tt-fibre"x="0" y="0" width="100%" height="100%">
+            <filter id="tt-fibre" x="0" y="0" width="100%" height="100%">
               <feTurbulence type="fractalNoise" baseFrequency=".012 .55" numOctaves="3" seed="6" />
               <feColorMatrix values="0 0 0 0 .42  0 0 0 0 .37  0 0 0 0 .3  1.5 0 0 0 -.62" />
             </filter>

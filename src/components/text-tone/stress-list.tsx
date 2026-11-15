@@ -11,6 +11,7 @@ import { onWidthChange, useMotion } from './loop-pause'
 import { FLAT, SENTENCE, STRESSED, clipKey, contour, penEase, ramp, type Reading, type TracePoint } from './stage-data'
 
 const WORDS = SENTENCE.split(' ')
+// GSAP reads the CSS rest transform as a px y, so y: 0 replaces it; without it the stressed word lifts twice.
 const REST = { y: 0, yPercent: -15, scale: 1.12, '--k': 1 }
 
 type Row = {
@@ -132,6 +133,7 @@ export function StressList() {
       })
 
       playRef.current = (i: number) => {
+        if (list.classList.contains('tt-moving')) return
         const r = rows[i]
         const e = typed ? FLAT : r.e
         void clips.play(
@@ -197,7 +199,7 @@ export function StressList() {
           const lag = i * 0.012
           ctl!
             .fromTo(r.words[r.k], REST, { yPercent: 0, scale: 1, '--k': 0, duration: 0.3, ease: 'okInOut' }, lag)
-            .fromTo(r.em, { marginLeft: '.2em', marginRight: '.2em' }, { marginLeft: '0em', marginRight: '0em', duration: 0.3, ease: 'okInOut' }, lag)
+            .fromTo(r.em, { marginLeft: '0.2em', marginRight: '0.2em' }, { marginLeft: '0em', marginRight: '0em', duration: 0.3, ease: 'okInOut' }, lag)
             .fromTo(r.g, { opacity: 1 }, { opacity: 0, duration: 0.22 }, 0)
             .fromTo(r.words, { opacity: (j: number) => (j === r.k ? 1 : 0.46) }, { opacity: 1, duration: 0.4 }, 0.3)
           r.strokes.forEach((g, j) =>

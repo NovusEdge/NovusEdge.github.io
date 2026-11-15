@@ -2,7 +2,7 @@
 
 Status: design approved by the author on 2026-11-15 after seven mock passes, revised the same day after a spec review. The approved mock is `2026-11-15-text-is-not-tone/mock-a7.html` (the notes call it `direction-a7.html`), and its pass-by-pass notes are `mock-notes.md` beside it.
 
-To run the mock, serve the repo root (`python -m http.server 8765`) and open `/docs/superpowers/specs/2026-11-15-text-is-not-tone/mock-a7.html`. It fetches `stage.json` and the clips from `/public/assets/blog/didnt-say/`. Its footer stand-in needs the dev server on port 5179 for the hand images; everything else runs without it.
+To run the mock, serve the repo root (`python -m http.server 8765`) and open `/docs/superpowers/specs/2026-11-15-text-is-not-tone/mock-a7.html`. It fetches `/src/data/text-tone-stage.json` and the clips from `/public/assets/blog/didnt-say/`. Its footer stand-in needs the dev server on port 5179 for the hand images; everything else runs without it.
 
 ## Goal
 

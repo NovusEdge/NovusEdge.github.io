@@ -1,4 +1,4 @@
-import { Children, type ReactNode } from 'react'
+import { Children, useMemo, type ReactNode } from 'react'
 import ReactMarkdown, { type Components } from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import { withSlash } from '../../i18n/paths'
@@ -25,21 +25,25 @@ function markScripts(children: ReactNode, han: boolean): ReactNode {
 
 export function TextToneMarkdown({ children, figures, locale }: { children: string; figures: Record<string, ReactNode>; locale: string }) {
   const han = locale !== 'zh' && locale !== 'ja'
-  const components: Components = {
-    p({ node, children: kids }) {
-      const first = node?.children.length === 1 ? node.children[0] : undefined
-      const name = first?.type === 'text' ? PLACEHOLDER.exec(first.value.trim())?.[1] : undefined
-      if (name && name in figures) return <>{figures[name]}</>
-      return <p>{markScripts(kids, han)}</p>
-    },
-    a({ href, children: kids }) {
-      if (href === '#stat') return <span className="tt-n">{kids}</span>
-      return <a href={href && withSlash(href)}>{kids}</a>
-    },
-    h2({ children: kids }) {
-      return <h2 id={headingId(String(kids))}>{kids}</h2>
-    },
-  }
+  // Stable identity: new component types on each render would remount the article and every figure.
+  const components = useMemo<Components>(
+    () => ({
+      p({ node, children: kids }) {
+        const first = node?.children.length === 1 ? node.children[0] : undefined
+        const name = first?.type === 'text' ? PLACEHOLDER.exec(first.value.trim())?.[1] : undefined
+        if (name && Object.hasOwn(figures, name)) return <>{figures[name]}</>
+        return <p>{markScripts(kids, han)}</p>
+      },
+      a({ href, children: kids }) {
+        if (href === '#stat') return <span className="tt-n">{kids}</span>
+        return <a href={href && withSlash(href)}>{kids}</a>
+      },
+      h2({ children: kids }) {
+        return <h2 id={headingId(String(kids))}>{kids}</h2>
+      },
+    }),
+    [figures, han],
+  )
   return (
     <ReactMarkdown remarkPlugins={[remarkGfm]} components={components}>
       {children}

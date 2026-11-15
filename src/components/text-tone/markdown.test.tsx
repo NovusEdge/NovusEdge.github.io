@@ -11,6 +11,7 @@ describe('TextToneMarkdown', () => {
     const html = render('before\n\n{{tones}}\n\nafter')
     expect(html).toContain('<div data-fig="tones"></div>')
     expect(html).not.toContain('{{tones}}')
+    expect(html).not.toContain('<p><div')
   })
 
   it('reads an underscored placeholder as one token, not emphasis', () => {
