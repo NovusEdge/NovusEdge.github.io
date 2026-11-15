@@ -137,7 +137,7 @@ export default function BlogIndex() {
                     </div>
                   )
                 }
-                if (isMeaningSlug(post.slug) && img) {
+                if ((isMeaningSlug(post.slug) || post.slug === 'text-is-not-tone') && img) {
                   return (
                     <div key={post.slug}>
                       {/* The site gold, as a hex because the card appends alpha bytes to it. */}
