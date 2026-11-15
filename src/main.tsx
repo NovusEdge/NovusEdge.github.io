@@ -101,6 +101,10 @@ export async function prerender(data: { url: string }) {
       },
     })
   }
+  if (stripLocale(pathname) === '/blog/text-is-not-tone') {
+    const { FONT_LINKS, fontLinkId } = await import('./components/text-tone/fonts')
+    FONT_LINKS.forEach((href, i) => elements.push({ type: 'link', props: { rel: 'stylesheet', id: fontLinkId(i), href } }))
+  }
   return {
     html,
     head: {

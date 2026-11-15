@@ -1,0 +1,46 @@
+.tt {
+  --paper: #f3ecdd; --ink: #1f1d1a; --soft: #6f685c; --rule: #d3cab7; --card: #fbf7ec; --night: #0b0a09;
+  --cream: #efe7d6; --gold: #d4a03c; --blue: #6b8cae; --coral: #e2573c;
+  --link: #2f5f8f; --link-rule: #2f5f8f80; --mark: #8a3a1c;
+  background: var(--night);
+}
+.dark .tt { --paper: #1a1917; --ink: #e9e2d3; --soft: #9a9283; --rule: #3a3732; --link: #a9c7e6; --link-rule: #a9c7e680; --mark: #f0a47c; }
+
+.tt-page { position: relative; z-index: 1; background: var(--paper); color: var(--ink); font: 400 1.2rem/1.66 Spectral, Georgia, serif; box-shadow: 0 -18px 50px #000c, 0 18px 50px #000c; }
+/* Absolute, not fixed: .page-enter keeps a transform, which makes fixed children absolute anyway. */
+.tt-page::after, .tt-closing::after {
+  content: ''; position: absolute; inset: 0; z-index: 5; pointer-events: none; opacity: .36;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .5 0 0 0 0 .5 0 0 0 0 .5 .55 0 0 0 -.17'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+.tt-col { max-width: 56rem; margin: 0 auto; padding: 4.5rem 1.5rem 5rem; font-synthesis: none; }
+.tt-col p { margin: 0 0 1.4em; }
+.tt-col h2 { font: 700 2rem/1.15 Spectral, Georgia, serif; letter-spacing: -.012em; margin: 3.8rem 0 1.2rem; }
+.tt-col em { font-style: italic; font-weight: 500; color: var(--mark); }
+.tt-col strong { font-weight: 700; }
+.tt-col p a { color: var(--link); text-decoration: underline; text-decoration-color: var(--link-rule); text-decoration-thickness: .09em; text-underline-offset: .2em; transition: text-decoration-color .15s, background-color .15s; }
+.tt-col p a:hover, .tt-col p a:focus-visible { text-decoration-color: currentColor; text-decoration-thickness: .14em; background: color-mix(in srgb, var(--link) 12%, transparent); }
+.tt-n { font: 500 .86em 'IBM Plex Mono', monospace; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.tt-mono { font: 400 .76rem/1.45 'IBM Plex Mono', monospace; letter-spacing: .03em; }
+.tt button { font: inherit; color: inherit; background: none; border: 0; padding: 0; cursor: pointer; }
+.tt button:focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; }
+
+.tt-head { margin-bottom: 3.2rem; color: var(--soft); }
+.tt-head h1 { margin: 2.6rem 0 1.3rem; color: var(--ink); font: 400 clamp(3.3rem, 11.5vw, 8rem)/.98 'Instrument Serif', Georgia, serif; letter-spacing: -.02em; }
+/* "!=" stays as typed: two characters in the mono, no ligature */
+.tt-ne { font: 500 .62em 'IBM Plex Mono', monospace; font-variant-ligatures: none; letter-spacing: -.04em; color: var(--mark); vertical-align: .12em; margin: 0 .06em; }
+.tt-head p { margin: 0; }
+
+.tt-ic { width: 1em; height: 1em; flex: none; }
+.tt-pp { position: absolute; right: .8rem; bottom: .8rem; z-index: 2; width: 2rem; height: 2rem; border-radius: 50%; opacity: .45; display: grid; place-items: center; }
+.tt-pp:hover, .tt-pp:focus-visible { opacity: 1; background: color-mix(in srgb, currentColor 12%, transparent); }
+.tt-pp:active { transform: scale(.92); }
+.tt-pp .tt-ic { width: .95rem; height: .95rem; }
+.tt-fig { margin: 3.2rem 0; position: relative; }
+.tt-fig > .tt-pp { top: -.4rem; bottom: auto; right: -.3rem; color: var(--ink); }
+
+/* Attribute selectors under .tt, never :lang(): on /zh/ the whole document is zh-Hans. */
+.tt [lang="zh-Hans"] { font-family: 'Noto Serif SC', 'Songti SC', serif; font-weight: 500; }
+.tt [lang="ar"] { font-family: 'Noto Naskh Arabic', 'Geeza Pro', serif; font-weight: 500; }
+.tt-col p [lang="ar"] { font-size: 1.35em; line-height: 1; }
+
+@media (max-width: 640px) { .tt-page { font-size: 1.08rem; } .tt-col h2 { font-size: 2.1rem; } }

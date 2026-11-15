@@ -24,6 +24,7 @@ import { PortalPage } from './portal-page'
 import { OpenJevPage } from './openjev-page'
 import { MeaningPage } from './meaning-page'
 import { HelloWorldPage } from './hello-world-page'
+import { TextTonePage } from './text-tone-page'
 import { isMeaningSlug } from '../../lib/meaning-data'
 import { OPENJEV_SLUG } from '../../lib/openjev-data'
 import { useLocalePath } from '../../i18n/use-locale-path'
@@ -103,6 +104,9 @@ export default function BlogPost() {
   // The first post is a greeting sent out with no idea who reads it, so it goes out
   // the way Voyager's did: etched on a gold record and launched into the dark.
   if (post.slug === 'hello-world') return <HelloWorldPage post={post} image={image} />
+  // Typing keeps the words and drops the stress, so this page lets you hear the seven readings
+  // before folding them into the one line a text box would send.
+  if (post.slug === 'text-is-not-tone') return <TextTonePage post={post} image={image} />
 
   return (
     <>

@@ -2533,6 +2533,7 @@ header.ms-col { max-width: 1400px; text-align: center; }
 /* The footer's charcoal reads as a grey band under deep space; it takes the space colour,
    with a faint gold horizon so the edge still reads. */
 .vg-space .site-footer { background-color: #05070d; box-shadow: inset 0 1px 0 #e9c46a1f; }
+.tone-night .site-footer { background-color: #0b0a09; }
 .vg-flight { position: relative; height: 100svh; }
 .vg-flight.vg-mode-live { height: 280svh; }
 .vg-stage {

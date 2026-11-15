@@ -70,8 +70,8 @@ function LocaleTree({ locale }: { locale: Locale }) {
       <LocaleContext value={locale}>
         {/* landing is a self-contained dark cover with its own nav; header rides every other page */}
         {bare !== '/' && <Header />}
-        {/* The paper pages keep their surface free of the site's grain overlay. */}
-        {bare !== '/blog/plan-a-ai' && bare !== `/blog/${OPENJEV_SLUG}` && <GrainShader />}
+        {/* The paper pages carry their own grain, or none, so they skip the site's overlay. */}
+        {bare !== '/blog/plan-a-ai' && bare !== `/blog/${OPENJEV_SLUG}` && bare !== '/blog/text-is-not-tone' && <GrainShader />}
         <div key={key} className="page-enter">
           {/* nested Routes match against the remainder of the parent path, so these are relative */}
           <Routes>
