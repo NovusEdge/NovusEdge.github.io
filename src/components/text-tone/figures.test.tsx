@@ -8,6 +8,7 @@ import { FortySheets } from './forty-sheets'
 import { RateCards } from './rate-cards'
 import { TonesFigure } from './tones-figure'
 import { HarakatFigure } from './harakat-figure'
+import { ClosingStage } from './closing-stage'
 
 const render = (node: ReactNode, mode: MotionMode = 'pending') =>
   renderToStaticMarkup(
@@ -68,5 +69,22 @@ describe('HarakatFigure', () => {
 
   it('shows every reading at once under reduced motion', () => {
     expect(render(<HarakatFigure />, 'reduced')).toContain('tt-static')
+  })
+})
+
+describe('ClosingStage', () => {
+  it('draws seven bands of paper under the arc', () => {
+    expect(count(render(<ClosingStage />), '<circle')).toBe(7)
+  })
+
+  it('keeps the pause button outside the image role', () => {
+    const html = render(<ClosingStage />, 'full')
+    const img = html.indexOf('role="img"')
+    const imgEnd = html.indexOf('</p></div>', img)
+    expect(img).toBeGreaterThan(-1)
+    expect(imgEnd).toBeGreaterThan(img)
+    expect(html.slice(img, imgEnd)).not.toContain('<button')
+    // The button mounts only once fonts load, which never happens in static markup.
+    expect(html.indexOf('<button')).toBe(-1)
   })
 })

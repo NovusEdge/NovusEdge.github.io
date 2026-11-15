@@ -10,6 +10,7 @@ import { FortySheets } from '../../components/text-tone/forty-sheets'
 import { RateCards } from '../../components/text-tone/rate-cards'
 import { TonesFigure } from '../../components/text-tone/tones-figure'
 import { HarakatFigure } from '../../components/text-tone/harakat-figure'
+import { ClosingStage } from '../../components/text-tone/closing-stage'
 import { TextToneMarkdown } from '../../components/text-tone/markdown'
 import { MotionContext, useMotionMode } from '../../components/text-tone/loop-pause'
 import { ensureFontLinks } from '../../components/text-tone/fonts'
@@ -85,6 +86,7 @@ export function TextTonePage({ post, image }: { post: Post; image?: string | nul
             <PostSignoff variant={0} />
           </div>
         </main>
+        <ClosingStage />
       </div>
     </MotionContext>
   )
