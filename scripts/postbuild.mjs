@@ -63,10 +63,12 @@ const items = posts
 writeFileSync(
   `${dist}/feed.xml`,
   `<?xml version="1.0" encoding="UTF-8"?>
-<rss version="2.0"><channel>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel>
   <title>NovusEdge</title>
-  <link>${ORIGIN}</link>
+  <link>${ORIGIN}/</link>
+  <atom:link href="${ORIGIN}/feed.xml" rel="self" type="application/rss+xml"/>
   <description>Essays and notes on AI agents, systems, hardware and the rest, by Aliasgar Khimani.</description>
+  <language>en</language>${posts[0] ? `\n  <lastBuildDate>${new Date(posts[0].date).toUTCString()}</lastBuildDate>` : ''}
 ${items}
 </channel></rss>`,
 )

@@ -4,7 +4,7 @@
 
 Coding since 2013. My background is offensive security: CTFs, malware development, and pentesting. Most of my current work records what agents decide, believe and change, so later sessions and people can check and revise it: docket for decisions, Engrammic for claims and evidence, stoat for disposable VMs to run agents in, and midwire for checking an action's real effect.
 
-Updated: 2026-10-11. Consult the linked project pages and repositories for implementation details.
+Updated: 2026-11-15. Consult the linked project pages and repositories for implementation details.
 
 ## Site directory
 
@@ -26,6 +26,9 @@ English is the default language. Localized routes use `/fi/` for Finnish, `/de/`
 - [glowup](https://glowup.khimani.dev/): A Claude Code mod with a side pane for changed files, subagents and context use, an activity line above the prompt, JSON packs and themes, and a pixel pet. [Repository](https://github.com/NovusEdge/glowup).
 - [a2a-mod](https://github.com/NovusEdge/a2a-mod): An Agent2Agent (A2A) client for Claude Code that hands tasks to non-Claude agents and returns their results. [Website](https://a2a.khimani.dev), [repository](https://github.com/NovusEdge/a2a-mod).
 - [midwire](https://github.com/NovusEdge/midwire): Early work on closed-loop agents: measuring what an action actually changed before the agent continues. No release yet.
+- [flocc](https://khimani.dev/portfolio/flocc/): Runs Claude Code sessions on Linear issues. A labelled issue is picked up by a host, worked in its own worktree, and returned as a draft pull request. Private.
+- [folo](https://khimani.dev/portfolio/folo/): An on-call COO for founders, built as a phone app on an agent gateway. In development; the waitlist is at [askfolo.com](https://askfolo.com) and the code is private.
+- [sundial](https://khimani.dev/portfolio/sundial/): Research on giving LLM agents a sense of elapsed and wall-clock time. [Paper](https://zenodo.org/records/23921544), [model](https://huggingface.co/NovusEdge/sundial-qwen3.5-2b-T-int).
 - [Engrammic](https://khimani.dev/portfolio/engrammic/): Epistemic memory for AI agents. Models claims, evidence, provenance, and decay so observations and beliefs can be traced to their sources. [Website](https://engrammic.ai), [repository](https://github.com/engrammic-ai/engrammic).
 - [Veil](https://khimani.dev/portfolio/veil/): A coding agent forked from Pi, with local SQLite memory, scored context eviction, and records of failed attempts. The memory store is local; a configured remote model provider can receive prompt context. [Repository](https://github.com/engrammic-ai/veil), [npm package](https://www.npmjs.com/package/@engrammic/veil).
 - [Primitives](https://github.com/engrammic-ai/primitives): Python schemas and rules for observations, claims, facts, and beliefs. [Repository](https://github.com/engrammic-ai/primitives), [PyPI package](https://pypi.org/project/engrammic-primitives/).
@@ -33,20 +36,23 @@ English is the default language. Localized routes use `/fi/` for Finnish, `/de/`
 - [ØCLOAK](https://khimani.dev/portfolio/ocloak/): Research into a home reflector, portable devices, and software decoys intended to interfere with sensing and profiling. The planned 2.4 GHz reflector experiment has not established efficacy, and no hardware has shipped. The repository is private.
 - [money-mesh](https://khimani.dev/portfolio/): An experimental autonomous-agent system with bounded budgets, node-owned business code, and a protected runtime. Self-sustaining operation is a design goal, not a claim of demonstrated profitability. Private.
 - [Curt](https://github.com/NovusEdge/curt): A Claude Code plugin with prose and code review skills, session hooks, and a linter. Writing guidance focuses on clarity, supported claims, and preserving the author's voice. [Repository](https://github.com/NovusEdge/curt).
+- [drygate](https://github.com/NovusEdge/drygate): A Claude Code and Codex plugin that warns when an agent's turn duplicates existing code and sweeps for functions that reimplement the standard library. [Repository](https://github.com/NovusEdge/drygate).
 - [polished-artifacts](https://github.com/NovusEdge/polished-artifacts) and [software-architecture](https://github.com/NovusEdge/software-architecture): Claude Code plugins for a consistent artifact design language and a sourced architecture reference with a design-review command.
 - [goob](https://github.com/NovusEdge/goob): A Godot desktop pet that wanders, naps, and comments on desktop activity, with support for custom spritesheets. [Repository](https://github.com/NovusEdge/goob).
 - [Palpatine](https://khimani.dev/portfolio/palpatine/): A tongue-in-cheek strategic-advisor plugin for pursuing goals. [Repository](https://github.com/NovusEdge/palpatine).
 
 ## Recent posts
 
+- [Text != Tone](https://khimani.dev/blog/text-is-not-tone/): November 15, 2026. Typing drops stress and tone, which matters more now that AI agents act on what we type. Includes synthesized readings of one sentence stressed seven ways, and cites studies on email tone, information rate across languages, typing speed, and how well speech models detect stress.
 - [In Search of Meaning #1](https://khimani.dev/blog/in-search-of-meaning-01/): October 2, 2026. A short note on meaning, purpose, and overwork, the first in a series.
 - [Fine-tuning OpenJev on 62,695 A/B Tests](https://khimani.dev/blog/fine-tuning-openjev-on-62695-ab-tests/): September 23, 2026. Training a headline ranker on Upworthy's A/B tests, correcting the evaluation, comparing it with Gemini, and testing transfer to Reddit.
+- [A Rant About School](https://khimani.dev/blog/one-in-fifty/): September 14, 2026. Thoughts on school, teaching, and whether good grades show that anyone is learning.
 - [What Did We All Miss?](https://khimani.dev/blog/what-did-we-all-miss/): September 12, 2026. Reflections on AI progress, research, robotics, and the gap between technical developments and public attention.
-- [Google's €13 Billion in Finland](https://khimani.dev/blog/googles-13-billion-in-finland/): September 12, 2026. An essay on energy investment in Finland, grid constraints, and the attention given to generation versus storage.
-- [Let's Talk About Plan A](https://khimani.dev/blog/plan-a-ai/): September 11, 2026. A broadly supportive critique of the AI Futures Project's AI 2040: Plan A, examining compute limits, transparency, verification, and constraints on AI systems.
 
 ## More writing
 
+- [Google's €13 Billion in Finland](https://khimani.dev/blog/googles-13-billion-in-finland/): Energy investment in Finland, grid constraints, and generation versus storage.
+- [Let's Talk About Plan A](https://khimani.dev/blog/plan-a-ai/): A broadly supportive critique of the AI Futures Project's AI 2040: Plan A.
 - [How Do You Know What's True?](https://khimani.dev/blog/epistemic-collapse/): The growing asymmetry between cheap generation and costly verification.
 - [On Building Something... Engrammic](https://khimani.dev/blog/on-building-something-engrammic/): Why agent memory involves belief and evidence as well as retrieval.
 - [All posts](https://khimani.dev/blog/): The published archive. Drafts are not part of this index.
@@ -75,9 +81,10 @@ Contributions to a project do not imply employment by its sponsoring organizatio
 ## Tools and interests
 
 Languages: Rust, Go, C, C#, Python, TypeScript, JavaScript, Lua, GDScript.
-Systems and data: Linux, Docker, Neovim, Git, Postgres, Neo4j, Memgraph, Qdrant, Redis, QEMU, KVM.
-Web: React, Tailwind CSS, Vite, GSAP, WebGL, WASM.
-AI: Claude, Gemini, Hugging Face, Ollama, LangChain, PyTorch, MCP, LiteLLM, Pydantic AI.
+Systems and data: Linux, Docker, QEMU, KVM, Nix, Cloudflare, Tailscale, Neovim, Git, Postgres, Neo4j, Memgraph, Qdrant, Redis, SQLite, uv, Ruff, mypy.
+Web: React, Expo, Tailwind CSS, Vite, GSAP, WebGL, WASM.
+AI: Claude, Gemini, Qwen, Hugging Face, Ollama, LangChain, PyTorch, MCP, LiteLLM, Pydantic AI, ElevenLabs.
+Policy and payments: Cedar, Stripe, Datasette.
 Hardware and games: ESP32, Raspberry Pi, Arduino, RF, P2P, Godot.
 
 ## Collaboration and contact

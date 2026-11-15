@@ -40,6 +40,11 @@ import {
   siQemu,
   siNixos,
   siGodotengine,
+  siCloudflare,
+  siTailscale,
+  siExpo,
+  siQwen,
+  siElevenlabs,
 } from 'simple-icons'
 
 export type Icon = { path: string; hex: string; title: string }
@@ -93,6 +98,8 @@ export const STACK: { key: string; jp: string; items: Tech[] }[] = [
       { name: 'Docker', icon: siDocker },
       { name: 'QEMU', icon: siQemu },
       { name: 'Nix', icon: siNixos },
+      { name: 'Cloudflare', icon: siCloudflare },
+      { name: 'Tailscale', icon: siTailscale, mono: true },
       { name: 'Neovim', icon: siNeovim },
       { name: 'Git', icon: siGit },
       { name: 'Postgres', icon: siPostgresql },
@@ -113,6 +120,7 @@ export const STACK: { key: string; jp: string; items: Tech[] }[] = [
     jp: '動き',
     items: [
       { name: 'React', icon: siReact },
+      { name: 'Expo', icon: siExpo, mono: true },
       { name: 'Tailwind', icon: siTailwindcss },
       { name: 'Vite', icon: siVite },
       { name: 'GSAP', icon: siGreensock },
@@ -129,8 +137,10 @@ export const STACK: { key: string; jp: string; items: Tech[] }[] = [
       { name: 'Gemini', icon: siGooglegemini },
       { name: 'HuggingFace', icon: siHuggingface },
       { name: 'Ollama', icon: siOllama, mono: true },
+      { name: 'Qwen', icon: siQwen },
       { name: 'LangChain', icon: siLangchain },
       { name: 'PyTorch', icon: siPytorch },
+      { name: 'ElevenLabs', icon: siElevenlabs, mono: true },
       { name: 'MCP', icon: customIcons.mcp },
       { name: 'LiteLLM', icon: customIcons.litellm },
       { name: 'Pydantic AI', icon: siPydantic },
@@ -158,18 +168,18 @@ export const STACK: { key: string; jp: string; items: Tech[] }[] = [
   },
 ]
 
-// Primary language of each non-fork repo owned by NovusEdge, from the GitHub
-// API on 2026-09-25. Repos with no detected language are left out. Org work
-// (engrammic-ai, BotSpot) is not counted.
+// Primary language of each public non-fork repo owned by NovusEdge, from the
+// GitHub API on 2026-11-15. Repos with no detected language are left out. Org
+// work (engrammic-ai, BotSpot) is not counted.
 export const LANGS = [
-  { name: 'Python', n: 8, color: '#3776AB' },
-  { name: 'Go', n: 7, color: '#00ADD8' },
+  { name: 'Python', n: 11, color: '#3776AB' },
+  { name: 'Go', n: 8, color: '#00ADD8' },
   { name: 'Rust', n: 7, color: '#DEA584' },
-  { name: 'JavaScript', n: 3, color: '#E5C000' },
-  { name: 'TypeScript', n: 3, color: '#3178C6' },
+  { name: 'JavaScript', n: 6, color: '#E5C000' },
+  { name: 'TypeScript', n: 4, color: '#3178C6' },
   { name: 'Shell', n: 3, color: '#89E051' },
   { name: 'C', n: 2, color: '#A8B9CC' },
-  { name: 'Other', n: 8, color: '#8A8A8A' },
+  { name: 'Other', n: 9, color: '#8A8A8A' },
 ]
 export const LANG_TOTAL = LANGS.reduce((s, l) => s + l.n, 0)
 
@@ -187,6 +197,7 @@ export const DEPTH: Record<string, Depth> = {
   Lua: 'dabbling', WebGL: 'dabbling', WASM: 'dabbling', ESP32: 'dabbling', 'Raspberry Pi': 'dabbling', Arduino: 'dabbling',
   P2P: 'dabbling', RF: 'dabbling',
   QEMU: 'comfortable', Nix: 'dabbling', Godot: 'dabbling',
+  Cloudflare: 'comfortable', Tailscale: 'comfortable', Qwen: 'comfortable', Expo: 'dabbling', ElevenLabs: 'dabbling',
 }
 
 // the stack doing real work. `tech` names must match STACK item names (they render as icons)
@@ -195,10 +206,14 @@ export const PROJECTS: { slug: string; name: string; tech: string[] }[] = [
   { slug: 'veil', name: 'Veil', tech: ['TypeScript', 'Go', 'Pixi', 'npm', 'Docker'] },
   { slug: 'docket', name: 'docket', tech: ['Python', 'Claude'] },
   { slug: 'stoat', name: 'stoat', tech: ['Go', 'QEMU', 'Nix', 'Linux'] },
+  { slug: 'flocc', name: 'flocc', tech: ['Go', 'Python', 'Claude', 'Tailscale'] },
+  { slug: 'folo', name: 'folo', tech: ['TypeScript', 'Expo', 'Cloudflare'] },
+  { slug: 'sundial', name: 'sundial', tech: ['Python', 'PyTorch', 'Qwen', 'HuggingFace'] },
   { slug: 'ocloak', name: 'ØCLOAK', tech: ['ESP32', 'C', 'Rust', 'P2P', 'RF'] },
   { slug: 'money-mesh', name: 'money-mesh', tech: ['Python', 'Cedar', 'LiteLLM', 'Pydantic AI', 'SQLite', 'Stripe', 'uv', 'MCP'] },
   { slug: 'glowup', name: 'glowup', tech: ['Claude', 'TypeScript'] },
   { slug: 'curt', name: 'Curt', tech: ['Claude', 'JavaScript', 'Python'] },
+  { slug: 'drygate', name: 'drygate', tech: ['Claude', 'JavaScript'] },
   { slug: 'goob', name: 'goob', tech: ['Godot', 'Python', 'Go'] },
   { slug: 'palpatine', name: 'palpatine', tech: ['Claude', 'TypeScript', 'JavaScript'] },
 ]

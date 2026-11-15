@@ -38,11 +38,23 @@ https://khimani.dev/portfolio/stoat/
 Hardware is experimental; none has shipped.
 https://khimani.dev/portfolio/ocloak/
 
+flocc: Claude Code sessions that pick up Linear issues and open draft PRs.
+https://khimani.dev/portfolio/flocc/
+
+folo: an on-call COO for founders. In development.
+https://khimani.dev/portfolio/folo/
+
+sundial: research on giving LLM agents a sense of time.
+https://khimani.dev/portfolio/sundial/
+
 glowup: a side pane, theme packs and a pixel pet for Claude Code.
 https://glowup.khimani.dev/
 
 Curt: a Claude Code plugin for reviewing and editing prose and code.
 https://github.com/NovusEdge/curt
+
+drygate: keeps coding agents from adding duplicated code.
+https://github.com/NovusEdge/drygate
 
 /* THIS SITE */
 Built with React, TypeScript, Vite, Tailwind CSS, and GSAP.
@@ -59,13 +71,18 @@ RSS: https://khimani.dev/feed.xml
 Rust, Go, C, C#, Python, TypeScript, JavaScript, Lua, GDScript
 
 /* SYSTEMS & DATA */
-Linux, Docker, Neovim, Git, Postgres, Neo4j, Memgraph, Qdrant, Redis, QEMU, KVM
+Linux, Docker, QEMU, KVM, Nix, Cloudflare, Tailscale, Neovim, Git, Postgres,
+Neo4j, Memgraph, Qdrant, Redis, SQLite, uv, Ruff, mypy
 
 /* WEB & MOTION */
-React, Tailwind, Vite, GSAP, WebGL, WASM
+React, Expo, Tailwind, Vite, GSAP, WebGL, WASM
 
 /* AI */
-Claude, Gemini, HuggingFace, Ollama, LangChain, PyTorch, MCP, LiteLLM, Pydantic AI
+Claude, Gemini, Qwen, HuggingFace, Ollama, LangChain, PyTorch, MCP, LiteLLM,
+Pydantic AI, ElevenLabs
+
+/* POLICY & PAYMENTS */
+Cedar, Stripe, Datasette
 
 /* HARDWARE */
 ESP32, Raspberry Pi, Arduino, RF, P2P
@@ -79,7 +96,7 @@ X: https://x.com/0kaliasgar
 Engrammic: https://engrammic.ai
 Email: khimanialiasgar@gmail.com
 
-Updated: 2026-10-11
+Updated: 2026-11-15
 
 /* NOTE */
 hey, you actually read these. coffee's on me if we ever meet.

@@ -23,10 +23,10 @@ const GOLD = '#d4a03c'
 // The graph maps tech only: personal projects belong in the editorial view's proof row.
 const NAME2TECH = new Map(STACK.flatMap((g) => g.items.map((t) => [t.name, t] as const)))
 const CLUSTERS: { hub: string; tools: string[]; text: string[] }[] = [
-  { hub: 'ai', tools: ['Claude', 'Gemini', 'PyTorch', 'HuggingFace', 'Ollama', 'LangChain', 'Qdrant', 'Neo4j', 'Redis', 'Python', 'LiteLLM', 'Pydantic AI'], text: [] },
-  { hub: 'craft', tools: ['Rust', 'Go', 'TypeScript', 'JavaScript', 'Lua', 'C#', 'Linux', 'Docker', 'QEMU', 'Nix', 'Neovim', 'Git', 'Postgres', 'uv', 'Ruff', 'mypy'], text: [] },
+  { hub: 'ai', tools: ['Claude', 'Gemini', 'Qwen', 'PyTorch', 'HuggingFace', 'Ollama', 'LangChain', 'ElevenLabs', 'Qdrant', 'Neo4j', 'Redis', 'Python', 'LiteLLM', 'Pydantic AI'], text: [] },
+  { hub: 'craft', tools: ['Rust', 'Go', 'TypeScript', 'JavaScript', 'Lua', 'C#', 'Linux', 'Docker', 'QEMU', 'Nix', 'Cloudflare', 'Tailscale', 'Neovim', 'Git', 'Postgres', 'uv', 'Ruff', 'mypy'], text: [] },
   { hub: 'autonomy', tools: ['Cedar', 'Stripe', 'SQLite', 'Datasette', 'MCP'], text: [] },
-  { hub: 'web', tools: ['React', 'Tailwind', 'Vite', 'GSAP', 'WebGL', 'WASM', 'Godot'], text: [] },
+  { hub: 'web', tools: ['React', 'Expo', 'Tailwind', 'Vite', 'GSAP', 'WebGL', 'WASM', 'Godot'], text: [] },
   { hub: 'hardware', tools: ['ESP32', 'Raspberry Pi', 'Arduino', 'C'], text: [] },
   { hub: 'founder', tools: [], text: ['fundraising', 'strategy', 'hiring', 'roadmap', 'investors'] },
   { hub: 'chaos', tools: [], text: ['ricing', 'jokeRepos'] },
