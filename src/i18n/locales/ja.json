@@ -186,7 +186,7 @@
   "blog.textTone.speakingTps": "毎秒約3トークン",
   "blog.textTone.speakingWpm": "毎分150語",
   "blog.textTone.spoken": "音声",
-  "blog.textTone.stageLabel": "水平線上に表示された入力文。線が地平線へと湾曲し、光が差して切り絵の重なりが立ち上がり、再び水平に戻る。",
+  "blog.textTone.stageLabel": "平らな線の上に表示された入力文。線が地平線へと湾曲し、光が差して切り絵の重なりが立ち上がり、再び水平に戻る。",
   "blog.textTone.toScold": "叱る",
   "blog.textTone.tonesLabel": "中国語の4つの単語とそれぞれの声調曲線：mā（高平調、母）、má（上昇調、麻）、mǎ（低下降上昇調、馬）、mà（下降調、叱る）。声調を取り除くと4本の線は平らになり、4語すべてが「ma」の1音節になる。詩の一行も同様に12回の「shi」になる。",
   "blog.textTone.typed": "テキスト入力",
