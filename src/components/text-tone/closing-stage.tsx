@@ -107,7 +107,8 @@ export function ClosingStage() {
             <filter id="tt-lift" x="-10%" y="-10%" width="120%" height="120%">
               <feDropShadow dx="0" dy="-5" stdDeviation="7" floodOpacity=".34" />
             </filter>
-            <filter id="tt-fibre" x="0" y="0" width="100%" height="100%">
+            {/* Long, thin noise reads as paper fibre once it is multiplied over a flat colour. */}
+            <filter id="tt-fibre"x="0" y="0" width="100%" height="100%">
               <feTurbulence type="fractalNoise" baseFrequency=".012 .55" numOctaves="3" seed="6" />
               <feColorMatrix values="0 0 0 0 .42  0 0 0 0 .37  0 0 0 0 .3  1.5 0 0 0 -.62" />
             </filter>
