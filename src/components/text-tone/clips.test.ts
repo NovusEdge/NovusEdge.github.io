@@ -80,6 +80,18 @@ describe('clips', () => {
     expect(ctx.close).toHaveBeenCalledOnce()
   })
 
+  it('a clip still loading when stop() runs never starts', async () => {
+    const { ctx, started } = fakeContext()
+    let release!: () => void
+    const slow = new Promise<Response>((done) => (release = () => done(new Response(new ArrayBuffer(1)))))
+    const c = createClips(() => slow, () => ctx)
+    const pending = c.play({}, 'i.mp3', vi.fn(), vi.fn())
+    c.stop()
+    release()
+    await pending
+    expect(started).toEqual([])
+  })
+
   it('a clip still loading when close() runs never starts', async () => {
     const { ctx, started } = fakeContext()
     let release!: () => void

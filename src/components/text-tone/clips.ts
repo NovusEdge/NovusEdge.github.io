@@ -62,6 +62,7 @@ export function createClips(
       onStart()
     },
     stop() {
+      seq++
       const me = current
       current = null
       if (!me) return

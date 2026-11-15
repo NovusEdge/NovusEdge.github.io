@@ -11,7 +11,7 @@ import { onWidthChange, useMotion } from './loop-pause'
 import { FLAT, SENTENCE, STRESSED, clipKey, contour, penEase, ramp, type Reading, type TracePoint } from './stage-data'
 
 const WORDS = SENTENCE.split(' ')
-const REST = { yPercent: -15, scale: 1.12, '--k': 1 }
+const REST = { y: 0, yPercent: -15, scale: 1.12, '--k': 1 }
 
 type Row = {
   e: Reading
@@ -133,12 +133,13 @@ export function StressList() {
 
       playRef.current = (i: number) => {
         const r = rows[i]
+        const e = typed ? FLAT : r.e
         void clips.play(
           r,
-          (typed ? FLAT : r.e).src,
+          e.src,
           () => {
             r.b.classList.add('tt-on')
-            animate(r, typed ? FLAT : r.e)
+            animate(r, e)
           },
           () => {
             r.tl?.kill()
