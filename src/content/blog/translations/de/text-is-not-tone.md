@@ -3,7 +3,6 @@ title: "Text != Tonfall"
 date: 2026-11-15
 tags: [ai, interfaces, voice, agents, essay]
 description: "Sieben Wörter, die sieben verschiedene Dinge bedeuten, je nachdem, welches man betont. Wenn man einer KI tippt, geht genau dieser Teil verloren. Und das fällt heute viel mehr ins Gewicht, wo KIs auf Basis unserer getippten Worte auch handeln."
-draft: true
 pixel: thinking
 ---
 

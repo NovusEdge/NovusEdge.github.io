@@ -3,7 +3,6 @@ title: "テキスト != トーン"
 date: 2026-11-15
 tags: [ai, interfaces, voice, agents, essay]
 description: "どこを強調するかによって7通りの意味になる7つの単語。AIに打ち込むと、そのニュアンスがそぎ落とされてしまう。AIが人間の入力をもとに行動を起こすようになった今、これは以前よりずっと重要な問題になっている。"
-draft: true
 pixel: thinking
 ---
 

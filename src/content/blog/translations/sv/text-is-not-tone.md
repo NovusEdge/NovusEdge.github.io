@@ -3,7 +3,6 @@ title: "Text != Ton"
 date: 2026-11-15
 tags: [ai, interfaces, voice, agents, essay]
 description: "Sju ord som betyder sju olika saker beroende på vilket du betonar. När du skriver till en AI kastas den delen bort, och det spelar mycket större roll nu när AI agerar på det vi skriver."
-draft: true
 pixel: thinking
 ---
 

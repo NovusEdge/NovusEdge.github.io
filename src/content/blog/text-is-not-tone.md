@@ -3,7 +3,6 @@ title: Text != Tone
 date: 2026-11-15
 tags: [ai, interfaces, voice, agents, essay]
 description: Seven words that mean seven different things depending on which one you lean on. Typing to an AI throws that part away, and that matters a lot more now that AI acts on what we type.
-draft: true
 pixel: thinking
 ---
 

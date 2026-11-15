@@ -3,7 +3,6 @@ title: "Teksti != sävy"
 date: 2026-11-15
 tags: [ai, interfaces, voice, agents, essay]
 description: "Seitsemän sanaa, jotka tarkoittavat seitsemää eri asiaa riippuen siitä, mitä niistä painottaa. Tekoälylle kirjoittaessa tuo osa heitetään menemään, ja sillä on paljon enemmän väliä nyt, kun tekoäly toimii kirjoitustemme pohjalta."
-draft: true
 pixel: thinking
 ---
 

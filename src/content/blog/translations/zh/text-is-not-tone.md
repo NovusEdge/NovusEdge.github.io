@@ -3,7 +3,6 @@ title: "文字 != 语气"
 date: 2026-11-15
 tags: [ai, interfaces, voice, agents, essay]
 description: "短短七个词，重音落在不同位置就有七种完全不同的含义。在键盘上敲给 AI 时，这部分信息全被丢掉了。而现在 AI 已经开始直接替我们办事，这一点就变得前所未有地重要。"
-draft: true
 pixel: thinking
 ---
 
