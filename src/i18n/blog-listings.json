@@ -96,6 +96,10 @@
       "title": "Shader-matkat: Osa 2",
       "description": "TODO"
     },
+    "text-is-not-tone": {
+      "title": "Teksti != sävy",
+      "description": "Seitsemän sanaa, jotka tarkoittavat seitsemää eri asiaa riippuen siitä, mitä niistä painottaa. Tekoälylle kirjoittaessa tuo osa heitetään menemään, ja sillä on paljon enemmän väliä nyt, kun tekoäly toimii kirjoitustemme pohjalta."
+    },
     "thm-blue-writeup": {
       "title": "THM Blue -writeup",
       "description": "Avoinna olevan SMB-palvelun skannaaminen ja MS17-010 EternalBlue -exploitin hyödyntäminen jalansijan saamiseksi TryHackMen Blue-huoneessa."
@@ -217,6 +221,10 @@
     "shader-journeys-part-2": {
       "title": "Shader Journeys: Teil 2",
       "description": "TODO"
+    },
+    "text-is-not-tone": {
+      "title": "Text != Tonfall",
+      "description": "Sieben Wörter, die sieben verschiedene Dinge bedeuten, je nachdem, welches man betont. Wenn man einer KI tippt, geht genau dieser Teil verloren. Und das fällt heute viel mehr ins Gewicht, wo KIs auf Basis unserer getippten Worte auch handeln."
     },
     "thm-blue-writeup": {
       "title": "THM Blue Writeup",
@@ -340,6 +348,10 @@
       "title": "Shader Journeys: Part 2",
       "description": "TODO"
     },
+    "text-is-not-tone": {
+      "title": "テキスト != トーン",
+      "description": "どこを強調するかによって7通りの意味になる7つの単語。AIに打ち込むと、そのニュアンスがそぎ落とされてしまう。AIが人間の入力をもとに行動を起こすようになった今、これは以前よりずっと重要な問題になっている。"
+    },
     "thm-blue-writeup": {
       "title": "THM Blue Writeup",
       "description": "公開されているSMBサービスをスキャンし、MS17-010 EternalBlueエクスプロイトを使ってTryHackMeのBlueルームで足がかりを得る。"
@@ -462,6 +474,10 @@
       "title": "Shaderresor: Del 2",
       "description": "TODO"
     },
+    "text-is-not-tone": {
+      "title": "Text != Ton",
+      "description": "Sju ord som betyder sju olika saker beroende på vilket du betonar. När du skriver till en AI kastas den delen bort, och det spelar mycket större roll nu när AI agerar på det vi skriver."
+    },
     "thm-blue-writeup": {
       "title": "THM Blue Writeup",
       "description": "Skannar en exponerad SMB-tjänst och använder MS17-010 EternalBlue-exploiten för att få fotfäste i TryHackMes Blue-rum."
@@ -583,6 +599,10 @@
     "shader-journeys-part-2": {
       "title": "Shader 之旅：第 2 部分",
       "description": "待办"
+    },
+    "text-is-not-tone": {
+      "title": "文字 != 语气",
+      "description": "短短七个词，重音落在不同位置就有七种完全不同的含义。在键盘上敲给 AI 时，这部分信息全被丢掉了。而现在 AI 已经开始直接替我们办事，这一点就变得前所未有地重要。"
     },
     "thm-blue-writeup": {
       "title": "THM Blue Writeup",

@@ -26,6 +26,8 @@ if (onlyLocale && !LOCALES.some((l) => l.code === onlyLocale)) {
   process.exit(1)
 }
 const TARGETS = onlyLocale ? LOCALES.filter((l) => l.code === onlyLocale) : LOCALES
+// --slug=x translates only that post, so one draft can ship without translating the others.
+const onlySlug = process.argv.find((a) => a.startsWith('--slug='))?.slice('--slug='.length)
 
 const key = process.env.GEMINI_API_KEY
 if (!key && !checkOnly && !dryRun) {
@@ -131,7 +133,9 @@ if (checkOnly) {
   process.exit(0)
 }
 
-const pendingSlugs = onlyLocale ? slugs.filter((s) => force || !existsSync(translationPath(s, onlyLocale))) : staleSlugs
+const pendingSlugs = (onlyLocale ? slugs.filter((s) => force || !existsSync(translationPath(s, onlyLocale))) : staleSlugs).filter(
+  (s) => !onlySlug || s === onlySlug,
+)
 const todoSlugs = dryRun ? pendingSlugs.slice(0, 1) : pendingSlugs
 if (!todoSlugs.length) {
   console.log('nothing to translate')
