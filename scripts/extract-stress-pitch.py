@@ -1,23 +1,20 @@
 # Measures pitch and per-word timing in the clips from generate-stress-clips.mjs
-# and writes public/assets/blog/didnt-say/stage.json, which the post's figures
-# draw from: the list plays every reading, the looping figure only loop=true.
+# and writes src/data/text-tone-stage.json, which the text-is-not-tone page imports.
 # Run: uv run --no-project --with praat-parselmouth python scripts/extract-stress-pitch.py
 import json
-import math
 import subprocess
 import tempfile
 from pathlib import Path
 
 import parselmouth
 
-DIR = Path("public/assets/blog/didnt-say")
+CLIPS = Path("public/assets/blog/didnt-say")
+ALIGN = Path("scripts/stress-align")
+OUT = Path("src/data/text-tone-stage.json")
 WORDS = ["I", "didn't", "say", "she", "stole", "the", "money"]
-# (stressed word, file, in the looping figure). The author cut "didn't" and
-# "the" from the loop; the list at the top still plays them.
-STAGE = [
-    ("I", "i", True), ("didn't", "didnt", False), ("say", "say", True), ("she", "she", True),
-    ("stole", "stole", True), ("the", "the", False), ("money", "money", True), (None, "flat", True),
-]
+# (stressed word, clip name); None is the flat reading.
+STAGE = [("I", "i"), ("didn't", "didnt"), ("say", "say"), ("she", "she"),
+         ("stole", "stole"), ("the", "the"), ("money", "money"), (None, "flat")]
 
 
 def word_spans(align):
@@ -32,26 +29,17 @@ def word_spans(align):
 
 
 def measure(name):
-    align = json.loads((DIR / f"{name}.align.json").read_text())["alignment"]
+    align = json.loads((ALIGN / f"{name}.align.json").read_text())["alignment"]
     with tempfile.NamedTemporaryFile(suffix=".wav") as wav:
-        subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", DIR / f"{name}.mp3", "-ac", "1", wav.name], check=True)
+        subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", CLIPS / f"{name}.mp3", "-ac", "1", wav.name], check=True)
         snd = parselmouth.Sound(wav.name)
     pitch = snd.to_pitch(time_step=0.01, pitch_floor=75, pitch_ceiling=500)
-    loud = snd.to_intensity(time_step=0.01)
     f0 = [(round(t, 3), round(v, 1)) for t, v in zip(pitch.xs(), pitch.selected_array["frequency"]) if v > 0]
-    words = []
-    for word, (a, b) in zip(WORDS, word_spans(align)):
-        seg = [v for t, v in f0 if a <= t <= b]
-        db = [loud.get_value(a + k * 0.01) for k in range(max(1, round((b - a) / 0.01)))]
-        db = [d for d in db if d is not None and not math.isnan(d)]
-        words.append({
-            "word": word, "start": round(a, 3), "end": round(b, 3),
-            "f0max": round(max(seg), 1) if seg else None,
-            "dbmax": round(max(db), 1) if db else None,
-        })
+    words = [{"word": word, "start": round(a, 3), "end": round(b, 3)} for word, (a, b) in zip(WORDS, word_spans(align))]
     return {"duration": round(snd.duration, 3), "words": words, "f0": f0}
 
 
-stage = [{"stress": word, "src": f"{name}.mp3", "loop": loop, **measure(name)} for word, name, loop in STAGE]
-(DIR / "stage.json").write_text(json.dumps(stage, separators=(",", ":")))
-print("\n".join(f'{c["src"]:10} {c["duration"]}s loop={c["loop"]}' for c in stage))
+stage = [{"stress": word, "src": f"{name}.mp3", **measure(name)} for word, name in STAGE]
+OUT.parent.mkdir(parents=True, exist_ok=True)
+OUT.write_text(json.dumps(stage, separators=(",", ":")))
+print("\n".join(f'{c["src"]:10} {c["duration"]}s' for c in stage))

@@ -459,7 +459,7 @@ function makeStage(el, { under = '', pre = '', frac = .4 }) {
 
 // The recordings, and one audio context for the whole page. Buffers are decoded once and cached by file.
 // While a list line is playing, `hold` keeps the looping figure quiet so two clips never overlap.
-const STAGE = fetch('/public/assets/blog/didnt-say/stage.json').then((r) => r.json())
+const STAGE = fetch('/src/data/text-tone-stage.json').then((r) => r.json())
 const audio = {
   ctx: null, cache: new Map(), hold: false, onHold: [],
   get() { return (this.ctx ??= new AudioContext()) },

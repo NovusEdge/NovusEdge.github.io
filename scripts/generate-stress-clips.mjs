@@ -12,6 +12,7 @@ import { execFileSync } from 'node:child_process'
 import { existsSync, mkdirSync, rmSync, writeFileSync } from 'node:fs'
 
 const OUT = 'public/assets/blog/didnt-say'
+const ALIGN = 'scripts/stress-align'
 const VOICE = 'SAz9YHcvj6GT2YYXdXww' // River: calm, neutral, American
 const MODEL = 'eleven_v4'
 const SEED = 4171
@@ -55,6 +56,7 @@ if (!key) {
   process.exit(1)
 }
 mkdirSync(OUT, { recursive: true })
+mkdirSync(ALIGN, { recursive: true })
 
 for (const clip of CLIPS) {
   if (existsSync(`${OUT}/${clip.name}.mp3`)) continue
@@ -69,6 +71,6 @@ for (const clip of CLIPS) {
   writeFileSync(raw, Buffer.from(body.audio_base64, 'base64'))
   const alignment = trimToSentence(raw, `${OUT}/${clip.name}.mp3`, body.alignment)
   rmSync(raw)
-  writeFileSync(`${OUT}/${clip.name}.align.json`, JSON.stringify({ text: clip.text, alignment }))
+  writeFileSync(`${ALIGN}/${clip.name}.align.json`, JSON.stringify({ text: clip.text, alignment }))
   console.log(`${clip.name}: ${clip.text}`)
 }
