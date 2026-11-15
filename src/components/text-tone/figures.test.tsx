@@ -6,6 +6,8 @@ import { i18nFor } from '../../i18n'
 import { MotionContext, type MotionMode } from './loop-pause'
 import { FortySheets } from './forty-sheets'
 import { RateCards } from './rate-cards'
+import { TonesFigure } from './tones-figure'
+import { HarakatFigure } from './harakat-figure'
 
 const render = (node: ReactNode, mode: MotionMode = 'pending') =>
   renderToStaticMarkup(
@@ -39,5 +41,32 @@ describe('RateCards', () => {
     const html = render(<RateCards />)
     expect(count(html, 'class="tt-card"')).toBe(7)
     expect(html).toContain('one hole, one token · 0 s')
+  })
+})
+
+describe('TonesFigure', () => {
+  it('prerenders four toned words and the poem, all marked as Chinese', () => {
+    const html = render(<TonesFigure />)
+    expect(count(html, 'class="tt-tone"')).toBe(4)
+    expect(count(html, 'lang="zh-Hans"')).toBe(5)
+    expect(html).toContain('Shíshì shīshì Shī Shì')
+    expect(html).not.toContain('tt-static')
+  })
+
+  it('shows every form at once under reduced motion', () => {
+    expect(render(<TonesFigure />, 'reduced')).toContain('tt-static')
+  })
+})
+
+describe('HarakatFigure', () => {
+  it('prerenders the bare word four times and three vowelled readings, all right-to-left', () => {
+    const html = render(<HarakatFigure />)
+    expect(count(html, 'class="tt-vw"')).toBe(4)
+    expect(count(html, 'class="tt-hk"')).toBe(3)
+    expect(count(html, 'lang="ar" dir="rtl"')).toBe(7)
+  })
+
+  it('shows every reading at once under reduced motion', () => {
+    expect(render(<HarakatFigure />, 'reduced')).toContain('tt-static')
   })
 })

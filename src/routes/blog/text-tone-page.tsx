@@ -8,6 +8,8 @@ import { PostSignoff } from '../../components/post-signoff'
 import { StressList, TypedLine } from '../../components/text-tone/stress-list'
 import { FortySheets } from '../../components/text-tone/forty-sheets'
 import { RateCards } from '../../components/text-tone/rate-cards'
+import { TonesFigure } from '../../components/text-tone/tones-figure'
+import { HarakatFigure } from '../../components/text-tone/harakat-figure'
 import { TextToneMarkdown } from '../../components/text-tone/markdown'
 import { MotionContext, useMotionMode } from '../../components/text-tone/loop-pause'
 import { ensureFontLinks } from '../../components/text-tone/fonts'
@@ -22,6 +24,8 @@ const FIGURES: Record<string, ReactNode> = {
   typed_line: <TypedLine />,
   forty_sheets: <FortySheets />,
   rate_cards: <RateCards />,
+  tones: <TonesFigure />,
+  harakat: <HarakatFigure />,
 }
 
 export function TextTonePage({ post, image }: { post: Post; image?: string | null }) {
