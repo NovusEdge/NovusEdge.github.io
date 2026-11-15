@@ -5,6 +5,7 @@ import { ArrowLeft } from 'lucide-react'
 import { TLink } from '../../components/page-transition'
 import Magnetic from '../../components/react-bits/Magnetic'
 import { PostSignoff } from '../../components/post-signoff'
+import { StressList, TypedLine } from '../../components/text-tone/stress-list'
 import { TextToneMarkdown } from '../../components/text-tone/markdown'
 import { MotionContext, useMotionMode } from '../../components/text-tone/loop-pause'
 import { ensureFontLinks } from '../../components/text-tone/fonts'
@@ -14,7 +15,10 @@ import { useLocalePath } from '../../i18n/use-locale-path'
 import type { Post } from '../../lib/posts'
 import '../../components/text-tone/text-tone.css'
 
-const FIGURES: Record<string, ReactNode> = {}
+const FIGURES: Record<string, ReactNode> = {
+  stress_list: <StressList />,
+  typed_line: <TypedLine />,
+}
 
 export function TextTonePage({ post, image }: { post: Post; image?: string | null }) {
   const { t, i18n } = useTranslation()
