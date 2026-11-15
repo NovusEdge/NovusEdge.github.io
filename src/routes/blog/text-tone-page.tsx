@@ -6,6 +6,8 @@ import { TLink } from '../../components/page-transition'
 import Magnetic from '../../components/react-bits/Magnetic'
 import { PostSignoff } from '../../components/post-signoff'
 import { StressList, TypedLine } from '../../components/text-tone/stress-list'
+import { FortySheets } from '../../components/text-tone/forty-sheets'
+import { RateCards } from '../../components/text-tone/rate-cards'
 import { TextToneMarkdown } from '../../components/text-tone/markdown'
 import { MotionContext, useMotionMode } from '../../components/text-tone/loop-pause'
 import { ensureFontLinks } from '../../components/text-tone/fonts'
@@ -18,6 +20,8 @@ import '../../components/text-tone/text-tone.css'
 const FIGURES: Record<string, ReactNode> = {
   stress_list: <StressList />,
   typed_line: <TypedLine />,
+  forty_sheets: <FortySheets />,
+  rate_cards: <RateCards />,
 }
 
 export function TextTonePage({ post, image }: { post: Post; image?: string | null }) {
