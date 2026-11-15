@@ -1,0 +1,721 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Text != Tone · direction A7</title>
+<!-- Noto Serif SC is requested for only the 16 characters the post uses; Noto Naskh Arabic whole, so shaping is complete -->
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@500&text=%E5%A6%88%E9%BA%BB%E9%A9%AC%E9%AA%82%E7%9F%B3%E5%AE%A4%E8%AF%97%E5%A3%AB%E6%96%BD%E6%B0%8F%E5%97%9C%E7%8B%AE%E8%AA%93%E9%A3%9F%E5%8D%81%EF%BC%8C&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Naskh+Arabic:wght@500&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<!-- mock only: the site footer stand-in uses the site's own Fontshare faces -->
+<link href="https://api.fontshare.com/v2/css?f[]=satoshi@700&display=swap" rel="stylesheet">
+<link href="https://api.fontshare.com/v2/css?f[]=amulya@900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Spectral:ital,wght@0,400;0,700;1,500;1,700&family=IBM+Plex+Mono:ital,wght@0,400;0,500;1,500&display=swap" rel="stylesheet">
+<style>
+  :root { --paper: #f3ecdd; --ink: #1f1d1a; --soft: #6f685c; --rule: #d3cab7; --card: #fbf7ec; --night: #0b0a09; --cream: #efe7d6; --gold: #d4a03c; --blue: #6b8cae; --coral: #e2573c; }
+  .dark { --paper: #1a1917; --ink: #e9e2d3; --soft: #9a9283; --rule: #3a3732; }
+  * { box-sizing: border-box; }
+  html { background: var(--night); }
+  body { margin: 0; background: var(--paper); color: var(--ink); font: 400 1.2rem/1.66 Spectral, Georgia, serif; -webkit-font-smoothing: antialiased; overflow-x: hidden; }
+  /* One grain over the page and the closing scene. Absolute, not fixed: the site's .page-enter wrapper keeps a
+     transform, which turns fixed children into absolute ones anyway. */
+  main::after, .closing::after { content: ''; position: absolute; inset: 0; z-index: 5; pointer-events: none; opacity: .36;
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .5 0 0 0 0 .5 0 0 0 0 .5 .55 0 0 0 -.17'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); }
+  a { color: inherit; text-underline-offset: .18em; text-decoration-thickness: 1px; }
+  /* Inline formatting in the prose has to show; the post is about emphasis. Only real faces: no synthesised italic or bold. */
+  :root { --link: #2f5f8f; --link-rule: #2f5f8f80; --mark: #8a3a1c; }
+  .dark { --link: #a9c7e6; --link-rule: #a9c7e680; --mark: #f0a47c; }
+  .col { font-synthesis: none; }
+  .col em { font-style: italic; font-weight: 500; color: var(--mark); }
+  .col strong { font-weight: 700; }
+  .col p a { color: var(--link); text-decoration: underline; text-decoration-color: var(--link-rule); text-decoration-thickness: .09em; text-underline-offset: .2em; transition: text-decoration-color .15s, background-color .15s; }
+  .col p a:hover, .col p a:focus-visible { text-decoration-color: currentColor; text-decoration-thickness: .14em; background: color-mix(in srgb, var(--link) 12%, transparent); }
+  .mono { font: 400 .76rem/1.45 'IBM Plex Mono', monospace; letter-spacing: .03em; }
+  button { font: inherit; color: inherit; background: none; border: 0; padding: 0; cursor: pointer; }
+  button:focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; }
+
+  /* the stage: used for the hero, the centrepiece and the ending */
+  .stage { position: relative; overflow: hidden; --above: var(--paper); --word: var(--ink); --line: var(--ink); background: var(--above); }
+  .stage.night { --above: var(--night); --word: var(--cream); --line: var(--cream); }
+  .stage > svg { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+  .arc { fill: none; stroke: var(--word); stroke-width: 1.4; vector-effect: non-scaling-stroke; }
+  .shade { fill: none; stroke: #000; stroke-opacity: .38; stroke-width: 22; filter: url(#soft); }
+  .pitch { fill: none; stroke: var(--line); stroke-width: 6; stroke-linecap: round; stroke-linejoin: round; }
+  .fibre { mix-blend-mode: multiply; opacity: .5; }
+  .rim { fill: none; stroke: #f2c46c; stroke-width: 14; filter: url(#soft); opacity: .55; }
+  .line { position: absolute; left: 50%; margin: 0; white-space: nowrap; transform: translate(-50%, calc(-100% + .2em)); color: var(--word);
+          font: 400 3rem/1 'Instrument Serif', Georgia, serif; letter-spacing: -.012em; }
+  .line div, #h1 div { -webkit-text-stroke: calc(var(--k, 0) * .018em) currentColor; }
+  /* hero title: the typed version, set as a stack so it stays large at any width */
+  .head { margin-bottom: 3.2rem; color: var(--soft); }
+  .head h1 { margin: 2.6rem 0 1.3rem; color: var(--ink); font: 400 clamp(3.3rem, 11.5vw, 8rem)/.98 'Instrument Serif', Georgia, serif; letter-spacing: -.02em; }
+  /* "!=" stays as typed: two characters in the mono, no ligature */
+  .head h1 .ne { font: 500 .62em 'IBM Plex Mono', monospace; font-variant-ligatures: none; letter-spacing: -.04em; color: var(--mark); vertical-align: .12em; margin: 0 .06em; }
+  .head p { margin: 0; }
+  /* once the list is live, each line is one quiet button: the sentence, its pitch trace, the meaning, a small speaker */
+  .readings.live li { display: block; padding: 0; border: 0; }
+  .rd { display: grid; grid-template-columns: max-content minmax(0, 1fr) auto; column-gap: 2rem; align-items: baseline; width: 100%; text-align: left; padding: 1rem .3rem .55rem; border-bottom: 1px solid var(--rule); }
+  .rd .s { grid-area: 1 / 1; } .readings.live .s { color: var(--ink); } .rd .g { grid-area: 1 / 2; } .rd .ear { grid-area: 1 / 3; align-self: center; width: 1rem; height: 1rem; opacity: .32; }
+  .rd .tr { grid-area: 2 / 1; width: 100%; height: 1.15rem; margin-top: .1rem; overflow: visible; opacity: .3; }
+  .rd .tr path { fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+  .rd .s div { opacity: .46; -webkit-text-stroke: calc(var(--k, 0) * .018em) currentColor; } .rd .s strong div { opacity: 1; }
+  .readings.live strong { transform: none; margin: 0 .2em; -webkit-text-stroke: 0; }
+  .rd:hover .ear, .rd:focus-visible .ear, .rd.on .ear, .rd.on .tr { opacity: 1; }
+  .rd:hover { background: color-mix(in srgb, var(--ink) 4%, transparent); }
+  /* collapsed: one typed line with a caret. Rows are untappable while they move. */
+  .caret { display: inline-block; width: .05em; height: .78em; margin-left: .07em; background: currentColor; vertical-align: -.06em; opacity: 0; }
+  .one .caret { opacity: 1; } .one { margin: 0 0 2.8rem; }
+  .readings.moving .rd, .readings.typed li:not(:last-child) .rd { pointer-events: none; }
+  .readings.typed li:last-child .tr { opacity: .55; }
+  @media (prefers-reduced-motion: no-preference) { .typed .caret { animation: blink 1.1s steps(1) infinite; } }
+  @keyframes blink { 50% { opacity: 0; } }
+  @media (max-width: 640px) { .rd { grid-template-columns: minmax(0, 1fr) auto; } .rd .g { grid-area: 3 / 1; margin-top: .25rem; } .rd .ear { grid-area: 1 / 2; } }
+  /* the seven readings: the stage's lift, standing still */
+  .readings { list-style: none; margin: 2.4rem 0 2.8rem; padding: 0; border-top: 1px solid var(--rule); }
+  .readings li { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); gap: .1rem 2rem; align-items: baseline; padding: 1rem 0 .7rem; border-bottom: 1px solid var(--rule); }
+  .readings .s { font: 400 clamp(1.45rem, 3.4vw, 2.2rem)/1.15 'Instrument Serif', Georgia, serif; letter-spacing: -.01em; white-space: nowrap; color: color-mix(in srgb, var(--ink) 46%, transparent); }
+  /* the stressed word is the list's bold (markdown **word**); it gets the stage's lift, not a heavier font */
+  .readings strong { font-weight: 400; display: inline-block; color: var(--ink); transform: translateY(-.17em) scale(1.12); margin: 0 .17em; -webkit-text-stroke: .018em currentColor; }
+  .readings .g { color: var(--soft); font-size: .8rem; }
+  @media (max-width: 640px) { .readings li { grid-template-columns: 1fr; } }
+  .pp { position: absolute; right: .8rem; bottom: .8rem; z-index: 2; width: 2rem; height: 2rem; border-radius: 50%; color: var(--word); opacity: .45; display: grid; place-items: center; }
+  .pp:hover, .pp:focus-visible { opacity: 1; }
+  .ic { width: 1em; height: 1em; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; flex: none; }
+  .pp .ic { width: .95rem; height: .95rem; }
+  .pp:hover, .pp:focus-visible { background: color-mix(in srgb, currentColor 12%, transparent); } .pp:active { transform: scale(.92); }
+  /* Nav chip: the site's back-to-blog chip from src/routes/blog/post.tsx (rounded, hairline border, mono caps, gold on hover). */
+  .chip { display: inline-flex; align-items: center; gap: .55rem; padding: .4rem .9rem; border: 1px solid color-mix(in srgb, var(--ink) 12%, transparent); border-radius: .25rem;
+          background: color-mix(in srgb, var(--ink) 3%, transparent); color: var(--link); font: 400 .75rem/1.3 'IBM Plex Mono', monospace; letter-spacing: .2em; text-transform: uppercase; text-decoration: none;
+          transition: border-color .15s, background-color .15s, transform .1s; }
+  .chip:hover { border-color: var(--gold); } .chip:hover .ic { transform: translateX(-2px); } .chip .ic { transition: transform .15s; }
+  .chip:active { transform: translateY(1px); background: color-mix(in srgb, var(--gold) 16%, transparent); }
+  .chip:focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; }
+  .pp .play, .pp[aria-pressed="true"] .pause { display: none; } .pp[aria-pressed="true"] .play { display: block; }
+  /* the speaker shows the muted icon until it is pressed, the reverse of the pause button */
+  .pp.spk { right: 3rem; } .pp.spk svg { width: .85rem; }
+  .spk .pause, .spk[aria-pressed="true"] .play { display: none; } .spk .play, .spk[aria-pressed="true"] .pause { display: block; }
+  /* The bookends are near-black in both themes; the paper under the horizon is what changes with the theme. */
+  .dark .td, :root:not(.dark) .tn { display: none; } .td { filter: brightness(.46) saturate(.85); }
+
+  .bookend { height: 100vh; height: 100svh; min-height: 30rem; }
+  .top { position: absolute; inset: 0 0 auto 0; z-index: 3; display: flex; justify-content: space-between; padding: 1.1rem 1.5rem; color: #a59d8d; }
+  /* Fixed, so the theme can be switched while looking at the page it changes; difference keeps it legible on paper and on black. */
+  #theme { position: fixed; top: 1rem; right: 1.5rem; z-index: 60; color: #fff; mix-blend-mode: difference; border: 1px solid #fff6; border-radius: 99px; padding: .25rem .8rem; }
+  .meta { position: absolute; inset: 15% 1.5rem auto; text-align: center; color: var(--cream); }
+  .meta h1 { font: 400 clamp(1.6rem, 4vw, 2.3rem)/1.1 'Instrument Serif', serif; font-style: italic; margin: 0 0 .7rem; }
+  .meta p { margin: .5rem auto 0; max-width: 31rem; color: #b9b1a1; font-size: 1rem; line-height: 1.5; }
+
+  /* the page: same container as every other post, max-w-4xl with px-6 */
+  main { position: relative; z-index: 1; background: var(--paper); box-shadow: 0 -18px 50px #000c, 0 18px 50px #000c; }
+  .col { max-width: 56rem; margin: 0 auto; padding: 4.5rem 1.5rem 5rem; }
+  .col p { margin: 0 0 1.4em; }
+  .col h2 { font: 700 2rem/1.15 Spectral, Georgia, serif; letter-spacing: -.012em; margin: 3.8rem 0 1.2rem; }
+  .n { font: 500 .86em 'IBM Plex Mono', monospace; font-variant-numeric: tabular-nums; white-space: nowrap; }
+  figure { margin: 3.2rem 0; position: relative; }
+
+  .said { margin: 3.4rem -1.5rem; }
+  .said .stage { aspect-ratio: 16 / 9; box-shadow: 0 1px 0 #0002, 0 26px 44px -30px #000b; }
+  .gloss { display: grid; justify-items: center; font-size: .84rem; padding: 1rem 1.5rem 0; color: var(--soft); min-height: 2.4rem; text-align: center; }
+  .gloss p { grid-area: 1 / 1; margin: 0; visibility: hidden; }
+  .gloss b { font-weight: 500; color: var(--ink); margin-right: .6em; }
+  .gloss.all { justify-items: start; max-width: 22rem; margin: 0 auto; } .gloss.all p { grid-area: auto; visibility: visible; text-align: left; }
+  @media (min-width: 62rem) { .said { margin: 3.4rem -2rem; } }
+  @media (max-width: 640px) { .said .stage { aspect-ratio: 4 / 5; } body { font-size: 1.08rem; } .col h2 { font-size: 2.1rem; } }
+
+  /* token rate: punched cards. one hole is one token; a full card is a hundred */
+  .cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0 clamp(.8rem, 4vw, 3rem); max-width: 44rem; margin-inline: auto; padding: 1.6rem 0 0; --c: clamp(8px, 2.05vw, 13px); }
+  .lane { display: grid; justify-items: center; align-content: start; }
+  .pile { position: relative; width: calc(var(--c) * 10 + 14px); height: calc(var(--c) * 10 + 14px); margin: 2.2rem 0 1.5rem; }
+  .card { position: absolute; inset: 0; padding: 7px; background: var(--card); border-radius: 2px; box-shadow: 0 1px 0 #0003, 0 9px 14px -8px #000a; }
+  .card::before { content: ''; position: absolute; top: 0; right: 0; border: calc(var(--c) * .55) solid; border-color: var(--paper) var(--paper) #0000 #0000; }
+  .card i { display: block; height: 0; background: radial-gradient(circle, #23201c 34%, #0000 38%) 0 0 / var(--c) var(--c); }
+  .lane b { font: 400 1.7rem/1 'Instrument Serif', serif; }
+  .lane small { color: var(--soft); text-align: center; margin-top: .35rem; }
+  .cards + figcaption { text-align: center; color: var(--soft); padding-top: 1.1rem; }
+  /* Other scripts. Chinese in a CJK serif, Arabic in a Naskh, both tagged with lang so the right face and shaping apply. */
+  :lang(zh-Hans) { font-family: 'Noto Serif SC', 'Songti SC', serif; font-weight: 500; }
+  :lang(ar) { font-family: 'Noto Naskh Arabic', 'Geeza Pro', serif; font-weight: 500; }
+  .col p :lang(ar) { font-size: 1.35em; line-height: 1; }
+  /* the two language figures: flat and ruled like the list, no card */
+  .lang { padding: 1.7rem 0 1.5rem; border-top: 1px solid var(--rule); border-bottom: 1px solid var(--rule); }
+  .tones, .vowels { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.4rem .5rem; justify-items: center; }
+  .tone, .vw { display: grid; justify-items: center; row-gap: .1rem; }
+  .tc { width: clamp(4rem, 9vw, 6.2rem); height: auto; overflow: visible; }
+  .tc path { fill: none; stroke: var(--ink); stroke-width: 2.6; stroke-linecap: round; stroke-linejoin: round; vector-effect: non-scaling-stroke; }
+  .han { font-size: clamp(3rem, 8vw, 4.6rem); line-height: 1.2; }
+  .py { display: grid; justify-items: center; text-align: center; font: italic 500 1.3rem/1.35 Spectral, Georgia, serif; color: var(--mark); }
+  .py i { grid-area: 1 / 1; }
+  .py i + i { opacity: 0; font: 500 1.05rem/1.7 'IBM Plex Mono', monospace; color: var(--ink); } /* the toneless form, set as typed text */
+  .gl { color: var(--soft); font-size: .78rem; text-align: center; }
+  .poem { display: grid; justify-items: center; row-gap: .35rem; margin-top: 1.9rem; }
+  .poem .han { font-size: clamp(1.35rem, 4.6vw, 2.2rem); letter-spacing: .05em; }
+  .poem .py { font-size: 1.05rem; } .poem .py i + i { font-size: .88rem; text-wrap: balance; }
+  .ar { position: relative; display: inline-block; font-size: clamp(3.1rem, 8.6vw, 5.2rem); line-height: 2.05; }
+  .ar .hk { position: absolute; inset: 0; text-align: center; opacity: 0; }
+  .vw .py { margin-top: -.7rem; }
+  /* reduced motion: everything visible at once */
+  .static .py i { grid-area: auto; } .static .py i + i, .static .hk { opacity: 1; } .static .ar:has(.hk) > span:first-child { opacity: 0; }
+  .tone .py i + i { font-size: 1.35rem; line-height: 1.3; }
+  @media (max-width: 560px) { .tones, .vowels { grid-template-columns: repeat(2, 1fr); } }
+  figure > .pp { top: -.4rem; bottom: auto; right: -.3rem; color: var(--ink); }
+
+  /* interrupting: forty sheets, the same "no wait" on both rows */
+  .runs { display: grid; gap: 1.6rem; max-width: 46rem; margin-inline: auto; padding-top: 1.4rem; }
+  .run header { display: flex; align-items: center; gap: .8rem; min-height: 2.1rem; color: var(--soft); }
+  .run header b { font: 400 1.7rem/1 'Instrument Serif', serif; color: var(--ink); }
+  .run header span:last-child { margin-left: auto; }
+  .slip { background: var(--card); color: #1f1d1a; padding: .2rem .55rem; box-shadow: 0 6px 10px -6px #000a; transform: rotate(-2deg); }
+  .files { display: grid; grid-template-columns: repeat(20, 1fr); gap: 5px; margin-top: .5rem; perspective: 600px; }
+  .files i { aspect-ratio: 3 / 4; background: var(--card); border-radius: 1.5px; box-shadow: 0 4px 6px -4px #0009; }
+  @media (max-width: 640px) { .files { grid-template-columns: repeat(10, 1fr); } }
+
+  /* Closing scene: the ending stage and the site footer as one frame on one background. */
+  .closing { position: relative; background: var(--night); }
+  .end { height: 66vh; height: 66svh; min-height: 24rem; }
+  .end::after { content: ''; position: absolute; inset: auto 0 0; height: 24%; pointer-events: none; background: linear-gradient(transparent, var(--night)); }
+  /* THE PORT NEEDS ONLY THIS RULE, with .tone-night on the page root (as .pal-space and .vg-space do). */
+  .tone-night .site-footer { background-color: #0b0a09; }
+
+  /* Stand-in for src/components/site-footer.tsx, so the join can be judged. Mock only: the real footer replaces it. */
+  .site-footer { position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 70vh; overflow: hidden; background-color: #1a1a1a; color: #f5f2eb; }
+  .sf-hands { position: relative; z-index: 1; display: flex; flex-direction: column; align-items: center; gap: 1rem; width: 100%; padding: 2rem 1.5rem; }
+  .sf-hand { width: 70vw; background: #d4a03c; -webkit-mask: var(--src) center / 100% 100% no-repeat; mask: var(--src) center / 100% 100% no-repeat; }
+  .sf-hand.l { aspect-ratio: 422 / 257; --src: url(http://localhost:5179/assets/hand-left.png); }
+  .sf-hand.r { aspect-ratio: 436 / 237; --src: url(http://localhost:5179/assets/hand-right.png); }
+  .sf-at { font: 700 3.75rem/1 Satoshi, sans-serif; color: #fb7185; }
+  .footer-word { position: absolute; inset: auto 0 -5vw; pointer-events: none; user-select: none; white-space: nowrap; text-align: center; font: italic 900 17vw/1 Amulya, 'Zen Kaku Gothic New', sans-serif; letter-spacing: .06em; color: rgb(245 242 235 / .07); }
+  .sf-credit { position: absolute; right: 1rem; bottom: .75rem; z-index: 1; margin: 0; font: 400 11px 'IBM Plex Mono', monospace; letter-spacing: .05em; color: rgb(245 242 235 / .4); }
+  .sf-credit a { text-decoration-color: rgb(245 242 235 / .2); }
+  @media (min-width: 768px) {
+    .sf-hands { height: 28vw; flex-direction: row; gap: 0; padding: 0; }
+    .sf-hand { position: absolute; top: 50%; width: 47vw; transform: translateY(-50%); } .sf-hand.l { left: 0; } .sf-hand.r { right: 0; }
+    .sf-at { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); }
+  }
+</style>
+</head>
+<body class="tone-night">
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+  <filter id="soft"><feGaussianBlur stdDeviation="9"/></filter>
+  <filter id="bloom" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="26"/></filter>
+  <filter id="lift" x="-10%" y="-10%" width="120%" height="120%"><feDropShadow dx="0" dy="-5" stdDeviation="7" flood-opacity=".34"/></filter>
+  <filter id="rough"><feTurbulence type="fractalNoise" baseFrequency=".6" numOctaves="2" seed="2"/><feDisplacementMap in="SourceGraphic" scale="5"/></filter>
+  <!-- long, thin noise: reads as paper fibre once it is multiplied over a flat colour -->
+  <filter id="fibre" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency=".012 .55" numOctaves="3" seed="6"/><feColorMatrix values="0 0 0 0 .42  0 0 0 0 .37  0 0 0 0 .3  1.5 0 0 0 -.62"/></filter>
+  <radialGradient id="sunG"><stop offset="0" stop-color="#fff1cf"/><stop offset=".3" stop-color="#f0b24a"/><stop offset="1" stop-color="#c2541f" stop-opacity="0"/></radialGradient>
+</defs></svg>
+
+<button id="theme" class="mono" type="button">dark</button>
+<main><div class="col">
+  <header class="head">
+    <a class="chip" href="#"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg>back to blog</a>
+    <h1>Text <span class="ne">!=</span> Tone</h1>
+    <p class="mono">15 November 2026 · Aliasgar Khimani</p>
+  </header>
+
+  <p>"I didn't say she stole the money." Try saying that out loud a few times, leaning on a different word each time. It's an example linguists and English teachers love, because it's seven words and it means seven different things depending on which one you stress:</p>
+
+  <ul class="readings">
+    <li><span class="s"><strong>I</strong> didn't say she stole the money.</span><span class="g mono">Someone else said it.</span></li>
+    <li><span class="s">I <strong>didn't</strong> say she stole the money.</span><span class="g mono">Flat denial.</span></li>
+    <li><span class="s">I didn't <strong>say</strong> she stole the money.</span><span class="g mono">I might have hinted at it though.</span></li>
+    <li><span class="s">I didn't say <strong>she</strong> stole the money.</span><span class="g mono">Someone else did.</span></li>
+    <li><span class="s">I didn't say she <strong>stole</strong> the money.</span><span class="g mono">Maybe she just borrowed it.</span></li>
+    <li><span class="s">I didn't say she stole <strong>the</strong> money.</span><span class="g mono">She took some money, just not <em>that</em> money.</span></li>
+    <li><span class="s">I didn't say she stole the <strong>money</strong>.</span><span class="g mono">She took something else.</span></li>
+  </ul>
+
+  <p>Now type it. It's the same sentence all seven times, and unless I bother with italics (I usually don't, and I'm guessing you don't either) you're left guessing which one I meant. And that's how we talk to pretty much every AI assistant right now, through a little box that keeps the words and throws everything else away.</p>
+
+  <h2>So... what'd get lost?</h2>
+  <p>The stress is one thing. Tone is the bigger one. There's a great story about the philosopher J. L. Austin giving a lecture where he said that in English a double negative can make a positive, but no language uses a double positive to make a negative. Sidney Morgenbesser, sitting in the audience, went "Yeah, <em>yeah</em>." Written down, that's two people agreeing. Out loud, he'd just disproved the whole point in two words.</p>
+  <p>And we're worse at noticing this than we think. In a <a href="https://pubmed.ncbi.nlm.nih.gov/16393025/">2005 study</a> on email, people who wrote sarcastic or serious messages expected readers to get the tone right around <span class="n">80%</span> of the time. Readers got it right about half the time. That's a coin flip, and the people sending had no idea.</p>
+  <p>The internet did come up with workarounds: /s, "lol" on the end of a sentence so it doesn't read as mean, all caps for yelling. Models have read the whole internet, so they get those just fine. The problem is that you only add them when you already suspect you'll be misread, and that study says we're bad at knowing when that is. Nobody types "ok fine /tired".</p>
+  <p>Then there's interrupting. Talking to someone, you say "mhm" so they keep going, or "no wait, not that" the second they start heading the wrong way. In a chat you write a whole message, wait for a whole reply, and only find out it misunderstood you once it's done. If you've ever watched an AI confidently write 600 words about the wrong thing, you know the feeling.</p>
+
+  <figure id="cut" role="group" aria-label="Forty files, twice. Spoken, no wait, not that stops the run after four files. Typed, the same words wait until all forty are changed.">
+    <div class="runs">
+      <div class="run"><header><b>spoken</b><span class="slip mono">no wait, not that</span><span class="mono count"></span></header><div class="files"></div></div>
+      <div class="run"><header><b>typed</b><span class="slip mono">no wait, not that</span><span class="mono count"></span></header><div class="files"></div></div>
+    </div>
+  </figure>
+
+  <h2>What if it's NOT English?</h2>
+  <p>English uses pitch mostly for attitude, which is exactly why writing it down loses so much. Other languages draw that line in different places, and honestly it's kind of fascinating.</p>
+  <p>In Mandarin, pitch is part of the word itself. <em>mā</em> said flat is <span lang="zh-Hans">妈</span>, mother. <em>má</em>, rising, is <span lang="zh-Hans">麻</span>, hemp. <em>mǎ</em>, dipping, is <span lang="zh-Hans">马</span>, horse. <em>mà</em>, falling, is <span lang="zh-Hans">骂</span>, to scold. Same syllable, four different words, and the only difference is the shape of your voice. The writing keeps it though, because each one gets its own character. The linguist Yuen Ren Chao took this to the extreme with a poem, "Lion-Eating Poet in the Stone Den", where every single syllable is some version of <em>shi</em>. It opens with <span lang="zh-Hans">石室诗士施氏，嗜狮，誓食十狮</span> (<em>Shíshì shīshì Shī Shì, shì shī, shì shí shí shī</em>): a poet called Shi, in a stone den, who loved lions and swore to eat ten of them. Read in characters it makes sense. Read out loud it's <em>shi shi shi shi</em> for a whole paragraph and nobody can follow it.</p>
+
+  <figure id="tones" class="lang" role="group" aria-label="Four Mandarin words, each with its tone drawn as a pitch line: mā, flat and high, mother; má, rising, hemp; mǎ, dipping, horse; mà, falling, to scold. Then the tones are removed: the four lines go flat and the four words become one syllable, ma. The poem line does the same and becomes shi twelve times.">
+    <div class="tones">
+      <div class="tone"><svg class="tc" viewBox="0 0 100 44" aria-hidden="true"><path d="M8,6 L92,6"/></svg><span class="han" lang="zh-Hans">妈</span><span class="py"><i>mā</i><i>ma</i></span><span class="gl mono">mother</span></div>
+      <div class="tone"><svg class="tc" viewBox="0 0 100 44" aria-hidden="true"><path d="M8,24 C36,23 62,14 92,4"/></svg><span class="han" lang="zh-Hans">麻</span><span class="py"><i>má</i><i>ma</i></span><span class="gl mono">hemp</span></div>
+      <div class="tone"><svg class="tc" viewBox="0 0 100 44" aria-hidden="true"><path d="M8,30 C28,40 44,42 54,38 C70,31 82,18 92,12"/></svg><span class="han" lang="zh-Hans">马</span><span class="py"><i>mǎ</i><i>ma</i></span><span class="gl mono">horse</span></div>
+      <div class="tone"><svg class="tc" viewBox="0 0 100 44" aria-hidden="true"><path d="M8,4 C36,8 66,26 92,40"/></svg><span class="han" lang="zh-Hans">骂</span><span class="py"><i>mà</i><i>ma</i></span><span class="gl mono">to scold</span></div>
+    </div>
+    <div class="poem">
+      <span class="han" lang="zh-Hans">石室诗士施氏，嗜狮，誓食十狮</span>
+      <span class="py"><i>Shíshì shīshì Shī Shì, shì shī, shì shí shí shī</i><i>shi shi shi shi shi shi, shi shi, shi shi shi shi</i></span>
+    </div>
+  </figure>
+
+  <p>Arabic goes the other way. Short vowels usually aren't written at all, so <span lang="ar" dir="rtl">كتب</span> is just the consonants k-t-b. With the vowel marks put back it could be <span lang="ar" dir="rtl">كَتَبَ</span> (<em>kataba</em>, he wrote), <span lang="ar" dir="rtl">كُتِبَ</span> (<em>kutiba</em>, it was written) or <span lang="ar" dir="rtl">كُتُب</span> (<em>kutub</em>, books), and fluent readers fill in the right one from context without even thinking about it.</p>
+
+  <figure id="harakat" class="lang" role="group" aria-label="The Arabic letters k-t-b written four times without vowels. The vowel marks fade in on three of them, giving kataba, he wrote; kutiba, it was written; and kutub, books. Then the marks fade out and all four are the same bare word again.">
+    <div class="vowels">
+      <div class="vw"><span class="ar"><span lang="ar" dir="rtl">كتب</span></span><span class="py"><i>k-t-b</i></span><span class="gl mono">as written</span></div>
+      <div class="vw"><span class="ar"><span lang="ar" dir="rtl">كتب</span><span class="hk" lang="ar" dir="rtl">كَتَبَ</span></span><span class="py"><i>kataba</i></span><span class="gl mono">he wrote</span></div>
+      <div class="vw"><span class="ar"><span lang="ar" dir="rtl">كتب</span><span class="hk" lang="ar" dir="rtl">كُتِبَ</span></span><span class="py"><i>kutiba</i></span><span class="gl mono">it was written</span></div>
+      <div class="vw"><span class="ar"><span lang="ar" dir="rtl">كتب</span><span class="hk" lang="ar" dir="rtl">كُتُب</span></span><span class="py"><i>kutub</i></span><span class="gl mono">books</span></div>
+    </div>
+  </figure>
+
+  <p>Spoken languages also pack information at different densities. A <a href="https://www.science.org/doi/10.1126/sciadv.aaw2594">2019 study in Science Advances</a> compared 17 languages and found that fast ones like Spanish and Japanese pack less into each syllable and slower ones like Vietnamese pack more, and they all end up carrying about <span class="n">39 bits a second</span>.</p>
+  <p>So every writing system makes a call about what to keep and what to leave for the reader. Chinese keeps the tones in the characters. Arabic leaves out the vowels and trusts you with context. English keeps every letter and throws away stress and tone completely, and leaves you to guess.</p>
+
+  <h2>Typing is just kinda slow</h2>
+  <p>The biggest typing study I could find <a href="https://userinterfaces.aalto.fi/136Mkeystrokes/">looked at 136 million keystrokes</a> and the average was <span class="n">52 words a minute</span>, about <span class="n">1 token a second</span>, and that's from people who <em>volunteered</em> for a typing test. Speaking is around <span class="n">150 words a minute</span>, a bit over <span class="n">3 tokens a second</span>. The model on the other end writes back at <span class="n">50 to 200 tokens a second</span>. So the slowest part of the whole loop is your fingers.</p>
+
+  <figure id="rates" role="group" aria-label="Tokens per second as holes punched in cards. Typing punches about one hole a second, speaking about three, and a model fills a hundred-hole card every second.">
+    <div class="cards">
+      <div class="lane"><div class="pile" data-rate="1"></div><b>typing</b><small class="mono">52 words a minute<br>about 1 token a second</small></div>
+      <div class="lane"><div class="pile" data-rate="3"></div><b>speaking</b><small class="mono">150 words a minute<br>about 3 tokens a second</small></div>
+      <div class="lane"><div class="pile" data-rate="100"></div><b>a model</b><small class="mono">50 to 200 tokens a second<br>shown at 100</small></div>
+    </div>
+    <figcaption class="mono" id="clock">one hole, one token</figcaption>
+  </figure>
+
+  <p>People who type fast are fine. Most people don't type fast though, and a lot of people can't type comfortably at all: kids, older people, anyone with a motor impairment, anyone who's more at home speaking a language than spelling it. Everyone learns to talk years before they learn to write. If we actually want AI to be usable by more than the people who already live at a keyboard, speech is the obvious way in.</p>
+
+  <h2>Can't we just use voice then?</h2>
+  <p>The annoying bit is that a lot of voice modes still throw the tone away. They transcribe what you say into text, send the text to the model, and read the reply back out loud. The stress is gone at step one, and you're back to the little box with extra steps.</p>
+  <p>Models that take audio directly should do better, right? A <a href="https://arxiv.org/abs/2505.22765">2025 paper called StressTest</a> checked exactly that with sentences like the one up top, and most speech models barely did better than guessing which meaning was intended. gpt-4o-audio got <span class="n">59%</span>. The best one, Gemini 2.5 Pro, got <span class="n">78%</span>. People got <span class="n">93%</span>. So even when the model can literally hear you, it often can't tell which word you leaned on.</p>
+
+  <h2>Why tho?</h2>
+  <p>For a while none of this was a big deal. A chatbot misread you, you got a bad answer, you rolled your eyes and asked again.</p>
+  <p>That's not how it works anymore. Assistants edit code, open pull requests, send emails, and run for hours on their own. I build some of these myself, <a href="#">flocc</a> picks up an issue and works on it without me in the loop. When something like that misreads you, you don't get a bad paragraph, a file changes or an email goes out.</p>
+  <p>Say an agent asks whether it should go ahead with a big refactor and you type "ok fine". If you meant <em>yes</em>, great. If you meant "I'm too tired to argue about this", you probably wanted it to stop, and there's nothing in those two words that tells it so.</p>
+  <p>I'm not saying text should go away. You can edit before you send, you can take your time, you can use it in a library. And sometimes you don't <em>want</em> a machine picking up on how you feel, which is fair.</p>
+  <p>But if we're going to let these things act for us, they need more than the words. They need to hear <em>how</em> you said yes and not just that you said it, they need to let you cut them off early, and when they genuinely can't tell which of the seven you meant, they should do what a person would do and ask.</p>
+</div></main>
+
+<div class="closing">
+  <div class="stage night end" id="end" role="img" aria-label="The typed sentence on a flat line. The line bends back into a horizon, the light comes up and layers of cut paper rise under it, then it goes flat again.">
+    <p class="line" aria-hidden="true">I didn’t say she stole the money</p>
+  </div>
+  <footer class="site-footer">
+    <div class="sf-hands"><div class="sf-hand l" aria-hidden="true"></div><span class="sf-at">@</span><div class="sf-hand r" aria-hidden="true"></div></div>
+    <span class="footer-word" aria-hidden="true">Creation</span>
+    <p class="sf-credit">tab critters by <a href="#">numbpill</a></p>
+  </footer>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/SplitText.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/MorphSVGPlugin.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/DrawSVGPlugin.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/ScrollTrigger.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/CustomEase.min.js"></script>
+<script>
+gsap.registerPlugin(SplitText, MorphSVGPlugin, DrawSVGPlugin, ScrollTrigger, CustomEase)
+const RM = matchMedia('(prefers-reduced-motion: reduce)').matches
+const root = document.documentElement, $ = (id) => document.getElementById(id)
+root.classList.toggle('dark', matchMedia('(prefers-color-scheme: dark)').matches)
+const syncTheme = () => ($('theme').textContent = root.classList.contains('dark') ? 'light' : 'dark')
+$('theme').onclick = () => { root.classList.toggle('dark'); syncTheme() }
+syncTheme()
+
+// One ease family for the whole page. okOut settles, okInOut travels, okLift overshoots a touch.
+CustomEase.create('okOut', '0.16, 1, 0.3, 1')
+CustomEase.create('okInOut', '0.76, 0, 0.24, 1')
+CustomEase.create('okLift', '0.3, 1.5, 0.5, 1')
+
+// Icons are lucide's own paths (lucide-react 1.31 is already a site dependency). In the port these are
+// <Pause/>, <Play/>, <Volume2/> and <ArrowLeft/> from lucide-react; no typed arrows or glyphs anywhere.
+const LUCIDE = {
+  pause: '<rect x="14" y="3" width="5" height="18" rx="1"/><rect x="5" y="3" width="5" height="18" rx="1"/>',
+  play: '<path d="M5 5a2 2 0 0 1 3.008-1.728l11.997 6.998a2 2 0 0 1 .003 3.458l-12 7A2 2 0 0 1 5 19z"/>',
+  volume2: '<path d="M11 4.702a.705.705 0 0 0-1.203-.498L6.413 7.587A1.4 1.4 0 0 1 5.416 8H3a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h2.416a1.4 1.4 0 0 1 .997.413l3.383 3.384A.705.705 0 0 0 11 19.298z"/><path d="M16 9a5 5 0 0 1 0 6"/><path d="M19.364 18.364a9 9 0 0 0 0-12.728"/>',
+}
+const icon = (name, cls = '') => `<svg class="ic ${cls}" viewBox="0 0 24 24" aria-hidden="true">${LUCIDE[name]}</svg>`
+
+// Every animation loops, pauses itself offscreen, and gets one quiet pause button. `ref.tl` may be rebuilt on resize.
+function control(host, ref) {
+  if (RM) return
+  host.insertAdjacentHTML('beforeend', `<button class="pp" type="button" aria-label="Pause animation" aria-pressed="false">${icon('pause', 'pause')}${icon('play', 'play')}</button>`)
+  const b = host.lastChild
+  ref.user = false; ref.vis = false
+  ref.apply = () => { if (!ref.tl) return; ref.user || !ref.vis ? ref.tl.pause() : ref.tl.play(); ref.onState?.() }
+  b.onclick = () => { ref.user = !ref.user; b.setAttribute('aria-pressed', ref.user); b.setAttribute('aria-label', ref.user ? 'Play animation' : 'Pause animation'); ref.apply() }
+  ScrollTrigger.create({ trigger: host, start: 'top bottom', end: 'bottom top', onToggle: (s) => { ref.vis = s.isActive; ref.apply() } })
+}
+function onResize(fn) { let w = innerWidth; addEventListener('resize', () => { if (innerWidth !== w) { w = innerWidth; fn() } }); document.fonts.ready.then(fn) }
+
+// Arc geometry in stage units: the stage is 1000 units wide at any size, the arc's top is (500, 0),
+// and it is a circle of radius RV. Materials are drawn in these units, below y = 0.
+const RV = 1300, EDGE = RV - Math.sqrt(RV * RV - 700 * 700)
+const ARC = `M-200,${EDGE.toFixed(1)} A${RV},${RV} 0 0 1 1200,${EDGE.toFixed(1)}`, FLAT = 'M-200,0 L1200,0'
+const arcY = (x) => RV - Math.sqrt(RV * RV - (x - 500) ** 2)
+function rng(a) { return () => { a |= 0; a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296 } }
+
+// Cut paper. A material is a stack of discs sharing the arc's centre, each casting a soft shadow on the
+// one behind it, each with its own printed surface clipped to its own edge. All of it is generated here.
+let pid = 0
+const BOX = 'x="-200" y="-10" width="1400" height="960"'
+const layer = (off, fill, tex = '') => { const id = 'c' + pid++; return `<circle cx="500" cy="${RV}" r="${RV - off}" fill="${fill}" filter="url(#lift)"/>` + (tex && `<clipPath id="${id}"><circle cx="500" cy="${RV}" r="${RV - off}"/></clipPath><g clip-path="url(#${id})">${tex}</g>`) }
+const pat = (size, inner, rot = 0) => { const id = 'p' + pid++; return `<pattern id="${id}" width="${size}" height="${size}" patternUnits="userSpaceOnUse" patternTransform="rotate(${rot})">${inner}</pattern><rect ${BOX} fill="url(#${id})"/>` }
+const dots = (fg, size, r, rot = 24) => pat(size, `<circle cx="${size / 2}" cy="${size / 2}" r="${r}" fill="${fg}"/>`, rot)
+const hatch = (fg, gap, wd, rot) => pat(gap, `<path d="M0,0 V${gap}" stroke="${fg}" stroke-width="${wd}"/>`, rot)
+function greek(fg) {
+  const r = rng(5); let s = `<g stroke="${fg}" stroke-width="5">`
+  for (let x = -190; x < 1200; x += 124) for (let y = 24 + ((x + 190) / 124 % 3) * 9; y < 560; y += 13) {
+    const head = r() < .06
+    s += `<path d="M${x},${y} h110" stroke-dasharray="${head ? '70 200' : Array.from({ length: 6 }, () => (8 + r() * 30 | 0) + ' 4').join(' ')}"${head ? ' stroke-width="9"' : ''}/>`
+  }
+  return s + '</g>'
+}
+function chalk() {
+  const r = rng(11); let s = '<g fill="none" stroke="#f1eee4" stroke-width="3" stroke-linecap="round" opacity=".9" filter="url(#rough)">'
+  for (const d of [46, 120, 123]) s += `<circle cx="500" cy="${RV}" r="${RV - d}"/>`
+  for (let i = -14; i <= 14; i++) { const a = (i * 2.1 - 90) * Math.PI / 180; s += `<path d="M${500 + (RV - 46) * Math.cos(a)},${RV + (RV - 46) * Math.sin(a)} L${500 + (RV - 120) * Math.cos(a)},${RV + (RV - 120) * Math.sin(a)}"/>` }
+  for (let i = 0; i < 9; i++) { const x = r() * 1000, y = 190 + r() * 280, a = r() * 3.1; s += `<path d="M${x},${y} l${Math.cos(a) * (80 + r() * 220)},${Math.sin(a) * 70}"/>` }
+  return s + '</g>'
+}
+function scribble(fg) {
+  const r = rng(23); let s = ''
+  for (let k = 0; k < 2; k++) {
+    let x = 100 + r() * 200, y = 260 + r() * 60, d = `M${x},${y}`
+    for (let i = 0; i < 150; i++) { const nx = Math.min(1100, Math.max(-100, x + (r() - .42) * 170)), ny = Math.min(560, Math.max(arcY(nx) + 140, y + (r() - .5) * 130)); d += ` Q${x},${y} ${(x + nx) / 2},${(y + ny) / 2}`; x = nx; y = ny }
+    s += `<path d="${d}" fill="none" stroke="${fg}" stroke-width="${k ? 1.6 : 2.8}" stroke-linejoin="round" filter="url(#rough)"/>`
+  }
+  return s
+}
+function ledger(fg, red) {
+  let s = `<g stroke="${fg}" stroke-width="1.4">`
+  for (let y = 12; y < 600; y += 21) s += `<path d="M-200,${y} H1200"/>`
+  for (let x = -160; x < 1200; x += 92) s += `<path d="M${x},-10 V600" stroke="${x % 276 === 116 ? red : fg}" stroke-width="${x % 276 === 116 ? 2.2 : 1}"/>`
+  return s + '</g>'
+}
+// Engraver's waves: concentric lines that breathe in and out, two families crossing.
+function guilloche(fg, off, n) {
+  let s = `<g fill="none" stroke="${fg}" stroke-width="1.5">`
+  for (let i = 0; i < n; i++) for (const ph of [0, 2.1]) {
+    let d = ''
+    for (let x = -200; x <= 1200; x += 12) { const rr = RV - off - 10 - i * 17 + 7 * Math.sin(x / 34 + i * .7 + ph); d += `${d ? 'L' : 'M'}${x},${(RV - Math.sqrt(Math.max(0, rr * rr - (x - 500) ** 2))).toFixed(1)}` }
+    s += `<path d="${d}"/>`
+  }
+  return s + '</g>'
+}
+const stack = (cols, step = 50) => cols.map((c, i) => layer(i * step, c)).join('')
+// One material per stressed word: sky, word colour, pitch-line colour, layers.
+const MATS = [
+  ['#f1e6cf', '#1d1b18', '#1d1b18', layer(0, '#e8b23a', dots('#c98a1f', 15, 4.2)) + layer(118, '#f6ecd6') + layer(176, '#e2573c', dots('#b93c26', 22, 7)) + layer(300, '#e8b23a')],
+  ['#0f0e0d', '#f3ecdd', '#151413', layer(0, '#f4f0e6') + layer(128, '#151413', hatch('#3a3632', 9, 1.4, 38)) + layer(214, '#f4f0e6') + layer(250, '#151413')],
+  ['#8d979e', '#14181c', '#d9482b', layer(0, '#dedbd0', greek('#8f8c84')) + layer(210, '#c5c1b3', greek('#7f7c74')) + layer(330, '#dedbd0')],
+  ['#dfe5ea', '#1f2a36', '#f4f1e8', layer(0, '#2b5c90', chalk()) + layer(300, '#1f4670')],
+  ['#e2573c', '#fbf3e2', '#fbf3e2', layer(0, '#1b1a18', hatch('#3b3733', 11, 1.5, 38) + hatch('#3b3733', 17, 1.2, -52)) + layer(124, '#b9a888', scribble('#1b1a18')) + layer(340, '#1b1a18')],
+  ['#e9ead8', '#23301f', '#23301f', layer(0, '#eef0dc', ledger('#a9bf9c', '#d9482b')) + layer(200, '#dde2c6', ledger('#9db58f', '#d9482b')) + layer(320, '#eef0dc')],
+  ['#1c2a22', '#efe9d6', '#1c2a22', layer(0, '#cfd8b8', guilloche('#3f6b4f', 0, 9)) + layer(160, '#3f6b4f', guilloche('#cfd8b8', 160, 6)) + layer(270, '#cfd8b8', guilloche('#3f6b4f', 270, 8))],
+]
+const NIGHT = stack(['#2a2622', '#1d1a18', '#332e29', '#191715', '#2a2622', '#1d1a18', '#332e29', '#191715'], 54)
+const DAY = stack(['#d4a03c', '#efe6d2', '#e2d6bd', '#6b8cae', '#efe6d2', '#e2d6bd', '#d4a03c', '#efe6d2'], 54)
+// The closing scene's paper: thin bands on the horizon that end in the footer's own black, so nothing is cut off at the join.
+const CLOSE = stack(['#d4a03c', '#efe6d2', '#6b8cae', '#e2d6bd', '#d4a03c', '#efe6d2', '#0b0a09'], 17)
+
+let uid = 0
+function makeStage(el, { under = '', pre = '', frac = .4 }) {
+  const id = 'u' + uid++
+  el.insertAdjacentHTML('afterbegin', `<svg aria-hidden="true"><defs><clipPath id="${id}"><path d="${ARC} L1200,950 L-200,950 Z"/></clipPath></defs>
+    <g class="space">${pre}<g class="under" clip-path="url(#${id})">${under}<g class="dress"><rect class="fibre" ${BOX} filter="url(#fibre)"/><path class="shade" d="${ARC}" transform="translate(0,-6)"/></g></g>
+    <path class="arc" d="${ARC}"/><path class="pitch"/></g></svg>`)
+  const q = (s) => el.querySelector(s), line = q('.line')
+  const { words, chars } = SplitText.create(line, { type: 'words,chars', aria: 'none' })
+  chars.forEach((c) => (c._w = words.indexOf(c.parentElement)))
+  const st = { el, words, chars, arc: q('.arc'), under: q('.under'), pitch: q('.pitch'), shade: q('.dress'), space: q('.space') }
+  // Size the sentence to the stage, then seat every letter on the circle: dropped by the sagitta at its x, turned to the tangent.
+  st.layout = () => {
+    const w = el.clientWidth, h = el.clientHeight, s = w / 1000, top = Math.round(h * (1 - frac))
+    el.firstElementChild.setAttribute('viewBox', `0 0 ${w} ${h}`)
+    st.space.setAttribute('transform', `translate(0 ${top}) scale(${s})`)
+    gsap.set([...words, ...chars], { clearProps: 'transform' })
+    line.style.fontSize = '100px'
+    st.fs = Math.min(w * .08, 100 * w * (w < 640 ? .92 : .86) / line.offsetWidth)
+    line.style.fontSize = st.fs + 'px'; line.style.top = top + 'px'
+    const lr = line.getBoundingClientRect(), mid = lr.left + lr.width / 2
+    const seat = (r) => { const dx = r.left + r.width / 2 - mid, th = Math.asin(dx / (RV * s)); return { dx, th, y: RV * s * (1 - Math.cos(th)), r: th * 180 / Math.PI, u: 500 + dx / s, wu: r.width / s } }
+    for (const e of [...chars, ...words]) e._ = seat(e.getBoundingClientRect())
+    gsap.set(chars, { transformOrigin: '50% 78%' })
+  }
+  st.flat = { x: 0, y: 0, rotation: 0, scale: 1 }
+  st.seat = (sink = 0) => ({ x: 0, y: (i, c) => c._.y + sink * st.fs, rotation: (i, c) => c._.r, scale: 1 })
+  // A stressed word leaves the arc along its own normal and grows from its middle, so its letters stay evenly spaced.
+  st.lift = (k, up, sc) => {
+    const W = words[k]._
+    return { x: (i, c) => (c._.dx - W.dx) * (sc - 1) * Math.cos(c._.th) + Math.sin(c._.th) * up * st.fs, y: (i, c) => c._.y + (c._.dx - W.dx) * (sc - 1) * Math.sin(c._.th) - Math.cos(c._.th) * up * st.fs, rotation: (i, c) => c._.r, scale: sc }
+  }
+  st.of = (k) => chars.filter((c) => c._w === k)
+  st.not = (k) => chars.filter((c) => c._w !== k)
+  return st
+}
+
+// The recordings, and one audio context for the whole page. Buffers are decoded once and cached by file.
+// While a list line is playing, `hold` keeps the looping figure quiet so two clips never overlap.
+const STAGE = fetch('/public/assets/blog/didnt-say/stage.json').then((r) => r.json())
+const audio = {
+  ctx: null, cache: new Map(), hold: false, onHold: [],
+  get() { return (this.ctx ??= new AudioContext()) },
+  buf(src) { if (!this.cache.has(src)) this.cache.set(src, fetch('/public/assets/blog/didnt-say/' + src).then((r) => r.arrayBuffer()).then((b) => this.get().decodeAudioData(b))); return this.cache.get(src) },
+  setHold(v) { this.hold = v; this.onHold.forEach((f) => f()) },
+}
+// f0 as semitones about the clip's own median, 9 semitones to full height. Normalising to the clip's
+// range instead would blow the flat reading up to the same size as the stressed ones.
+// Points more than 13 semitones out are octave errors from the tracker; gaps over 90 ms are unvoiced.
+function contour(e) {
+  const s = e.f0.map(([t, hz]) => [t, 12 * Math.log2(hz)]), med = s.map((p) => p[1]).sort((a, b) => a - b)[s.length >> 1]
+  const pts = s.filter((p) => Math.abs(p[1] - med) < 13).map(([t, v]) => ({ t, h: (v - med) / 9 })), segs = [[]]
+  pts.forEach((p, i) => { if (i && p.t - pts[i - 1].t > .09) segs.push([]); segs.at(-1).push(p) })
+  const at = (g, i) => g[Math.min(g.length - 1, Math.max(0, i))].h
+  return segs.filter((g) => g.length > 2).map((g) => g.map((p, i) => ({ t: p.t, h: Math.max(-1.3, Math.min(1.3, (at(g, i - 2) + at(g, i - 1) + p.h + at(g, i + 1) + at(g, i + 2)) / 5)) })))
+}
+// Piecewise-linear map through [time, x] anchors: each word's start and end pinned to that word's edges.
+const ramp = (a) => (t) => { if (t <= a[0][0]) return a[0][1]; for (let i = 1; i < a.length; i++) if (t <= a[i][0]) return a[i - 1][1] + (a[i][1] - a[i - 1][1]) * (t - a[i - 1][0]) / (a[i][0] - a[i - 1][0] || 1); return a.at(-1)[1] }
+// DrawSVG draws by length; this ease converts playback time into length so the pen is under the sound.
+function penEase(pts) {
+  const L = [0]; for (let i = 1; i < pts.length; i++) L.push(L[i - 1] + Math.hypot(pts[i].x - pts[i - 1].x, pts[i].y - pts[i - 1].y))
+  const t0 = pts[0].t, span = pts.at(-1).t - t0
+  return (p) => { const t = t0 + p * span; let i = 1; while (i < pts.length - 1 && pts[i].t < t) i++; return (L[i - 1] + (L[i] - L[i - 1]) * Math.min(1, Math.max(0, (t - pts[i - 1].t) / (pts[i].t - pts[i - 1].t || 1)))) / L.at(-1) }
+}
+
+// The list of seven is where the sound lives. The markdown list is upgraded in place: each line becomes
+// a button that plays its recording, with the words moving on that clip's own timings.
+STAGE.then((all) => {
+  const data = all.filter((e) => e.stress), list = document.querySelector('.readings'), REST = { yPercent: -15, scale: 1.12, '--k': 1 }
+  const rows = [...list.children].map((li, i) => {
+    const e = data[i], b = document.createElement('button')
+    b.type = 'button'; b.className = 'rd'
+    b.setAttribute('aria-label', `Play: I didn't say she stole the money, stressed on ${e.stress}. ${li.querySelector('.g').textContent}`)
+    b.append(...li.childNodes); li.append(b)
+    const s = b.querySelector('.s'), words = SplitText.create(s, { type: 'words', aria: 'none' }).words
+    s.insertAdjacentHTML('afterend', '<svg class="tr" aria-hidden="true"></svg>')
+    b.insertAdjacentHTML('beforeend', icon('volume2', 'ear'))
+    return { e, b, s, words, k: words.findIndex((w) => w.closest('strong')), em: s.querySelector('strong'), g: b.querySelector('.g'), tr: b.querySelector('.tr'), label: b.getAttribute('aria-label') }
+  })
+  list.classList.add('live')
+  rows.forEach((r) => gsap.set(r.words[r.k], REST))
+  // A small pitch trace under each line, laid out against that line's own words. Faint at rest, redrawn while it plays.
+  const trace = () => rows.forEach((r) => {
+    const sr = r.s.getBoundingClientRect(), H = r.tr.clientHeight || 18
+    const x = ramp(r.e.words.flatMap((w, j) => { const wr = r.words[j].getBoundingClientRect(); return [[w.start, wr.left - sr.left], [w.end, wr.right - sr.left]] }))
+    r.strokes = contour(r.e).map((g) => g.map((p) => ({ t: p.t, x: x(p.t), y: H / 2 - p.h / 1.3 * (H / 2 - 1.5) })))
+    r.tr.setAttribute('viewBox', `0 0 ${sr.width} ${H}`)
+    r.tr.innerHTML = r.strokes.map((g) => `<path d="M${g.map((p) => `${p.x.toFixed(1)},${p.y.toFixed(1)}`).join(' L')}"/>`).join('')
+    r.paths = [...r.tr.children]
+  })
+  const flat = all.find((e) => !e.stress), last = rows.at(-1), para = list.nextElementSibling
+  const FLAT_LABEL = "Play: I didn't say she stole the money, typed, with no stress"
+  let cur = null, seq = 0, typed = false
+
+  // Put a row back to how it sits when nothing is playing. `now` skips the ease, for when the scrub takes over.
+  function settle(r, now) {
+    if (typed || r.k < 0) return gsap.set(r.words, { opacity: 1 })
+    gsap.to(r.words, { opacity: (j) => j === r.k ? 1 : .46, duration: now ? 0 : .3, overwrite: 'auto' })
+    gsap.to(r.words[r.k], { ...REST, duration: now ? 0 : .3, ease: 'okOut', overwrite: 'auto' }); gsap.set(r.paths, { drawSVG: '100%' })
+  }
+  function stop(now) {
+    if (!cur) return
+    const r = cur; cur = null
+    try { r.src.stop() } catch {}
+    r.tl?.kill(); r.b.classList.remove('on'); settle(r, now)
+  }
+  // Open list: a row plays its own reading. Collapsed to the one typed line: it plays the flat reading.
+  async function play(r) {
+    const again = cur === r, mine = ++seq, e = typed || r.k < 0 ? flat : r.e
+    stop()
+    if (again) return
+    const buf = await audio.buf(e.src), ctx = audio.get()
+    await ctx.resume()
+    if (mine !== seq) return // a later tap won while this clip was loading
+    const src = ctx.createBufferSource(); src.buffer = buf; src.connect(ctx.destination); src.start()
+    cur = r; r.src = src; r.playing = e.src; r.b.classList.add('on')
+    src.onended = () => cur === r && r.src === src && stop()
+    if (RM) return
+    const tl = r.tl = gsap.timeline()
+    tl.set(r.words, { opacity: .46 }, 0)
+    if (e === flat) return e.words.forEach((w, j) => tl.to(r.words[j], { opacity: 1, duration: .16, ease: 'okOut' }, w.start)) // every word the same
+    // Flat on the beat, every word brightens as it is spoken, the stressed one lifts when it starts.
+    tl.set(r.words[r.k], { yPercent: 0, scale: 1, '--k': 0 }, 0)
+    r.e.words.forEach((w, j) => j === r.k ? tl.to(r.words[j], { ...REST, opacity: 1, duration: .42, ease: 'okLift' }, w.start) : tl.to(r.words[j], { opacity: 1, duration: .16, ease: 'okOut' }, w.start))
+    r.strokes.forEach((g, j) => tl.fromTo(r.paths[j], { drawSVG: '0%' }, { drawSVG: '100%', duration: g.at(-1).t - g[0].t, ease: penEase(g) }, g[0].t))
+  }
+  rows.forEach((r) => (r.b.onclick = () => play(r)))
+  window.readings = () => ({ typed, playing: cur && { line: rows.indexOf(cur), src: cur.playing, lifted: cur.words.map((w, j) => gsap.getProperty(w, 'scale') > 1.05 ? j : -1).filter((j) => j >= 0) } })
+
+  if (RM) {
+    // No scrub: the list stays open, and the typed version is a static line under the paragraph.
+    trace()
+    para.insertAdjacentHTML('afterend', `<p class="readings live one"><button class="rd" type="button" aria-label="${FLAT_LABEL}"><span class="s">I didn't say she stole the money.<i class="caret" aria-hidden="true"></i></span>${rows[0].b.querySelector('.ear').outerHTML}</button></p>`)
+    const b = para.nextElementSibling.firstChild, one = { e: flat, b, words: [], k: -1, paths: [] }
+    b.onclick = () => play(one)
+    return onResize(trace)
+  }
+
+  // The "typed" point, made by the list itself. As the next paragraph scrolls in, the seven rows lose what
+  // told them apart and stack into one line. Transforms only: the list keeps its height, so no text moves.
+  last.s.insertAdjacentHTML('beforeend', '<i class="caret" aria-hidden="true"></i>')
+  const caret = last.s.lastChild
+  let ctl
+  function setTyped(p) {
+    if (p > .02 && cur && !typed) stop(true)
+    list.classList.toggle('moving', p > .02 && p < .97)
+    const t = p >= .97
+    if (t === typed) return
+    stop(true); typed = t; list.classList.toggle('typed', t)
+    last.b.setAttribute('aria-label', t ? FLAT_LABEL : last.label)
+    rows.slice(0, -1).forEach((r) => (r.b.tabIndex = t ? -1 : 0))
+  }
+  const build = () => {
+    ctl?.scrollTrigger.kill(); ctl?.kill(); stop(true); typed = false; list.classList.remove('typed', 'moving')
+    // Only what the scrub touched. SplitText's own inline styles on the words (inline-block) have to stay.
+    gsap.set(rows.flatMap((r) => [r.b, r.em, r.g, ...r.words]), { clearProps: 'transform,opacity,visibility,marginLeft,marginRight' })
+    rows.forEach((r) => gsap.set(r.words[r.k], REST))
+    trace()
+    const H = last.tr.clientHeight || 18, top = last.b.getBoundingClientRect().top
+    last.tr.insertAdjacentHTML('beforeend', `<path class="rule" d="M0,${H / 2} L${last.s.getBoundingClientRect().width.toFixed(1)},${H / 2}"/>`)
+    ctl = gsap.timeline({ defaults: { ease: 'none' }, scrollTrigger: { trigger: para, start: 'top 68%', end: 'top 28%', scrub: .4, onUpdate: (s) => setTyped(s.progress) } })
+    rows.forEach((r, i) => {
+      const lag = i * .012
+      // 1. what marked the stress goes: the lift, the weight, the gap around the word, the shape of the pitch, the meaning
+      ctl.fromTo(r.words[r.k], REST, { yPercent: 0, scale: 1, '--k': 0, duration: .3, ease: 'okInOut' }, lag)
+        .fromTo(r.em, { marginLeft: '.2em', marginRight: '.2em' }, { marginLeft: '0em', marginRight: '0em', duration: .3, ease: 'okInOut' }, lag)
+        .fromTo(r.g, { opacity: 1 }, { opacity: 0, duration: .22 }, 0)
+        .fromTo(r.words, { opacity: (j) => j === r.k ? 1 : .46 }, { opacity: 1, duration: .4 }, .3)
+      r.strokes.forEach((g, j) => ctl.fromTo(r.paths[j], { morphSVG: r.paths[j].getAttribute('d') }, { morphSVG: `M${g[0].x.toFixed(1)},${H / 2} L${g.at(-1).x.toFixed(1)},${H / 2}`, duration: .3, ease: 'okInOut' }, lag))
+      // 2. the rows, now identical, slide onto the last one and leave a single line
+      if (r !== last) ctl.fromTo(r.b, { y: 0 }, { y: top - r.b.getBoundingClientRect().top, duration: .5, ease: 'okInOut' }, .32 + lag).fromTo(r.b, { autoAlpha: 1 }, { autoAlpha: 0, duration: .1 }, .87)
+    })
+    ctl.fromTo(last.tr.lastChild, { opacity: 0 }, { opacity: 1, duration: .12 }, .86).fromTo(caret, { opacity: 0 }, { opacity: 1, duration: .02 }, .97).set({}, {}, 1)
+  }
+  build(); onResize(build)
+  window.collapse = () => ctl
+}).catch((err) => console.warn('stage.json not loaded; open this page from the local server, not from disk', err))
+
+// Token rate: one hole per token at the real rates. The model finishes a hundred-hole card every second.
+{
+  const SECS = 5, ref = {}, piles = [...document.querySelectorAll('.pile')]
+  piles.forEach((p) => (p.innerHTML = '<div class="card"><i></i><i></i></div>'.repeat(p.dataset.rate > 10 ? SECS : 1)))
+  const fill = (card, n) => { card.children[0].style.height = `calc(var(--c) * ${Math.floor(n / 10)})`; Object.assign(card.children[1].style, { width: `calc(var(--c) * ${n % 10})`, height: n % 10 ? 'var(--c)' : 0 }) }
+  const paint = (t) => {
+    piles.forEach((p) => [...p.children].forEach((card, i) => { const n = Math.min(100, Math.max(0, Math.floor(p.dataset.rate * t) - i * 100)); card.style.visibility = n || !i ? 'visible' : 'hidden'; fill(card, n) }))
+    $('clock').textContent = `one hole, one token · ${Math.min(SECS, Math.floor(t))} s`
+  }
+  const o = { t: RM ? 1 : 0 }
+  paint(o.t)
+  if (!RM) {
+    const stack = [...piles[2].children]
+    ref.tl = gsap.timeline({ repeat: -1, repeatDelay: 2.2, paused: true }).to(o, { t: SECS, duration: SECS, ease: 'none', onUpdate: () => paint(o.t) }, 0)
+    stack.forEach((card, i) => ref.tl.fromTo(card, { y: -34, rotation: 0, x: 0 }, { y: -i * 7, x: -i * 6, rotation: [0, 2.5, -2, 3.5, -1][i], duration: .5, ease: 'okOut', immediateRender: false }, i))
+    control($('rates'), ref)
+  }
+}
+
+// Interrupting: both rows hear "no wait, not that" at the same moment. Only one of them can use it.
+{
+  const ref = {}, runs = [...document.querySelectorAll('.run')].map((r) => ({ files: (r.querySelector('.files').innerHTML = '<i></i>'.repeat(40), [...r.querySelectorAll('i')]), slip: r.querySelector('.slip'), count: r.querySelector('.count') }))
+  const [A, B] = runs, RATE = 40 / 6, STOP = 4, on = { backgroundColor: '#e2573c', rotationX: 180 }
+  const counts = (a, b) => { A.count.textContent = `${a} of 40 changed`; B.count.textContent = `${b} of 40 changed` }
+  counts(0, 0)
+  if (RM) { gsap.set([...A.files.slice(0, STOP), ...B.files], on); counts(STOP, 40) }
+  else {
+    const o = { t: 0 }, said = STOP / RATE
+    ref.tl = gsap.timeline({ repeat: -1, repeatDelay: 2.6, paused: true })
+      .set([A.slip, B.slip], { autoAlpha: 0 }, 0)
+      .to(o, { t: 6, duration: 6, ease: 'none', onUpdate: () => counts(Math.min(STOP, Math.floor(o.t * RATE)), Math.min(40, Math.floor(o.t * RATE))) }, 0)
+      .to(A.files.slice(0, STOP), { ...on, duration: .3, ease: 'okOut', stagger: 1 / RATE }, 0)
+      .to(B.files, { ...on, duration: .3, ease: 'okOut', stagger: 1 / RATE }, 0)
+      .fromTo(A.slip, { autoAlpha: 0, y: -16, rotation: -9 }, { autoAlpha: 1, y: 0, rotation: -2, duration: .45, ease: 'okLift' }, said)
+      .fromTo(B.slip, { autoAlpha: 0, y: -16, rotation: -9 }, { autoAlpha: .4, y: -5, rotation: -6, duration: .45, ease: 'okOut' }, said)
+      .to(B.slip, { autoAlpha: 1, y: 0, rotation: -2, duration: .45, ease: 'okLift' }, 6.25)
+    control($('cut'), ref)
+  }
+}
+
+// Mandarin: four words that differ only by tone. Take the tones away and the lines go flat, the marks
+// come off, and the four fold into one syllable: the same move as the English list.
+{
+  const fig = $('tones'), ref = {}, cells = [...fig.querySelectorAll('.tone')], q = (s) => cells.map((c) => c.querySelector(s))
+  const paths = q('path'), han = q('.han'), gl = q('.gl'), marked = q('.py i'), bare = q('.py i + i')
+  const poem = fig.querySelector('.poem'), [pm, pb] = poem.querySelectorAll('.py i'), ph = poem.querySelector('.han')
+  const D = paths.map((p) => p.getAttribute('d')), LEVEL = 'M8,22 L92,22'
+  if (RM) fig.classList.add('static') // every reading and its toneless form, all at once
+  else {
+    const build = () => {
+      const t = ref.tl?.time() ?? 0; ref.tl?.kill()
+      gsap.set([...cells, ...han, ...gl, ...marked, ...bare, ph, pm, pb], { clearProps: 'transform,opacity,visibility' })
+      paths.forEach((p, i) => p.setAttribute('d', D[i]))
+      const box = fig.querySelector('.tones').getBoundingClientRect(), cx = box.left + box.width / 2, cy = box.top + box.height / 2
+      const to = cells.map((c) => { const r = c.getBoundingClientRect(); return { x: cx - r.left - r.width / 2, y: cy - r.top - r.height / 2 } })
+      const up = -han[0].offsetHeight * .82, S = 2.4, R = S + 4.6
+      ref.tl = gsap.timeline({ repeat: -1, paused: true })
+        // strip the tones
+        .to(paths, { morphSVG: LEVEL, duration: .7, ease: 'okInOut', stagger: .06 }, S)
+        .to([...marked, pm], { opacity: 0, duration: .3, ease: 'okOut' }, S).to([...bare, pb], { opacity: 1, duration: .3, ease: 'okOut' }, S + .2)
+        .to([...han, ...gl], { opacity: 0, duration: .5, ease: 'okOut' }, S + .6).to(ph, { opacity: .13, duration: .5, ease: 'okOut' }, S + .6)
+        // four identical syllables become one
+        .to(cells, { x: (i) => to[i].x, y: (i) => to[i].y, duration: .85, ease: 'okInOut' }, S + 1.1).to(bare, { y: up, duration: .85, ease: 'okInOut' }, S + 1.1)
+        .to(cells.slice(1), { autoAlpha: 0, duration: .12 }, S + 1.9)
+        // and back
+        .to(cells.slice(1), { autoAlpha: 1, duration: .12 }, R).to(cells, { x: 0, y: 0, duration: .85, ease: 'okInOut' }, R + .05).to(bare, { y: 0, duration: .85, ease: 'okInOut' }, R + .05)
+        .to([...han, ...gl, ph], { opacity: 1, duration: .5, ease: 'okOut' }, R + .7)
+        .to([...bare, pb], { opacity: 0, duration: .3, ease: 'okOut' }, R + .9).to([...marked, pm], { opacity: 1, duration: .3, ease: 'okOut' }, R + 1.05)
+      paths.forEach((p, i) => ref.tl.to(p, { morphSVG: D[i], duration: .7, ease: 'okInOut' }, R + .9 + i * .06))
+      ref.tl.set({}, {}, R + 2).time(t); ref.apply?.()
+    }
+    build(); control(fig, ref); onResize(build)
+  }
+}
+
+// Arabic: the same three consonants every time. The vowel marks arrive on three of them and make three
+// words, then leave, and the page is back to what is normally written.
+{
+  const fig = $('harakat'), ref = {}, cells = [...fig.querySelectorAll('.vw')].slice(1)
+  const hk = cells.map((c) => c.querySelector('.hk')), labels = cells.map((c) => [c.querySelector('.py'), c.querySelector('.gl')])
+  if (RM) fig.classList.add('static')
+  else {
+    ref.tl = gsap.timeline({ repeat: -1, paused: true }).set([...hk, ...labels.flat()], { opacity: 0 }, 0)
+    // The marked word fades in over the bare one, then the bare one is switched off under it: two copies
+    // stacked would draw the letters heavier than their neighbour.
+    const under = cells.map((c) => c.querySelector('.ar > span'))
+    cells.forEach((c, i) => ref.tl.to(hk[i], { opacity: 1, duration: .7, ease: 'okOut' }, 1 + i * 1.4).set(under[i], { opacity: 0 }, 1.7 + i * 1.4).to(labels[i], { opacity: 1, duration: .5, ease: 'okOut' }, 1.15 + i * 1.4))
+    ref.tl.set(under, { opacity: 1 }, 7.2).to([...hk, ...labels.flat()], { opacity: 0, duration: .8, ease: 'okInOut' }, 7.2).set({}, {}, 9)
+    control(fig, ref)
+  }
+}
+
+// Ending: the typed line gets its curve, its light and its paper back, then loses them again.
+{
+  const ref = {}, st = makeStage($('end'), { frac: .46, under: CLOSE, pre: `<path class="rim" d="${ARC}"/>` })
+  const layers = st.under.querySelectorAll('circle'), rim = st.space.querySelector('.rim')
+  const build = () => {
+    const t = ref.tl?.time() ?? 0; ref.tl?.kill()
+    gsap.set([st.arc, rim, st.shade, ...layers], { clearProps: 'all' }); st.arc.setAttribute('d', ARC)
+    st.layout()
+    gsap.set(st.chars, st.seat())
+    if (RM) return
+    const e = { duration: 1.4, ease: 'okInOut' }
+    ref.tl = gsap.timeline({ repeat: -1, paused: true })
+      .fromTo(st.arc, { morphSVG: FLAT }, { morphSVG: ARC, ...e }, 1.2)
+      .fromTo(st.chars, st.flat, { ...st.seat(), ...e, stagger: { each: .012, from: 'center' } }, 1.2)
+      .fromTo(st.shade, { autoAlpha: 0 }, { autoAlpha: 1, duration: .5 }, 1.7).to(st.shade, { autoAlpha: 0, duration: .5 }, 7.6)
+      .fromTo(layers, { attr: { cy: RV + 1000 } }, { attr: { cy: RV }, duration: 1.3, ease: 'okOut', stagger: .08 }, 1.7)
+      .fromTo(rim, { autoAlpha: 0 }, { autoAlpha: .55, duration: 1.4, ease: 'okOut' }, 2)
+      .to(rim, { autoAlpha: 0, duration: .8, ease: 'okInOut' }, 7)
+      .to(layers, { attr: { cy: RV + 1000 }, duration: 1.1, ease: 'okInOut', stagger: { each: .05, from: 'end' } }, 7)
+      .fromTo(st.arc, { morphSVG: ARC }, { morphSVG: FLAT, immediateRender: false, ...e }, 7.5)
+      .to(st.chars, { ...st.flat, ...e, stagger: { each: .012, from: 'edges' } }, 7.5)
+      .set({}, {}, 9.4)
+    ref.tl.time(t); ref.apply?.()
+  }
+  build(); control(st.el, ref); onResize(build)
+}
+</script>
+</body>
+</html>
