@@ -130,17 +130,27 @@ export function SiteFooter({ word = 'Creation' }: { word?: string }) {
         {word}
       </span>
 
-      <p className="absolute bottom-3 right-4 z-10 font-mono text-[11px] tracking-wider text-bone/40">
-        {t('footer.faviconCredit')}{' '}
+      {/* one wrapping row: the Finnish and German strings collide on a 360px phone as two absolute corners */}
+      <div className="absolute inset-x-4 bottom-3 z-10 flex flex-wrap items-end justify-between gap-x-4 gap-y-1 font-mono text-[11px] tracking-wider">
+        {/* the notice is English-only and unprefixed, so every locale links to the same path */}
         <a
-          href="https://numbpill.tumblr.com/post/779519954636685312/rare-obscure-hard-to-find-favicons-round-of"
-          target="_blank"
-          rel="noreferrer"
-          className="underline decoration-bone/20 underline-offset-2 transition-colors hover:text-rose-400"
+          href="/privacy/outreach/"
+          className="text-bone/60 underline decoration-bone/20 underline-offset-2 transition-colors hover:text-rose-400"
         >
-          numbpill
+          {t('footer.privacy')}
         </a>
-      </p>
+        <p className="ml-auto text-bone/40">
+          {t('footer.faviconCredit')}{' '}
+          <a
+            href="https://numbpill.tumblr.com/post/779519954636685312/rare-obscure-hard-to-find-favicons-round-of"
+            target="_blank"
+            rel="noreferrer"
+            className="underline decoration-bone/20 underline-offset-2 transition-colors hover:text-rose-400"
+          >
+            numbpill
+          </a>
+        </p>
+      </div>
 
       {open && (
         <Suspense fallback={null}>

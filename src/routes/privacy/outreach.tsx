@@ -3,7 +3,7 @@ import { Rule, MonoTag, JPLabel } from '../../components/motifs'
 
 // English only on purpose: a legal notice should not go through the machine translation
 // the rest of the UI uses, so this route is prerendered for the default locale alone.
-const UPDATED = '15 November 2026'
+const UPDATED = '16 November 2026'
 const EMAIL = 'aliasgar@khimani.dev'
 
 export default function OutreachPrivacy() {
@@ -63,10 +63,24 @@ export default function OutreachPrivacy() {
           </p>
 
           <h2>Who else sees it</h2>
+          <ul>
+            <li>The people who work with me on these audits. They follow my instructions and this notice.</li>
+            <li>Google, which runs my email.</li>
+            <li>GitHub, which stores our working files in private repositories.</li>
+            <li>Anthropic, whose AI service I use to check findings and draft messages.</li>
+            <li>Ukko, my invoicing service, but only if your organisation becomes a client.</li>
+          </ul>
           <p>
-            Only the provider that runs my email and, if your organisation becomes a client, my invoicing service. I do not
-            sell, rent or share contact details for anyone else's marketing. My email provider may process data outside the
-            EU and UK under its standard contractual safeguards.
+            I do not sell, rent or share contact details for anyone else's marketing. Google, GitHub and Anthropic are based
+            in the United States. When your data leaves the EU or UK, the transfer relies on the European Commission's standard
+            contractual clauses or another safeguard the GDPR and UK GDPR allow. Email me if you want details of these
+            safeguards.
+          </p>
+
+          <h2>How decisions are made</h2>
+          <p>
+            Software, including AI, helps me find accessibility problems and draft messages. A person decides who to contact
+            and reads every email before it is sent. I make no automated decisions that affect you.
           </p>
 
           <h2>How long I keep it</h2>
@@ -81,7 +95,8 @@ export default function OutreachPrivacy() {
 
           <h2>Your rights</h2>
           <p>
-            You can ask me for a copy of what I hold, ask me to correct or delete it, or object to my using it.{' '}
+            You can ask me for a copy of what I hold, ask me to correct or delete it, ask me to limit how I use it, or object
+            to my using it. I answer within one month.{' '}
             <strong>Reply "no thanks" to any of my emails and I will not write to you again.</strong> If you are unhappy with
             how I handle your data, you can complain to the{' '}
             <a href="https://tietosuoja.fi/en/home" target="_blank" rel="noopener noreferrer">

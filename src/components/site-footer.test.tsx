@@ -18,6 +18,7 @@ describe('SiteFooter server render', () => {
     expect(html).toContain('hand-right.png')
     expect(html).toContain('Creation')
     expect(html).toContain('tab critters by')
+    expect(html).toContain('href="/privacy/outreach/"')
     expect(html).not.toContain('footer-bubble')
   })
 })
