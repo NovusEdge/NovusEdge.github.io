@@ -67,12 +67,12 @@ export default function OutreachPrivacy() {
             <li>The people who work with me on these audits. They follow my instructions and this notice.</li>
             <li>Google, which runs my email.</li>
             <li>GitHub, which stores our working files in private repositories.</li>
-            <li>Anthropic, whose AI service I use to check findings and draft messages.</li>
+            <li>The AI service I use to check findings and draft messages.</li>
             <li>Ukko, my invoicing service, but only if your organisation becomes a client.</li>
           </ul>
           <p>
-            I do not sell, rent or share contact details for anyone else's marketing. Google, GitHub and Anthropic are based
-            in the United States. When your data leaves the EU or UK, the transfer relies on the European Commission's standard
+            I do not sell, rent or share contact details for anyone else's marketing. Google, GitHub and my AI
+            service are based in the United States. When your data leaves the EU or UK, the transfer relies on the European Commission's standard
             contractual clauses or another safeguard the GDPR and UK GDPR allow. Email me if you want details of these
             safeguards.
           </p>
