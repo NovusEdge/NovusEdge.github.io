@@ -3,7 +3,7 @@ import { Rule, MonoTag, JPLabel } from '../../components/motifs'
 
 // English only on purpose: a legal notice should not go through the machine translation
 // the rest of the UI uses, so this route is prerendered for the default locale alone.
-const UPDATED = '16 November 2026'
+const UPDATED = '21 November 2026'
 const EMAIL = 'aliasgar@khimani.dev'
 
 export default function OutreachPrivacy() {
@@ -11,7 +11,7 @@ export default function OutreachPrivacy() {
     <>
       <Meta
         title="Outreach privacy notice"
-        description="How Aliasgar Khimani gets and uses work contact details when telling public bodies about accessibility problems on their websites."
+        description="How Aliasgar Khimani gets and uses work contact details when telling organisations about problems on their public websites."
       />
       <article className="mx-auto max-w-4xl px-6 pb-24 pt-36">
         <MonoTag>Privacy · updated {UPDATED}</MonoTag>
@@ -21,20 +21,21 @@ export default function OutreachPrivacy() {
             <span aria-hidden className="h-4 w-px bg-gold/50" />
           </div>
           <h1 className="font-display text-4xl font-black text-charcoal md:text-5xl dark:text-bone">
-            Privacy notice for accessibility outreach
+            Privacy notice for website outreach
           </h1>
         </div>
         <Rule className="mt-8" />
 
         <div className="prose prose-neutral prose-blog mt-10 max-w-none leading-relaxed text-charcoal/80 dark:prose-invert dark:text-bone/85 prose-headings:mb-4 prose-headings:mt-10 prose-headings:font-display prose-h2:text-2xl">
           <p>
-            If I emailed you about the accessibility of your organisation's website, this page explains where I got your
+            If I emailed you about your organisation's website, for example about its accessibility or about an outdated
+            software version it reports, this page explains where I got your
             contact details, what I do with them, and how to make me stop.
           </p>
 
           <h2>Who I am</h2>
           <p>
-            Aliasgar Khimani, a self-employed web accessibility auditor based in Finland. I am the data controller. You can
+            Aliasgar Khimani, a self-employed web accessibility auditor and software developer based in Finland. I am the data controller. You can
             reach me at <a href={`mailto:${EMAIL}`}>{EMAIL}</a>.
           </p>
 
@@ -45,26 +46,28 @@ export default function OutreachPrivacy() {
             <li>Any emails you send me, and whether you asked me not to contact you again.</li>
           </ul>
           <p>
-            I collect no other personal data. My accessibility checks look only at your organisation's public web pages, as
+            I collect no other personal data. My checks look only at your organisation's public web pages, as
             any visitor sees them, and record nothing about visitors or staff.
           </p>
 
           <h2>Where it comes from</h2>
           <p>
             From your organisation's own website, usually the feedback address in its accessibility statement or its
-            published contact page, and from official public registers of public bodies.
+            published contact page. I find public bodies through official public registers, and companies through the
+            website address they give in the Finnish business register (PRH's YTJ open data).
           </p>
 
           <h2>Why I use it, and on what basis</h2>
           <p>
-            To tell your organisation about accessibility problems I found on its public website, to offer my audit services,
+            To tell your organisation about problems I found on its public website, such as accessibility barriers or an
+            outdated software version, to offer my services,
             and to answer your replies. The legal basis is legitimate interests (Article 6(1)(f) of the GDPR and the UK GDPR):
             contacting an organisation at its published work address, about its own website, with an easy way to opt out.
           </p>
 
           <h2>Who else sees it</h2>
           <ul>
-            <li>The people who work with me on these audits. They follow my instructions and this notice.</li>
+            <li>The people who work with me. They follow my instructions and this notice.</li>
             <li>Google, which runs my email.</li>
             <li>GitHub, which stores our working files in private repositories.</li>
             <li>The AI service I use to check findings and draft messages.</li>
@@ -79,7 +82,7 @@ export default function OutreachPrivacy() {
 
           <h2>How decisions are made</h2>
           <p>
-            Software, including AI, helps me find accessibility problems and draft messages. A person decides who to contact
+            Software, including AI, helps me find problems on public websites and draft messages. A person decides who to contact
             and reads every email before it is sent. I make no automated decisions that affect you.
           </p>
 
