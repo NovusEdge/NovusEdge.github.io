@@ -30,6 +30,8 @@ The 6th of October one deserves its own post. OpenAI put out 722 manuscripts acr
 
 The Exponential Time Hypothesis says, roughly, that 3-SAT can't be solved meaningfully faster than brute force. If you have n variables, you need something like 2^(cn) time. It's not as famous as P vs NP, but a lot of complexity theory is built on top of it, since "assuming ETH, this problem needs at least X time" is how you prove a ton of lower bounds.
 
+{{eth_figure}}
+
 On the 16th of October, two labs found it was false on the same day. OpenAI's write-up is titled "The Exponential Time Hypothesis Is False" and says "our system has recently proved that the ETH is false", with a [Lean proof](https://openai.com/index/building-scientific-understanding-with-academic-communities/) done the next day. Anthropic's paper, "A 2^o(n) Time Algorithm for 3-SAT", came out around the same time, calls the two results "independent and concurrent", and says ["Claude found the core algorithm with no human input"](https://www.datacamp.com/blog/ai-exponential-time-hypothesis). Anthropic also claims it kills the Strong ETH.
 
 Russell Impagliazzo, who's one of the people who *came up with* ETH, called it "deeply surprising". He's now co-leading the group checking it with Ramamohan Paturi and Ryan Williams. Williams said most of it looks routine, apart from a few bits:
@@ -46,17 +48,23 @@ To be clear about the scope, this isn't P = NP, and the speedup reportedly only 
 
 The Navier–Stokes Millennium problem asks whether smooth initial conditions for a 3D fluid always stay smooth, or whether the solution can blow up in finite time. Proving either one wins.
 
+{{ns_figure}}
+
 In September, OpenAI claimed blowup, but for a *forced* version, meaning there's an external force pushing on the fluid. Scientific American called that force "unrealistic, finely tuned", and it isn't the version Clay asks about. It also came with a fight. Tristan Buckmaster, who'd been working on the same problem with Alpöge, says OpenAI's first prompt went out [days after information about their work reached the company](https://www.unite.ai/buckmaster-and-alpoge-post-ai-fluid-blowup-proofs-dispute-openai-contact/). When he asked on a call whether the model had trained on their Codex sessions, he says: "I did not get an answer." By his account OpenAI also pushed twice to drop Alpöge from the authorship because he works at Anthropic. OpenAI denies any foul play, and that's all from Buckmaster's side, but it's quite the backstory.
 
 On the 20th, Alpöge and Buckmaster posted their own result: finite-time blowup for the *unforced* 3D equations, the real one, as a 79-page paper plus [Lean](https://github.com/tristanbuckmaster/navier-stokes/). Tao says the strategy is "broadly clear": a numerical, approximately self-similar solution plus rigorous perturbation theory around it. He also says "more work needs to be done to create a proper, professionally written proof." Two practical gaps remain. The numerical certificate the proof depends on isn't released yet, only its hash. And the README itself says "the patched package was not rebuilt when this repository was assembled", so the Lean build isn't confirmed.
 
 ## The Riemann Hypothesis
 
+{{rh_figure}}
+
 This is the one everyone's posting about. Alpöge put a four-page PDF called [Remark](https://alpo.ge/remark.pdf) on his website:
 
 > I believe I have, working with Claude, discovered a proof of the Riemann Hypothesis. In fact, the method easily extends much further, resolving the so-called Generalized Riemann Hypothesis, and I expect, with more time, the Extended Riemann Hypothesis too.
 
 The proof is a footnote linking to fourteen tarball parts, together 239 MB and about 175,000 Lean files. There is no paper. He says a human-readable version is "routine to produce", and in another footnote that he did produce one, which "hit 250,000+ pages". When he opened Claude's "book" to Theorem 1, it began by noting that because the reals are totally ordered, if σ ≠ ½ then σ > ½ or σ < ½. He decided that posting it would be "some massive unreadable travesty of 'slop'" and released only the Lean.
+
+{{proof_scale}}
 
 The note is also the most excited I've ever seen a mathematician sound in writing. He says he'd been planning for this problem since he was a student, steered the work into the right setting, and then:
 
@@ -71,6 +79,8 @@ There's a nice cross-lab bit in there too. He credits OpenAI's "good taste" with
 ## Is it real
 
 As of writing, it's looking good. The Lean's top-level theorem is stated against Mathlib's own definition of `RiemannHypothesis`, with GRH for Dirichlet L-functions alongside it, per the [independent mirror](https://github.com/Deicyde/riemann-hypothesis) set up to check it. Andrew Sutherland at MIT compiled it himself and told Scientific American ["honestly the chance that anything is fishy here is approximately zero"](https://www.scientificamerican.com/article/the-ai-riemann-hypothesis-proof-is-almost-certainly-true-independent-mathematicians-attest/). Kevin Buzzard's response was "we still await a successful comparator run."
+
+{{lean_statement}}
 
 Buzzard's caveat is the one that matters. Comparator checks the proof against theorem statements written separately and lists every axiom it uses. Lean will compile a file that quietly assumes what it's trying to prove, as long as the assumption is declared. A clean run means only Lean's three standard axioms are used, which would leave a Mathlib definition bug or a Lean kernel bug as the only ways out. Both are very unlikely for a statement this well-read.
 

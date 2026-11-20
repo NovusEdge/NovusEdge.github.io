@@ -2,7 +2,7 @@ import gsap from 'gsap'
 import { animate, utils } from 'animejs'
 import { TRACES } from './timeline-data'
 
-export type Zone = 'hero' | 'read' | 'timeline' | 'still' | 'after' | 'next'
+export type Zone = 'hero' | 'read' | 'open' | 'timeline' | 'still' | 'after' | 'next'
 type Group = { reveal: number; heat: number; on: boolean }
 
 // The renderer reads this every frame; GSAP and anime.js write to it. `reveal` is how far along
@@ -40,6 +40,8 @@ type Pose = Pick<Scene, 'alpha' | 'flow' | 'zoom' | 'ox' | 'oy'>
 const POSES: Record<Zone, { wide: Pose; tall: Pose }> = {
   hero: { wide: { alpha: 1, flow: 1, zoom: 1.18, ox: 0.44, oy: 0.06 }, tall: { alpha: 1, flow: 1, zoom: 0.95, ox: 0, oy: 0.34 } },
   read: { wide: { alpha: 0.18, flow: 0.7, zoom: 1.55, ox: 0, oy: 0 }, tall: { alpha: 0.18, flow: 0.7, zoom: 1.3, ox: 0, oy: 0 } },
+  // The window above a problem: the figure comes back up and fills the gap.
+  open: { wide: { alpha: 0.85, flow: 1, zoom: 1.3, ox: 0, oy: 0 }, tall: { alpha: 0.85, flow: 1, zoom: 1.05, ox: 0, oy: 0 } },
   timeline: { wide: { alpha: 1, flow: 1, zoom: 0.92, ox: -0.4, oy: 0.34 }, tall: { alpha: 0.85, flow: 1, zoom: 1.05, ox: 0, oy: 0 } },
   still: { wide: { alpha: 0.95, flow: 0, zoom: 0.98, ox: 0, oy: 0 }, tall: { alpha: 0.95, flow: 0, zoom: 1, ox: 0, oy: 0 } },
   after: { wide: { alpha: 0.2, flow: 0, zoom: 1.55, ox: 0, oy: 0 }, tall: { alpha: 0.2, flow: 0, zoom: 1.3, ox: 0, oy: 0 } },

@@ -31,16 +31,93 @@ html.ml-night::-webkit-scrollbar-thumb:hover { background: #46a888; }
 .ml-date { margin: 1.7rem 0 0; font: 500 0.8rem/1 var(--font-mono); letter-spacing: 0.14em; text-transform: uppercase; color: var(--soft); font-variant-numeric: tabular-nums; }
 .ml-date time { display: inline-block; }
 
-/* The reading column is solid: body text never sits on the particles. The same-colour shadow feathers its edge into the field. */
-.ml-col { position: relative; width: min(100%, 54rem); margin: 0 auto; padding: clamp(3.5rem, 9vh, 6rem) var(--pad); background: var(--bg); box-shadow: 0 0 44px 26px var(--bg); }
-.ml-prose { max-width: 44rem; margin: 0 auto; }
-.ml-prose h2 { scroll-margin-top: 6rem; text-wrap: balance; letter-spacing: -0.02em; }
+/* Sheets are solid: body text never sits on the particles. The figure shows in the gaps between
+   them and, past 84rem, down both sides. */
+.ml-sheet { position: relative; width: min(100%, 84rem); margin: 0 auto; padding: clamp(3rem, 8vh, 5.5rem) var(--pad); background: var(--bg); }
+.ml-sheet--lead { padding-bottom: 0; }
+.ml-sheet--end { padding-top: 0; padding-bottom: 2rem; }
+/* One column on a phone. From 1200px: the rail's column, the text, and a margin for notes.
+   Rows are subgrids, so a note sits beside the text it belongs to and drops under it when the margin goes. */
+.ml-grid { display: grid; grid-template-columns: minmax(0, 42rem); justify-content: center; }
+.ml-grid > * { grid-column: 1; min-width: 0; }
+.ml-row, .ml-fig { display: grid; grid-template-columns: subgrid; }
+.ml-row > *, .ml-fig > * { min-width: 0; }
+
+.ml-stand { margin: 0; font: 500 clamp(1.3rem, 2.3vw, 1.8rem)/1.32 var(--font-display); letter-spacing: -0.012em; text-wrap: pretty; color: var(--bone); }
+
+.ml-head { display: grid; grid-template-columns: 1fr auto; align-items: end; column-gap: 1.5rem; margin-bottom: clamp(1.8rem, 4vh, 2.8rem); padding-top: 1.3rem; border-top: 1px solid var(--rule); }
+.ml-head h2 { margin: 0; font: 800 clamp(2.2rem, 5.2vw, 4rem)/1 var(--font-display); letter-spacing: -0.032em; text-wrap: balance; scroll-margin-top: 6.5rem; }
+.ml-head-aside { color: var(--gold); }
+.ml-kanji { font: 900 clamp(1.9rem, 4.2vw, 3.2rem)/1 var(--font-display); color: var(--gold); white-space: nowrap; }
+.ml-status { grid-column: 1 / -1; list-style: none; margin: 1.4rem 0 0; padding: 0; display: grid; gap: 0.6rem; font: 400 0.78rem/1.5 var(--font-mono); color: var(--soft); font-variant-numeric: tabular-nums; }
+.ml-status li { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.35rem 0.9rem; }
+.ml-status time { color: var(--bone); }
+.ml-status em { font-style: italic; color: var(--gold); }
+
+.ml-prose h3 { text-wrap: balance; letter-spacing: -0.02em; }
 .ml-prose > div > :first-child { margin-top: 0; }
-.ml-col .ml-prose a { color: var(--blue); text-decoration: underline; text-decoration-color: #8fb1d366; text-decoration-thickness: 0.08em; text-underline-offset: 0.22em; transition: text-decoration-color 0.15s, color 0.15s; }
-.ml-col .ml-prose a:hover, .ml-col .ml-prose a:focus-visible { color: var(--bone); text-decoration-color: var(--gold); }
+.ml-prose > div > :last-child { margin-bottom: 0; }
+.ml .ml-prose a, .ml-note a { color: var(--blue); text-decoration: underline; text-decoration-color: color-mix(in srgb, var(--blue) 45%, transparent); text-decoration-thickness: 0.08em; text-underline-offset: 0.22em; transition: text-decoration-color 0.15s, color 0.15s; }
+.ml .ml-prose a:hover, .ml .ml-prose a:focus-visible, .ml-note a:hover, .ml-note a:focus-visible { color: var(--ink, var(--bone)); text-decoration-color: var(--gold); }
 .ml-prose li::marker { color: var(--gold); }
 /* Alpöge's own paragraph is quoted without curly quotes, so it reads as a document excerpt. */
 .ml-prose blockquote:not([class]) { border-left: 1px solid var(--gold); padding-left: 1.4rem; font-style: normal; color: var(--bone); }
+/* Pull quotes: display size, with the opening mark hung in the margin so the words align with the body. */
+.ml .ml-prose blockquote[class] p:first-child { font-size: clamp(1.75rem, 3.6vw, 2.6rem) !important; line-height: 1.1; letter-spacing: -0.022em; text-indent: -0.44em; text-wrap: balance; }
+
+/* Margin notes: captions and sources. */
+.ml-note { margin-top: 1.4rem; font: 400 0.84rem/1.55 var(--font-body); color: var(--soft); }
+.ml-note::before { content: ''; display: block; width: 1.5rem; height: 1px; margin-bottom: 0.8rem; background: var(--gold); }
+.ml-note p { margin: 0 0 0.7rem; }
+.ml-note code { font: 400 0.92em var(--font-mono); color: var(--ink, var(--bone)); }
+.ml-sources > p { font: 500 0.7rem/1 var(--font-mono); letter-spacing: 0.14em; text-transform: uppercase; }
+.ml-sources ol { list-style: none; margin: 0; padding: 0; counter-reset: src; font: 400 0.76rem/1.5 var(--font-mono); }
+.ml-sources li { counter-increment: src; display: grid; grid-template-columns: 1.6em 1fr; margin-bottom: 0.3rem; overflow-wrap: anywhere; }
+.ml-sources li::before { content: counter(src); color: var(--gold); font-variant-numeric: tabular-nums; }
+
+/* A gap above each of the three problems where the figure comes back up. */
+.ml-window { height: 62svh; }
+
+/* The chapter rail stands in for a table of contents. It rides in the grid's first column and
+   only shows over a sheet; under 1200px it is a plain list after the hero. */
+.ml-rail { position: relative; z-index: 3; width: min(100%, 84rem); margin: 0 auto; padding: 2.5rem var(--pad) 0; background: var(--bg); }
+.ml-rail ol { list-style: none; margin: 0; padding: 1rem 0 0; border-top: 1px solid var(--rule); display: grid; grid-template-rows: repeat(4, auto); grid-auto-flow: column; grid-auto-columns: 1fr; gap: 0.1rem 1.5rem; }
+.ml-rail a { display: grid; grid-template-columns: 2.4em 1fr; align-items: baseline; padding: 0.4rem 0; font: 500 0.78rem/1.3 var(--font-mono); color: var(--soft); text-decoration: none; transition: color 0.2s; }
+.ml-rail a span { font: 700 0.95em/1 var(--font-display); transition: color 0.2s; }
+.ml-rail a:hover, .ml-rail a[aria-current] { color: var(--bone); }
+.ml-rail a[aria-current] span { color: var(--gold); }
+
+@media (min-width: 1200px) {
+  .ml-grid { grid-template-columns: 8rem minmax(0, 42rem) minmax(11rem, 1fr); column-gap: 3rem; justify-content: start; max-width: 75rem; margin: 0 auto; }
+  .ml-grid > * { grid-column: 2 / -1; }
+  .ml-row > *, .ml-fig > * { grid-column: 1; }
+  .ml-row > .ml-note, .ml-fig > .ml-note { grid-column: 2; margin-top: 0.35rem; }
+  .ml-fig--wide > *, .ml-fig > .ml-note--under { grid-column: 1 / -1; }
+  .ml-fig > .ml-note--under { margin-top: 1.4rem; display: grid; grid-template-columns: minmax(0, 42rem) 1fr; column-gap: 3rem; }
+  .ml-note--under::before { grid-column: 1 / -1; }
+  .ml-head { grid-template-columns: subgrid; }
+  .ml-kanji { justify-self: start; }
+
+  .ml-rail { position: sticky; top: 0; height: 100svh; margin-bottom: -100svh; padding: 0 var(--pad); background: none; display: flex; align-items: center; pointer-events: none; opacity: 0; transition: opacity 0.4s; }
+  .ml-rail ol { width: 8.6rem; padding: 0.8rem 0.6rem 0.8rem 0; border: 0; background: var(--bg); grid-template-rows: none; grid-auto-flow: row; }
+  .ml-rail a { grid-template-columns: 2.5em 1fr; padding: 0.3rem 0; font-size: 0.72rem; }
+  .ml[data-zone='read'] .ml-rail, .ml[data-zone='after'] .ml-rail, .ml[data-zone='next'] .ml-rail { opacity: 1; }
+  .ml[data-zone='read'] .ml-rail ol, .ml[data-zone='after'] .ml-rail ol, .ml[data-zone='next'] .ml-rail ol { pointer-events: auto; }
+}
+
+/* "Where this goes" is opinion, so it is set on paper: bone sheet, dark ink, no margin and no figures. */
+.ml-sheet--paper { width: min(100%, 50rem); margin: clamp(4rem, 12vh, 7rem) auto; background: #f5f2eb; color: #1a1a1a; box-shadow: 0 34px 60px -28px #000; --rule: #1a1a1a33; --soft: #4d4a44; --gold: #8a6417; --blue: #3a5f85; --bone: #1a1a1a; --ink: #1a1a1a; }
+.ml-sheet--paper .ml-grid { grid-template-columns: minmax(0, 40rem); column-gap: 0; justify-content: center; max-width: none; }
+.ml-sheet--paper .ml-grid > *, .ml-sheet--paper .ml-row > * { grid-column: 1; }
+.ml-sheet--paper .ml-head { grid-template-columns: 1fr auto; }
+.ml-sheet--paper .ml-prose, .ml-sheet--paper .ml-prose .prose { color: #1a1a1ae0; --tw-prose-body: #1a1a1ae0; --tw-prose-bold: #1a1a1a; --tw-prose-headings: #1a1a1a; --tw-prose-bullets: #8a6417; --tw-prose-counters: #8a6417; }
+.ml-sheet--paper ::selection { background: #1a1a1a; color: #f5f2eb; }
+.ml-sheet--paper .ml-prose p > strong:first-child { font-family: var(--font-display); font-size: 1.12em; letter-spacing: -0.01em; }
+
+/* "What's next" is a list of things nobody has ruled on yet, so each item gets an empty box. */
+.ml-ch[data-chapter='whats-next'] .ml-prose ul { list-style: none; padding: 0; }
+.ml-ch[data-chapter='whats-next'] .ml-prose li { position: relative; margin: 0; padding: 0.95rem 0 0.95rem 2.1rem; border-top: 1px solid var(--rule); }
+.ml-ch[data-chapter='whats-next'] .ml-prose li::before { content: ''; position: absolute; left: 0.1rem; top: 1.5rem; width: 0.72rem; height: 0.72rem; border: 1px solid var(--gold); }
 
 /* Timeline. The default is the list: a vertical ledger of solid strips with the field showing between them.
    .ml-tl--pin lays the same markup out as one horizontal run under a sticky viewport. */
@@ -103,11 +180,10 @@ html.ml-night::-webkit-scrollbar-thumb:hover { background: #46a888; }
 .ml--reduced .ml-still { height: 100svh; }
 .ml--reduced .ml-still-frame i, .ml--reduced .ml-still-note { opacity: 1; transform: none; transition: none; }
 
-.ml-end { padding-bottom: 2rem; }
-
 @media (max-width: 640px) {
   .ml-hero::before { background: linear-gradient(to top, var(--bg) 30%, #1a1a1a00 62%); }
   /* The phone list opens on an empty half screen, so the single thread is seen before the first strip covers it. */
   .ml-tl-track { gap: 7rem; padding-top: 48svh; }
-  .ml-col { box-shadow: none; }
+  .ml-window { height: 46svh; }
+  .ml-sheet--paper { box-shadow: none; }
 }

@@ -26,7 +26,7 @@ void main() {
   // two pulses per trajectory, running the orbit at about one time unit a second
   float behind = fract((fract(uTime * 0.045 + meta.w) - meta.x) * 2.0);
   float pulse = exp(-behind * 16.0);
-  float glow = 0.5 + 2.2 * pulse + 3.0 * front + 1.4 * g.y;
+  float glow = 0.5 + 1.9 * pulse + 3.0 * front + 1.4 * g.y;
   vec3 teal = vec3(0.14, 0.95, 0.60);
   vec3 hot = vec3(1.0, 0.84, 0.46);
   vColor = mix(teal, hot, clamp(g.y * 0.9 + front, 0.0, 1.0)) * glow * meta.z * uGain * vis;
@@ -132,7 +132,7 @@ export function AttractorStage({ scene }: { scene: Scene }) {
     if (!mobile && !scene.still) addEventListener('pointermove', onMove, { passive: true })
 
     // Fewer points over the same area need more light each to reach the same bloom.
-    const base = 0.17 * Math.sqrt(222600 / cloud.count)
+    const base = 0.125 * Math.sqrt(222600 / cloud.count)
     let time = 0
     let then = performance.now()
     let last = ''
@@ -161,7 +161,7 @@ export function AttractorStage({ scene }: { scene: Scene }) {
       const px = (mobile ? 2.3 : 2.1) * renderer.dpr
       program.uniforms.uGain.value = gain
       program.uniforms.uSize.value = px
-      haloProgram.uniforms.uGain.value = gain * 0.09
+      haloProgram.uniforms.uGain.value = gain * 0.085
       haloProgram.uniforms.uSize.value = px * 9
       shared.uTime.value = time
       shared.uOffset.value = [scene.ox, scene.oy]

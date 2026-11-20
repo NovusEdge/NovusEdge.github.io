@@ -37,22 +37,3 @@ export const MONTH_KANJI: Record<Month, string> = { jul: '七月', aug: '八月'
 export const TRACES = [1, 1, 2, 3, 4, 6, 8, 12, 16] as const
 
 export const tracesThrough = (count: number) => TRACES.slice(0, count).reduce((n, t) => n + t, 0)
-
-const TIMELINE = /^\{\{timeline\}\}[ \t]*$/m
-const STILL = /^## Is it real[ \t]*$/m
-
-// before: up to the timeline placeholder. middle: the three problems. tail: from "Is it real" on,
-// where the attractor is held still. A post missing either marker keeps all its text in `before`
-// or `middle` rather than dropping any.
-export function splitPost(content: string): { before: string; middle: string; tail: string; hasTimeline: boolean } {
-  const t = TIMELINE.exec(content)
-  const before = t ? content.slice(0, t.index) : content
-  const rest = t ? content.slice(t.index + t[0].length) : ''
-  const s = STILL.exec(rest)
-  return {
-    before: before.trim(),
-    middle: (s ? rest.slice(0, s.index) : rest).trim(),
-    tail: s ? rest.slice(s.index).trim() : '',
-    hasTimeline: !!t,
-  }
-}

@@ -12,7 +12,7 @@ const TONES = Object.keys(STATUS_KEY) as Tone[]
 const TOTAL = tracesThrough(TRACES.length)
 const pad = (n: number) => String(n).padStart(2, '0')
 
-function emphasised(text: string) {
+export function emphasised(text: string) {
   return text.split('*').map((part, i) => (i % 2 ? <em key={i}>{part}</em> : part))
 }
 
