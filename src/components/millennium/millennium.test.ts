@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest'
 import { buildCloud, rk4, type Vec3 } from './attractor'
 import { RESULTS, STATUS_KEY, TRACES, tracesThrough } from './timeline-data'
 import { LOOKS, SLOTS, parsePost, slug } from './chapters'
+import { FIELD, FIELD_MONTHS, FIELD_ROWS, PRIZES } from './field-data'
 import { ETH_C, ETH_CROSS, ON_LINE, ZEROS, blowup, smooth, subExponent } from './figure-data'
 import { parseFrontmatter } from '../../lib/frontmatter'
 import raw from '../../content/blog/two-millennium-problems-in-one-day.md?raw'
@@ -109,5 +110,28 @@ describe('figure data', () => {
     expect(blowup(0)).toBeCloseTo(smooth(0), 10)
     expect(blowup(0.999)).toBeGreaterThan(5)
     for (let t = 0; t <= 1.5; t += 0.05) expect(smooth(t)).toBeLessThan(0.4)
+  })
+})
+
+describe('result field', () => {
+  it('keeps the results in date order, with every timeline row present once', () => {
+    const order = FIELD.map((r) => FIELD_MONTHS.indexOf(r.month))
+    expect([...order].sort((a, b) => a - b)).toEqual(order)
+    for (const r of RESULTS) expect(FIELD.filter((f) => f.what === r.what.replaceAll('*', ''))).toHaveLength(1)
+    expect(FIELD).toHaveLength(19)
+    expect(FIELD_ROWS).toBe(5)
+  })
+
+  it('leaves out the single-source claims', () => {
+    expect(FIELD.map((r) => r.what).join(' ')).not.toMatch(/Fermat|6-sphere|3SUM/)
+  })
+
+  it('has seven prize problems, one solved, and lights only the two claimed on 20 November', () => {
+    expect(PRIZES).toHaveLength(7)
+    expect(PRIZES.filter((p) => p.state === 'solved').map((p) => p.id)).toEqual(['poincare'])
+    const claimed = PRIZES.filter((p) => p.state === 'claimed').map((p) => p.id)
+    expect(FIELD.filter((r) => r.prize).map((r) => [r.prize, r.when])).toEqual([['ns', '20 Nov'], ['rh', '20 Nov']])
+    expect(claimed.sort()).toEqual(['ns', 'rh'])
+    expect(FIELD.filter((r) => r.both).map((r) => r.who)).toEqual(['OpenAI and Anthropic, independently'])
   })
 })

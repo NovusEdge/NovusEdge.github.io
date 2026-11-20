@@ -1,0 +1,85 @@
+/* The field is rendered fully lit. Under .ml--live the section grows so the stage can stay put
+   while scroll lights the results in date order. */
+/* clip, not hidden: the rings from the last column would widen a phone's page, and hidden would break the sticky stage. */
+.ml-field { position: relative; overflow-x: clip; --lit: 1; --node: clamp(1rem, 2.2vw, 1.6rem); }
+.ml--live .ml-field { height: 330svh; }
+.ml-field-stage { position: sticky; top: 0; width: min(100%, 84rem); min-height: 100svh; margin: 0 auto; padding: 6.5rem var(--pad) 3rem; background: var(--bg); display: flex; flex-direction: column; justify-content: center; }
+.ml-field-lede { margin: 0 0 clamp(1.8rem, 5vh, 3.2rem); max-width: 34ch; font: 500 clamp(1.2rem, 2.1vw, 1.7rem)/1.3 var(--font-display); letter-spacing: -0.012em; color: var(--bone); text-wrap: pretty; }
+
+.ml-prizes { list-style: none; margin: 0; padding: 0 0 1.6rem; display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 0.4rem; border-bottom: 1px solid var(--rule); }
+.ml-prizes li { display: grid; justify-items: start; gap: 0.5rem; font: 500 0.78rem/1.25 var(--font-mono); color: var(--soft); overflow-wrap: anywhere; }
+.ml-prizes i { width: calc(var(--node) * 1.5); height: calc(var(--node) * 1.5); border-radius: 50%; border: 1px solid #f5f2eb55; transition: background-color 0.5s, border-color 0.5s; }
+.ml-prizes small { font: 400 0.68rem/1.35 var(--font-mono); color: var(--soft); }
+.ml-prizes li[data-on] { color: var(--bone); }
+.ml-prizes li[data-state='solved'] i { background: var(--bone); border-color: var(--bone); }
+.ml-prizes li[data-state='claimed'][data-on] i { background: var(--gold); border-color: var(--gold); }
+.ml-prizes li[data-state='claimed']:not([data-on]) small { visibility: hidden; }
+.ml--live .ml-prizes li[data-state='claimed'][data-on] i { animation: ml-amber 2.2s ease-in-out infinite; }
+@keyframes ml-amber {
+  0%, 100% { box-shadow: 0 0 0 0 #d4a03c00; opacity: 1; }
+  50% { box-shadow: 0 0 22px 2px #d4a03c99; opacity: 0.72; }
+}
+
+.ml-field-plot { position: relative; display: grid; grid-template-columns: repeat(10, minmax(0, 1fr)); padding-top: 2rem; }
+/* The field's own light, which builds with the share of results lit. */
+.ml-field-plot::before { content: ''; position: absolute; inset: -35% -4% -35% 15%; background: radial-gradient(closest-side at 68% 55%, #5fe0b02e, #5fe0b000); opacity: var(--lit); transition: opacity 0.8s; pointer-events: none; }
+.ml-field-col { position: relative; display: grid; justify-items: start; gap: 0.7rem; font: 400 0.72rem/1 var(--font-mono); color: var(--soft); }
+.ml-field-col ol { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column-reverse; gap: calc(var(--node) * 0.55); }
+.ml-field-col li { display: flex; }
+.ml-socket, .ml-node { width: var(--node); height: var(--node); border-radius: 50%; border: 1px solid #f5f2eb26; }
+.ml-node { position: relative; padding: 0; background: none; color: var(--teal); cursor: default; transition: background-color 0.4s, border-color 0.4s, scale 0.6s var(--out); }
+.ml-node--wait { color: var(--gold); }
+.ml-node--warn { color: var(--red); }
+.ml-node[data-on] { background: currentColor; border-color: currentColor; }
+.ml-node[data-on]:hover, .ml-node[data-on]:focus-visible { scale: 1.25; }
+/* Each result that lights sends one ring out. */
+.ml-node::after { content: ''; position: absolute; inset: -1px; border-radius: 50%; border: 1px solid currentColor; opacity: 0; pointer-events: none; }
+.ml--live .ml-node[data-on]::after { animation: ml-ring 1.6s var(--out); }
+@keyframes ml-ring {
+  0% { scale: 1; opacity: 0.9; }
+  100% { scale: 5.5; opacity: 0; }
+}
+
+/* 16 October: two rings, one from each lab, arrive on the same result and stay there. */
+.ml-node--both i { position: absolute; border-radius: 50%; border: 1px solid currentColor; pointer-events: none; }
+.ml-node--both i:nth-of-type(1) { inset: -5px; }
+.ml-node--both i:nth-of-type(2) { inset: -9px; }
+.ml-node--both em { display: none; }
+.ml-node--both:not([data-on]) i { opacity: 0; }
+.ml--live .ml-node--both[data-on] i:nth-of-type(1) { animation: ml-meet 1.5s var(--out) both; --from: -5.5rem; }
+.ml--live .ml-node--both[data-on] i:nth-of-type(2) { animation: ml-meet 1.5s var(--out) both; --from: 5.5rem; }
+@keyframes ml-meet {
+  0% { translate: var(--from) 0; scale: 2.4; opacity: 0; }
+  35% { opacity: 1; }
+  100% { translate: 0 0; scale: 1; opacity: 1; }
+}
+
+.ml-field-read { min-height: 3.2em; margin: 1.8rem 0 0; padding-top: 1rem; border-top: 1px solid var(--rule); max-width: 46rem; font: 400 0.95rem/1.5 var(--font-body); color: var(--bone); }
+.ml-field-read b { margin-right: 0.5rem; font: 500 0.78rem/1 var(--font-mono); letter-spacing: 0.1em; text-transform: uppercase; color: var(--gold); }
+.ml-field-read span { color: var(--soft); }
+.ml-field-key { list-style: none; margin: 0.9rem 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: 0.4rem 1.5rem; font: 400 0.72rem/1.5 var(--font-mono); color: var(--soft); }
+.ml-field-key li { display: flex; align-items: center; gap: 0.5rem; }
+.ml-field-key li::before { content: ''; width: 0.6rem; height: 0.6rem; border-radius: 50%; background: var(--teal); }
+.ml-field-key .ml-key--wait::before { background: var(--gold); }
+.ml-field-key .ml-key--warn::before { background: var(--red); }
+
+/* Clear of the chapter rail, which rides down the left edge here. */
+@media (min-width: 1200px) {
+  .ml-field-stage { padding-left: calc(var(--pad) + 11rem); }
+}
+@media (min-width: 760px) {
+  .ml-prizes span[data-short] { display: none; }
+  .ml-node--both em { display: block; position: absolute; z-index: 1; bottom: calc(100% + 0.7rem); padding: 0.2rem 0.35rem; background: var(--bg); font: 500 0.7rem/1 var(--font-mono); font-style: normal; color: var(--bone); white-space: nowrap; transition: opacity 0.5s 0.9s; }
+  .ml-node--both em:nth-of-type(1) { right: calc(100% + 0.5rem); }
+  .ml-node--both em:nth-of-type(2) { left: calc(100% + 0.5rem); }
+  .ml-node--both:not([data-on]) em { opacity: 0; transition-delay: 0s; }
+}
+@media (max-width: 759px) {
+  .ml-field { --node: 1.05rem; }
+  .ml-field-stage { padding-top: 5.5rem; }
+  .ml-prizes { gap: 0.25rem; }
+  .ml-prizes li { font-size: 0.6rem; }
+  .ml-prizes small, .ml-prizes span[data-long] { display: none; }
+  .ml-prizes i { width: 1.5rem; height: 1.5rem; }
+  .ml-field-read { min-height: 6.2em; font-size: 0.9rem; }
+}

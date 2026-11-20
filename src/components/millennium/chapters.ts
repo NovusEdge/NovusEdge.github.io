@@ -20,7 +20,7 @@ type Look = {
   short?: string
   zone: Zone
   // a gap above the chapter where the figure shows at full strength
-  opens?: 'window' | 'still'
+  opens?: 'window' | 'still' | 'field'
   paper?: boolean
   // rows of RESULTS whose status is shown under the heading
   results?: number[]
@@ -34,7 +34,7 @@ export const LOOKS: Record<string, Look> = {
   navierstokes: { kanji: '流体', zone: 'read', opens: 'window', results: [4, 7] },
   'the-riemann-hypothesis': { kanji: '零点', short: 'Riemann', zone: 'read', opens: 'window', results: [8] },
   'is-it-real': { kanji: '検証', zone: 'after', opens: 'still' },
-  'where-this-goes-speculation': { kanji: '推測', zone: 'next', paper: true },
+  'where-this-goes-speculation': { kanji: '推測', zone: 'next', opens: 'field', paper: true },
   'whats-next': { kanji: '次', zone: 'next' },
 }
 

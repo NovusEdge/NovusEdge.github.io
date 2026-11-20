@@ -38,7 +38,7 @@ type Pose = Pick<Scene, 'alpha' | 'flow' | 'zoom' | 'ox' | 'oy'>
 // wide: the figure shares the viewport with type beside it. tall: phones and the list timeline,
 // where it sits behind or above. In the list it only shows through the gaps between strips.
 const POSES: Record<Zone, { wide: Pose; tall: Pose }> = {
-  hero: { wide: { alpha: 1, flow: 1, zoom: 1.18, ox: 0.44, oy: 0.06 }, tall: { alpha: 1, flow: 1, zoom: 0.95, ox: 0, oy: 0.34 } },
+  hero: { wide: { alpha: 1, flow: 1, zoom: 1.12, ox: 0.2, oy: 0.02 }, tall: { alpha: 1, flow: 1, zoom: 0.92, ox: 0, oy: 0.3 } },
   read: { wide: { alpha: 0.18, flow: 0.7, zoom: 1.55, ox: 0, oy: 0 }, tall: { alpha: 0.18, flow: 0.7, zoom: 1.3, ox: 0, oy: 0 } },
   // The window above a problem: the figure comes back up and fills the gap.
   open: { wide: { alpha: 0.85, flow: 1, zoom: 1.3, ox: 0, oy: 0 }, tall: { alpha: 0.85, flow: 1, zoom: 1.05, ox: 0, oy: 0 } },
@@ -67,8 +67,9 @@ export function turn(scene: Scene, yaw: number, pitch: number) {
   gsap.to(scene, { yaw, pitch, duration: 2.6, ease: 'power2.inOut', overwrite: 'auto' })
 }
 
-// Draws groups below `count` and retracts the rest back along their own paths.
-export function showCount(scene: Scene, count: number) {
+// Draws groups below `count` and retracts the rest back along their own paths. `gap` is the
+// time between one group starting and the next: short for a burst, long for the hero's slow bloom.
+export function showCount(scene: Scene, count: number, gap = 110) {
   if (scene.still) return
   let drawn = 0
   scene.groups.forEach((g, i) => {
@@ -77,7 +78,7 @@ export function showCount(scene: Scene, count: number) {
     g.on = on
     utils.remove(g)
     if (on) {
-      const delay = drawn++ * 110
+      const delay = drawn++ * gap
       animate(g, { reveal: 1, duration: 1500, delay, ease: 'inOutSine' })
       animate(g, { heat: [1, 0], duration: 2600, delay, ease: 'outQuad' })
     } else {

@@ -23,13 +23,38 @@ html.ml-night::-webkit-scrollbar-thumb:hover { background: #46a888; }
 .ml-stage canvas { display: block; width: 100%; height: 100%; }
 .ml-body { position: relative; z-index: 1; }
 
-.ml-hero { position: relative; min-height: 100svh; display: flex; flex-direction: column; justify-content: space-between; align-items: flex-start; padding: 6.5rem var(--pad) clamp(2.5rem, 7vh, 4.5rem); }
+/* The hero is one picture: the day in outline across the top with the figure burning through its
+   digits, the two problems as plates wired into the figure's right side, the title bottom left.
+   A phone stacks it: day, figure, title, plates. */
+.ml-hero { position: relative; min-height: 100svh; display: flex; flex-direction: column; align-items: flex-start; padding: 6.5rem var(--pad) clamp(2.5rem, 7vh, 4.5rem); }
 /* A charcoal pool under the title so the lettering never sits on the bright core. */
-.ml-hero::before { content: ''; position: absolute; inset: 0; z-index: -1; background: radial-gradient(95% 80% at 0% 100%, var(--bg) 28%, #1a1a1a00 72%); }
-.ml-hero h1 { margin: 0; max-width: 10.5em; font: 800 clamp(2.6rem, 6.4vw, 5.5rem)/0.97 var(--font-display); letter-spacing: -0.035em; text-wrap: balance; }
-.ml-prob { display: block; width: max-content; color: var(--gold); transform-origin: 0 80%; }
-.ml-date { margin: 1.7rem 0 0; font: 500 0.8rem/1 var(--font-mono); letter-spacing: 0.14em; text-transform: uppercase; color: var(--soft); font-variant-numeric: tabular-nums; }
-.ml-date time { display: inline-block; }
+.ml-hero::before { content: ''; position: absolute; inset: 0; z-index: -1; background: linear-gradient(to bottom, #1a1a1a00 calc(9rem + 30svh), var(--bg) calc(9rem + 44svh)); }
+.ml-day { margin: 1.2rem 0 0; font: 900 15.5vw/0.9 var(--font-display); letter-spacing: -0.045em; font-variant-numeric: tabular-nums; white-space: nowrap; color: #1a1a1a00; -webkit-text-stroke: 1px var(--gold); }
+.ml-day time { display: block; overflow: hidden; padding: 0.04em 0.02em; }
+.ml-day span { display: inline-block; }
+.ml-hero-title { margin-top: 37svh; }
+.ml-hero h1 { margin: 0; max-width: 10.5em; font: 800 clamp(2.5rem, 5.6vw, 5rem)/0.97 var(--font-display); letter-spacing: -0.035em; text-wrap: balance; }
+.ml-prob { display: block; width: max-content; margin-top: 0.06em; font-size: 1.22em; color: var(--gold); transform-origin: 0 80%; }
+.ml-date { margin: 1.6rem 0 0; font: 500 0.8rem/1 var(--font-mono); letter-spacing: 0.14em; text-transform: uppercase; color: var(--soft); font-variant-numeric: tabular-nums; }
+.ml-date time { display: inline-block; color: var(--bone); }
+.ml-exhibits { order: 1; align-self: stretch; display: grid; gap: 1rem; margin-top: 2.4rem; }
+.ml-exhibit { position: relative; padding: 1rem 1.15rem 1.05rem; border: 1px solid var(--rule); background: var(--bg); }
+.ml-exhibit p { margin: 0; font: 400 0.82rem/1.45 var(--font-body); color: var(--soft); }
+.ml-exhibit p:first-child { display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
+.ml-exhibit b { font: 800 1.15rem/1.1 var(--font-display); letter-spacing: -0.015em; color: var(--bone); }
+.ml-exhibit .ml-exhibit-math { display: grid; gap: 0.35rem; margin: 0.95rem 0 0.7rem; overflow-x: auto; overflow-y: hidden; font-size: 1rem; color: var(--bone); scrollbar-width: thin; }
+
+@media (min-width: 900px) {
+  .ml-hero { display: grid; grid-template-columns: minmax(0, 1fr) clamp(19rem, 30vw, 25rem); grid-template-rows: auto auto 1fr; column-gap: 2rem; align-items: start; }
+  .ml-hero::before { background: radial-gradient(90% 62% at 0% 100%, var(--bg) 30%, #1a1a1a00 74%); }
+  .ml-back { grid-area: 1 / 1; }
+  .ml-day { grid-area: 2 / 1 / 3 / -1; font-size: clamp(6rem, 14.6vw, 15rem); }
+  .ml-hero-title { grid-area: 3 / 1; align-self: end; margin: 0; }
+  .ml-exhibits { grid-area: 3 / 2; align-self: end; margin: 0; }
+  /* A wire from each plate into the figure. */
+  .ml-exhibit::before { content: ''; position: absolute; right: 100%; top: 50%; width: clamp(2.5rem, 7vw, 7rem); height: 1px; background: #f5f2eb66; }
+  .ml-exhibit::after { content: ''; position: absolute; right: calc(100% + clamp(2.5rem, 7vw, 7rem) - 3px); top: calc(50% - 3px); width: 7px; height: 7px; border-radius: 50%; background: var(--bone); }
+}
 
 /* Sheets are solid: body text never sits on the particles. The figure shows in the gaps between
    them and, past 84rem, down both sides. */
@@ -181,7 +206,6 @@ html.ml-night::-webkit-scrollbar-thumb:hover { background: #46a888; }
 .ml--reduced .ml-still-frame i, .ml--reduced .ml-still-note { opacity: 1; transform: none; transition: none; }
 
 @media (max-width: 640px) {
-  .ml-hero::before { background: linear-gradient(to top, var(--bg) 30%, #1a1a1a00 62%); }
   /* The phone list opens on an empty half screen, so the single thread is seen before the first strip covers it. */
   .ml-tl-track { gap: 7rem; padding-top: 48svh; }
   .ml-window { height: 46svh; }

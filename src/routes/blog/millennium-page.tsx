@@ -12,7 +12,8 @@ import { AttractorStage } from '../../components/millennium/attractor-stage'
 import { createScene, disposeScene, pose, showCount, turn, type Scene, type Zone } from '../../components/millennium/scene'
 import { RESULTS } from '../../components/millennium/timeline-data'
 import { Timeline, emphasised } from '../../components/millennium/timeline'
-import { Figure } from '../../components/millennium/figures'
+import { Figure, Pill, Tex } from '../../components/millennium/figures'
+import { ResultField } from '../../components/millennium/field'
 import { LOOKS, PLAIN, parsePost, splitTitle, type Block, type Chapter } from '../../components/millennium/chapters'
 import { Meta } from '../../lib/meta'
 import { isMobile, prefersReducedMotion } from '../../lib/motion'
@@ -31,6 +32,9 @@ const TURNS: [number, number][] = [
   [-0.8, -0.2],
   [1.7, 0.35],
 ]
+
+// The day the three papers came out, which is the day before the post's own date.
+const EVENT_DAY = '2026-11-20'
 
 type Motion = { reduced: boolean; pin: boolean }
 
@@ -119,7 +123,8 @@ export function MillenniumPage({ post, image }: { post: Post; image?: string | n
         zone.current = next
         el.dataset.zone = next
         pose(scene, next, next === 'timeline' ? !motion.pin : narrow())
-        showCount(scene, next === 'timeline' ? count.current : RESULTS.length)
+        // The hero opens on one thread and takes about five seconds to fill in.
+        showCount(scene, next === 'timeline' ? count.current : RESULTS.length, next === 'hero' ? 560 : undefined)
       }
       zone.current = null
       ScrollTrigger.create({ start: 0, end: 'max', onUpdate: resolve, onRefresh: resolve })
@@ -150,6 +155,8 @@ export function MillenniumPage({ post, image }: { post: Post; image?: string | n
       })
       hero
         .from('.ml-prob', { opacity: 0, yPercent: 55, rotate: -7, duration: 0.9, ease: 'back.out(2.2)' }, 1.25)
+        .from('.ml-day span', { yPercent: 105, duration: 1.1, stagger: 0.045 }, 0.1)
+        .from('.ml-exhibit', { opacity: 0, x: 28, duration: 1, stagger: 0.9 }, 2.6)
         .from('.ml-date time', { clipPath: 'inset(0 100% 0 0)', duration: 0.7, ease: 'steps(14)' }, 1.5)
         .from('.ml-back', { opacity: 0, duration: 0.8 }, 0.4)
 
@@ -214,6 +221,7 @@ export function MillenniumPage({ post, image }: { post: Post; image?: string | n
     return (
       <section key={ch.id} className="ml-ch" data-chapter={ch.id} aria-labelledby={ch.id}>
         {look.opens === 'window' && <div className="ml-window" data-zone="open" aria-hidden="true" />}
+        {look.opens === 'field' && <ResultField live={live} />}
         {look.opens === 'still' && (
           <div className="ml-still" data-zone="still">
             <div className="ml-still-frame">
@@ -282,7 +290,39 @@ export function MillenniumPage({ post, image }: { post: Post; image?: string | n
               </TLink>
             </Magnetic>
           </div>
-          <div>
+          <p className="ml-day">
+            <time dateTime={EVENT_DAY} aria-label="20 November 2026">
+              {EVENT_DAY.split('-').reverse().join('.').split('').map((c, i) => (
+                <span key={i} aria-hidden="true">
+                  {c}
+                </span>
+              ))}
+            </time>
+          </p>
+          <div className="ml-exhibits">
+            <div className="ml-exhibit">
+              <p>
+                <b>Riemann Hypothesis</b>
+                <Pill row={8} />
+              </p>
+              <p className="ml-exhibit-math">
+                <Tex>{'\\zeta(s) = 0 \\;\\Longrightarrow\\; \\operatorname{Re}(s) = \\tfrac12'}</Tex>
+              </p>
+              <p>for every zero of zeta that isn’t a trivial one</p>
+            </div>
+            <div className="ml-exhibit">
+              <p>
+                <b>Navier–Stokes</b>
+                <Pill row={7} />
+              </p>
+              <p className="ml-exhibit-math">
+                <Tex>{'\\partial_t u + (u\\cdot\\nabla)u = -\\nabla p + \\nu\\,\\Delta u'}</Tex>
+                <Tex>{'\\nabla\\cdot u = 0'}</Tex>
+              </p>
+              <p>smooth forever in 3D, or infinite in finite time</p>
+            </div>
+          </div>
+          <div className="ml-hero-title">
             <h1>
               <span className="ml-title-main">{main}</span>
               {aside && (
@@ -293,7 +333,7 @@ export function MillenniumPage({ post, image }: { post: Post; image?: string | n
               )}
             </h1>
             <p className="ml-date">
-              <time dateTime={post.date}>{date}</time>
+              Published <time dateTime={post.date}>{date}</time>
             </p>
           </div>
         </header>

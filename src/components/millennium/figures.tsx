@@ -7,7 +7,7 @@ import './figures.css'
 
 const UNIT = { x: 0, y: 0, w: 100, h: 100 }
 
-function Tex({ children }: { children: string }) {
+export function Tex({ children }: { children: string }) {
   return <span className="ml-tex" dangerouslySetInnerHTML={{ __html: katex.renderToString(children, { throwOnError: false }) }} />
 }
 
@@ -23,7 +23,7 @@ function Lab({ x, y, pin = 'l', className = '', children }: { x: number; y: numb
   )
 }
 
-function Pill({ row }: { row: number }) {
+export function Pill({ row }: { row: number }) {
   const r = RESULTS[row]
   return <span className={`ml-pill ml-pill--${r.tone}`}>{r.status}</span>
 }
