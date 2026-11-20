@@ -90,7 +90,7 @@ export function MillenniumPage({ post, image }: { post: Post; image?: string | n
       const el = root.current!
       const zones = gsap.utils.toArray<HTMLElement>('[data-zone]', el)
       // The tail is one markdown render, so the point where the figure resumes is a heading inside it, not a zone element.
-      const resume = el.querySelector<HTMLElement>('.ml-end h2:not(:first-of-type)[id^="where-this-goes"]')
+      const resume = el.querySelector<HTMLElement>('.ml-end h2[id^="where-this-goes"]')
       const narrow = () => innerWidth < 900 || innerWidth < innerHeight
       const resolve = () => {
         const line = innerHeight * 0.55
