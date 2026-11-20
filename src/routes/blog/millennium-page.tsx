@@ -89,6 +89,8 @@ export function MillenniumPage({ post, image }: { post: Post; image?: string | n
       if (!scene || !motion) return
       const el = root.current!
       const zones = gsap.utils.toArray<HTMLElement>('[data-zone]', el)
+      // The tail is one markdown render, so the point where the figure resumes is a heading inside it, not a zone element.
+      const resume = el.querySelector<HTMLElement>('.ml-end h2:not(:first-of-type)[id^="where-this-goes"]')
       const narrow = () => innerWidth < 900 || innerWidth < innerHeight
       const resolve = () => {
         const line = innerHeight * 0.55
@@ -96,7 +98,8 @@ export function MillenniumPage({ post, image }: { post: Post; image?: string | n
           const r = z.getBoundingClientRect()
           return r.top <= line && r.bottom > line
         })
-        const next = (hit?.dataset.zone as Zone | undefined) ?? zone.current ?? 'hero'
+        let next = (hit?.dataset.zone as Zone | undefined) ?? zone.current ?? 'hero'
+        if (next === 'after' && resume && resume.getBoundingClientRect().top <= line) next = 'next'
         if (next === zone.current) return
         zone.current = next
         el.dataset.zone = next

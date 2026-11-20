@@ -98,8 +98,8 @@ html.ml-night::-webkit-scrollbar-thumb:hover { background: #46a888; }
 .ml-still-frame i:nth-child(3) { left: var(--in); bottom: var(--in); border-width: 0 0 1px 1px; transform: translate(-22px, 22px); }
 .ml-still-frame i:nth-child(4) { right: var(--in); bottom: var(--in); border-width: 0 1px 1px 0; transform: translate(22px, 22px); }
 .ml-still-note { position: absolute; left: calc(var(--in) + 2.4rem); bottom: var(--in); margin: 0; padding: 0.35rem 0.6rem; background: var(--bg); font: 400 0.74rem/1.4 var(--font-mono); letter-spacing: 0.06em; color: var(--bone); font-variant-numeric: tabular-nums; opacity: 0; transition: opacity 0.6s 0.9s; }
-.ml[data-zone='still'] .ml-still-frame i, .ml[data-zone='after'] .ml-still-frame i { opacity: 0.8; transform: none; transition-delay: 0.9s; }
-.ml[data-zone='still'] .ml-still-note, .ml[data-zone='after'] .ml-still-note { opacity: 1; }
+.ml[data-zone='still'] .ml-still-frame i, .ml[data-zone='after'] .ml-still-frame i, .ml[data-zone='next'] .ml-still-frame i { opacity: 0.8; transform: none; transition-delay: 0.9s; }
+.ml[data-zone='still'] .ml-still-note, .ml[data-zone='after'] .ml-still-note, .ml[data-zone='next'] .ml-still-note { opacity: 1; }
 .ml--reduced .ml-still { height: 100svh; }
 .ml--reduced .ml-still-frame i, .ml--reduced .ml-still-note { opacity: 1; transform: none; transition: none; }
 
