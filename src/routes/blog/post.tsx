@@ -58,6 +58,7 @@ const POST_HERO: Record<string, number> = {
   'epistemic-collapse': 4,
   'shader-journeys-part-1': 0,
   'building-vs-creating': 6, // raw - natural aspect, no effects
+  'two-millennium-problems-in-one-day': 4, // grain over the attractor video
 }
 
 export default function BlogPost() {

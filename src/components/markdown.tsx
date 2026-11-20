@@ -40,6 +40,14 @@ function getYouTubeId(url: string): string | null {
   return null
 }
 
+// `status:<tone> label` inline code renders as a pill; tones are fixed so a typo falls back to plain code.
+const STATUS = /^status:(ok|wait|warn)\s+(.+)$/
+const STATUS_TONE = {
+  ok: 'border-paper-deep/40 bg-paper/10 text-paper-deep dark:border-paper/40 dark:text-paper',
+  wait: 'border-gold/50 bg-gold/10 text-[#9a7020] dark:text-gold',
+  warn: 'border-red-700/40 bg-red-700/10 text-red-800 dark:border-red-400/40 dark:text-red-300',
+} as const
+
 const components: Components = {
   h2({ children, ...props }) {
     const text = String(children)
@@ -64,11 +72,31 @@ const components: Components = {
         </blockquote>
       )
     }
+    // A blockquote opening with a curly quote is a pull quote; a last paragraph starting with an em dash is its attribution.
+    if (text.startsWith('“')) {
+      return (
+        <blockquote
+          {...props}
+          className="not-italic my-12 border-l-0 border-y !border-gold/60 py-8 pl-0 text-charcoal dark:text-bone [&_p]:my-0 [&_p]:!font-display [&_p]:!text-[30px] [&_p]:font-semibold [&_p]:leading-snug [&_p]:before:content-none [&_p]:after:content-none [&_p:last-child:not(:first-child)]:mt-5 [&_p:last-child:not(:first-child)]:!font-mono [&_p:last-child:not(:first-child)]:!text-[12px] [&_p:last-child:not(:first-child)]:font-normal [&_p:last-child:not(:first-child)]:uppercase [&_p:last-child:not(:first-child)]:tracking-[0.2em] [&_p:last-child:not(:first-child)]:text-gold"
+        >
+          {children}
+        </blockquote>
+      )
+    }
     return <blockquote {...props}>{children}</blockquote>
   },
   // `[ REDACTED ]` inline code becomes the scramble-on-rest, reveal-on-hover redaction.
   code({ node, className, children, ...props }) {
     if (nodeText(node).trim() === '[ REDACTED ]') return <Redacted />
+    const status = STATUS.exec(nodeText(node).trim())
+    if (status) {
+      const [, tone, label] = status as unknown as [string, keyof typeof STATUS_TONE, string]
+      return (
+        <span className={`inline-block whitespace-nowrap rounded-full border px-2.5 py-0.5 font-mono text-[0.7em] uppercase tracking-wider ${STATUS_TONE[tone]}`}>
+          {label}
+        </span>
+      )
+    }
     return (
       <code className={className} {...props}>
         {children}

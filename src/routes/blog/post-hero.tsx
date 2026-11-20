@@ -189,6 +189,7 @@ function HeroDuotone({ post, image, lang }: HeroProps) {
 const GRAIN_VIDEOS: Record<string, string> = {
   'epistemic-collapse': '/assets/blog/epistemic-hero.mp4',
   'building-vs-creating': '/assets/blog/building-vs-creating.mp4',
+  'two-millennium-problems-in-one-day': '/assets/blog/two-millennium-problems-hero.mp4',
 }
 
 function HeroGrain({ post, image, lang }: HeroProps) {
