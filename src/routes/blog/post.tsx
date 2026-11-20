@@ -25,6 +25,7 @@ import { OpenJevPage } from './openjev-page'
 import { MeaningPage } from './meaning-page'
 import { HelloWorldPage } from './hello-world-page'
 import { TextTonePage } from './text-tone-page'
+import { MillenniumPage } from './millennium-page'
 import { isMeaningSlug } from '../../lib/meaning-data'
 import { OPENJEV_SLUG } from '../../lib/openjev-data'
 import { useLocalePath } from '../../i18n/use-locale-path'
@@ -58,7 +59,6 @@ const POST_HERO: Record<string, number> = {
   'epistemic-collapse': 4,
   'shader-journeys-part-1': 0,
   'building-vs-creating': 6, // raw - natural aspect, no effects
-  'two-millennium-problems-in-one-day': 4, // grain over the attractor video
 }
 
 export default function BlogPost() {
@@ -109,6 +109,9 @@ export default function BlogPost() {
   // Typing keeps the words and drops the stress, so this page lets you hear the seven readings
   // before folding them into the one line a text box would send.
   if (post.slug === 'text-is-not-tone') return <TextTonePage post={post} image={image} />
+
+  // The run of AI math results is drawn as a strange attractor that gains a trajectory per result.
+  if (post.slug === 'two-millennium-problems-in-one-day') return <MillenniumPage post={post} image={image} />
 
   return (
     <>

@@ -1,0 +1,113 @@
+/* The header, footer and scrollbar belong to App, so the page's night hangs off <html>. */
+html.ml-night,
+html.ml-night body { background-color: #1a1a1a; }
+html.ml-night { color-scheme: dark; scrollbar-color: #2f6f5a #1a1a1a; }
+html.ml-night::-webkit-scrollbar { width: 10px; }
+html.ml-night::-webkit-scrollbar-track { background: #1a1a1a; }
+html.ml-night::-webkit-scrollbar-thumb { background: #2f6f5a; border: 2px solid #1a1a1a; border-radius: 6px; }
+html.ml-night::-webkit-scrollbar-thumb:hover { background: #46a888; }
+.ml-night .site-footer { background-color: #1a1a1a; }
+
+.ml {
+  --bg: #1a1a1a; --bone: #f5f2eb; --soft: #b9b5ac; --rule: #f5f2eb24;
+  --gold: #d4a03c; --blue: #8fb1d3; --red: #f2a7a0; --teal: #5fe0b0;
+  --pad: clamp(1.25rem, 5vw, 4.5rem);
+  --out: cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative; background: var(--bg); color: var(--bone);
+}
+.ml ::selection { background: #2f8f72; color: #fff; }
+.ml :focus-visible { outline: 2px solid var(--gold); outline-offset: 4px; border-radius: 2px; }
+
+/* Sticky, not fixed: .page-enter carries a transform, so a fixed layer would size to the whole page. */
+.ml-stage { position: sticky; top: 0; height: 100lvh; margin-bottom: -100lvh; z-index: 0; pointer-events: none; }
+.ml-stage canvas { display: block; width: 100%; height: 100%; }
+.ml-body { position: relative; z-index: 1; }
+
+.ml-hero { position: relative; min-height: 100svh; display: flex; flex-direction: column; justify-content: space-between; align-items: flex-start; padding: 6.5rem var(--pad) clamp(2.5rem, 7vh, 4.5rem); }
+/* A charcoal pool under the title so the lettering never sits on the bright core. */
+.ml-hero::before { content: ''; position: absolute; inset: 0; z-index: -1; background: radial-gradient(95% 80% at 0% 100%, var(--bg) 28%, #1a1a1a00 72%); }
+.ml-hero h1 { margin: 0; max-width: 10.5em; font: 800 clamp(2.6rem, 6.4vw, 5.5rem)/0.97 var(--font-display); letter-spacing: -0.035em; text-wrap: balance; }
+.ml-prob { display: block; width: max-content; color: var(--gold); transform-origin: 0 80%; }
+.ml-date { margin: 1.7rem 0 0; font: 500 0.8rem/1 var(--font-mono); letter-spacing: 0.14em; text-transform: uppercase; color: var(--soft); font-variant-numeric: tabular-nums; }
+.ml-date time { display: inline-block; }
+
+/* The reading column is solid: body text never sits on the particles. The same-colour shadow feathers its edge into the field. */
+.ml-col { position: relative; width: min(100%, 54rem); margin: 0 auto; padding: clamp(3.5rem, 9vh, 6rem) var(--pad); background: var(--bg); box-shadow: 0 0 44px 26px var(--bg); }
+.ml-prose { max-width: 44rem; margin: 0 auto; }
+.ml-prose h2 { scroll-margin-top: 6rem; text-wrap: balance; letter-spacing: -0.02em; }
+.ml-prose > div > :first-child { margin-top: 0; }
+.ml-col .ml-prose a { color: var(--blue); text-decoration: underline; text-decoration-color: #8fb1d366; text-decoration-thickness: 0.08em; text-underline-offset: 0.22em; transition: text-decoration-color 0.15s, color 0.15s; }
+.ml-col .ml-prose a:hover, .ml-col .ml-prose a:focus-visible { color: var(--bone); text-decoration-color: var(--gold); }
+.ml-prose li::marker { color: var(--gold); }
+/* Alpöge's own paragraph is quoted without curly quotes, so it reads as a document excerpt. */
+.ml-prose blockquote:not([class]) { border-left: 1px solid var(--gold); padding-left: 1.4rem; font-style: normal; color: var(--bone); }
+
+/* Timeline. The default is the list: a vertical ledger of solid strips with the field showing between them.
+   .ml-tl--pin lays the same markup out as one horizontal run under a sticky viewport. */
+.ml-tl { position: relative; }
+.ml-tl-track { list-style: none; margin: 0; padding: 3.5rem 0 1.5rem; display: flex; flex-direction: column; gap: 4.5rem; }
+.ml-piece { position: relative; width: min(100%, 54rem); margin: 0 auto; padding: 1.5rem var(--pad) 1.7rem; background: var(--bg); border-top: 1px solid var(--rule); }
+.ml-piece-when { margin: 0 0 0.7rem; font: 500 0.78rem/1 var(--font-mono); letter-spacing: 0.14em; text-transform: uppercase; color: var(--gold); font-variant-numeric: tabular-nums; }
+.ml-piece-what { margin: 0; max-width: 22ch; font: 700 clamp(1.45rem, 2.3vw, 1.9rem)/1.12 var(--font-display); letter-spacing: -0.02em; text-wrap: balance; font-variant-numeric: tabular-nums; }
+.ml-piece-what em { font-style: italic; color: var(--gold); }
+.ml-piece-who { margin: 0.75rem 0 0.95rem; max-width: 34ch; font: 400 0.8rem/1.5 var(--font-mono); color: var(--soft); }
+.ml-pill { display: inline-block; white-space: nowrap; border: 1px solid; border-radius: 999px; padding: 0.22rem 0.7rem; font: 500 0.7rem/1.4 var(--font-mono); letter-spacing: 0.08em; text-transform: uppercase; }
+.ml-pill--ok { color: var(--blue); border-color: #8fb1d366; background: #8fb1d31a; }
+.ml-pill--wait { color: var(--gold); border-color: #d4a03c80; background: #d4a03c1a; }
+.ml-pill--warn { color: var(--red); border-color: #f2a7a066; background: #b91c1c26; }
+.ml-tl-key { list-style: none; width: min(100%, 54rem); margin: 0 auto; padding: 1.2rem var(--pad) 1.4rem; background: var(--bg); display: flex; flex-wrap: wrap; gap: 0.6rem 1.6rem; font: 400 0.74rem/1.5 var(--font-mono); color: var(--soft); }
+.ml-tl-key li { display: flex; align-items: center; gap: 0.55rem; }
+.ml-tl-key i { width: 0.6rem; height: 0.6rem; border-radius: 50%; background: currentColor; }
+.ml-tl-key span { color: var(--soft); }
+.ml-key--ok { color: var(--blue); }
+.ml-key--wait { color: var(--gold); }
+.ml-key--warn { color: var(--red); }
+.ml-tl-month, .ml-tl-read, .ml-tl-feed { display: none; }
+
+.ml-tl--pin .ml-tl-pin { position: sticky; top: 0; height: 100svh; overflow: hidden; }
+/* The lower band is solid under the type and fades out above the axis, so the figure rises out of it. */
+.ml-tl--pin .ml-tl-pin::before { content: ''; position: absolute; inset: 44% 0 0 0; background: linear-gradient(to top, var(--bg) 76%, #1a1a1a00); }
+.ml-tl--pin .ml-tl-track { position: absolute; left: 0; top: 60%; flex-direction: row; align-items: flex-start; gap: clamp(3.5rem, 6vw, 6rem); padding: 0 70vw 0 30vw; width: max-content; will-change: transform; }
+.ml-tl--pin .ml-tl-track::before { content: ''; position: absolute; left: 0; right: 0; top: 0; height: 1px; background: var(--rule); }
+.ml-tl--pin .ml-piece { flex: none; width: max-content; max-width: 25rem; margin: 0; padding: 1.9rem 0 0; background: none; border: 0; opacity: 0.55; transition: opacity 0.5s var(--out); }
+.ml-tl--pin .ml-piece::before { content: ''; position: absolute; left: 0; top: -5px; width: 1px; height: 11px; background: var(--soft); transform-origin: 50% 100%; transition: transform 0.6s var(--out), background-color 0.3s; }
+.ml-tl--pin .ml-piece[data-on] { opacity: 1; }
+.ml-tl--pin .ml-piece[data-on]::before { background: var(--gold); transform: scaleY(2.6); }
+.ml-tl--pin .ml-piece-when { color: var(--soft); transition: color 0.3s; }
+.ml-tl--pin .ml-piece[data-on] .ml-piece-when { color: var(--gold); }
+.ml-tl--pin .ml-pill { transition: transform 0.6s var(--out); transform-origin: 0 50%; transform: scale(0.94); }
+.ml-tl--pin .ml-piece[data-on] .ml-pill { transform: none; }
+
+/* The playhead: results cross it, and each crossing sends a spark up into the figure. */
+.ml-tl--pin .ml-tl-feed { display: block; position: absolute; left: 30vw; top: 35%; height: 25%; width: 1px; background: linear-gradient(to top, #d4a03cb3, #d4a03c00); }
+.ml-tl-feed i { position: absolute; left: -2px; bottom: 0; width: 5px; height: 5px; border-radius: 50%; background: #ffe2a3; opacity: 0; }
+
+.ml-tl--pin .ml-tl-month { display: block; position: absolute; right: var(--pad); top: 5.5rem; width: 3.4em; height: 1.1em; font: 900 clamp(6rem, 15vw, 13rem)/1.1 var(--font-display); letter-spacing: -0.04em; color: #f5f2eb1c; text-align: right; }
+.ml-tl-month span { position: absolute; right: 0; top: 0; white-space: nowrap; clip-path: inset(100% 0 0 0); transform: translateY(14%); transition: clip-path 0.8s var(--out), transform 0.8s var(--out); }
+.ml-tl-month span[data-on] { clip-path: inset(0); transform: none; }
+.ml-tl--pin .ml-tl-read { display: flex; gap: 1.6rem; position: absolute; right: var(--pad); top: calc(5.5rem + clamp(6rem, 15vw, 13rem) * 1.1 + 0.6rem); margin: 0; font: 400 0.76rem/1 var(--font-mono); letter-spacing: 0.06em; color: var(--soft); font-variant-numeric: tabular-nums; }
+.ml-tl-read b { font-weight: 500; color: var(--bone); }
+.ml-tl--pin .ml-tl-key { position: absolute; left: 30vw; bottom: 1.6rem; width: auto; margin: 0; padding: 0; background: none; }
+
+/* "Is it real": a window in the column where the figure runs down and stops. */
+.ml-still { position: relative; height: 135svh; }
+.ml-still-frame { position: sticky; top: 0; height: 100svh; --in: clamp(1.25rem, 7vmin, 5rem); }
+.ml-still-frame i { position: absolute; width: 1.6rem; height: 1.6rem; border: 0 solid var(--bone); opacity: 0; transition: opacity 0.5s, transform 0.9s var(--out); }
+.ml-still-frame i:nth-child(1) { left: var(--in); top: calc(var(--in) + 3.5rem); border-width: 1px 0 0 1px; transform: translate(-22px, -22px); }
+.ml-still-frame i:nth-child(2) { right: var(--in); top: calc(var(--in) + 3.5rem); border-width: 1px 1px 0 0; transform: translate(22px, -22px); }
+.ml-still-frame i:nth-child(3) { left: var(--in); bottom: var(--in); border-width: 0 0 1px 1px; transform: translate(-22px, 22px); }
+.ml-still-frame i:nth-child(4) { right: var(--in); bottom: var(--in); border-width: 0 1px 1px 0; transform: translate(22px, 22px); }
+.ml-still-note { position: absolute; left: calc(var(--in) + 2.4rem); bottom: var(--in); margin: 0; padding: 0.35rem 0.6rem; background: var(--bg); font: 400 0.74rem/1.4 var(--font-mono); letter-spacing: 0.06em; color: var(--bone); font-variant-numeric: tabular-nums; opacity: 0; transition: opacity 0.6s 0.9s; }
+.ml[data-zone='still'] .ml-still-frame i, .ml[data-zone='after'] .ml-still-frame i { opacity: 0.8; transform: none; transition-delay: 0.9s; }
+.ml[data-zone='still'] .ml-still-note, .ml[data-zone='after'] .ml-still-note { opacity: 1; }
+.ml--reduced .ml-still { height: 100svh; }
+.ml--reduced .ml-still-frame i, .ml--reduced .ml-still-note { opacity: 1; transform: none; transition: none; }
+
+.ml-end { padding-bottom: 2rem; }
+
+@media (max-width: 640px) {
+  .ml-hero::before { background: linear-gradient(to top, var(--bg) 30%, #1a1a1a00 62%); }
+  /* The phone list opens on an empty half screen, so the single thread is seen before the first strip covers it. */
+  .ml-tl-track { gap: 7rem; padding-top: 48svh; }
+  .ml-col { box-shadow: none; }
+}

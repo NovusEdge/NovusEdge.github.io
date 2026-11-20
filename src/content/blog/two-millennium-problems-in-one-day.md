@@ -20,17 +20,7 @@ None of it is confirmed yet, and I'll get to what "confirmed" means here. But th
 
 This is the short version. Most of it comes from the Wikipedia [list of AI math discoveries](https://en.wikipedia.org/wiki/List_of_mathematical_discoveries_made_with_artificial_intelligence), which now has an embarrassing number of 2026 entries.
 
-| When | What | Who | Status |
-|---|---|---|---|
-| Jul | Explicit 3D counterexample to the Jacobian conjecture | Claude with Alpöge and Akhil Mathew | `status:ok Checked` |
-| Jul | Crouzeix's conjecture proved | GPT-5.6 Sol | `status:ok Reviewed` |
-| Aug | Ehrhart volume conjecture, upper bound | GPT-6 Astra | `status:ok Lean` |
-| Aug | Share of zeta zeros proven on the critical line goes from 41.6% to 67.25% | Claude, Anthropic | `status:ok Reviewed` |
-| Sep | Finite-time blowup for *forced* Navier–Stokes | OpenAI internal model | `status:warn Disputed` |
-| 6 Oct | 722 papers dumped at once, one claiming Landau–Siegel zeros don't exist | OpenAI internal model | `status:warn Mixed` |
-| 16 Oct | Exponential Time Hypothesis is false | OpenAI and Anthropic, independently | `status:wait Under review` |
-| 20 Nov | Unforced Euler and Navier–Stokes blowup | Alpöge, Buckmaster (and Coiculescu for Euler), heavy AI use | `status:wait Pending` |
-| 20 Nov | Riemann Hypothesis and GRH | Alpöge with Claude | `status:wait Pending` |
+{{timeline}}
 
 Blue has been checked by people or Lean, amber is waiting on a check, and red means disputed or partly walked back. The Ehrhart result only covers the upper bound, and the equality case is still open. About half of the October papers came with Lean, and three were retracted within a day.
 
@@ -85,6 +75,24 @@ As of writing, it's looking good. The Lean's top-level theorem is stated against
 Buzzard's caveat is the one that matters. Comparator checks the proof against theorem statements written separately and lists every axiom it uses. Lean will compile a file that quietly assumes what it's trying to prove, as long as the assumption is declared. A clean run means only Lean's three standard axioms are used, which would leave a Mathlib definition bug or a Lean kernel bug as the only ways out. Both are very unlikely for a statement this well-read.
 
 If Comparator comes back clean, we're in a strange place. The Riemann Hypothesis would be a theorem, and the only complete proof would be one that no human has read and possibly no human can. Clay's prize rules want a refereed publication and two years of acceptance, and nobody wrote those with a 239 MB tarball in mind.
+
+## Where this goes (speculation)
+
+Everything above is what's been claimed and checked. This section is me guessing, so weigh it accordingly.
+
+**The pattern.** Line the results up and the same shape keeps showing up. A human picks the problem and steers toward the right setting, and then the model does the technical heavy lifting in exactly the area the human knows least. Alpöge says this outright about automorphic forms on higher rank groups. The output is too big to read: 175,000 Lean files for RH, around 2,270 files and 600,000 lines for Navier–Stokes, and a 250,000-page "book" nobody will open. So Lean ends up doing the refereeing. And when two labs land on the same ETH algorithm on the same day, it looks less like genius and more like a capability threshold getting crossed. The ideas were sitting there waiting for something strong enough to reach them.
+
+**The cadence.** In July it was a counterexample to one conjecture. By November it was two Millennium problems. That's five months. I'm not going to extrapolate a curve from nine data points, but there are four Millennium problems left (P vs NP, Hodge, Yang–Mills and Birch–Swinnerton-Dyer), and I'd be less surprised than I was a year ago to see another one claimed in 2027.
+
+**What changes if it holds.**
+
+- Every "assuming GRH" in the literature turns into a plain theorem. The textbook example is Miller's primality test, which has been deterministic and polynomial-time *if* GRH holds since the 70s.
+- The hard part of checking a proof moves from the proof to the statement. Once Lean accepts a proof, the remaining question is whether the theorem it proves is the one we meant. Reading 30 lines of definitions very carefully becomes the new refereeing.
+- Understanding starts lagging behind truth. We may spend years knowing RH is true before anyone can explain why in a way that fits in a human head, and Alpöge's "short arguments to follow" is a bet that this gap closes fast.
+- Credit gets messy. The Buckmaster dispute is a preview: whose idea was it, whose model, whose data. Clay's rules, refereeing norms and authorship conventions were all written for a world where the author could explain the proof.
+- What a mathematician does shifts toward choosing problems, judging taste and building understanding. Alpöge's note keeps praising "good taste", from both labs. That might be the job now.
+
+None of this needs the RH proof to survive Comparator. Even if it falls over, ETH, the zeta-zeros result and the July results are still there, and the pattern was visible before Friday.
 
 ## What's next
 
