@@ -53,7 +53,7 @@ const POSES: Record<Zone, { wide: Pose; tall: Pose }> = {
 // reading, the figure moves there and stays lit, where otherwise it dims behind the sheet.
 export function pose(scene: Scene, zone: Zone, tall: boolean, side?: number) {
   const base = POSES[zone][tall ? 'tall' : 'wide']
-  const to = side !== undefined && (zone === 'read' || zone === 'after' || zone === 'next') ? { ...base, ox: side, zoom: 0.62, alpha: 0.7 } : base
+  const to = side !== undefined && (zone === 'read' || zone === 'after' || zone === 'next') ? { ...base, ox: side, zoom: 0.5, alpha: 0.7 } : base
   if (scene.still) {
     gsap.set(scene, { ...to, flow: 0 })
     return

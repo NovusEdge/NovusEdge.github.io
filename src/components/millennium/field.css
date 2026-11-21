@@ -65,7 +65,7 @@
 
 /* Clear of the chapter rail, which rides down the left edge here. */
 @media (min-width: 1200px) {
-  .ml-field-stage { padding-left: calc(var(--pad) + 11rem); }
+  .ml-field-stage { padding-left: calc(var(--pad) + 13rem); }
 }
 @media (min-width: 760px) {
   .ml-prizes span[data-short] { display: none; }

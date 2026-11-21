@@ -11,7 +11,7 @@ html.ml-night::-webkit-scrollbar-thumb:hover { background: #46a888; }
 .ml {
   --bg: #1a1a1a; --bone: #f5f2eb; --soft: #b9b5ac; --rule: #f5f2eb24;
   --gold: #d4a03c; --blue: #8fb1d3; --red: #f2a7a0; --teal: #5fe0b0;
-  --pad: clamp(1.25rem, 5vw, 4.5rem);
+  --pad: clamp(1.5rem, 4vw, 6rem);
   --out: cubic-bezier(0.16, 1, 0.3, 1);
   position: relative; background: var(--bg); color: var(--bone);
 }
@@ -118,7 +118,7 @@ html.ml-night::-webkit-scrollbar-thumb:hover { background: #46a888; }
 .ml-rail a[aria-current] span { color: var(--gold); }
 
 @media (min-width: 1200px) {
-  .ml-grid { grid-template-columns: 9rem minmax(0, 44rem) minmax(11rem, 1fr); column-gap: 3rem; justify-content: start; }
+  .ml-grid { grid-template-columns: 9rem minmax(34rem, 44rem) minmax(16rem, 1fr); column-gap: 3rem; justify-content: start; }
   .ml-grid > * { grid-column: 2 / -1; }
   .ml-row > *, .ml-fig > * { grid-column: 1; }
   .ml-row > .ml-note, .ml-fig > .ml-note { grid-column: 2; margin-top: 0.35rem; }
@@ -129,40 +129,42 @@ html.ml-night::-webkit-scrollbar-thumb:hover { background: #46a888; }
   .ml-head { grid-template-columns: subgrid; }
   .ml-kanji { justify-self: start; }
 
-  .ml-rail { position: sticky; top: 0; height: 100svh; margin-bottom: -100svh; padding: 0 var(--pad); background: none; display: flex; align-items: center; pointer-events: none; opacity: 0; transition: opacity 0.4s; }
-  .ml-rail ol { width: 9.6rem; padding: 0.8rem 0.6rem 0.8rem 0; border: 0; background: var(--bg); grid-template-rows: none; grid-auto-flow: row; }
-  .ml-rail a { grid-template-columns: 2.5em 1fr; padding: 0.35rem 0; font-size: 0.8rem; }
+  .ml-rail { position: sticky; top: 0; height: 100svh; margin-bottom: -100svh; padding: 0 var(--pad); background: none; display: flex; align-items: center; pointer-events: none; opacity: 0; transition: opacity 0.4s;
+    /* No ground of its own. Difference blending, on the element that owns the stacking context, keeps it light on the charcoal sheets and dark on the bone band. */
+    mix-blend-mode: difference; }
+  .ml-rail ol { width: 10rem; padding: 0.8rem 0.6rem 0.8rem 0; border: 0; grid-template-rows: none; grid-auto-flow: row; }
+  .ml-rail a { grid-template-columns: 2.5em 1fr; padding: 0.38rem 0; font-size: 0.88rem; color: #cfcbc2; }
   .ml[data-zone='read'] .ml-rail, .ml[data-zone='after'] .ml-rail, .ml[data-zone='next'] .ml-rail { opacity: 1; }
   .ml[data-zone='read'] .ml-rail ol, .ml[data-zone='after'] .ml-rail ol, .ml[data-zone='next'] .ml-rail ol { pointer-events: auto; }
 }
 
-/* From 1600px the page has a fourth, empty track on the right. Nothing is laid out in it: the
-   sheet's solid ground stops at the edge of the notes and the figure lives in the rest. Type goes
-   up a step so the text column fills its share. */
+/* From 1600px the type goes up a step. From 1760px there is room for a fourth, empty track on
+   the right: the sheet's solid ground stops at the edge of the notes and the figure lives in the
+   rest. Chapter heads run through it to the page edge. */
 @media (min-width: 1600px) {
-  .ml-sheet:not(.ml-sheet--paper, .ml-sheet--end) { background: linear-gradient(to right, var(--bg) calc(var(--pad) + 85rem), #1a1a1a00 calc(var(--pad) + 93rem)); }
-  .ml-grid { grid-template-columns: 9rem minmax(0, 46rem) 22rem minmax(0, 1fr); }
-  .ml-grid > * { grid-column: 2 / 4; }
+  .ml-grid { grid-template-columns: 10rem minmax(0, 46rem) minmax(20rem, 1fr); }
   .ml .ml-prose.prose-blog :is(p, li):not(blockquote[class] *) { font-size: 22px !important; }
-  .ml .ml-prose blockquote[class] { width: calc(100% + 25rem); }
+}
+@media (min-width: 1760px) {
+  .ml-sheet:not(.ml-sheet--paper, .ml-sheet--end) { background: linear-gradient(to right, var(--bg) calc(var(--pad) + 91rem), #1a1a1a00 calc(var(--pad) + 97rem)); }
+  .ml-grid { grid-template-columns: 10rem minmax(0, 46rem) 27.5rem minmax(0, 1fr); }
+  .ml-grid > * { grid-column: 2 / 4; }
+  .ml-grid > .ml-head { grid-column: 2 / -1; grid-template-columns: 1fr auto; background: var(--bg); }
+  .ml-head .ml-kanji { justify-self: end; }
+  .ml .ml-prose blockquote[class] { width: calc(100% + 30.5rem); }
 }
 
-/* "Where this goes" is opinion, so it is set on paper: bone sheet, dark ink, no margin and no figures. */
-.ml-sheet--paper { width: min(100% - 2 * var(--pad), 78rem); margin: clamp(4rem, 12vh, 7rem) auto; background: #f5f2eb; color: #1a1a1a; box-shadow: 0 34px 60px -28px #000; --rule: #1a1a1a33; --soft: #4d4a44; --gold: #8a6417; --blue: #3a5f85; --bone: #1a1a1a; --ink: #1a1a1a; }
-.ml-sheet--paper .ml-grid { grid-template-columns: minmax(0, 44rem); column-gap: 0; justify-content: center; }
-.ml-sheet--paper .ml-grid > *, .ml-sheet--paper .ml-row > * { grid-column: 1; }
-.ml-sheet--paper .ml-head { grid-template-columns: 1fr auto; }
-/* Wide: the heading stands in its own column and stays in view beside the text. */
-@media (min-width: 1200px) {
-  /* Left edge clear of the chapter rail. */
-  .ml-sheet--paper { width: min(78rem, 100% - 2 * var(--pad) - 12rem); margin-left: calc(var(--pad) + 12rem); margin-right: auto; }
-}
+/* "Where this goes" is opinion, so it is set on paper: a bone band from edge to edge with dark
+   ink, on the same grid as the rest. On a wide page its text runs in two columns, like a
+   newspaper's comment page, which no reported section does. */
+.ml-sheet--paper { margin: clamp(4rem, 12vh, 7rem) 0; background: #f5f2eb; color: #1a1a1a; --rule: #1a1a1a33; --soft: #4d4a44; --gold: #8a6417; --blue: #3a5f85; --bone: #1a1a1a; --ink: #1a1a1a; }
+.ml-sheet--paper .ml-grid > .ml-head { background: none; }
 @media (min-width: 1600px) {
-  .ml-sheet--paper .ml-grid { grid-template-columns: minmax(16rem, 1fr) minmax(0, 46rem); column-gap: 4rem; }
-  .ml-sheet--paper .ml-grid > .ml-row { grid-column: 2; }
-  .ml-sheet--paper .ml-head { position: sticky; top: 7rem; align-self: start; grid-template-columns: 1fr; row-gap: 1.5rem; margin: 0; }
-  .ml-sheet--paper .ml-head h2 { font-size: 2.6rem; }
-  .ml-sheet--paper .ml-head-aside { display: block; }
+  .ml-sheet--paper .ml-grid > .ml-row { grid-column: 2 / -1; }
+  .ml-sheet--paper .ml-row > .ml-prose { grid-column: 1 / -1; }
+  .ml-sheet--paper .ml-prose > div { column-count: 2; column-gap: 4rem; }
+  .ml-sheet--paper .ml-prose :is(p, li) { break-inside: avoid-column; }
+  .ml-sheet--paper .ml-prose > div > p:has(+ ul) { break-after: avoid-column; }
 }
 .ml-sheet--paper .ml-prose, .ml-sheet--paper .ml-prose .prose { color: #1a1a1ae0; --tw-prose-body: #1a1a1ae0; --tw-prose-bold: #1a1a1a; --tw-prose-headings: #1a1a1a; --tw-prose-bullets: #8a6417; --tw-prose-counters: #8a6417; }
 .ml-sheet--paper ::selection { background: #1a1a1a; color: #f5f2eb; }
@@ -238,5 +240,4 @@ html.ml-night::-webkit-scrollbar-thumb:hover { background: #46a888; }
   /* The phone list opens on an empty half screen, so the single thread is seen before the first strip covers it. */
   .ml-tl-track { gap: 7rem; padding-top: 48svh; }
   .ml-window { height: 46svh; }
-  .ml-sheet--paper { box-shadow: none; }
 }
