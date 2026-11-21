@@ -1,5 +1,3 @@
-import type { Zone } from './scene'
-
 export const SLOTS = ['timeline', 'eth_figure', 'ns_figure', 'rh_figure', 'proof_scale', 'lean_statement'] as const
 export type Slot = (typeof SLOTS)[number]
 
@@ -18,9 +16,8 @@ type Look = {
   kanji: string
   // the name in the chapter rail when the heading is too long for it
   short?: string
-  zone: Zone
-  // a gap above the chapter where the figure shows at full strength
-  opens?: 'window' | 'still' | 'field'
+  // what stands above the chapter
+  opens?: 'field'
   paper?: boolean
   // rows of RESULTS whose status is shown under the heading
   results?: number[]
@@ -28,17 +25,17 @@ type Look = {
 
 // Keyed by heading id. A heading that is not listed still renders, as a plain chapter.
 export const LOOKS: Record<string, Look> = {
-  friday: { kanji: '金曜', zone: 'read' },
-  'how-we-got-here': { kanji: '経緯', zone: 'read' },
-  eth: { kanji: '時間', zone: 'read', opens: 'window', results: [6] },
-  navierstokes: { kanji: '流体', zone: 'read', opens: 'window', results: [4, 7] },
-  'the-riemann-hypothesis': { kanji: '零点', short: 'Riemann', zone: 'read', opens: 'window', results: [8] },
-  'is-it-real': { kanji: '検証', zone: 'after', opens: 'still' },
-  'where-this-goes-speculation': { kanji: '推測', zone: 'next', opens: 'field', paper: true },
-  'whats-next': { kanji: '次', zone: 'next' },
+  friday: { kanji: '金曜', },
+  'how-we-got-here': { kanji: '経緯', },
+  eth: { kanji: '時間', results: [6] },
+  navierstokes: { kanji: '流体', results: [4, 7] },
+  'the-riemann-hypothesis': { kanji: '零点', short: 'Riemann', results: [8] },
+  'is-it-real': { kanji: '検証' },
+  'where-this-goes-speculation': { kanji: '推測', opens: 'field', paper: true },
+  'whats-next': { kanji: '次' },
 }
 
-export const PLAIN: Look = { kanji: '', zone: 'read' }
+export const PLAIN: Look = { kanji: '' }
 
 // The same ids markdown.tsx gives its headings, so links to a section keep working.
 export const slug = (text: string) =>

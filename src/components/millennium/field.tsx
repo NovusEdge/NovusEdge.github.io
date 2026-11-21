@@ -72,7 +72,7 @@ export function ResultField({ live }: { live: boolean }) {
 
   let n = 0
   return (
-    <section ref={root} className="ml-field" data-zone="after" aria-label="2026 results made with AI, by month, and the seven Millennium Prize problems">
+    <section ref={root} className="ml-field" data-zone="read" aria-label="2026 results made with AI, by month, and the seven Millennium Prize problems">
       <div className="ml-field-stage">
         <p className="ml-field-lede">Every dot is a 2026 result made with AI, in the month it landed. The row on top is the seven Millennium Prize problems.</p>
         <ol className="ml-prizes">

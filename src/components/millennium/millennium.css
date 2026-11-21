@@ -21,43 +21,42 @@ html.ml-night::-webkit-scrollbar-thumb:hover { background: #46a888; }
 /* Sticky, not fixed: .page-enter carries a transform, so a fixed layer would size to the whole page. */
 .ml-stage { position: sticky; top: 0; height: 100lvh; margin-bottom: -100lvh; z-index: 0; pointer-events: none; }
 .ml-stage canvas { display: block; width: 100%; height: 100%; }
+/* Off wherever the hero and the timeline are out of view; the renderer stops drawing too. */
+.ml[data-fig='off'] .ml-stage { visibility: hidden; }
 .ml-body { position: relative; z-index: 1; }
 
-/* The hero is one picture: the day in outline across the top with the figure burning through its
-   digits, the two problems as plates wired into the figure's right side, the title bottom left.
-   A phone stacks it: day, figure, title, plates. */
+/* The hero is one picture: the title sits level with the figure, the two problems hang off the
+   figure's right side as plates, and the day of the papers is one solid line at the foot.
+   A phone stacks it: figure, title, day, plates. */
 .ml-hero { position: relative; min-height: 100svh; display: flex; flex-direction: column; align-items: flex-start; padding: 6.5rem var(--pad) clamp(2.5rem, 7vh, 4.5rem); }
 /* A charcoal pool under the title so the lettering never sits on the bright core. */
-.ml-hero::before { content: ''; position: absolute; inset: 0; z-index: -1; background: linear-gradient(to bottom, #1a1a1a00 calc(9rem + 30svh), var(--bg) calc(9rem + 44svh)); }
-.ml-day { margin: 1.2rem 0 0; font: 900 15.5vw/0.9 var(--font-display); letter-spacing: -0.045em; font-variant-numeric: tabular-nums; white-space: nowrap; color: #1a1a1a00; -webkit-text-stroke: 1px var(--gold); }
-.ml-day time { display: block; overflow: hidden; padding: 0.04em 0.02em; }
-.ml-day span { display: inline-block; }
-.ml-hero-title { margin-top: 37svh; }
-.ml-hero h1 { margin: 0; max-width: 10.5em; font: 800 clamp(2.5rem, 5.6vw, 5rem)/0.97 var(--font-display); letter-spacing: -0.035em; text-wrap: balance; }
+.ml-hero::before { content: ''; position: absolute; inset: 0; z-index: -1; background: linear-gradient(to bottom, #1a1a1a00 calc(5rem + 30svh), var(--bg) calc(5rem + 44svh)); }
+.ml-hero-title { margin-top: 44svh; }
+.ml-hero h1 { margin: 0; max-width: 10.5em; font: 800 clamp(2.5rem, 6.2vw, 6rem)/0.97 var(--font-display); letter-spacing: -0.035em; text-wrap: balance; }
 .ml-prob { display: block; width: max-content; margin-top: 0.06em; font-size: 1.22em; color: var(--gold); transform-origin: 0 80%; }
-.ml-date { margin: 1.6rem 0 0; font: 500 0.8rem/1 var(--font-mono); letter-spacing: 0.14em; text-transform: uppercase; color: var(--soft); font-variant-numeric: tabular-nums; }
-.ml-date time { display: inline-block; color: var(--bone); }
+.ml-date { margin: 1.5rem 0 0; display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.5rem 1.4rem; font: 500 0.8rem/1 var(--font-mono); letter-spacing: 0.14em; text-transform: uppercase; color: var(--soft); font-variant-numeric: tabular-nums; }
+.ml-date > time { font: 700 clamp(1.3rem, 2.1vw, 2rem)/1 var(--font-display); letter-spacing: -0.015em; text-transform: none; color: var(--bone); }
 .ml-exhibits { order: 1; align-self: stretch; display: grid; gap: 1rem; margin-top: 2.4rem; }
 .ml-exhibit { position: relative; padding: 1rem 1.15rem 1.05rem; border: 1px solid var(--rule); background: var(--bg); }
-.ml-exhibit p { margin: 0; font: 400 0.82rem/1.45 var(--font-body); color: var(--soft); }
+.ml-exhibit p { margin: 0; font: 400 0.9rem/1.45 var(--font-body); color: var(--soft); }
 .ml-exhibit p:first-child { display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
-.ml-exhibit b { font: 800 1.15rem/1.1 var(--font-display); letter-spacing: -0.015em; color: var(--bone); }
-.ml-exhibit .ml-exhibit-math { display: grid; gap: 0.35rem; margin: 0.95rem 0 0.7rem; overflow-x: auto; overflow-y: hidden; font-size: 1rem; color: var(--bone); scrollbar-width: thin; }
+.ml-exhibit b { font: 800 1.2rem/1.1 var(--font-display); letter-spacing: -0.015em; color: var(--bone); }
+.ml-exhibit .ml-exhibit-math { display: grid; gap: 0.35rem; margin: 0.95rem 0 0.7rem; overflow-x: auto; overflow-y: hidden; font-size: 1.05rem; color: var(--bone); scrollbar-width: thin; }
 
 @media (min-width: 900px) {
-  .ml-hero { display: grid; grid-template-columns: minmax(0, 1fr) clamp(19rem, 30vw, 25rem); grid-template-rows: auto auto 1fr; column-gap: 2rem; align-items: start; }
-  .ml-hero::before { background: radial-gradient(90% 62% at 0% 100%, var(--bg) 30%, #1a1a1a00 74%); }
+  .ml-hero { display: grid; grid-template-columns: minmax(0, 1fr) clamp(19rem, 30vw, 27rem); grid-template-rows: auto 1fr auto; column-gap: 2rem; align-items: start; }
+  .ml-hero::before { background: radial-gradient(64% 70% at 0% 55%, var(--bg) 34%, #1a1a1a00 78%); }
   .ml-back { grid-area: 1 / 1; }
-  .ml-day { grid-area: 2 / 1 / 3 / -1; font-size: clamp(6rem, 14.6vw, 15rem); }
-  .ml-hero-title { grid-area: 3 / 1; align-self: end; margin: 0; }
-  .ml-exhibits { grid-area: 3 / 2; align-self: end; margin: 0; }
+  .ml-hero-title { grid-area: 2 / 1; align-self: center; margin: 0; }
+  /* Raised clear of the site's pet, which stands in the bottom left corner. */
+  .ml-date { grid-area: 3 / 1; align-self: end; margin: 0 0 2.8rem; }
+  .ml-exhibits { grid-area: 2 / 2 / 4 / 3; align-self: end; margin: 0; }
   /* A wire from each plate into the figure. */
   .ml-exhibit::before { content: ''; position: absolute; right: 100%; top: 50%; width: clamp(2.5rem, 7vw, 7rem); height: 1px; background: #f5f2eb66; }
   .ml-exhibit::after { content: ''; position: absolute; right: calc(100% + clamp(2.5rem, 7vw, 7rem) - 3px); top: calc(50% - 3px); width: 7px; height: 7px; border-radius: 50%; background: var(--bone); }
 }
 
-/* Sheets are solid under the type: body text never sits on the particles. The figure shows in the
-   gaps between them and, from 1600px, in the open right-hand side of the page. */
+/* Sheets are solid and run the full width. The figure is not behind them: it shows in the hero and the timeline only. */
 .ml-sheet { position: relative; width: 100%; margin: 0 auto; padding: clamp(3rem, 8vh, 5.5rem) var(--pad); background: var(--bg); }
 .ml-sheet--lead { padding-bottom: 0; }
 .ml-sheet--end { padding-top: 0; padding-bottom: 2rem; }
@@ -105,9 +104,6 @@ html.ml-night::-webkit-scrollbar-thumb:hover { background: #46a888; }
 .ml-sources li { counter-increment: src; display: grid; grid-template-columns: 1.6em 1fr; margin-bottom: 0.3rem; overflow-wrap: anywhere; }
 .ml-sources li::before { content: counter(src); color: var(--gold); font-variant-numeric: tabular-nums; }
 
-/* A gap above each of the three problems where the figure comes back up. */
-.ml-window { height: 62svh; }
-
 /* The chapter rail stands in for a table of contents. It rides in the grid's first column and
    only shows over a sheet; under 1200px it is a plain list after the hero. */
 .ml-rail { position: relative; z-index: 3; width: 100%; margin: 0 auto; padding: 2.5rem var(--pad) 0; background: var(--bg); }
@@ -118,7 +114,9 @@ html.ml-night::-webkit-scrollbar-thumb:hover { background: #46a888; }
 .ml-rail a[aria-current] span { color: var(--gold); }
 
 @media (min-width: 1200px) {
-  .ml-grid { grid-template-columns: 9rem minmax(34rem, 44rem) minmax(16rem, 1fr); column-gap: 3rem; justify-content: start; }
+  /* The text takes what the rail and the notes leave, up to a cap on the line itself, and the notes sit on the right page edge. */
+  .ml-grid { grid-template-columns: 9rem minmax(0, 1fr) clamp(16rem, 20vw, 22rem); column-gap: 3rem; }
+  .ml-row > .ml-prose { max-width: 60rem; }
   .ml-grid > * { grid-column: 2 / -1; }
   .ml-row > *, .ml-fig > * { grid-column: 1; }
   .ml-row > .ml-note, .ml-fig > .ml-note { grid-column: 2; margin-top: 0.35rem; }
@@ -126,42 +124,29 @@ html.ml-night::-webkit-scrollbar-thumb:hover { background: #46a888; }
   .ml-fig > .ml-note--under { margin-top: 1.4rem; max-width: none; display: flex; flex-wrap: wrap; gap: 0 3rem; }
   .ml-note--under::before { flex-basis: 100%; width: auto; background: linear-gradient(var(--gold), var(--gold)) left / 1.5rem 1px no-repeat; }
   .ml-note--under p { flex: 0 1 34rem; }
-  .ml-head { grid-template-columns: subgrid; }
-  .ml-kanji { justify-self: start; }
 
   .ml-rail { position: sticky; top: 0; height: 100svh; margin-bottom: -100svh; padding: 0 var(--pad); background: none; display: flex; align-items: center; pointer-events: none; opacity: 0; transition: opacity 0.4s;
     /* No ground of its own. Difference blending, on the element that owns the stacking context, keeps it light on the charcoal sheets and dark on the bone band. */
     mix-blend-mode: difference; }
   .ml-rail ol { width: 10rem; padding: 0.8rem 0.6rem 0.8rem 0; border: 0; grid-template-rows: none; grid-auto-flow: row; }
   .ml-rail a { grid-template-columns: 2.5em 1fr; padding: 0.38rem 0; font-size: 0.88rem; color: #cfcbc2; }
-  .ml[data-zone='read'] .ml-rail, .ml[data-zone='after'] .ml-rail, .ml[data-zone='next'] .ml-rail { opacity: 1; }
-  .ml[data-zone='read'] .ml-rail ol, .ml[data-zone='after'] .ml-rail ol, .ml[data-zone='next'] .ml-rail ol { pointer-events: auto; }
+  .ml[data-zone='read'] .ml-rail { opacity: 1; }
+  .ml[data-zone='read'] .ml-rail ol { pointer-events: auto; }
 }
 
-/* From 1600px the type goes up a step. From 1760px there is room for a fourth, empty track on
-   the right: the sheet's solid ground stops at the edge of the notes and the figure lives in the
-   rest. Chapter heads run through it to the page edge. */
+/* From 1600px the type goes up a step. */
 @media (min-width: 1600px) {
-  .ml-grid { grid-template-columns: 10rem minmax(0, 46rem) minmax(20rem, 1fr); }
+  .ml-grid { grid-template-columns: 10rem minmax(0, 1fr) clamp(16rem, 20vw, 22rem); }
   .ml .ml-prose.prose-blog :is(p, li):not(blockquote[class] *) { font-size: 22px !important; }
-}
-@media (min-width: 1760px) {
-  .ml-sheet:not(.ml-sheet--paper, .ml-sheet--end) { background: linear-gradient(to right, var(--bg) calc(var(--pad) + 91rem), #1a1a1a00 calc(var(--pad) + 97rem)); }
-  .ml-grid { grid-template-columns: 10rem minmax(0, 46rem) 27.5rem minmax(0, 1fr); }
-  .ml-grid > * { grid-column: 2 / 4; }
-  .ml-grid > .ml-head { grid-column: 2 / -1; grid-template-columns: 1fr auto; background: var(--bg); }
-  .ml-head .ml-kanji { justify-self: end; }
-  .ml .ml-prose blockquote[class] { width: calc(100% + 30.5rem); }
 }
 
 /* "Where this goes" is opinion, so it is set on paper: a bone band from edge to edge with dark
    ink, on the same grid as the rest. On a wide page its text runs in two columns, like a
    newspaper's comment page, which no reported section does. */
 .ml-sheet--paper { margin: clamp(4rem, 12vh, 7rem) 0; background: #f5f2eb; color: #1a1a1a; --rule: #1a1a1a33; --soft: #4d4a44; --gold: #8a6417; --blue: #3a5f85; --bone: #1a1a1a; --ink: #1a1a1a; }
-.ml-sheet--paper .ml-grid > .ml-head { background: none; }
 @media (min-width: 1600px) {
   .ml-sheet--paper .ml-grid > .ml-row { grid-column: 2 / -1; }
-  .ml-sheet--paper .ml-row > .ml-prose { grid-column: 1 / -1; }
+  .ml-sheet--paper .ml-row > .ml-prose { grid-column: 1 / -1; max-width: none; }
   .ml-sheet--paper .ml-prose > div { column-count: 2; column-gap: 4rem; }
   .ml-sheet--paper .ml-prose :is(p, li) { break-inside: avoid-column; }
   .ml-sheet--paper .ml-prose > div > p:has(+ ul) { break-after: avoid-column; }
@@ -222,22 +207,7 @@ html.ml-night::-webkit-scrollbar-thumb:hover { background: #46a888; }
 .ml-tl-read b { font-weight: 500; color: var(--bone); }
 .ml-tl--pin .ml-tl-key { position: absolute; left: 30vw; bottom: 1.6rem; width: auto; margin: 0; padding: 0; background: none; }
 
-/* "Is it real": a window in the column where the figure runs down and stops. */
-.ml-still { position: relative; height: 135svh; }
-.ml-still-frame { position: sticky; top: 0; height: 100svh; --in: clamp(1.25rem, 7vmin, 5rem); }
-.ml-still-frame i { position: absolute; width: 1.6rem; height: 1.6rem; border: 0 solid var(--bone); opacity: 0; transition: opacity 0.5s, transform 0.9s var(--out); }
-.ml-still-frame i:nth-child(1) { left: var(--in); top: calc(var(--in) + 3.5rem); border-width: 1px 0 0 1px; transform: translate(-22px, -22px); }
-.ml-still-frame i:nth-child(2) { right: var(--in); top: calc(var(--in) + 3.5rem); border-width: 1px 1px 0 0; transform: translate(22px, -22px); }
-.ml-still-frame i:nth-child(3) { left: var(--in); bottom: var(--in); border-width: 0 0 1px 1px; transform: translate(-22px, 22px); }
-.ml-still-frame i:nth-child(4) { right: var(--in); bottom: var(--in); border-width: 0 1px 1px 0; transform: translate(22px, 22px); }
-.ml-still-note { position: absolute; left: calc(var(--in) + 2.4rem); bottom: var(--in); margin: 0; padding: 0.35rem 0.6rem; background: var(--bg); font: 400 0.74rem/1.4 var(--font-mono); letter-spacing: 0.06em; color: var(--bone); font-variant-numeric: tabular-nums; opacity: 0; transition: opacity 0.6s 0.9s; }
-.ml[data-zone='still'] .ml-still-frame i, .ml[data-zone='after'] .ml-still-frame i, .ml[data-zone='next'] .ml-still-frame i { opacity: 0.8; transform: none; transition-delay: 0.9s; }
-.ml[data-zone='still'] .ml-still-note, .ml[data-zone='after'] .ml-still-note, .ml[data-zone='next'] .ml-still-note { opacity: 1; }
-.ml--reduced .ml-still { height: 100svh; }
-.ml--reduced .ml-still-frame i, .ml--reduced .ml-still-note { opacity: 1; transform: none; transition: none; }
-
 @media (max-width: 640px) {
   /* The phone list opens on an empty half screen, so the single thread is seen before the first strip covers it. */
   .ml-tl-track { gap: 7rem; padding-top: 48svh; }
-  .ml-window { height: 46svh; }
 }

@@ -9,7 +9,7 @@ import Magnetic from '../../components/react-bits/Magnetic'
 import { Markdown } from '../../components/markdown'
 import { PostSignoff } from '../../components/post-signoff'
 import { AttractorStage } from '../../components/millennium/attractor-stage'
-import { createScene, disposeScene, pose, showCount, turn, type Scene, type Zone } from '../../components/millennium/scene'
+import { createScene, disposeScene, pose, showCount, type Scene, type Zone } from '../../components/millennium/scene'
 import { RESULTS } from '../../components/millennium/timeline-data'
 import { Timeline, emphasised } from '../../components/millennium/timeline'
 import { Figure, Pill, Tex } from '../../components/millennium/figures'
@@ -25,13 +25,6 @@ gsap.registerPlugin(useGSAP, ScrollTrigger, SplitText)
 
 const PROSE =
   'ml-prose prose prose-neutral prose-blog max-w-none leading-relaxed text-charcoal/80 dark:prose-invert dark:text-bone/85 prose-headings:mt-12 prose-headings:mb-6 prose-headings:font-display prose-p:my-6 prose-h2:text-4xl prose-h3:text-2xl'
-
-// A different side of the figure in the window above each of the three problems.
-const TURNS: [number, number][] = [
-  [0.9, 0.25],
-  [-0.8, -0.2],
-  [1.7, 0.35],
-]
 
 // The day the three papers came out, which is the day before the post's own date.
 const EVENT_DAY = '2026-11-20'
@@ -95,16 +88,11 @@ export function MillenniumPage({ post, image }: { post: Post; image?: string | n
       if (!scene || !motion) return
       const el = root.current!
       const zones = gsap.utils.toArray<HTMLElement>('[data-zone]', el)
-      const windows = gsap.utils.toArray<HTMLElement>('.ml-window', el)
+      // The figure belongs to three places only: the hero, the timeline and the held frame.
+      const stages = zones.filter((z) => z.dataset.zone !== 'read')
       const heads = gsap.utils.toArray<HTMLElement>('[data-chapter]', el)
       const links = gsap.utils.toArray<HTMLElement>('.ml-rail a', el)
       const narrow = () => innerWidth < 900 || innerWidth < innerHeight
-      // The centre of the page's open right side, if it has one wide enough to hold the figure.
-      const row = el.querySelector<HTMLElement>('.ml-row')
-      const side = () => {
-        const edge = (row?.getBoundingClientRect().right ?? innerWidth) + 48
-        return innerWidth - edge > 260 ? (edge + innerWidth) / innerWidth - 1 : undefined
-      }
       let chapter: string | undefined
       const resolve = () => {
         const h = innerHeight
@@ -115,33 +103,28 @@ export function MillenniumPage({ post, image }: { post: Post; image?: string | n
           chapter = current
           links.forEach((a) => (a.dataset.chapterLink === current ? a.setAttribute('aria-current', 'true') : a.removeAttribute('aria-current')))
         }
-        // A window owns the figure for as long as it fills the middle of the screen, not only while it crosses one line.
-        const open = windows.some((w) => {
-          const r = w.getBoundingClientRect()
-          return r.top < h * 0.8 && r.bottom > h * 0.2
+        // Everywhere else the canvas is hidden and stops drawing, so it costs nothing behind the text.
+        const on = stages.some((z) => {
+          const r = z.getBoundingClientRect()
+          return r.top < h && r.bottom > 0
         })
+        scene.off = !on
+        el.dataset.fig = on ? 'on' : 'off'
         const hit = zones.find((z) => {
           const r = z.getBoundingClientRect()
           return r.top <= line && r.bottom > line
         })
-        const next = open ? 'open' : ((hit?.dataset.zone as Zone | undefined) ?? zone.current ?? 'hero')
+        const next = (hit?.dataset.zone as Zone | undefined) ?? zone.current ?? 'hero'
         if (next === zone.current) return
         zone.current = next
         el.dataset.zone = next
-        pose(scene, next, next === 'timeline' ? !motion.pin : narrow(), side())
+        pose(scene, next, next === 'timeline' ? !motion.pin : narrow())
         // The hero opens on one thread and takes about five seconds to fill in.
         showCount(scene, next === 'timeline' ? count.current : RESULTS.length, next === 'hero' ? 560 : undefined)
       }
       zone.current = null
       ScrollTrigger.create({ start: 0, end: 'max', onUpdate: resolve, onRefresh: resolve })
       resolve()
-
-      if (motion.reduced) return
-      windows.forEach((w, i) => {
-        const [yaw, pitch] = TURNS[i % TURNS.length]
-        const [backYaw, backPitch] = i ? TURNS[(i - 1) % TURNS.length] : [0, 0]
-        ScrollTrigger.create({ trigger: w, start: 'top 85%', onEnter: () => turn(scene, yaw, pitch), onLeaveBack: () => turn(scene, backYaw, backPitch) })
-      })
     },
     { scope: root, dependencies: [scene, motion?.pin], revertOnUpdate: true },
   )
@@ -161,9 +144,8 @@ export function MillenniumPage({ post, image }: { post: Post; image?: string | n
       })
       hero
         .from('.ml-prob', { opacity: 0, yPercent: 55, rotate: -7, duration: 0.9, ease: 'back.out(2.2)' }, 1.25)
-        .from('.ml-day span', { yPercent: 105, duration: 1.1, stagger: 0.045 }, 0.1)
         .from('.ml-exhibit', { opacity: 0, x: 28, duration: 1, stagger: 0.9 }, 2.6)
-        .from('.ml-date time', { clipPath: 'inset(0 100% 0 0)', duration: 0.7, ease: 'steps(14)' }, 1.5)
+        .from('.ml-date', { opacity: 0, y: 14, duration: 0.9 }, 1.7)
         .from('.ml-back', { opacity: 0, duration: 0.8 }, 0.4)
 
       // Pull quotes: the gold rules draw across, then the words come up line by line.
@@ -226,23 +208,11 @@ export function MillenniumPage({ post, image }: { post: Post; image?: string | n
     const firstText = ch.blocks.findIndex((b) => b.kind === 'md')
     return (
       <section key={ch.id} className="ml-ch" data-chapter={ch.id} aria-labelledby={ch.id}>
-        {look.opens === 'window' && <div className="ml-window" data-zone="open" aria-hidden="true" />}
         {look.opens === 'field' && <ResultField live={live} />}
-        {look.opens === 'still' && (
-          <div className="ml-still" data-zone="still">
-            <div className="ml-still-frame">
-              <i />
-              <i />
-              <i />
-              <i />
-              <p className="ml-still-note">Frame held. Verdicts pending.</p>
-            </div>
-          </div>
-        )}
         {runs.map((run, r) => (
           <div key={r}>
             {r > 0 && <Timeline layout={motion?.pin ? 'pin' : 'list'} live={live} onCount={onCount} />}
-            <div className={`ml-sheet${look.paper ? ' ml-sheet--paper' : ''}`} data-zone={look.zone}>
+            <div className={`ml-sheet${look.paper ? ' ml-sheet--paper' : ''}`} data-zone="read">
               <div className="ml-grid">
                 {r === 0 && (
                   <header className="ml-head">
@@ -296,15 +266,6 @@ export function MillenniumPage({ post, image }: { post: Post; image?: string | n
               </TLink>
             </Magnetic>
           </div>
-          <p className="ml-day">
-            <time dateTime={EVENT_DAY} aria-label="20 November 2026">
-              {EVENT_DAY.split('-').reverse().join('.').split('').map((c, i) => (
-                <span key={i} aria-hidden="true">
-                  {c}
-                </span>
-              ))}
-            </time>
-          </p>
           <div className="ml-exhibits">
             <div className="ml-exhibit">
               <p>
@@ -338,10 +299,13 @@ export function MillenniumPage({ post, image }: { post: Post; image?: string | n
                 </>
               )}
             </h1>
-            <p className="ml-date">
-              Published <time dateTime={post.date}>{date}</time>
-            </p>
           </div>
+          <p className="ml-date">
+            <time dateTime={EVENT_DAY}>{new Date(EVENT_DAY).toLocaleDateString(i18n.language, { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' })}</time>
+            <span>
+              Published <time dateTime={post.date}>{date}</time>
+            </span>
+          </p>
         </header>
 
         <nav className="ml-rail" aria-label="Sections">

@@ -139,6 +139,10 @@ export function AttractorStage({ scene }: { scene: Scene }) {
     let raf = 0
     const frame = (now: number) => {
       raf = requestAnimationFrame(frame)
+      if (scene.off) {
+        then = now
+        return
+      }
       const dt = Math.min(0.05, (now - then) / 1000)
       then = now
       time += dt * scene.flow

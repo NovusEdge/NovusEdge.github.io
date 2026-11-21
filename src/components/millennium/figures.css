@@ -25,6 +25,9 @@
 
 /* ETH */
 .ml-eth-plot { aspect-ratio: 4 / 3; margin: 2.4rem 0 2.4rem; }
+@media (min-width: 1400px) {
+  .ml-eth-plot { aspect-ratio: 16 / 9; }
+}
 .ml-eth-hatch { stroke: var(--red); stroke-opacity: 0.5; stroke-width: 0.3; }
 .ml-eth-floor { stroke: var(--red); stroke-width: 1.5; stroke-dasharray: 5 5; }
 .ml-eth-brute { stroke: var(--soft); stroke-width: 1.5; }
@@ -38,21 +41,27 @@
 .ml-ns-eq p { margin: 0; }
 .ml-ns-eq p:first-child { max-width: 100%; overflow-x: auto; overflow-y: hidden; font-size: clamp(1.05rem, 2.2vw, 1.7rem); color: var(--bone); scrollbar-width: thin; }
 .ml-ns-eq p:last-child { max-width: 30ch; font: 400 1rem/1.5 var(--font-body); color: var(--soft); }
-.ml-ns-pair { display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: repeat(4, auto); gap: 0 clamp(1.25rem, 2.5vw, 2.5rem); }
-.ml-ns-panel { display: grid; grid-row: span 4; grid-template-rows: subgrid; min-width: 0; padding: clamp(1.1rem, 2.2vw, 1.8rem); border: 1px solid var(--rule); }
-.ml-ns-head { display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
-.ml-ns-head h3 { margin: 0; font: 800 clamp(1.5rem, 2.6vw, 2.1rem)/1 var(--font-display); letter-spacing: -0.02em; color: var(--bone); }
-.ml-ns-head .ml-pill { font-size: 0.8rem; padding: 0.3rem 0.85rem; }
-.ml-ns-sub { margin: 0.8rem 0 0; max-width: 38ch; font: 400 1rem/1.5 var(--font-body); color: var(--soft); }
-.ml-ns-plot { aspect-ratio: 5 / 4; margin: 3.2rem 0 2.4rem; --lab: clamp(0.92rem, 3.6cqi, 1.15rem); }
+/* Label column and plot column. The force lanes use the same two columns, so each lane sits under the plot's time axis. */
+.ml-ns { display: grid; grid-template-columns: minmax(0, 22rem) minmax(0, 1fr); column-gap: clamp(1.5rem, 3vw, 3rem); align-items: end; }
+.ml-ns-who p { margin: 0 0 0.6rem; max-width: 34ch; font: 400 1rem/1.5 var(--font-body); color: #cfcbc2; }
+.ml-ns-who p:first-child { display: flex; align-items: center; gap: 1rem; }
+.ml-ns-who b { font: 800 clamp(1.4rem, 2vw, 1.8rem)/1 var(--font-display); letter-spacing: -0.02em; color: var(--bone); }
+.ml-ns-who .ml-pill { font-size: 0.8rem; padding: 0.3rem 0.85rem; }
+.ml-ns-key { align-self: center; }
+.ml-ns-key p:first-child { display: block; color: var(--bone); font-size: 1.1rem; }
+.ml-ns-key--gold, .ml-ns-key--blue { position: relative; padding-left: 2.4rem; }
+.ml-ns-key--gold::before, .ml-ns-key--blue::before { content: ''; position: absolute; left: 0; top: 0.72em; width: 1.7rem; border-top: 3px solid var(--gold); }
+.ml-ns-key--blue::before { border-top: 2px solid var(--blue); }
+.ml-ns-plot { aspect-ratio: 21 / 9; margin: 3rem 0 2.6rem; --lab: clamp(0.92rem, 2.2cqi, 1.2rem); }
 .ml-ns-plot svg { mask-image: linear-gradient(to top, #000 82%, #0000); }
 .ml-ns-t { stroke: var(--soft); stroke-width: 1; stroke-dasharray: 3 5; }
 .ml-ns-smooth { stroke: var(--blue); stroke-width: 2; }
 .ml-ns-blow { stroke: var(--gold); stroke-width: 3; }
-.ml-ns-force { display: grid; gap: 0.6rem; font: 500 0.95rem/1.2 var(--font-body); color: var(--soft); }
-.ml-ns-force > div { display: flex; align-items: flex-end; justify-content: space-between; height: 2.6rem; padding-right: 33.3%; border-bottom: 1px solid var(--rule); }
+.ml-ns-lane { display: grid; grid-column: 1 / -1; grid-template-columns: subgrid; align-items: end; padding: 1.3rem 0; border-top: 1px solid var(--rule); }
+.ml-ns-force { position: relative; }
+.ml-ns-force > span { position: absolute; right: 0; bottom: 0.5rem; font-size: 1.15rem; color: var(--bone); }
+.ml-ns-force > div { display: flex; align-items: flex-end; justify-content: space-between; height: 3.2rem; padding-right: 33.3%; border-bottom: 1px solid #f5f2eb55; }
 .ml-ns-force i { width: 3px; height: calc(var(--h) * 100%); background: var(--red); }
-.ml-ns-panel--forced .ml-ns-force { color: var(--red); }
 
 /* Riemann: the strip from above and the size of zeta from the side, sharing one height axis. */
 .ml-rh { --gut: clamp(3.4rem, 7vw, 6.5rem); --lab: clamp(0.82rem, 1.25vw, 1.05rem); padding: 5.2rem 0 4rem var(--gut); }
@@ -124,7 +133,9 @@
 .ml-lean-ty { color: var(--blue); }
 
 @media (max-width: 720px) {
-  .ml-ns-pair { grid-template-columns: 1fr; gap: 1.25rem; }
+  .ml-ns { grid-template-columns: 1fr; }
+  .ml-ns-plot { aspect-ratio: 4 / 3; }
+  .ml-ns-lane { row-gap: 0.4rem; }
   .ml-rh { padding-top: 4.6rem; }
   .ml-rh-zero .ml-dot { width: 0.55rem; height: 0.55rem; outline-offset: 2px; }
   /* The last two zeros are 1.8 apart, closer than a line of type on a phone, so their labels lean away from each other. */

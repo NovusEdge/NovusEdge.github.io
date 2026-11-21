@@ -84,36 +84,24 @@ const nsFrame = { x: 0, y: 100 - 100 / NS_TOP, w: 100 / NS_SPAN, h: 100 / NS_TOP
 const NS_EXIT = 1 - (0.22 / NS_TOP) ** 2
 const FORCE = [0.35, 0.8, 0.5, 1, 0.3, 0.7, 0.95, 0.45, 0.85, 0.6, 1, 0.4]
 
-function NsPanel({ forced }: { forced: boolean }) {
+// One plot, because the claimed behaviour is the same in both results. What differs is whether an
+// outside force is acting, so that is drawn as two lanes under the plot on the same time axis.
+function NsLane({ forced }: { forced: boolean }) {
+  const r = RESULTS[forced ? 4 : 7]
   return (
-    <div className={`ml-ns-panel${forced ? ' ml-ns-panel--forced' : ''}`}>
-      <div className="ml-ns-head">
-        <h3>{forced ? 'Forced' : 'Unforced'}</h3>
-        <Pill row={forced ? 4 : 7} />
-      </div>
-      <p className="ml-ns-sub">{forced ? 'September, OpenAI. Something outside keeps pushing the fluid.' : '20 November, Alpöge and Buckmaster. Nothing pushes. This is the one Clay asks about.'}</p>
-      <div className="ml-plot ml-ns-plot" role="img" aria-label={`Chart: the fastest speed in the fluid against time, ${forced ? 'with' : 'without'} an outside force. One curve stays bounded forever. The other climbs without limit as time approaches T.`}>
-        <svg viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
-          <line className="ml-ns-t" x1={100 / NS_SPAN} y1="100" x2={100 / NS_SPAN} y2="0" />
-          <path className="ml-ns-smooth" d={plot((t) => smooth(t * NS_SPAN), 0, 1, { ...nsFrame, w: 100 })} />
-        </svg>
-        <svg className="ml-draw" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
-          <path className="ml-ns-blow" d={plot(blowup, 0, NS_EXIT, nsFrame, 90)} />
-        </svg>
-        <Lab x={1 / NS_SPAN} y={0} pin="c" className="ml-lab--under">
-          time <Tex>T</Tex>
-        </Lab>
-        <Lab x={0.5} y={0.44} pin="r" className="ml-lab--gold">
-          blows up
-        </Lab>
-        <Lab x={0.99} y={0.36} pin="r" className="ml-lab--blue">
-          stays smooth
-        </Lab>
-        <span className="ml-axis ml-axis--y">fastest point in the fluid</span>
+    <div className={`ml-ns-lane${forced ? ' ml-ns-lane--forced' : ''}`}>
+      <div className="ml-ns-who">
+        <p>
+          <b>{forced ? 'Forced' : 'Unforced'}</b>
+          <span className={`ml-pill ml-pill--${r.tone}`}>{r.status}</span>
+        </p>
+        <p>{forced ? 'September, OpenAI. A finely tuned outside force keeps pushing the fluid the whole way.' : '20 November, Alpöge and Buckmaster. Nothing pushes. This is the version Clay asks about.'}</p>
       </div>
       <div className="ml-ns-force" aria-hidden="true">
-        <span>{forced ? 'outside force, tuned' : 'outside force: none'}</span>
-        <div>{forced && FORCE.map((h, i) => <i key={i} style={{ '--h': h, '--i': i } as CSSProperties} />)}</div>
+        <span>
+          <Tex>{forced ? '\\textcolor{#f2a7a0}{f} \\neq 0' : '\\textcolor{#f2a7a0}{f} = 0'}</Tex>
+        </span>
+        <div>{forced && FORCE.map((h, i) => <i key={i} style={{ '--h': h } as CSSProperties} />)}</div>
       </div>
     </div>
   )
@@ -128,17 +116,41 @@ function NsFigure() {
             <Tex>{'\\partial_t u + (u\\cdot\\nabla)u = -\\nabla p + \\nu\\,\\Delta u + \\textcolor{#f2a7a0}{f}'}</Tex>
           </p>
           <p>
-            The red <Tex>{'\\textcolor{#f2a7a0}{f}'}</Tex> is a force from outside the fluid. Clay’s problem sets it to zero.
+            The red <Tex>{'\\textcolor{#f2a7a0}{f}'}</Tex> is a force from outside the fluid. The two results differ in that term and nothing else.
           </p>
         </div>
-        <div className="ml-ns-pair">
-          <NsPanel forced />
-          <NsPanel forced={false} />
+        <div className="ml-ns">
+          <div className="ml-ns-who ml-ns-key">
+            <p>The question is what the fastest point in the fluid does over time.</p>
+            <p className="ml-ns-key--gold">Blowup: it reaches infinity at a finite time T. Both results claim this.</p>
+            <p className="ml-ns-key--blue">The other answer: it stays finite forever.</p>
+          </div>
+          <div className="ml-plot ml-ns-plot" role="img" aria-label="Chart: the fastest speed in the fluid against time. One curve stays bounded forever. The other climbs without limit as time approaches T.">
+            <svg viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+              <line className="ml-ns-t" x1={100 / NS_SPAN} y1="100" x2={100 / NS_SPAN} y2="0" />
+              <path className="ml-ns-smooth" d={plot((t) => smooth(t * NS_SPAN), 0, 1, { ...nsFrame, w: 100 })} />
+            </svg>
+            <svg className="ml-draw" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+              <path className="ml-ns-blow" d={plot(blowup, 0, NS_EXIT, nsFrame, 90)} />
+            </svg>
+            <Lab x={1 / NS_SPAN} y={0} pin="c" className="ml-lab--under">
+              time <Tex>T</Tex>
+            </Lab>
+            <Lab x={0.56} y={0.5} pin="r" className="ml-lab--gold">
+              blows up
+            </Lab>
+            <Lab x={0.99} y={0.3} pin="r" className="ml-lab--blue">
+              stays smooth
+            </Lab>
+            <span className="ml-axis ml-axis--y">fastest point in the fluid</span>
+          </div>
+          <NsLane forced />
+          <NsLane forced={false} />
         </div>
       </div>
       <figcaption className="ml-note ml-note--under">
-        <p>Start with a smooth fluid and watch its fastest point. Either it stays finite forever, or it hits infinity at some finite time T. The curves are the same in both panels; only the force differs.</p>
-        <p className="ml-note-fine">Shapes only, not the computed solution.</p>
+        <p>The curve is the same for both because both claim the same thing. In September something outside was driving it. On 20 November the fluid is claimed to get there on its own.</p>
+        <p className="ml-note-fine">Shapes only, not the computed solution. The force ticks are a picture of “tuned”, not data.</p>
       </figcaption>
     </figure>
   )
