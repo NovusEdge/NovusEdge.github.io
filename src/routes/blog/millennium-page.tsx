@@ -18,7 +18,7 @@ import { LOOKS, PLAIN, parsePost, splitTitle, type Block, type Chapter } from '.
 import { Meta } from '../../lib/meta'
 import { isMobile, prefersReducedMotion } from '../../lib/motion'
 import { useLocalePath } from '../../i18n/use-locale-path'
-import type { Post } from '../../lib/posts'
+import { posts, type Post } from '../../lib/posts'
 import '../../components/millennium/millennium.css'
 
 gsap.registerPlugin(useGSAP, ScrollTrigger, SplitText)
@@ -41,7 +41,10 @@ export function MillenniumPage({ post, image }: { post: Post; image?: string | n
   const zone = useRef<Zone | null>(null)
   const count = useRef(1)
 
-  const { lead, chapters } = useMemo(() => parsePost(post.content), [post.content])
+  const { lead, chapters } = useMemo(
+    () => parsePost(post.content, posts.find((p) => p.slug === post.slug)?.content),
+    [post.content, post.slug],
+  )
   const [main, aside] = splitTitle(post.title)
   const date = new Date(post.date).toLocaleDateString(i18n.language, { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' })
 

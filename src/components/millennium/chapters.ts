@@ -84,14 +84,16 @@ function sources(body: string): Source[] {
 }
 
 // lead: any text above the first heading. Each `## ` heading opens a chapter; a `{{slot}}` line of
-// its own inside one places a figure there.
-export function parsePost(content: string): { lead: string; chapters: Chapter[] } {
+// its own inside one places a figure there. `canonical` is the English post: LOOKS is keyed by English
+// heading ids, so a translation takes its ids from the English heading at the same position.
+export function parsePost(content: string, canonical = content): { lead: string; chapters: Chapter[] } {
   const heads = [...content.matchAll(HEADING)]
+  const ids = [...canonical.matchAll(HEADING)].map((h) => slug(h[1]))
   const lead = (heads.length ? content.slice(0, heads[0].index) : content).trim()
   const chapters = heads.map((h, i) => {
     const body = content.slice(h.index + h[0].length, heads[i + 1]?.index ?? content.length)
     const [title, aside] = splitTitle(h[1])
-    return { id: slug(h[1]), title, aside, blocks: blocks(body), sources: sources(body) }
+    return { id: ids[i] ?? slug(h[1]), title, aside, blocks: blocks(body), sources: sources(body) }
   })
   return { lead, chapters }
 }

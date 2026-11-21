@@ -67,6 +67,11 @@ describe('parsePost', () => {
     expect(parsePost('just prose')).toEqual({ lead: 'just prose', chapters: [] })
   })
 
+  it('takes chapter ids from the English headings so a translation keeps its looks', () => {
+    const { chapters } = parsePost('## Perjantai\n\na\n\n## Mihin tämä menee (spekulaatiota)\n\nb', '## Friday\n\na\n\n## Where this goes (speculation)\n\nb')
+    expect(chapters.map((c) => [c.id, c.title, c.aside])).toEqual([['friday', 'Perjantai', undefined], ['where-this-goes-speculation', 'Mihin tämä menee', '(spekulaatiota)']])
+  })
+
   it('gives the post eight chapters, each with a look, and every slot exactly once', () => {
     const { lead, chapters } = parsePost(parseFrontmatter(raw).content)
     expect(lead).toBe('')

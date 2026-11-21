@@ -116,6 +116,10 @@
       "title": "ToolsRus Writeup",
       "description": "Haitallisen WAR-tiedoston lataaminen haavoittuvaan Tomcat-manageriin reverse shellin saamiseksi TryHackMen ToolsRus-huoneessa ja pysyvyyden varmistaminen SSH-avaimella."
     },
+    "two-millennium-problems-in-one-day": {
+      "title": "Kaksi Millennium-ongelmaa yhdessä päivässä (luultavasti)",
+      "description": "Marraskuun 20. päivänä julkaistiin tekoälyavusteiset todistukset sekä Riemannin hypoteesille että Navierin–Stokesin blowupille, vain kolme viikkoa sen jälkeen kun kaksi eri labraa mursi toisistaan riippumattomasti eksponentiaalisen aikahypoteesin. Katsaus tekoälymatematiikan viime kuukausiin ja siihen, mitä on oikeasti tarkistettu."
+    },
     "university": {
       "title": "Yliopisto!!",
       "description": "Ensivaikutelmia ulkomaille muuttamisesta ja opintojen aloittamisesta LUT Universityn Lahden kampuksella Suomessa."
@@ -245,6 +249,10 @@
     "toolsrus-writeup": {
       "title": "ToolsRus Writeup",
       "description": "Hochladen einer bösartigen WAR-Datei auf einen verwundbaren Tomcat-Manager für eine Reverse-Shell im ToolsRus-Room von TryHackMe, gefolgt von Persistenz über einen SSH-Key."
+    },
+    "two-millennium-problems-in-one-day": {
+      "title": "Zwei Millennium-Probleme an einem Tag (wahrscheinlich)",
+      "description": "Am 20. November sind KI-gestützte Beweise sowohl für die Riemannsche Vermutung als auch für das Navier-Stokes-Blowup erschienen, drei Wochen nachdem zwei Labs unabhängig voneinander die Exponential Time Hypothesis geknackt haben. Ein Blick auf die letzten Monate der KI-Mathe und darauf, was eigentlich schon überprüft wurde."
     },
     "university": {
       "title": "Universität!!",
@@ -376,6 +384,10 @@
       "title": "ToolsRus Writeup",
       "description": "TryHackMeのToolsRusルームで、脆弱なTomcat managerに悪意のあるWARファイルをアップロードしてリバースシェルを取得し、SSHキーで永続化する。"
     },
+    "two-millennium-problems-in-one-day": {
+      "title": "1日に2つのミレニアム問題（おそらく）",
+      "description": "11月20日、Riemann HypothesisとNavier–Stokesの解の爆発に関するAI支援による証明が相次いで公開された。2つの研究機関がそれぞれ独立にExponential Time Hypothesisを破ってからわずか3週間後のことだ。ここ数か月のAI数学の動向と、実際に何が検証されたのかを振り返ってみる。"
+    },
     "university": {
       "title": "大学！！",
       "description": "フィンランドにあるLUT UniversityのLahtiキャンパスで留学生活をスタートさせた第一印象。"
@@ -506,6 +518,10 @@
       "title": "ToolsRus Writeup",
       "description": "Ladda upp en skadlig WAR-fil till en sårbar Tomcat-manager för ett reverse shell i TryHackMes ToolsRus-rum, och sedan säkra persistens med en SSH-nyckel."
     },
+    "two-millennium-problems-in-one-day": {
+      "title": "Två millennieproblem på en dag (förmodligen)",
+      "description": "Den 20 november dök det upp AI-assisterade bevis för både Riemannhypotesen och Navier–Stokes-blowup, tre veckor efter att två labb oberoende av varandra knäckte Exponential Time Hypothesis. En titt på de senaste månadernas AI-matematik, och vad som faktiskt har kontrollerats."
+    },
     "university": {
       "title": "Universitet!!",
       "description": "Första intrycken av att flytta utomlands för att börja studera på LUT Universitys Lahti-campus i Finland."
@@ -635,6 +651,10 @@
     "toolsrus-writeup": {
       "title": "ToolsRus Writeup",
       "description": "在 TryHackMe 的 ToolsRus 靶房中，向存在漏洞的 Tomcat manager 上传恶意 WAR 文件以获取反向 shell，随后利用 SSH 密钥实现权限维持。"
+    },
+    "two-millennium-problems-in-one-day": {
+      "title": "一天搞定两道千禧年难题（大概）",
+      "description": "11 月 20 日，AI 辅助完成的 Riemann Hypothesis 和 Navier–Stokes 爆破解证明双双发布，就在三周前，两家实验室才刚刚各自独立推翻了 Exponential Time Hypothesis。本文盘点一下过去几个月 AI 在数学领域的狂飙，以及究竟有哪些成果是真正经过核验的。"
     },
     "university": {
       "title": "上大学啦！！",
