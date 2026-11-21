@@ -142,7 +142,7 @@ export default function AboutPage() {
 
   return (
     <>
-      <Meta title={`${t('about.title')} · NovusEdge`} description="Aliasgar Khimani (NovusEdge), an AI infrastructure engineer in Finland. Tools that keep AI agents accountable (docket, Engrammic, stoat, midwire), Claude Code tools like glowup, and an offensive-security background." />
+      <Meta title={`${t('about.title')} · NovusEdge`} description="Aliasgar Khimani (NovusEdge), a founding-style engineer in Finland who takes agent systems from research idea to shipped product: docket, folo, sundial, and open-source Claude Code tools." />
       <section ref={scope} className="relative mx-auto max-w-4xl px-6 pb-24 pt-36">
 
         {/* 00 - Header */}
@@ -174,13 +174,10 @@ export default function AboutPage() {
             <p>
               <Trans
                 i18nKey="about.bio.research"
-                components={{
-                  ai: <a href="https://en.wikipedia.org/wiki/AI_alignment" target="_blank" rel="noopener noreferrer" className="italic text-charcoal hover:text-gold dark:text-bone" />,
-                  rsi: <a href="https://en.wikipedia.org/wiki/Recursive_self-improvement" target="_blank" rel="noopener noreferrer" className="italic text-charcoal hover:text-gold dark:text-bone" />,
-                  epistemics: <a href="https://en.wikipedia.org/wiki/Epistemology" target="_blank" rel="noopener noreferrer" className="italic text-charcoal hover:text-gold dark:text-bone" />,
-                }}
+                components={{ papers: <TLink to={lp('/research')} className="italic text-charcoal hover:text-gold dark:text-bone" /> }}
               />
             </p>
+            <p>{t('about.bio.engrammic')}</p>
             <p>{t('about.bio.background')}</p>
           </div>
 

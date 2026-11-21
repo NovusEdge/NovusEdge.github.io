@@ -17,8 +17,8 @@ Location: Finland
 Coding since: 2013
 
 /* WHAT I BUILD */
-Infrastructure for keeping AI agents honest (decisions, memory, sandboxes),
-and a pile of Claude Code tools.
+Agent systems, from a research idea to a shipped product, end to end.
+Right now: docket, folo, sundial, and a pile of Claude Code tools.
 I also write papers on agent memory and on how models keep track of time.
 https://khimani.dev/research/
 
@@ -27,6 +27,7 @@ Docket: decision tracking for agents and complex agent workflows.
 https://khimani.dev/portfolio/docket/
 
 Engrammic: agent memory built around claims, evidence, and provenance.
+Not in active development; Veil and Primitives come under it.
 https://khimani.dev/portfolio/engrammic/
 
 Veil: a coding agent built on Pi, with local memory and scored context eviction.

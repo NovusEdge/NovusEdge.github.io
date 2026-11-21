@@ -184,14 +184,14 @@ export const projects: Project[] = [
     jp: '環',
     year: '2026',
     lang: 'Python',
-    group: 'now',
-    phase: 'building',
+    group: 'ice',
+    phase: 'on-ice',
     kind: 'ai',
     description:
-      'Closed-loop agency. Measures what an agent’s action actually changed in the world and feeds that back before the agent moves on.',
+      'Closed-loop agency: measure what an agent’s action actually changed in the world and feed that back before the agent moves on. Paused, but an idea I want to come back to.',
     tech: ['Python', 'Agent tooling'],
     links: [{ label: 'github', href: 'https://github.com/NovusEdge/midwire' }],
-    body: 'Agents today are open-loop: a tool call reports its own result and the agent believes it, so a write that silently fails goes unnoticed. midwire is the separate sensor. It checks the outcome against the world before the next step. Early work, no release yet.',
+    body: 'Agents today are open-loop: a tool call reports its own result and the agent believes it, so a write that silently fails goes unnoticed. midwire is the separate sensor. It checks the outcome against the world before the next step. Early work with no release, not in active development.',
   },
   {
     slug: 'folo',

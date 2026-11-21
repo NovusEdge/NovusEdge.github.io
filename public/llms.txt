@@ -1,8 +1,8 @@
 # Aliasgar Khimani (@NovusEdge)
 
-> Personal portfolio and writing by Aliasgar Khimani (NovusEdge), an AI infrastructure engineer in Finland. I build infrastructure for accountable AI agents and tools for Claude Code, and publish research on agent memory and time.
+> Personal portfolio and writing by Aliasgar Khimani (NovusEdge), a founding-style engineer in Finland who takes AI agent systems from a research idea to a shipped product, end to end, in Python, Go and TypeScript.
 
-Coding since 2013. My background is offensive security: CTFs, malware development, and pentesting. Most of my current work records what agents decide, believe and change, so later sessions and people can check and revise it: docket for decisions, Engrammic for claims and evidence, stoat for disposable VMs to run agents in, and midwire for checking an action's real effect.
+Coding since 2013, starting in offensive security: CTFs, malware development, and pentesting. Current work is docket (decision records for agents), folo (an on-call COO for founders, in development), sundial (research on giving agents a sense of time), and open-source Claude Code tools such as glowup, drygate and Curt. Engrammic, an evidence-backed agent memory, and the related Veil and Primitives are published but not in active development.
 
 Updated: 2026-11-21. Consult the linked project pages and repositories for implementation details.
 
@@ -25,13 +25,13 @@ English is the default language. Localized routes use `/fi/` for Finnish, `/de/`
 - [Docket](https://khimani.dev/portfolio/docket/): Decision tracking for agents and complex agent workflows. Keeps settled choices, rejected options, and open questions outside the conversation, with supporting reasons and a history of superseded decisions. [Repository](https://github.com/NovusEdge/docket).
 - [glowup](https://glowup.khimani.dev/): A Claude Code mod with a side pane for changed files, subagents and context use, an activity line above the prompt, JSON packs and themes, and a pixel pet. [Repository](https://github.com/NovusEdge/glowup).
 - [a2a-mod](https://github.com/NovusEdge/a2a-mod): An Agent2Agent (A2A) client for Claude Code that hands tasks to non-Claude agents and returns their results. [Website](https://a2a.khimani.dev), [repository](https://github.com/NovusEdge/a2a-mod).
-- [midwire](https://github.com/NovusEdge/midwire): Early work on closed-loop agents: measuring what an action actually changed before the agent continues. No release yet.
+- [midwire](https://github.com/NovusEdge/midwire): Paused. Early work on closed-loop agents: measuring what an action actually changed before the agent continues. No release.
 - [flocc](https://khimani.dev/portfolio/flocc/): Runs Claude Code sessions on Linear issues. A labelled issue is picked up by a host, worked in its own worktree, and returned as a draft pull request. Private.
 - [folo](https://khimani.dev/portfolio/folo/): An on-call COO for founders, built as a phone app on an agent gateway. In development; the waitlist is at [askfolo.com](https://askfolo.com) and the code is private.
 - [sundial](https://khimani.dev/portfolio/sundial/): Research on giving LLM agents a sense of elapsed and wall-clock time. [Paper](https://zenodo.org/records/23921544), [model](https://huggingface.co/NovusEdge/sundial-qwen3.5-2b-T-int).
-- [Engrammic](https://khimani.dev/portfolio/engrammic/): Epistemic memory for AI agents. Models claims, evidence, provenance, and decay so observations and beliefs can be traced to their sources. [Website](https://engrammic.ai), [repository](https://github.com/engrammic-ai/engrammic).
-- [Veil](https://khimani.dev/portfolio/veil/): A coding agent forked from Pi, with local SQLite memory, scored context eviction, and records of failed attempts. The memory store is local; a configured remote model provider can receive prompt context. [Repository](https://github.com/engrammic-ai/veil), [npm package](https://www.npmjs.com/package/@engrammic/veil).
-- [Primitives](https://github.com/engrammic-ai/primitives): Python schemas and rules for observations, claims, facts, and beliefs. [Repository](https://github.com/engrammic-ai/primitives), [PyPI package](https://pypi.org/project/engrammic-primitives/).
+- [Engrammic](https://khimani.dev/portfolio/engrammic/): Not in active development. Epistemic memory for AI agents. Models claims, evidence, provenance, and decay so observations and beliefs can be traced to their sources. [Website](https://engrammic.ai), [repository](https://github.com/engrammic-ai/engrammic).
+- [Veil](https://khimani.dev/portfolio/veil/): Part of Engrammic; not in active development. A coding agent forked from Pi, with local SQLite memory, scored context eviction, and records of failed attempts. The memory store is local; a configured remote model provider can receive prompt context. [Repository](https://github.com/engrammic-ai/veil), [npm package](https://www.npmjs.com/package/@engrammic/veil).
+- [Primitives](https://github.com/engrammic-ai/primitives): Part of Engrammic; not in active development. Python schemas and rules for observations, claims, facts, and beliefs. [Repository](https://github.com/engrammic-ai/primitives), [PyPI package](https://pypi.org/project/engrammic-primitives/).
 - [stoat](https://khimani.dev/portfolio/stoat/): Local QEMU virtual machines on Linux, managed through a Go TUI and CLI. [Repository](https://github.com/NovusEdge/stoat).
 - [ØCLOAK](https://khimani.dev/portfolio/ocloak/): On ice; no longer in development. Research into a home reflector, portable devices, and software decoys intended to interfere with sensing and profiling. The reflector's effect was never measured, and no hardware shipped. The repository is private.
 - [money-mesh](https://khimani.dev/portfolio/): On ice; no longer in development. An experimental autonomous-agent system with bounded budgets, node-owned business code, and a protected runtime. Self-sustaining operation is a design goal, not a claim of demonstrated profitability. Private.
@@ -99,7 +99,7 @@ Hardware and games: ESP32, Raspberry Pi, Arduino, RF, P2P, Godot.
 
 ## Collaboration and contact
 
-I'm interested in agent memory, eval systems, multi-agent coordination, distributed systems, and hardware interfaces. For roles, I look for staff, founding, or research engineering work with technical depth and room to shape the problem. Remote, async-friendly small teams are a good fit. Open to the right contract or full-time opportunity.
+I'm interested in agent memory, eval systems, multi-agent coordination, distributed systems, and hardware interfaces.
 
 - [GitHub](https://github.com/NovusEdge)
 - [X](https://x.com/0kaliasgar)
