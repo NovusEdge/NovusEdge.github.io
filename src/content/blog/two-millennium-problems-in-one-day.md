@@ -4,7 +4,6 @@ date: 2026-11-21
 tags: [ai, math, lean, commentary]
 description: On the 20th of November, AI-assisted proofs of the Riemann Hypothesis and Navier–Stokes blowup both dropped, three weeks after two labs independently broke the Exponential Time Hypothesis. A look at the last few months of AI math, and what's actually been checked.
 toc: true
-draft: true
 pixel: thinking
 ---
 
