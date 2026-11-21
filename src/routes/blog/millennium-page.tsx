@@ -99,6 +99,12 @@ export function MillenniumPage({ post, image }: { post: Post; image?: string | n
       const heads = gsap.utils.toArray<HTMLElement>('[data-chapter]', el)
       const links = gsap.utils.toArray<HTMLElement>('.ml-rail a', el)
       const narrow = () => innerWidth < 900 || innerWidth < innerHeight
+      // The centre of the page's open right side, if it has one wide enough to hold the figure.
+      const row = el.querySelector<HTMLElement>('.ml-row')
+      const side = () => {
+        const edge = (row?.getBoundingClientRect().right ?? innerWidth) + 48
+        return innerWidth - edge > 260 ? (edge + innerWidth) / innerWidth - 1 : undefined
+      }
       let chapter: string | undefined
       const resolve = () => {
         const h = innerHeight
@@ -122,7 +128,7 @@ export function MillenniumPage({ post, image }: { post: Post; image?: string | n
         if (next === zone.current) return
         zone.current = next
         el.dataset.zone = next
-        pose(scene, next, next === 'timeline' ? !motion.pin : narrow())
+        pose(scene, next, next === 'timeline' ? !motion.pin : narrow(), side())
         // The hero opens on one thread and takes about five seconds to fill in.
         showCount(scene, next === 'timeline' ? count.current : RESULTS.length, next === 'hero' ? 560 : undefined)
       }

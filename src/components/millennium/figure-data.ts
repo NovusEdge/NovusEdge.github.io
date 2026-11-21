@@ -49,3 +49,40 @@ export function plot(fn: (x: number) => number, from: number, to: number, box: {
 export const blowup = (t: number) => 0.22 / Math.sqrt(1 - t)
 // The other answer: it stays bounded for all time.
 export const smooth = (t: number) => 0.22 + 0.1 * Math.sin(t * 5) * Math.exp(-t * 1.6) + 0.05 * t
+
+// Zeta by Borwein's alternating-series method ("An efficient algorithm for the Riemann zeta
+// function", algorithm 2). With 70 terms the error at height 52 is far below what a plot shows;
+// the tests check it against the ten known zeros.
+const TERMS = 70
+const WEIGHTS = (() => {
+  const d: number[] = []
+  let term = 1
+  let sum = 0
+  for (let i = 0; i <= TERMS; i++) {
+    sum += term
+    d.push(sum)
+    term *= ((TERMS + i) * 4 * (TERMS - i)) / ((2 * i + 1) * (2 * i + 2))
+  }
+  return d
+})()
+
+export function zeta(re: number, im: number): [number, number] {
+  const dn = WEIGHTS[TERMS]
+  let sr = 0
+  let si = 0
+  for (let k = 0; k < TERMS; k++) {
+    const log = Math.log(k + 1)
+    const w = ((k % 2 ? -1 : 1) * (WEIGHTS[k] - dn)) / dn / Math.pow(k + 1, re)
+    sr += w * Math.cos(im * log)
+    si -= w * Math.sin(im * log)
+  }
+  // divide by -(1 - 2^(1-s))
+  const m = Math.pow(2, 1 - re)
+  const qr = m * Math.cos(im * Math.LN2) - 1
+  const qi = -m * Math.sin(im * Math.LN2)
+  const q = qr * qr + qi * qi
+  return [(sr * qr + si * qi) / q, (si * qr - sr * qi) / q]
+}
+
+// |zeta(1/2 + it)|: the size of zeta along the critical line.
+export const zetaOnLine = (t: number) => Math.hypot(...zeta(0.5, t))

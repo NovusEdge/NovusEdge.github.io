@@ -49,8 +49,11 @@ const POSES: Record<Zone, { wide: Pose; tall: Pose }> = {
   next: { wide: { alpha: 0.2, flow: 0.25, zoom: 1.55, ox: 0, oy: 0 }, tall: { alpha: 0.2, flow: 0.25, zoom: 1.3, ox: 0, oy: 0 } },
 }
 
-export function pose(scene: Scene, zone: Zone, tall: boolean) {
-  const to = POSES[zone][tall ? 'tall' : 'wide']
+// `side` is where the open right-hand part of a wide page is centred (in clip units). While
+// reading, the figure moves there and stays lit, where otherwise it dims behind the sheet.
+export function pose(scene: Scene, zone: Zone, tall: boolean, side?: number) {
+  const base = POSES[zone][tall ? 'tall' : 'wide']
+  const to = side !== undefined && (zone === 'read' || zone === 'after' || zone === 'next') ? { ...base, ox: side, zoom: 0.62, alpha: 0.7 } : base
   if (scene.still) {
     gsap.set(scene, { ...to, flow: 0 })
     return

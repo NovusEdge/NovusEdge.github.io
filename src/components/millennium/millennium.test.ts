@@ -3,7 +3,7 @@ import { buildCloud, rk4, type Vec3 } from './attractor'
 import { RESULTS, STATUS_KEY, TRACES, tracesThrough } from './timeline-data'
 import { LOOKS, SLOTS, parsePost, slug } from './chapters'
 import { FIELD, FIELD_MONTHS, FIELD_ROWS, PRIZES } from './field-data'
-import { ETH_C, ETH_CROSS, ON_LINE, ZEROS, blowup, smooth, subExponent } from './figure-data'
+import { ETH_C, ETH_CROSS, ON_LINE, ZEROS, blowup, smooth, subExponent, zeta, zetaOnLine } from './figure-data'
 import { parseFrontmatter } from '../../lib/frontmatter'
 import raw from '../../content/blog/two-millennium-problems-in-one-day.md?raw'
 
@@ -133,5 +133,23 @@ describe('result field', () => {
     expect(FIELD.filter((r) => r.prize).map((r) => [r.prize, r.when])).toEqual([['ns', '20 Nov'], ['rh', '20 Nov']])
     expect(claimed.sort()).toEqual(['ns', 'rh'])
     expect(FIELD.filter((r) => r.both).map((r) => r.who)).toEqual(['OpenAI and Anthropic, independently'])
+  })
+})
+
+describe('zeta', () => {
+  it('matches known values off the line', () => {
+    expect(zeta(2, 0)[0]).toBeCloseTo(Math.PI ** 2 / 6, 10)
+    expect(zeta(0.5, 0)[0]).toBeCloseTo(-1.4603545088, 8)
+    expect(zeta(2, 0)[1]).toBeCloseTo(0, 10)
+  })
+
+  it('vanishes at the ten listed heights and nowhere else below 52', () => {
+    for (const t of ZEROS) expect(zetaOnLine(t)).toBeLessThan(5e-4)
+    let dips = 0
+    for (let t = 1; t < 52; t += 0.01) {
+      const [a, b, c] = [zetaOnLine(t - 0.01), zetaOnLine(t), zetaOnLine(t + 0.01)]
+      if (b < a && b < c && b < 0.02) dips++
+    }
+    expect(dips).toBe(ZEROS.length)
   })
 })

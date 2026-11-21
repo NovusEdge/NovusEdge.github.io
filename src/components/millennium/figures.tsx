@@ -1,6 +1,6 @@
 import { useEffect, useState, type CSSProperties, type ReactNode } from 'react'
 import katex from 'katex'
-import { ARCHIVE, ETH_C, ETH_CROSS, ON_LINE, PAGES, ZEROS, blowup, plot, smooth, subExponent } from './figure-data'
+import { ARCHIVE, ETH_C, ETH_CROSS, ON_LINE, PAGES, ZEROS, blowup, plot, smooth, subExponent, zetaOnLine } from './figure-data'
 import { RESULTS } from './timeline-data'
 import type { Slot } from './chapters'
 import './figures.css'
@@ -87,10 +87,10 @@ const FORCE = [0.35, 0.8, 0.5, 1, 0.3, 0.7, 0.95, 0.45, 0.85, 0.6, 1, 0.4]
 function NsPanel({ forced }: { forced: boolean }) {
   return (
     <div className={`ml-ns-panel${forced ? ' ml-ns-panel--forced' : ''}`}>
-      <p className="ml-ns-head">
-        <b>{forced ? 'Forced' : 'Unforced'}</b>
+      <div className="ml-ns-head">
+        <h3>{forced ? 'Forced' : 'Unforced'}</h3>
         <Pill row={forced ? 4 : 7} />
-      </p>
+      </div>
       <p className="ml-ns-sub">{forced ? 'September, OpenAI. Something outside keeps pushing the fluid.' : '20 November, Alpöge and Buckmaster. Nothing pushes. This is the one Clay asks about.'}</p>
       <div className="ml-plot ml-ns-plot" role="img" aria-label={`Chart: the fastest speed in the fluid against time, ${forced ? 'with' : 'without'} an outside force. One curve stays bounded forever. The other climbs without limit as time approaches T.`}>
         <svg viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
@@ -101,22 +101,18 @@ function NsPanel({ forced }: { forced: boolean }) {
           <path className="ml-ns-blow" d={plot(blowup, 0, NS_EXIT, nsFrame, 90)} />
         </svg>
         <Lab x={1 / NS_SPAN} y={0} pin="c" className="ml-lab--under">
-          <Tex>T</Tex>
+          time <Tex>T</Tex>
         </Lab>
-        <Lab x={0.5} y={0.42} pin="r" className="ml-lab--gold">
+        <Lab x={0.5} y={0.44} pin="r" className="ml-lab--gold">
           blows up
         </Lab>
-        <Lab x={0.99} y={0.34} pin="r" className="ml-lab--blue">
+        <Lab x={0.99} y={0.36} pin="r" className="ml-lab--blue">
           stays smooth
         </Lab>
-        <span className="ml-axis ml-axis--y">
-          fastest point, <Tex>{'\\max|u|'}</Tex>
-        </span>
+        <span className="ml-axis ml-axis--y">fastest point in the fluid</span>
       </div>
       <div className="ml-ns-force" aria-hidden="true">
-        <span>
-          <Tex>{forced ? 'f(t)' : 'f = 0'}</Tex>
-        </span>
+        <span>{forced ? 'outside force, tuned' : 'outside force: none'}</span>
         <div>{forced && FORCE.map((h, i) => <i key={i} style={{ '--h': h, '--i': i } as CSSProperties} />)}</div>
       </div>
     </div>
@@ -127,89 +123,122 @@ function NsFigure() {
   return (
     <figure className="ml-fig ml-fig--ns ml-fig--wide" data-fig>
       <div className="ml-fig-body">
-        <p className="ml-ns-eq">
-          <Tex>{'\\partial_t u + (u\\cdot\\nabla)u = -\\nabla p + \\nu\\,\\Delta u + \\textcolor{#f2a7a0}{f}, \\qquad \\nabla\\cdot u = 0'}</Tex>
-        </p>
+        <div className="ml-ns-eq">
+          <p>
+            <Tex>{'\\partial_t u + (u\\cdot\\nabla)u = -\\nabla p + \\nu\\,\\Delta u + \\textcolor{#f2a7a0}{f}'}</Tex>
+          </p>
+          <p>
+            The red <Tex>{'\\textcolor{#f2a7a0}{f}'}</Tex> is a force from outside the fluid. Clay’s problem sets it to zero.
+          </p>
+        </div>
         <div className="ml-ns-pair">
           <NsPanel forced />
           <NsPanel forced={false} />
         </div>
       </div>
       <figcaption className="ml-note ml-note--under">
-        <p>
-          Start with a smooth fluid and watch its fastest point. Either it stays finite forever, or it hits infinity at some finite time <Tex>T</Tex>. Both curves are the same in the two
-          panels. What differs is <Tex>{'\\textcolor{#f2a7a0}{f}'}</Tex>, the outside force, and Clay’s version has none.
-        </p>
+        <p>Start with a smooth fluid and watch its fastest point. Either it stays finite forever, or it hits infinity at some finite time T. The curves are the same in both panels; only the force differs.</p>
         <p className="ml-note-fine">Shapes only, not the computed solution.</p>
       </figcaption>
     </figure>
   )
 }
 
-const IM_TOP = 53
+// The critical line from height 0 to 52, seen twice over one axis: from above, as the strip with
+// its zeros, and from the side, as the size of zeta along the line.
+const T_MAX = 52
+const SAMPLES = Array.from({ length: 521 }, (_, i) => [i / 10, zetaOnLine(i / 10)] as const)
+const SIZE_TOP = Math.ceil(Math.max(...SAMPLES.map(([, v]) => v)))
+const SIZE_PATH = SAMPLES.map(([t, v], i) => `${i ? 'L' : 'M'}${((t / T_MAX) * 100).toFixed(2)} ${(100 - (v / SIZE_TOP) * 100).toFixed(2)}`).join('')
 const fmt = (t: number) => t.toFixed(4)
+const along = (t: number): CSSProperties => ({ left: `${(t / T_MAX) * 100}%`, '--t': t } as CSSProperties)
 
 function RhFigure() {
   return (
-    <figure className="ml-fig ml-fig--rh" data-fig>
-      <div className="ml-fig-body ml-rh">
-        <div className="ml-plot ml-rh-plot" role="img" aria-label={`Chart: the critical strip of the zeta function, between real part 0 and 1, with the line at real part one half. The first ten zeros all sit on that line, at heights ${ZEROS.map(fmt).join(', ')}.`}>
-          <i className="ml-rh-strip" />
-          <i className="ml-rh-line" />
-          <i className="ml-rh-scan" />
-          {[0, 10, 20, 30, 40, 50].map((t) => (
-            <span key={t} className="ml-rh-tick" style={{ bottom: `${(t / IM_TOP) * 100}%` }}>
-              {t}
+    <figure className="ml-fig ml-fig--rh ml-fig--wide" data-fig>
+      <div className="ml-fig-body">
+        <div className="ml-rh" role="img" aria-label={`Chart in two parts over one axis, height from 0 to ${T_MAX}. Above: the critical strip between real part 0 and 1, with ten zeros marked on the middle line at heights ${ZEROS.map(fmt).join(', ')}. Below: the size of zeta along that line, which drops to zero at each of those heights.`}>
+          <div className="ml-rh-strip">
+            <span className="ml-rh-re ml-rh-re--name" style={{ top: 0 }}>
+              <Tex>{'\\operatorname{Re}(s)'}</Tex>
             </span>
-          ))}
-          {ZEROS.map((t) => (
-            <span key={t} className="ml-rh-zero" style={{ bottom: `${(t / IM_TOP) * 100}%`, '--t': t } as CSSProperties}>
-              <i className="ml-dot" />
-              <b>{fmt(t)}</b>
+            <span className="ml-rh-re" style={{ top: 0 }}>
+              <Tex>{'1'}</Tex>
             </span>
-          ))}
-          <span className="ml-rh-re" style={{ left: '25%' }}>
-            0
-          </span>
-          <span className="ml-rh-re ml-rh-re--half" style={{ left: '50%' }}>
-            ½
-          </span>
-          <span className="ml-rh-re" style={{ left: '75%' }}>
-            1
-          </span>
-          <span className="ml-axis ml-axis--y">
-            height, <Tex>{'\\operatorname{Im}(s)'}</Tex>
-          </span>
-          <span className="ml-axis ml-axis--x">
-            <Tex>{'\\operatorname{Re}(s)'}</Tex>
-          </span>
+            <span className="ml-rh-re ml-rh-re--half" style={{ top: '50%' }}>
+              <Tex>{'\\tfrac12'}</Tex>
+            </span>
+            <span className="ml-rh-re" style={{ top: '100%' }}>
+              <Tex>{'0'}</Tex>
+            </span>
+            {ZEROS.map((t) => (
+              <span key={t} className="ml-rh-zero" style={along(t)}>
+                <b>{fmt(t)}</b>
+                <i className="ml-dot" />
+              </span>
+            ))}
+          </div>
+          <div className="ml-plot ml-rh-size">
+            <svg className="ml-draw" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+              <path className="ml-rh-fill" d={`${SIZE_PATH}L100 100L0 100Z`} />
+              <path className="ml-rh-curve" d={SIZE_PATH} />
+            </svg>
+            {ZEROS.map((t) => (
+              <i key={t} className="ml-rh-drop" style={along(t)} />
+            ))}
+            {Array.from({ length: SIZE_TOP + 1 }, (_, v) => (
+              <span key={v} className="ml-rh-tick ml-rh-tick--y" style={{ bottom: `${(v / SIZE_TOP) * 100}%` }}>
+                {v}
+              </span>
+            ))}
+            {[0, 10, 20, 30, 40, 50].map((t) => (
+              <span key={t} className="ml-rh-tick ml-rh-tick--x" style={{ left: `${(t / T_MAX) * 100}%` }}>
+                {t}
+              </span>
+            ))}
+            <span className="ml-axis ml-axis--y">
+              size of zeta on the line, <Tex>{'|\\zeta(\\tfrac12 + it)|'}</Tex>
+            </span>
+            <span className="ml-axis ml-axis--x">
+              height <Tex>t</Tex>
+            </span>
+          </div>
         </div>
-        <div className="ml-rh-read">
-          <p>
-            The zeta function <Tex>{'\\zeta(s)'}</Tex> has zeros that aren’t the boring ones, and every one of them is known to sit inside this strip, <Tex>{'0 < \\operatorname{Re}(s) < 1'}</Tex>.
-          </p>
-          <p>
-            Riemann’s guess from 1859 is that they all sit dead on the middle line, <Tex>{'\\operatorname{Re}(s) = \\tfrac12'}</Tex>.
-          </p>
-          <p>These are the first ten. Trillions more have been computed, and every one is on the line. That was never going to prove it.</p>
+        <div className="ml-rh-below">
+          <div className="ml-rh-read">
+            <p>
+              The top band is the critical strip seen from above, laid on its side. Every zero of zeta that isn’t a trivial one is known to sit somewhere in that band. Riemann’s guess from 1859 is that
+              they all sit on the gold line through the middle.
+            </p>
+            <p>
+              The curve underneath is the size of zeta as you walk along that line. It touches zero ten times before height 52, at the ten heights marked. Trillions more have been computed and every one
+              is on the line, which was never going to prove it.
+            </p>
+          </div>
           <div className="ml-share">
-            <p>Share of zeros proven to be on the line</p>
+            <h3>Share of zeros proven to be on the line</h3>
             <ol>
               {ON_LINE.map((s, i) => (
                 <li key={s.label} className={s.share === 100 ? 'ml-share--claim' : ''} style={{ '--w': `${s.share}%`, '--i': i } as CSSProperties}>
-                  <i />
-                  <span>
-                    <b>{s.share === 100 ? 'all' : `${s.share}%`}</b> {s.label}
-                  </span>
+                  <span>{s.label}</span>
+                  <div>
+                    <i />
+                    <b>{s.share}%</b>
+                  </div>
                 </li>
               ))}
             </ol>
+            <p className="ml-share-axis" aria-hidden="true">
+              {[0, 25, 50, 75, 100].map((v) => (
+                <span key={v}>{v}%</span>
+              ))}
+            </p>
           </div>
         </div>
       </div>
-      <figcaption className="ml-note">
-        <p>Heights to four decimal places. Only the upper half is drawn; every zero has a mirror image below the axis.</p>
-        <p className="ml-note-fine">The August share is the reviewed result in the timeline above. The last bar is Friday’s claim.</p>
+      <figcaption className="ml-note ml-note--under">
+        <p>The curve is computed, not drawn: zeta evaluated every tenth of a unit of height. Zero heights are to four decimal places. Only the upper half is shown; every zero has a mirror image below.</p>
+        <p className="ml-note-fine">The first two bars are the reviewed August result. The hatched one is Friday’s claim, still pending.</p>
       </figcaption>
     </figure>
   )
