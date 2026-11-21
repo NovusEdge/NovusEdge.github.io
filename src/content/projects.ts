@@ -5,7 +5,7 @@ export type Project = {
   year: string
   lang?: string
   stars?: number
-  group: 'now' | 'shipped' | 'chaos' | 'oss'
+  group: 'now' | 'shipped' | 'ice' | 'chaos' | 'oss'
   phase: 'building' | 'shipped' | 'on-ice' | 'chaos-era' | 'contributor'
   kind: 'systems' | 'ai' | 'offsec' | 'contrib' | 'toys'
   featured?: boolean
@@ -152,15 +152,15 @@ export const projects: Project[] = [
     jp: '隠',
     year: '2026',
     lang: 'Hardware',
-    group: 'now',
-    phase: 'building',
+    group: 'ice',
+    phase: 'on-ice',
     kind: 'systems',
     featured: true,
     description:
-      'Research into affordable privacy hardware and software that make surveillance data less reliable. Hardware prototypes remain unproven.',
+      'Research into affordable privacy hardware and software that make surveillance data less reliable. On ice; the hardware prototypes were never proven.',
     tech: ['ESP32', 'C', 'Rust', 'P2P', 'RF'],
     links: [],
-    body: 'ØCLOAK explores a home reflector, a portable device, and software-generated decoys. The goal is to interfere with sensing and profiling while keeping ordinary communications usable. The current work is research and bench testing; no hardware has shipped. The intended model is open hardware sold near cost, funded without subscriptions or VC.',
+    body: 'ØCLOAK explored a home reflector, a portable device, and software-generated decoys, meant to interfere with sensing and profiling while keeping ordinary communications usable. It stopped at research and bench testing; no hardware shipped. The intended model was open hardware sold near cost, funded without subscriptions or VC.',
   },
   {
     slug: 'money-mesh',

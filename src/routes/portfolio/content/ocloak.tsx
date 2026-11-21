@@ -2,7 +2,7 @@ import type { ProjectContent } from './types'
 import { Figures } from '../kit'
 
 export const ocloak: ProjectContent = {
-  lede: 'I’m researching affordable hardware and software that make surveillance data less reliable. ØCLOAK is still experimental; no hardware has shipped.',
+  lede: 'I was researching affordable hardware and software that make surveillance data less reliable. ØCLOAK is on ice; no hardware shipped.',
   sections: [
     {
       id: 'through-a-wall',
@@ -32,7 +32,7 @@ export const ocloak: ProjectContent = {
       body: (
         <>
           <p>
-            The current design has two units. A mains-powered home unit would hold a switched reflector with enough
+            The last design had two units. A mains-powered home unit would hold a switched reflector with enough
             physical area to affect radio paths in a room. A portable unit would carry the functions that need to
             travel with a person, including experiments with Bluetooth and WiFi decoys.
           </p>
@@ -63,7 +63,7 @@ export const ocloak: ProjectContent = {
             more cheaply than an adversary can remove them.
           </p>
           <p>
-            A community network for sharing observations remains part of the longer-term plan. It would need a way
+            A community network for sharing observations was part of the longer-term plan. It would need a way
             to assess reports without exposing the people submitting them. Rotating identifiers or rounding a
             location would not, by themselves, establish anonymity.
           </p>
@@ -72,17 +72,17 @@ export const ocloak: ProjectContent = {
     },
     {
       id: 'dual-use',
-      title: 'How I want to fund it',
+      title: 'How I wanted to fund it',
       body: (
         <>
           <p>
-            The intended model is open hardware sold near manufacturing cost, with grants, crowdfunding, and
-            donations supporting development. I don’t want a subscription or a VC-funded business that depends on
+            The intended model was open hardware sold near manufacturing cost, with grants, crowdfunding, and
+            donations supporting development. I didn’t want a subscription or a VC-funded business that depends on
             collecting data from the people using it.
           </p>
           <p>
-            RF work can also have defense applications. The current plan puts consumer privacy first; counter-drone
-            work is a possible later direction, not the funding source for this phase.
+            RF work can also have defense applications. The plan put consumer privacy first; counter-drone
+            work was a possible later direction, not the funding source.
           </p>
         </>
       ),
@@ -93,9 +93,9 @@ export const ocloak: ProjectContent = {
       body: (
         <>
           <p>
-            The repository contains research, product plans, bench protocols, and software tools. The hardware
-            still depends on the reflector experiment. A successful result would be followed by prototype work,
-            legal review, and certification before production.
+            ØCLOAK is on ice. The hardware never got past research and bench protocols, and the reflector’s
+            effect was never measured. The repository holds that research, the product plans, and the software
+            tools.
           </p>
           <p>
             An ultrasonic scanning tool is available for experiments with recorded audio. The browser illustration

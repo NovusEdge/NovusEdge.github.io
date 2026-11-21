@@ -7,7 +7,6 @@ import { ArrowRight, Github, Globe } from '../../components/icons'
 import DecryptedText from '../../components/react-bits/DecryptedText'
 import { projects, type Project } from '../../content/projects'
 import { revealCards } from '../../lib/reveals'
-import { RedactedCard } from '../../components/redacted-card'
 import { useLocalePath } from '../../i18n/use-locale-path'
 
 const building = projects.filter((p) => p.phase === 'building')
@@ -29,7 +28,7 @@ const PRINCIPLE_KEYS = [
   'about.principles.5',
 ]
 
-const NOW_UPDATED = '2026-10'
+const NOW_UPDATED = '2026-11'
 
 const OSS = [
   { org: 'Microsoft', project: 'DeepSpeed', whatI18n: 'about.oss.deepspeed', prs: 'https://github.com/deepspeedai/DeepSpeed/pulls?q=author%3ANovusEdge' },
@@ -130,22 +129,14 @@ function FeaturedCard({ p }: { p: Project }) {
 }
 
 const PROJECTS_PER_PAGE = 4
-
-// The redacted teaser leads, ØCLOAK follows it; the rest keep source order.
-const ocloak = building.find((p) => p.slug === 'ocloak')
-const CARDS = [
-  { slug: 'redacted' },
-  ...(ocloak ? [ocloak] : []),
-  ...building.filter((p) => p.slug !== 'ocloak'),
-]
-const TOTAL_PAGES = Math.ceil(CARDS.length / PROJECTS_PER_PAGE)
+const TOTAL_PAGES = Math.ceil(building.length / PROJECTS_PER_PAGE)
 
 export default function AboutPage() {
   const { t } = useTranslation()
   const scope = useRef<HTMLElement>(null)
   const [projectPage, setProjectPage] = useState(0)
   const lp = useLocalePath()
-  const pageItems = CARDS.slice(projectPage * PROJECTS_PER_PAGE, (projectPage + 1) * PROJECTS_PER_PAGE)
+  const pageItems = building.slice(projectPage * PROJECTS_PER_PAGE, (projectPage + 1) * PROJECTS_PER_PAGE)
 
   useEffect(() => revealCards(scope.current), [])
 
@@ -246,13 +237,9 @@ export default function AboutPage() {
             </TLink>
           </div>
           <div className="grid gap-4 sm:grid-cols-2">
-            {pageItems.map((item) =>
-              item.slug === 'redacted' ? (
-                <RedactedCard key="redacted" />
-              ) : (
-                <FeaturedCard key={item.slug} p={item as Project} />
-              )
-            )}
+            {pageItems.map((p) => (
+              <FeaturedCard key={p.slug} p={p} />
+            ))}
           </div>
           {TOTAL_PAGES > 1 && (
             <div className="mt-6 flex justify-center gap-2">

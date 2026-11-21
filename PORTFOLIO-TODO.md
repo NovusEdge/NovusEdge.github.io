@@ -8,7 +8,6 @@ Now redesigning each detail page, one at a time. Goal: each page individually de
 
 - [ ] **stoat** — capture the real TUI + CLI (`stoat ls/up/ssh`, VM list). Terminal frames as the hero art.
 - [ ] **engrammic** — claim/evidence graph visuals; pull from engrammic.ai. Links: site, research, github.
-- [ ] **ocloak** — EvilEye (ogl, react-bits) integration for the anti-surveillance theme. RF/board imagery.
 - [ ] **palpatine** — lean into the joke; the unhinged-advice output, star count.
 - [ ] **veil** — drop-in npm API snippet, memory-graph. Links: github, npm.
 

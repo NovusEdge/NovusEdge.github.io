@@ -3,7 +3,7 @@
  *   ALIASGAR KHIMANI                                                          *
  *   @NovusEdge                                                                *
  *                                                                             *
- *   Agent Infrastructure | Claude Code Tools | Hardware                       *
+ *   Agent Infrastructure | Claude Code Tools | Research                       *
  *                                                                             *
  *   khimani.dev | github.com/NovusEdge | engrammic.ai                         *
  *                                                                             *
@@ -19,7 +19,8 @@ Coding since: 2013
 /* WHAT I BUILD */
 Infrastructure for keeping AI agents honest (decisions, memory, sandboxes),
 and a pile of Claude Code tools.
-I'm also researching privacy hardware through ØCLOAK.
+I also write papers on agent memory and on how models keep track of time.
+https://khimani.dev/research/
 
 /* SELECTED PROJECTS */
 Docket: decision tracking for agents and complex agent workflows.
@@ -35,7 +36,7 @@ stoat: local QEMU virtual machines on Linux, with a TUI and CLI.
 https://khimani.dev/portfolio/stoat/
 
 ØCLOAK: research into reflectors and decoys for WiFi sensing and tracking.
-Hardware is experimental; none has shipped.
+On ice; no hardware shipped.
 https://khimani.dev/portfolio/ocloak/
 
 flocc: Claude Code sessions that pick up Linear issues and open draft PRs.
@@ -96,7 +97,7 @@ X: https://x.com/0kaliasgar
 Engrammic: https://engrammic.ai
 Email: khimanialiasgar@gmail.com
 
-Updated: 2026-11-15
+Updated: 2026-11-21
 
 /* NOTE */
 hey, you actually read these. coffee's on me if we ever meet.

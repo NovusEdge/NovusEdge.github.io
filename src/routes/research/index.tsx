@@ -103,7 +103,7 @@ export default function ResearchIndex() {
     <>
       <Meta
         title={t('research.title')}
-        description="Papers I've published on agent memory, epistemics, and cognitive infrastructure."
+        description="Papers I've published on agent memory, epistemics, and elapsed time in language models."
       />
 
       <MarginQuote lines={RESEARCH_QUOTE} translation={RESEARCH_QUOTE_EN} cite="『デューン』" />

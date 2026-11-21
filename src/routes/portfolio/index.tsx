@@ -313,12 +313,13 @@ function InfoCard({ p }: { p: Project }) {
 const GROUPS = [
   { key: 'now', labelKey: 'portfolio.groupNow', jp: '現在' },
   { key: 'shipped', labelKey: 'portfolio.groupShipped', jp: '完了' },
+  { key: 'ice', labelKey: 'portfolio.groupIce', jp: '凍結' },
   { key: 'oss', labelKey: 'portfolio.groupOss', jp: '貢献' },
   { key: 'chaos', labelKey: 'portfolio.groupChaos', jp: '混沌' },
 ] as const
 
 // carousel curation + order: strongest work first
-const CAROUSEL = ['docket', 'glowup', 'engrammic', 'ocloak', 'stoat', 'palpatine', 'veil']
+const CAROUSEL = ['docket', 'glowup', 'engrammic', 'stoat', 'palpatine', 'veil']
 
 function matches(p: Project, q: string) {
   return (

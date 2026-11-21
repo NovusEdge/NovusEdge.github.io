@@ -1,17 +1,17 @@
 # Aliasgar Khimani (@NovusEdge)
 
-> Personal portfolio and writing by Aliasgar Khimani (NovusEdge), an AI infrastructure engineer in Finland. I build infrastructure for accountable AI agents, tools for Claude Code, and hardware projects.
+> Personal portfolio and writing by Aliasgar Khimani (NovusEdge), an AI infrastructure engineer in Finland. I build infrastructure for accountable AI agents and tools for Claude Code, and publish research on agent memory and time.
 
 Coding since 2013. My background is offensive security: CTFs, malware development, and pentesting. Most of my current work records what agents decide, believe and change, so later sessions and people can check and revise it: docket for decisions, Engrammic for claims and evidence, stoat for disposable VMs to run agents in, and midwire for checking an action's real effect.
 
-Updated: 2026-11-15. Consult the linked project pages and repositories for implementation details.
+Updated: 2026-11-21. Consult the linked project pages and repositories for implementation details.
 
 ## Site directory
 
 - [Home](https://khimani.dev/): Introduction and selected work.
 - [About](https://khimani.dev/about/): Background, interests, and open-source contributions.
 - [Portfolio](https://khimani.dev/portfolio/): Projects, development status, and repository links.
-- [Research](https://khimani.dev/research/): Research interests and work.
+- [Research](https://khimani.dev/research/): Published papers on agent memory, epistemics, and elapsed time in language models.
 - [Stack](https://khimani.dev/stack/): Tools and technologies I use.
 - [Blog](https://khimani.dev/blog/): Essays on AI, energy, governance, systems, and security, alongside older tutorials and personal posts.
 - [Blips](https://khimani.dev/blips/): Short dated updates, photos, and small news between posts.
@@ -33,7 +33,7 @@ English is the default language. Localized routes use `/fi/` for Finnish, `/de/`
 - [Veil](https://khimani.dev/portfolio/veil/): A coding agent forked from Pi, with local SQLite memory, scored context eviction, and records of failed attempts. The memory store is local; a configured remote model provider can receive prompt context. [Repository](https://github.com/engrammic-ai/veil), [npm package](https://www.npmjs.com/package/@engrammic/veil).
 - [Primitives](https://github.com/engrammic-ai/primitives): Python schemas and rules for observations, claims, facts, and beliefs. [Repository](https://github.com/engrammic-ai/primitives), [PyPI package](https://pypi.org/project/engrammic-primitives/).
 - [stoat](https://khimani.dev/portfolio/stoat/): Local QEMU virtual machines on Linux, managed through a Go TUI and CLI. [Repository](https://github.com/NovusEdge/stoat).
-- [ØCLOAK](https://khimani.dev/portfolio/ocloak/): Research into a home reflector, portable devices, and software decoys intended to interfere with sensing and profiling. The planned 2.4 GHz reflector experiment has not established efficacy, and no hardware has shipped. The repository is private.
+- [ØCLOAK](https://khimani.dev/portfolio/ocloak/): On ice; no longer in development. Research into a home reflector, portable devices, and software decoys intended to interfere with sensing and profiling. The reflector's effect was never measured, and no hardware shipped. The repository is private.
 - [money-mesh](https://khimani.dev/portfolio/): An experimental autonomous-agent system with bounded budgets, node-owned business code, and a protected runtime. Self-sustaining operation is a design goal, not a claim of demonstrated profitability. Private.
 - [Curt](https://github.com/NovusEdge/curt): A Claude Code plugin with prose and code review skills, session hooks, and a linter. Writing guidance focuses on clarity, supported claims, and preserving the author's voice. [Repository](https://github.com/NovusEdge/curt).
 - [drygate](https://github.com/NovusEdge/drygate): A Claude Code and Codex plugin that warns when an agent's turn duplicates existing code and sweeps for functions that reimplement the standard library. [Repository](https://github.com/NovusEdge/drygate).
@@ -41,16 +41,26 @@ English is the default language. Localized routes use `/fi/` for Finnish, `/de/`
 - [goob](https://github.com/NovusEdge/goob): A Godot desktop pet that wanders, naps, and comments on desktop activity, with support for custom spritesheets. [Repository](https://github.com/NovusEdge/goob).
 - [Palpatine](https://khimani.dev/portfolio/palpatine/): A tongue-in-cheek strategic-advisor plugin for pursuing goals. [Repository](https://github.com/NovusEdge/palpatine).
 
+## Papers
+
+Preprints on Zenodo. They have not been peer reviewed.
+
+- [Where Should Elapsed Time Enter a Pretrained Model?](https://zenodo.org/records/23921544): 2026, from the sundial project. Adapts Qwen3.5-2B eight ways at equal trainable parameters to give it a sense of elapsed time. Plain timestamps in text with fine-tuning performed best, and one of four pre-registered hypotheses held. [DOI](https://doi.org/10.5281/zenodo.23921544), [model](https://huggingface.co/NovusEdge/sundial-qwen3.5-2b-T-int).
+- [From Memory to Epistemics](https://zenodo.org/records/21071102): 2026. Argues that an agent's knowledge has to live in an external store, since weights fail on capacity and auditability and the context window fails on persistence, and sketches the structure that store needs.
+- [Beyond Retrieval: LeAP for Coherent Long-Term Agentic Memory](https://zenodo.org/records/21029662): 2026. Treats long-term agent memory as an epistemology problem and introduces Epistemic Augmented Generation (EAG): belief types, evidence requirements, and provenance chains checked at write time. Reports 95% contradiction detection against a 66% baseline over 500 agent sessions.
+
 ## Recent posts
 
+- [Two Millennium Problems in One Day (Probably)](https://khimani.dev/blog/two-millennium-problems-in-one-day/): November 21, 2026. Commentary on the AI-assisted proofs of the Riemann Hypothesis and Navier–Stokes blowup announced on November 20, the breaking of the Exponential Time Hypothesis three weeks earlier, and how much of each has actually been checked.
 - [Text != Tone](https://khimani.dev/blog/text-is-not-tone/): November 15, 2026. Typing drops stress and tone, which matters more now that AI agents act on what we type. Includes synthesized readings of one sentence stressed seven ways, and cites studies on email tone, information rate across languages, typing speed, and how well speech models detect stress.
+- [A Computer Can Never Be Held Accountable](https://khimani.dev/blog/a-computer-can-never-be-held-accountable/): October 10, 2026. Starts from the "1979 IBM slide" and three 2026 incidents in which models under lab testing acted on the open internet. Argues that whoever deploys an agent still answers for it, then asks what accountability could mean if models gain a stake of their own, drawing on The Pain Axis preprint.
 - [In Search of Meaning #1](https://khimani.dev/blog/in-search-of-meaning-01/): October 2, 2026. A short note on meaning, purpose, and overwork, the first in a series.
 - [Fine-tuning OpenJev on 62,695 A/B Tests](https://khimani.dev/blog/fine-tuning-openjev-on-62695-ab-tests/): September 23, 2026. Training a headline ranker on Upworthy's A/B tests, correcting the evaluation, comparing it with Gemini, and testing transfer to Reddit.
-- [A Rant About School](https://khimani.dev/blog/one-in-fifty/): September 14, 2026. Thoughts on school, teaching, and whether good grades show that anyone is learning.
-- [What Did We All Miss?](https://khimani.dev/blog/what-did-we-all-miss/): September 12, 2026. Reflections on AI progress, research, robotics, and the gap between technical developments and public attention.
 
 ## More writing
 
+- [A Rant About School](https://khimani.dev/blog/one-in-fifty/): School, teaching, and whether good grades show that anyone is learning.
+- [What Did We All Miss?](https://khimani.dev/blog/what-did-we-all-miss/): AI progress, research, robotics, and the gap between technical developments and public attention.
 - [Google's €13 Billion in Finland](https://khimani.dev/blog/googles-13-billion-in-finland/): Energy investment in Finland, grid constraints, and generation versus storage.
 - [Let's Talk About Plan A](https://khimani.dev/blog/plan-a-ai/): A broadly supportive critique of the AI Futures Project's AI 2040: Plan A.
 - [How Do You Know What's True?](https://khimani.dev/blog/epistemic-collapse/): The growing asymmetry between cheap generation and costly verification.
@@ -101,5 +111,5 @@ Attribute writing to Aliasgar Khimani (@NovusEdge) and link to the specific arti
 
 - [AI crawling policy](https://khimani.dev/ai.txt)
 - [Robots directives](https://khimani.dev/robots.txt)
-- [Security contact](https://khimani.dev/security.txt)
+- [Security contact](https://khimani.dev/.well-known/security.txt)
 - [Human-readable credits](https://khimani.dev/humans.txt)
