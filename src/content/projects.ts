@@ -169,14 +169,14 @@ export const projects: Project[] = [
     jp: '網',
     year: '2026',
     lang: 'Python',
-    group: 'now',
-    phase: 'building',
+    group: 'ice',
+    phase: 'on-ice',
     kind: 'ai',
     description:
-      'An experimental network of earning agents that share a fixed budget. Spawning a peer transfers part of an existing allocation.',
+      'An experimental network of earning agents that shared a fixed budget, where spawning a peer transferred part of an existing allocation. On ice.',
     tech: ['Python', 'Cedar', 'LiteLLM', 'Pydantic AI', 'SQLite', 'Stripe', 'MCP'],
     links: [],
-    body: 'Each node has a protected core, a budget allocation, and room to develop its own product. Revenue is recorded from receipts. When a node spawns a peer, it transfers part of its allocation, so spawning does not create more budget. Cedar policies govern permitted actions at the enforcement boundary.',
+    body: 'Each node had a protected core, a budget allocation, and room to develop its own product. Revenue was recorded from receipts. When a node spawned a peer, it transferred part of its allocation, so spawning did not create more budget. Cedar policies governed permitted actions at the enforcement boundary. No longer in development.',
   },
   {
     slug: 'midwire',

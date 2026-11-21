@@ -20,7 +20,7 @@ export const ocloak: ProjectContent = {
             the others.
           </p>
           <p>
-            The project’s <a href="https://github.com/NovusEdge/ocloak">research notes</a> cover WiFi sensing,
+            The project’s research notes, which stay private, cover WiFi sensing,
             Bluetooth trackers, device fingerprinting, and the limits of the proposed defenses.
           </p>
         </>
@@ -94,11 +94,11 @@ export const ocloak: ProjectContent = {
         <>
           <p>
             ØCLOAK is on ice. The hardware never got past research and bench protocols, and the reflector’s
-            effect was never measured. The repository holds that research, the product plans, and the software
-            tools.
+            effect was never measured. That research, the product plans, and the software tools stay in a
+            private repository.
           </p>
           <p>
-            An ultrasonic scanning tool is available for experiments with recorded audio. The browser illustration
+            The tools include an ultrasonic scanner for experiments with recorded audio. The browser illustration
             below shows the intended effect of obfuscation; it is not a measurement of ØCLOAK hardware.
           </p>
         </>

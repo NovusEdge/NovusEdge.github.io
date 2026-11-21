@@ -9,7 +9,7 @@ type Node = {
   group: string
   hub: boolean
   tech?: Tech
-  text?: boolean // a people/work node with no logo (founder, chaos)
+  text?: boolean // a concept node with no logo (research, chaos)
   x: number
   y: number
   vx: number
@@ -28,18 +28,19 @@ const CLUSTERS: { hub: string; tools: string[]; text: string[] }[] = [
   { hub: 'autonomy', tools: ['Cedar', 'Stripe', 'SQLite', 'Datasette', 'MCP'], text: [] },
   { hub: 'web', tools: ['React', 'Expo', 'Tailwind', 'Vite', 'GSAP', 'WebGL', 'WASM', 'Godot'], text: [] },
   { hub: 'hardware', tools: ['ESP32', 'Raspberry Pi', 'Arduino', 'C'], text: [] },
-  { hub: 'founder', tools: [], text: ['fundraising', 'strategy', 'hiring', 'roadmap', 'investors'] },
+  { hub: 'research', tools: [], text: ['papers', 'preregistration', 'probing', 'fineTuning', 'evals'] },
   { hub: 'chaos', tools: [], text: ['ricing', 'jokeRepos'] },
 ]
 
-// concept icons (filled 24x24) for the founder/cto nodes, each with a distinct color
+// concept icons (filled 24x24) for the research nodes, each with a distinct color. The fill rule is
+// nonzero, so a hole (the magnifier's lens) is a subpath wound the opposite way.
 const CONCEPT_TECH = new Map<string, Tech>(
   Object.entries({
-    fundraising: { path: 'M11.5 2v2.05A6.5 6.5 0 0 0 6 10.5h2a4.5 4.5 0 0 1 3.5-4.4V12c-3.1.5-5 2.2-5 4.5 0 2.6 2.2 4.5 5 4.95V22h2v-2.05A6.5 6.5 0 0 0 19 13.5h-2a4.5 4.5 0 0 1-3.5 4.4V12c3.1-.5 5-2.2 5-4.5 0-2.6-2.2-4.5-5-4.95V2h-2z', hex: '22C55E' },
-    strategy: { path: 'M5 3h1.6v18H5z M7 4h11l-3 3.5 3 3.5H7z', hex: '3B82F6' },
-    hiring: { path: 'M12 4.8a3.2 3.2 0 1 0 0 6.4 3.2 3.2 0 0 0 0-6.4z M12 12.5c-3.3 0-6 1.9-6 4.7V19h12v-1.8c0-2.8-2.7-4.7-6-4.7z M18.25 3h1.5v5h-1.5z M17 4.75h4v1.5h-4z', hex: 'A855F7' },
-    roadmap: { path: 'M3 5h4v4H3z M3 11h4v4H3z M3 17h4v4H3z M9 6h11v2H9z M9 12h11v2H9z M9 18h11v2H9z', hex: '06B6D4' },
-    investors: { path: 'M12 3L2 8h20z M4 10h2.5v8H4z M8.5 10h2.5v8H8.5z M13 10h2.5v8H13z M17.5 10h2.5v8h-2.5z M2 19h20v2.5H2z', hex: 'F59E0B' },
+    papers: { path: 'M7 2h11v15H7z M4 6h1.5v14.5H16V22H4z', hex: '3B82F6' },
+    preregistration: { path: 'M7 10V7a5 5 0 0 1 10 0v3h-2V7a3 3 0 0 0-6 0v3z M5 11h14v10H5z', hex: 'A855F7' },
+    probing: { path: 'M10 3a7 7 0 1 1 0 14a7 7 0 1 1 0-14z M10 5.5a4.5 4.5 0 1 0 0 9a4.5 4.5 0 1 0 0-9z M14.6 16.4l1.8-1.8 5.6 5.6-1.8 1.8z', hex: '06B6D4' },
+    fineTuning: { path: 'M4 6h16v2H4z M4 11h16v2H4z M4 16h16v2H4z M8 4h3v6H8z M14 9h3v6h-3z M6 14h3v6H6z', hex: 'F59E0B' },
+    evals: { path: 'M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z', hex: '22C55E' },
   }).map(([name, { path, hex }]): [string, Tech] => [
     name,
     { name, mono: false, icon: { title: name, hex, path } },

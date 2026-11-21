@@ -70,7 +70,7 @@ export { siClaude }
 // in English on every locale.
 export const DOMAINS = [
   { key: 'ai', jp: '知' },
-  { key: 'founder', jp: '営' },
+  { key: 'research', jp: '研' },
   { key: 'hardware', jp: '機' },
   { key: 'systems', jp: '遊' },
 ]

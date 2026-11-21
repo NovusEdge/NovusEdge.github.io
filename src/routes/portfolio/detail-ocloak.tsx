@@ -3,7 +3,7 @@ import { createPortal } from 'react-dom'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { TLink } from '../../components/page-transition'
-import { Github, Globe, Package, FileText, ArrowRight } from '../../components/icons'
+import { ArrowRight } from '../../components/icons'
 import { prefersReducedMotion } from '../../lib/motion'
 import { techRef } from '../../lib/tech-icons'
 import TrustCollapse from '../../components/ocloak/TrustCollapse'
@@ -15,8 +15,6 @@ gsap.registerPlugin(ScrollTrigger)
 const EvilEye = lazy(() => import('../../components/react-bits/bg/EvilEye.jsx'))
 const Dither = lazy(() => import('../../components/react-bits/bg/Dither.jsx'))
 
-const iconFor = (href: string) =>
-  href.includes('github.com') ? Github : href.includes('npmjs.com') || href.includes('pypi.org') ? Package : Globe
 
 const PROSE =
   'max-w-[65ch] text-[17px] leading-[1.75] text-bone/80 [&_p]:my-6 [&_strong]:text-bone [&_code]:rounded [&_code]:bg-bone/10 [&_code]:px-1.5 [&_code]:py-0.5 [&_code]:font-mono [&_code]:text-[0.85em] [&_code]:text-bone'
@@ -240,8 +238,8 @@ export default function Ocloak({ p, c }: LayoutProps) {
 
             <div className="mt-10">
               <span className="inline-flex items-center gap-2 rounded-full border border-gold/40 bg-gold/10 px-3 py-1 font-mono text-[10px] uppercase tracking-[0.25em] text-gold">
-                <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-gold" />
-                wip
+                <span className="h-1.5 w-1.5 rounded-full bg-gold" />
+                on ice
               </span>
             </div>
             <h1 className="mt-4 flex items-baseline gap-4 font-display text-6xl font-black md:text-8xl">
@@ -257,31 +255,6 @@ export default function Ocloak({ p, c }: LayoutProps) {
               ))}
             </div>
 
-            <div className="mt-6 flex flex-wrap items-center gap-3">
-              {p.links.map((l) => {
-                const Icon = iconFor(l.href)
-                return (
-                  <a
-                    key={l.href}
-                    href={l.href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 rounded border border-gold bg-gold/10 px-4 py-2 font-mono text-[12px] uppercase tracking-[0.2em] text-gold transition-colors hover:bg-gold hover:text-charcoal"
-                  >
-                    <Icon className="h-4 w-4" /> {l.label}
-                  </a>
-                )
-              })}
-              <a
-                href="https://github.com/NovusEdge/ocloak/blob/main/LICENSE"
-                target="_blank"
-                rel="noopener noreferrer"
-                title="AGPL-3.0 · license"
-                className="inline-flex items-center gap-2 rounded border border-bone/15 px-4 py-2 font-mono text-[12px] uppercase tracking-[0.2em] text-bone/60 transition-colors hover:border-bone/40 hover:text-bone"
-              >
-                <FileText className="h-4 w-4" /> AGPL-3.0
-              </a>
-            </div>
           </div>
 
         </div>
