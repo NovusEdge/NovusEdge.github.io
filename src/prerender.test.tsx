@@ -51,7 +51,11 @@ describe('blog prerendering', () => {
     expect(page.html).not.toContain('<!--$!-->')
     expect([...page.head.elements]).toContainEqual({
       type: 'meta',
-      props: { property: 'og:image', content: 'https://khimani.dev/assets/blog/fatigue-thumb.webp' },
+      props: { property: 'og:image', content: 'https://khimani.dev/assets/og/what-did-we-all-miss.jpg' },
+    })
+    expect([...page.head.elements]).toContainEqual({
+      type: 'meta',
+      props: { property: 'og:image:width', content: '1200' },
     })
   })
 

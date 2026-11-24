@@ -29,6 +29,7 @@ export async function prerender(data: { url: string }) {
   const { LOCALES, localeFromPath, stripLocale } = await import('./i18n/paths')
   const { structuredData } = await import('./lib/structured-data')
   const { getProject, projects } = await import('./content/projects')
+  const { default: shareCards } = (await import('./content/og-images.json')) as { default: Record<string, string> }
   // Blog routes suspend while loading a post, so metadata is only final once
   // the complete tree has rendered. renderToString only emits the fallback.
   const { prelude } = await renderStatic(
@@ -86,11 +87,20 @@ export async function prerender(data: { url: string }) {
     })
   }
   if (headState.pageTitle !== '404') {
-    const imageUrl = `${origin}${headState.image ?? DEFAULT_SHARE_IMAGE}`
+    // Cards come from scripts/og-images.mjs; a post without one shares its raw thumbnail.
+    const card = post ? shareCards[post.slug] : undefined
+    const image = card ?? headState.image ?? DEFAULT_SHARE_IMAGE
     elements.push(
-      { type: 'meta', props: { property: 'og:image', content: imageUrl } },
-      { type: 'meta', props: { name: 'twitter:image', content: imageUrl } },
+      { type: 'meta', props: { property: 'og:image', content: `${origin}${image}` } },
+      { type: 'meta', props: { name: 'twitter:image', content: `${origin}${image}` } },
     )
+    if (image === card || image === DEFAULT_SHARE_IMAGE) {
+      elements.push(
+        { type: 'meta', props: { property: 'og:image:type', content: 'image/jpeg' } },
+        { type: 'meta', props: { property: 'og:image:width', content: '1200' } },
+        { type: 'meta', props: { property: 'og:image:height', content: '630' } },
+      )
+    }
   }
   if (headState.lang === 'zh-Hans') {
     elements.push({
