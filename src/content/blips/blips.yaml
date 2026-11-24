@@ -1,5 +1,24 @@
 # blips - short-form updates
 
+- date: 2026-11-24
+  text: "got into the arctic express hackathon :)) helsinki to lapland, 3-6 dec, 1 of 200"
+  media: arctic-express-card.mp4
+  tags: [hackathon, events, finland]
+
+- date: 2026-11-18
+  text: "volunteered at slush 2026"
+  media: [slush-volunteers.jpg, slush-badge-desk-crew.jpg, slush-badge-table.jpg, slush-cable-duty.jpg]
+  tags: [events, slush, finland]
+
+- date: 2026-11-18
+  text: "spotted at slush"
+  media: [slush-compassionate-capital.jpg, slush-rover.jpg, slush-signed-badge.jpg]
+  tags: [events, slush]
+
+- date: 2026-11-18
+  media: [slush-dinner.jpg, slush-dessert.jpg]
+  tags: [food, slush]
+
 - date: 2026-11-01
   text: "omg i've been sleeping on knackerbrod holy fuck its so good"
   media: knackebrod.jpg
