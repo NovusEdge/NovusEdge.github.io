@@ -15,11 +15,8 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  deploy:
+  build:
     runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - uses: actions/checkout@v7
       - uses: pnpm/action-setup@v6
@@ -36,5 +33,15 @@ jobs:
           path: dist
           # without this the tar step drops dist/.well-known/ and security.txt 404s
           include-hidden-files: true
+
+  # A separate job: deploy-pages in the uploading job ran within a second of the
+  # upload and the artifact API listed zero (2026-11-24), then two on a re-run.
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
       - id: deployment
         uses: actions/deploy-pages@v5
