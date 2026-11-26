@@ -15,7 +15,10 @@ const PHOTOS = ['/photos/profile1.JPG', '/photos/profile2.JPG', '/photos/profile
 
 const DOSSIER_KEYS = [
   { keyI18n: 'about.dossier.codingSince', val: '2013' },
+  { keyI18n: 'about.dossier.based', valI18n: 'about.dossier.basedVal' },
+  { keyI18n: 'about.dossier.timeZone', val: 'EET (UTC+2/+3)' },
   { keyI18n: 'about.dossier.focus', valI18n: 'about.dossier.focusVal' },
+  { keyI18n: 'about.dossier.stack', val: 'Python, Go, TypeScript' },
   { keyI18n: 'about.dossier.cats', valI18n: 'about.dossier.catsVal' },
   { keyI18n: 'about.dossier.status', valI18n: 'about.dossier.statusVal', redacted: true },
 ]
