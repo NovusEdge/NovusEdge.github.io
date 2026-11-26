@@ -137,6 +137,14 @@ export default function BlogIndex() {
                     </div>
                   )
                 }
+                if (post.slug === '140-mw-of-chat' && img) {
+                  return (
+                    <div key={post.slug}>
+                      <PlanACard post={post} img={img} clip={null} dayOf={dayOf} monthOf={monthOf} />
+                      <InlineBlipCount count={blipCount} />
+                    </div>
+                  )
+                }
                 if ((isMeaningSlug(post.slug) || post.slug === 'text-is-not-tone') && img) {
                   return (
                     <div key={post.slug}>

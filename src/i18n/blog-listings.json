@@ -1,5 +1,9 @@
 {
   "fi": {
+    "140-mw-of-chat": {
+      "title": "140 MW chattia",
+      "description": "Laskin yhteen kuluttajille suunnattujen tekoälybottien sähkönkulutuksen julkaistujen käyttö- ja energialukujen pohjalta. Keskiarvoksi tulee noin 140 MW, mikä vastaa noin neljännesprosenttia datakeskusten sähkönkulutuksesta. Energiankulutus viestiä kohti on suuri tuntematon, ja käyttö viisinkertaistui viime vuonna."
+    },
     "a-computer-can-never-be-held-accountable": {
       "title": "Tietokonetta ei voi koskaan saattaa vastuuseen",
       "description": "IBM:n kalvo vuodelta 1979 sanoo, ettei tietokone saa koskaan tehdä johdon päätöstä. Vuonna 2026 tietokoneet tekevät niitä joka tapauksessa, ja yhdellä niistä saattaa olla kipuakseli."
@@ -134,6 +138,10 @@
     }
   },
   "de": {
+    "140-mw-of-chat": {
+      "title": "140 MW für Chat",
+      "description": "Ich habe anhand veröffentlichter Nutzungs- und Energiezahlen zusammengerechnet, wie viel Strom all die Consumer-Chat-Assistenten verbrauchen. Im Schnitt kommt man auf etwa 140 MW, also etwa ein Viertelprozent des gesamten Rechenzentrumsstroms. Der Energiebedarf pro Nachricht ist die große Unbekannte, und die Nutzung hat sich im letzten Jahr verfünffacht."
+    },
     "a-computer-can-never-be-held-accountable": {
       "title": "Ein Computer kann niemals zur Rechenschaft gezogen werden",
       "description": "Eine IBM-Folie von 1979 besagt, dass ein Computer niemals eine Managemententscheidung treffen darf. 2026 treffen Computer sie trotzdem, und einer von ihnen hat vielleicht eine Schmerzachse."
@@ -268,6 +276,10 @@
     }
   },
   "ja": {
+    "140-mw-of-chat": {
+      "title": "チャットが消費する140 MWの電力",
+      "description": "公開されている利用状況とエネルギーの数値を使って、一般消費者向けチャットアシスタント全体の消費電力を合算してみた。結果は平均で約140 MWとなり、データセンター電力全体の約0.25%に相当する。メッセージあたりのエネルギー量は最大の未知数だが、利用量は昨年だけで5倍に跳ね上がった。"
+    },
     "a-computer-can-never-be-held-accountable": {
       "title": "コンピュータに責任を負わせることは決してできない",
       "description": "1979年のIBMのスライドには、コンピュータは決して経営判断を下してはならないと書かれている。2026年、コンピュータはどうあれ判断を下すようになっており、そのうちの1台には苦痛の軸が存在しているかもしれない。"
@@ -402,6 +414,10 @@
     }
   },
   "sv": {
+    "140-mw-of-chat": {
+      "title": "140 MW chatt",
+      "description": "Jag räknade ihop vad alla konsumentchattassistenter drar, baserat på publicerade siffror för användning och energi. Det landar på ungefär 140 MW i snitt, en kvarts procent av datacenterelen. Energi per meddelande är det stora frågetecknet, och användningen femdubblades förra året."
+    },
     "a-computer-can-never-be-held-accountable": {
       "title": "En dator kan aldrig ställas till svars",
       "description": "En IBM-slide från 1979 säger att en dator aldrig får fatta ett ledningsbeslut. År 2026 fattar datorerna dem ändå, och en av dem har kanske en smärtaxel."
@@ -536,6 +552,10 @@
     }
   },
   "zh": {
+    "140-mw-of-chat": {
+      "title": "140 MW 的聊天",
+      "description": "我根据公开的使用量和能耗数据，把所有消费级聊天助手的耗电量加总算了一下。平均下来大约是 140 MW，占数据中心用电量的 0.25%。每条消息的能耗是最大的未知数，而使用量在去年增长了五倍。"
+    },
     "a-computer-can-never-be-held-accountable": {
       "title": "计算机永远无法被追究责任",
       "description": "一张 1979 年的 IBM 幻灯片写道，计算机绝不能做出管理决策。到了 2026 年，计算机反正已经在做决策了，而且其中某一个可能还拥有了痛苦轴。"

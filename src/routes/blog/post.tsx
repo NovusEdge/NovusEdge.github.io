@@ -20,6 +20,9 @@ import Magnetic from '../../components/react-bits/Magnetic'
 import { PostHero } from './post-hero'
 import { PlanAPage } from './plan-a-page'
 import { GridPage } from './grid-page'
+import { PaperPage } from './paper-page'
+import { CHAT_POWER_FIGURES } from '../../components/chat-power-calc'
+import { ChatPowerDots, ChatPowerRail } from '../../components/chat-power-rail'
 import { PortalPage } from './portal-page'
 import { OpenJevPage } from './openjev-page'
 import { MeaningPage } from './meaning-page'
@@ -95,6 +98,9 @@ export default function BlogPost() {
   if (post.slug === 'googles-13-billion-in-finland') return <GridPage post={post} image={image} />
 
   // The trends piece argues nobody is in a state to read the signal, so it is
+  // The chatbot-power estimate sits on Plan A's paper, with a calculator for readers who dispute its inputs.
+  if (post.slug === '140-mw-of-chat') return <PaperPage post={post} image={image} figures={CHAT_POWER_FIGURES} head={<ChatPowerDots />} rail={<ChatPowerRail />} />
+
   // served as an onboarding portal that tracks whether you got to the end.
   if (post.slug === 'what-did-we-all-miss') return <PortalPage post={post} image={image} />
 

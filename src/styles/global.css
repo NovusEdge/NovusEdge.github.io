@@ -1351,6 +1351,72 @@ html:has(.oj-dialog[open]) {
   }
 }
 
+/* The generic paper page. Its body takes the full column the layout gives it;
+   Plan A and OpenJev keep their capped measure. */
+.pa-paper .pa-body,
+.pa-paper .pa-standfirst {
+  max-width: none;
+}
+.pa-paper table {
+  margin: 2em 0;
+  font-size: 0.82em;
+  line-height: 1.4;
+}
+.pa-paper th,
+.pa-paper td {
+  padding: 0.7em 1.4em 0.7em 0;
+  vertical-align: baseline;
+}
+.pa-paper :is(th, td):last-child {
+  padding-right: 0;
+}
+.pa-paper th {
+  vertical-align: bottom;
+}
+/* Values keep their units on one line; the row label and the last column take the wrap. */
+.pa-paper :is(th, td):not(:first-child):not(:last-child) {
+  white-space: nowrap;
+}
+.pa-paper td:first-child {
+  min-width: 8.5em;
+}
+/* A last column holding links is prose about sources, which reads ragged-right. */
+.pa-paper table:has(td:last-child a) :is(th, td):last-child {
+  text-align: left;
+  padding-left: 0.6em;
+}
+/* A cell's link already names its source. The floating note beside it adds
+   only the host, and its 2.75rem peek button doubles the row height. */
+@media (min-width: 1024px) {
+  .pa-paper table .pa-sn {
+    display: none;
+  }
+}
+/* At 27% of a narrow shell the plates' labels drop under 9px, so the rail takes width from the text. */
+@media (min-width: 1024px) and (max-width: 1279px) {
+  .pa-paper .pa-col {
+    width: 56%;
+  }
+  .pa-paper .pa-rail {
+    width: 34%;
+  }
+  .pa-paper th,
+  .pa-paper td {
+    padding-right: 0.9em;
+  }
+}
+.pa-paper .pa-body ul {
+  margin: 0 0 1.4em;
+  padding: 0;
+  list-style: none;
+}
+.pa-paper .pa-body li {
+  margin-bottom: 0.7em;
+}
+.pa-paper tbody tr:last-child td {
+  border-bottom-color: color-mix(in srgb, var(--pa-ink) 55%, transparent);
+}
+
 /* ------------------------------------------------------------------ */
 /* Orientation portal: the essay served as corporate onboarding.      */
 /* Office-grey and deep teal palettes follow the site theme.         */
@@ -2180,6 +2246,280 @@ html:has(.oj-dialog[open]) {
   color: var(--fg-signal);
   font-weight: 500;
   font-variant-numeric: tabular-nums;
+}
+
+/* Chat power calculator: picks up the grid or paper palette from whichever page hosts it. */
+.cpc {
+  --cpc-ink: var(--fg-ink, var(--pa-ink, currentColor));
+  --cpc-accent: var(--fg-signal, var(--pa-ox, currentColor));
+  --cpc-rule: color-mix(in srgb, var(--cpc-ink) 18%, transparent);
+  margin: 2.25rem 0;
+  padding: 1.25rem 1.25rem 1rem;
+  border: 1px solid var(--cpc-rule);
+  color: var(--cpc-ink);
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+}
+.cpc-presets {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-bottom: 1.1rem;
+}
+.cpc-presets button {
+  padding: 0.3rem 0.6rem;
+  border: 1px solid var(--cpc-rule);
+  font-size: 0.7rem;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+}
+.cpc-presets button[aria-pressed='true'] {
+  border-color: var(--cpc-accent);
+  color: var(--cpc-accent);
+}
+.cpc-row {
+  display: grid;
+  grid-template-columns: 13rem 1fr 5.5rem;
+  align-items: center;
+  gap: 0.9rem;
+  padding: 0.35rem 0;
+}
+.cpc-row input {
+  width: 100%;
+  accent-color: var(--cpc-accent);
+}
+.cpc-row output {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+.cpc-out {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.8rem 1.5rem;
+  margin-top: 1.1rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--cpc-rule);
+}
+.cpc-out p {
+  margin: 0;
+}
+.cpc-big {
+  display: block;
+  color: var(--cpc-accent);
+  font-size: 1.5rem;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+}
+.cpc figcaption {
+  margin-top: 1rem;
+  font-size: 0.7rem;
+  opacity: 0.7;
+}
+@media (max-width: 640px) {
+  .cpc-row {
+    grid-template-columns: 1fr 4.5rem;
+  }
+  .cpc-row input {
+    grid-column: 1 / -1;
+    grid-row: 2;
+  }
+}
+
+/* Chat power rail: one drawn plate per section, in the paper's ink and ox only. */
+.cpr {
+  margin: 0;
+  width: 100%;
+}
+.cpr-n {
+  color: var(--pa-ox);
+  padding-right: 0.7em;
+  font-variant-numeric: tabular-nums;
+}
+.cpr-plate {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+  font-size: 12.5px;
+  font-variant-numeric: lining-nums tabular-nums;
+}
+.cpr-plate text {
+  fill: var(--pa-ink);
+}
+.cpr-plate .cpr-l {
+  fill: color-mix(in srgb, var(--pa-ink) 72%, transparent);
+}
+.cpr-plate .cpr-s {
+  font-size: 11px;
+  fill: color-mix(in srgb, var(--pa-ink) 62%, transparent);
+}
+.cpr-plate .cpr-k {
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  fill: color-mix(in srgb, var(--pa-ink) 62%, transparent);
+}
+.cpr-plate .cpr-strong {
+  fill: var(--pa-ink);
+}
+.cpr-plate .cpr-v {
+  font-size: 19px;
+}
+.cpr-plate .cpr-big {
+  font-size: 36px;
+}
+.cpr-plate .cpr-ox {
+  fill: var(--pa-ox);
+}
+.cpr-fill-ox {
+  fill: var(--pa-ox-mark);
+}
+.cpr-fill-ink {
+  fill: color-mix(in srgb, var(--pa-ink) 55%, var(--pa-ground));
+}
+.cpr-dot {
+  fill: color-mix(in srgb, var(--pa-ink) 30%, var(--pa-ground));
+}
+.cpr-ripple {
+  fill: none;
+  stroke: var(--pa-ox-mark);
+  stroke-width: 0.6;
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .cpr-ripple {
+    animation: cpr-ripple 2.6s ease-out 0.6s 3;
+  }
+}
+@keyframes cpr-ripple {
+  from {
+    opacity: 0.9;
+    transform: scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: scale(9);
+  }
+}
+.cpr-track {
+  fill: color-mix(in srgb, var(--pa-ink) 8%, var(--pa-ground));
+}
+.cpr-band {
+  fill: color-mix(in srgb, var(--pa-ox-mark) 16%, var(--pa-ground));
+}
+.cpr-node {
+  fill: var(--pa-ground);
+  stroke: var(--pa-ink);
+  stroke-width: 1.25;
+}
+.cpr-asked,
+.cpr-used,
+.cpr-cell,
+.cpr-ring {
+  fill: none;
+  stroke: color-mix(in srgb, var(--pa-ink) 60%, transparent);
+  stroke-width: 1;
+}
+.cpr-asked {
+  stroke-dasharray: 3 4;
+}
+.cpr-used {
+  stroke: var(--pa-ink);
+  stroke-width: 1.5;
+}
+.cpr-cell {
+  stroke: color-mix(in srgb, var(--pa-ink) 38%, transparent);
+}
+.cpr-ring {
+  fill: var(--pa-ground);
+  stroke: var(--pa-ox-mark);
+}
+.cpr-lead,
+.cpr-axis,
+.cpr-spine,
+.cpr-rung,
+.cpr-rail,
+.cpr-span,
+.cpr-line-ox,
+.cpr-line-ink {
+  fill: none;
+  stroke: color-mix(in srgb, var(--pa-ink) 45%, transparent);
+  stroke-width: 1;
+}
+.cpr-lead,
+.cpr-line-ox {
+  stroke: var(--pa-ox-mark);
+}
+.cpr-rail {
+  stroke: var(--pa-ink);
+  stroke-width: 1.5;
+}
+.cpr-rung {
+  stroke: var(--pa-ink);
+}
+.cpr-span {
+  stroke-width: 3;
+  stroke: color-mix(in srgb, var(--pa-ink) 22%, transparent);
+}
+.cpr-line-ox,
+.cpr-line-ink {
+  stroke-width: 2;
+}
+.cpr-line-ink {
+  stroke: color-mix(in srgb, var(--pa-ink) 70%, transparent);
+}
+.cpr-dash {
+  stroke-width: 1;
+  stroke-dasharray: 3 4;
+}
+.cpr-stream {
+  stroke: var(--pa-ox-mark);
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-dasharray: 0.1 7.9;
+  opacity: 0.7;
+}
+.cpr-stream:nth-child(2) {
+  stroke-dasharray: 0.1 11.9;
+}
+.cpr-stream:nth-child(3) {
+  stroke-dasharray: 0.1 5.9;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .cpr-stream {
+    animation: cpr-stream 0.9s linear infinite;
+  }
+  .cpr-stream:nth-child(2) {
+    animation-duration: 1.5s;
+  }
+  .cpr-stream:nth-child(3) {
+    animation-duration: 0.7s;
+  }
+}
+/* 24 is a whole number of each row's dash period (8, 12, 6), so the loop has no seam. */
+@keyframes cpr-stream {
+  to {
+    stroke-dashoffset: -24;
+  }
+}
+.cpr-ticks {
+  display: flex;
+  gap: 5px;
+  margin-top: 1.4rem;
+}
+.cpr-ticks span {
+  width: 22px;
+  height: 2px;
+  background: color-mix(in srgb, var(--pa-ink) 22%, transparent);
+  transform: scaleX(0.5);
+  transform-origin: left;
+  transition: background-color 240ms ease, transform 240ms ease;
+}
+.cpr-ticks span[data-on] {
+  transform: scaleX(1);
+  background: var(--pa-ox-mark);
 }
 
 .fg-end {
