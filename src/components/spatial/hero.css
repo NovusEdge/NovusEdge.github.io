@@ -1,0 +1,52 @@
+/* Colours come from the --sp-* properties on .sp-fig in figures.css, so the hero follows the figures. */
+.sp-hero { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr); align-items: center; gap: 2rem 3rem; margin: 0 0 3.5rem; }
+.sp-hero .spp-head { margin: 0; }
+/* Half the column, so smaller than the page's full-width title size. */
+.sp-hero .spp-head h1 { font-size: clamp(2.5rem, 5.2vw, 5rem); }
+@media (max-width: 56rem) {
+  .sp-hero { grid-template-columns: minmax(0, 1fr); }
+}
+
+/* The ratio is the viewBox's, reserved on the drawing so nothing moves when it arrives. */
+.sp-hero-art { position: relative; --px: 0; --py: 0; }
+.sp-hero .sp-hero-art svg { width: 100%; height: auto; aspect-ratio: 440 / 360; max-height: none; overflow: visible; }
+
+/* The tick field (hero-field.tsx) sits behind the drawing and runs past its box, so the ticks fade out
+   in open paper and not at the box's edge. Sideways it stops inside the page gutter: further would
+   give a phone a horizontal scrollbar. isolation keeps the z-index: -1 above the page background.
+   color and outline-color are not painted: the shader reads its ink and gold from them. */
+.sh-stage { position: relative; isolation: isolate; }
+.sh-field { position: absolute; top: -16%; left: max(-7%, -1.25rem); z-index: -1; width: calc(100% + 2 * min(7%, 1.25rem)); height: 128%; pointer-events: none; color: var(--sp-ink); outline-color: var(--sp-a); }
+
+/* A tap pauses the loop on a touch screen, where there is no hover to show it. Two bars in the
+   corner say so; they are a sign, not a control, and a second tap anywhere on the drawing resumes. */
+.sh-stage::after { content: ''; position: absolute; top: 0.25rem; right: 0.25rem; width: 0.7rem; height: 0.9rem; border-inline: 0.22rem solid var(--sp-soft); opacity: 0; transition: opacity 0.2s; pointer-events: none; }
+.sh-stage[data-paused]::after { opacity: 1; }
+
+.sh-grid { fill: none; stroke: var(--sp-ink); stroke-width: 1; opacity: 0.16; }
+.sh-plate { fill: color-mix(in srgb, var(--sp-ink) 5%, var(--sp-surface)); stroke: var(--sp-rule); stroke-width: 1.5; stroke-linejoin: round; }
+.sh-wall { fill: var(--sp-surface); stroke: var(--sp-ink); stroke-width: 1.5; stroke-linejoin: round; }
+.sh-shade { fill: color-mix(in srgb, var(--sp-ink) 9%, var(--sp-surface)); }
+.sh-inner { fill: color-mix(in srgb, var(--sp-ink) 18%, var(--sp-surface)); }
+.sh-roof { fill: color-mix(in srgb, var(--sp-a) 22%, var(--sp-surface)); }
+.sh-glass { fill: color-mix(in srgb, var(--sp-a) 55%, var(--sp-surface)); }
+.sh-hole { fill: none; stroke: var(--sp-ink); stroke-width: 1; stroke-dasharray: 3 3; }
+.sh-socket { fill: var(--sp-a); stroke: var(--sp-ink); stroke-width: 1; }
+
+/* fill-box: the roof turns about its own centre, and a socket scales about its own, not the SVG's corner. */
+.sp-hero [data-part], .sp-hero [data-socket] { transform-box: fill-box; transform-origin: center; }
+
+/* Parallax uses `translate`, which is separate from the `transform` anime.js drives on the same layers. */
+@media (hover: hover) and (pointer: fine) {
+  .sp-hero [data-depth] { translate: calc(var(--px) * var(--d) * 1px) calc(var(--py) * var(--d) * 1px); transition: translate 0.3s ease-out; }
+}
+
+.sp-hero ol { position: absolute; left: 0; bottom: 0; display: grid; gap: 0.35rem; margin: 0; padding: 0; list-style: none; font: 600 clamp(0.7rem, 1.15vw, 0.95rem)/1.3 var(--font-mono); }
+.sp-hero li { width: fit-content; padding: 0.3rem 0.6rem; border: 1px solid var(--sp-rule); border-radius: 4px; background: var(--sp-surface); }
+/* Below this width the chips are wide enough, against the drawing, to cover the house's front
+   corner, so they leave the overlay and sit under it. */
+@media (max-width: 40rem) {
+  .sp-hero ol { position: static; margin-top: 0.75rem; }
+}
+.sp-hero [data-char] { white-space: pre; }
+.sp-hero-art [role='img']:focus-visible { outline: 2px solid var(--sp-a); outline-offset: 4px; border-radius: 6px; }

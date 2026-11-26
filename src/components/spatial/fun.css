@@ -1,0 +1,17 @@
+/* The resting offset is the end of the path: with the animation dropped (reduced motion) the player
+   sits where the beat ends, next to the dashed path that got it there. */
+.fun-player { fill: var(--sp-a); stroke: var(--sp-ink); stroke-width: 1.5; offset-rotate: 0deg; offset-distance: 100%; animation: fun-run 2.6s linear 0.5s both; }
+@keyframes fun-run {
+  from { offset-distance: 0%; }
+  to { offset-distance: 100%; }
+}
+.sp-fig[data-paused] .fun-player { animation-play-state: paused; }
+@media (prefers-reduced-motion: reduce) {
+  .fun-player { animation: none; }
+}
+
+.fun-dot { fill: var(--sp-a); stroke: var(--sp-ink); stroke-width: 1.5; }
+
+.fun-slop { align-items: center; }
+/* The ratio is set here, not left to the video, so the panel does not shift while it loads. */
+.fun-video { display: block; width: 100%; height: auto; aspect-ratio: 16 / 9; border-radius: 6px; background: var(--sp-rule); }

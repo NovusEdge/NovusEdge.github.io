@@ -1,0 +1,180 @@
+/* The page's colour scheme is not chosen yet: every figure colour comes from these six properties. */
+.sp-fig {
+  --sp-ink: var(--color-charcoal);
+  --sp-surface: var(--color-bone);
+  --sp-soft: color-mix(in srgb, var(--sp-ink) 68%, transparent);
+  --sp-rule: color-mix(in srgb, var(--sp-ink) 24%, transparent);
+  --sp-a: var(--color-gold);
+  --sp-b: var(--color-paper-deep);
+  /* Every HTML label in a figure (stats, readouts, notes) takes this one size: 13px on a phone, the beat label's 15.2px on a desktop. */
+  --sp-text: clamp(0.8125rem, 0.7rem + 0.42vw, 0.95rem);
+}
+.dark .sp-fig {
+  --sp-ink: var(--color-bone);
+  --sp-surface: var(--color-charcoal);
+  --sp-b: var(--color-paper);
+}
+
+/* Figures take the article column's full width. The column sets the measure, not the figure. */
+.sp-fig { margin: 2.5rem 0; color: var(--sp-ink); font-variant-numeric: tabular-nums; }
+.sp-fig figcaption { margin-top: 0.9rem; font: 400 0.95rem/1.5 var(--font-body); color: var(--sp-soft); }
+
+.sp-bar { display: flex; align-items: center; gap: 1rem; min-height: 2.25rem; margin-bottom: 0.7rem; }
+.sp-beat { flex: 1; min-width: 0; margin: 0; font: 600 0.95rem/1.3 var(--font-mono); }
+.sp-beat i { margin-right: 0.6rem; color: var(--sp-soft); font-style: normal; font-weight: 500; }
+.sp-swap { display: grid; }
+.sp-swap > * { grid-area: 1 / 1; }
+.sp-btn { min-height: 2rem; padding: 0.2rem 0.75rem; border: 1.5px solid var(--sp-ink); border-radius: 999px; background: transparent; color: inherit; font: 500 0.75rem/1.3 var(--font-mono); cursor: pointer; }
+.sp-btn:focus-visible { outline: 2px solid var(--sp-a); outline-offset: 2px; }
+/* The pause control ends the label row, where it covers nothing. A figure with no labels has it in
+   the corner of its stage, and a figure with footage has it in the corner of the video. A solid ink disc with the icon in the surface colour; the disc is the
+   target: 36px, and 28px on a phone. */
+.sp-stage { position: relative; animation-duration: 0.45s; animation-timing-function: ease-out; }
+/* The first beat fades in over the reset at the end of a lap; Fig alternates the two names to restart it. */
+@keyframes sp-lap-a {
+  from { opacity: 0.15; }
+}
+@keyframes sp-lap-b {
+  from { opacity: 0.15; }
+}
+.sp-figpause { flex: none; display: grid; place-items: center; width: 2.25rem; height: 2.25rem; padding: 0; border: 0; border-radius: 50%; background: var(--sp-ink); color: var(--sp-surface); box-shadow: 0 1px 2px rgb(0 0 0 / 0.2), 0 4px 12px rgb(0 0 0 / 0.18); cursor: pointer; transition: scale 0.15s ease; }
+.sp-media { position: relative; }
+:is(.sp-stage, .sp-media) > .sp-figpause { position: absolute; top: 0.5rem; right: 0.5rem; z-index: 2; }
+.sp-figpause:hover { scale: 1.06; }
+.sp-figpause:active { scale: 0.94; }
+.sp-fig .sp-figpause svg { display: block; width: 50%; height: 50%; max-height: none; fill: currentColor; }
+.sp-figpause:focus-visible { outline: 2px solid var(--sp-a); outline-offset: 2px; }
+@media (max-width: 40rem) {
+  .sp-figpause { width: 1.75rem; height: 1.75rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .sp-figpause { transition: none; }
+}
+
+/* Panels sit side by side while each has 18rem, then stack, so SVG type stays near its drawn
+   12px on a 360px screen. */
+.sp-panels { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 18rem), 1fr)); gap: 1.25rem 2rem; align-items: start; }
+.sp-panel { padding: 0.75rem; border: 1px solid var(--sp-rule); border-radius: 6px; }
+.sp-title { margin: 0 0 0.5rem; font: 600 0.95rem/1.3 var(--font-mono); text-transform: uppercase; letter-spacing: 0.08em; }
+.sp-chat { margin: 0.75rem 0 0; font: 600 var(--sp-text)/1.4 var(--font-mono); }
+/* KaTeX sets subscripts and fraction digits at 0.7 of this: 1.35rem keeps those above 15px on a desktop column. */
+.sp-sum { margin: 0 0 0.75rem; overflow-x: auto; font-size: clamp(1.1rem, 0.8rem + 0.9vw, 1.35rem); }
+.sp-sum p { margin: 0.35rem 0; }
+
+/* max-height: a single drawing in a 69rem column would otherwise scale to well over a screen tall.
+   The viewBox keeps its ratio, so the drawing centres in the box. */
+.sp-fig svg { display: block; width: 100%; height: auto; max-height: 34rem; font: 500 12px var(--font-mono); }
+.sp-fig svg text { fill: var(--sp-ink); }
+.sp-fig svg text.sp-soft { fill: var(--sp-soft); }
+.sp-fig svg text.sp-strong { font-weight: 700; }
+.sp-fig svg text.sp-small { font-size: 11px; }
+.sp-fig svg text.sp-mark { font-size: 16px; font-weight: 700; }
+/* A highlight moving from one shape to the next crosses over; without this every beat change is a cut. */
+.sp-line, .sp-box, .sp-frame { transition: fill 0.3s, stroke 0.3s, stroke-width 0.3s; }
+.sp-line { fill: none; stroke: var(--sp-ink); stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
+.sp-box { fill: var(--sp-surface); stroke: var(--sp-ink); stroke-width: 1.5; }
+.sp-frame { fill: none; stroke: var(--sp-rule); stroke-width: 1.5; }
+.sp-faint { stroke: var(--sp-rule); }
+.sp-dash { stroke-dasharray: 4 4; }
+.sp-stroke-a { stroke: var(--sp-a); }
+.sp-stroke-b { stroke: var(--sp-b); }
+.sp-heavy { stroke-width: 2.5; }
+.sp-tint-a { fill: color-mix(in srgb, var(--sp-a) 30%, var(--sp-surface)); }
+.sp-tint-b { fill: color-mix(in srgb, var(--sp-b) 22%, var(--sp-surface)); }
+.sp-clear { fill: none; }
+.sp-fill-b { fill: var(--sp-b); stroke: var(--sp-surface); stroke-width: 1.5; }
+.sp-move { transition: transform 0.6s ease; }
+/* One voxel face. --vox is the cube's colour; the two side faces are that colour darkened, which reads as
+   shading on either theme's background. */
+.sp-vox { --vox: var(--sp-b); fill: var(--vox); stroke: var(--sp-ink); stroke-width: 0.5; stroke-linejoin: round; }
+.sp-vox--wall { --vox: var(--sp-surface); stroke: var(--sp-soft); }
+.sp-vox--lit { --vox: var(--sp-a); }
+.sp-vox--l { fill: color-mix(in srgb, #000 14%, var(--vox)); }
+.sp-vox--r { fill: color-mix(in srgb, #000 30%, var(--vox)); }
+.sp-fig .sp-vox--ghost { fill: color-mix(in srgb, var(--sp-a) 35%, transparent); stroke: var(--sp-a); stroke-width: 1; stroke-dasharray: 2 2; }
+/* What a beat adds to the voxel view fades in and out, so the change of beat on the way back to the plan is not a cut. */
+.sp-vox { transition: fill 0.4s; }
+.sp-cue { transition: opacity 0.4s; }
+/* A name in the voxel view: ink on a solid plate in the page colour, with a hairline border and a leader to its object. */
+.sp-plate { fill: var(--sp-surface); stroke: var(--sp-ink); stroke-width: 1px; vector-effect: non-scaling-stroke; }
+.sp-leader { fill: none; stroke: var(--sp-ink); stroke-width: 1px; vector-effect: non-scaling-stroke; }
+.sp-leader-end { fill: var(--sp-ink); }
+.sp-readout { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 0 1rem; margin: 0.75rem 0 0; padding: 0.5rem 0.75rem; border: 1px solid var(--sp-rule); border-radius: 6px; font: 500 var(--sp-text)/1.5 var(--font-mono); }
+/* See .sp-fit in problems.css: the plan is 340 units wide and stops growing at the 34rem height cap. */
+.fit-lod { --fit-min: 7.4px; --fit-line: calc(15.44px - 1.025cqw); --fit-max: 11.9px; }
+/* A label that may lie over lines gets an outline in the background colour, painted under its fill. */
+.sp-fig svg text.sp-halo { paint-order: stroke; stroke: var(--sp-surface); stroke-width: 3px; stroke-linejoin: round; }
+/* The patch of page colour under a name on the plan. */
+.sp-patch { fill: var(--sp-surface); }
+@media (max-width: 40rem) {
+  .sp-readout { grid-template-columns: minmax(0, 1fr); }
+}
+
+/* The resting offset is the static end state: reduced motion drops the animation and the token
+   stays where --rest puts it. The site's .a11y-reduced-motion rule ends the animation after one
+   0.01ms pass, which lands on the same base style. */
+.sp-token { fill: var(--sp-a); stroke: var(--sp-ink); stroke-width: 1.5; offset-rotate: 0deg; offset-distance: var(--rest, 0%); animation: sp-loop 6s linear infinite; }
+.sp-token--once { animation-name: sp-once; }
+@keyframes sp-loop {
+  from { offset-distance: 0%; }
+  to { offset-distance: 100%; }
+}
+@keyframes sp-once {
+  0% { offset-distance: 0%; opacity: 1; }
+  60%, 88% { offset-distance: 100%; opacity: 1; }
+  100% { offset-distance: 100%; opacity: 0; }
+}
+
+/* Pipeline. One 12s cycle: the token reaches the checks at about 35%, is back at the model at
+   about 65% and passes at 86%. Base styles are the end state: token at the checks, pass mark shown. */
+.sp-token--pipe { animation: sp-pipe 12s linear infinite; }
+.sp-mark--fail { opacity: 0; animation: sp-fail 12s linear infinite; }
+.sp-mark--pass { animation: sp-pass 12s linear infinite; }
+@keyframes sp-pipe {
+  0% { offset-distance: 0%; opacity: 1; }
+  86%, 96% { offset-distance: 100%; opacity: 1; }
+  100% { offset-distance: 100%; opacity: 0; }
+}
+@keyframes sp-fail {
+  0%, 34% { opacity: 0; }
+  35%, 65% { opacity: 1; }
+  66%, 100% { opacity: 0; }
+}
+@keyframes sp-pass {
+  0%, 85% { opacity: 0; }
+  86%, 100% { opacity: 1; }
+}
+/* The same pipeline is drawn twice, left to right and top to bottom; the column's width picks one.
+   The row needs 49rem: narrower, its 716 units scale the two-line captions in the boxes under 12px.
+   Type follows .sp-fit (problems.css): 12px where the row takes over, 17px in a 74rem column. */
+.sp-flow { --fit-min: 10.27px; --fit-line: calc(12.41px - 0.181cqw); --fit-max: 11px; }
+/* Two classes each: `.sp-fig svg { display: block }` outranks a single class. */
+.sp-flow .sp-flow-tall { display: none; max-width: 20rem; max-height: none; margin: 0 auto; }
+@container (max-width: 49rem) {
+  .sp-flow .sp-flow-wide { display: none; }
+  .sp-flow .sp-flow-tall { display: block; }
+}
+
+/* data-paused covers the pause button, hover, focus and being off screen. */
+.sp-fig[data-paused] :is(.sp-token, .sp-mark--fail, .sp-mark--pass) { animation-play-state: paused; }
+@media (prefers-reduced-motion: reduce) {
+  .sp-token, .sp-token--pipe, .sp-mark--fail, .sp-mark--pass { animation: none; }
+  .sp-move, .sp-rung, .sp-line, .sp-box, .sp-frame { transition: none; }
+}
+
+.sp-tiers { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 0.3rem 1rem; margin: 0.75rem 0 0; font: 500 var(--sp-text)/1.5 var(--font-mono); }
+.sp-tiers dt { font-weight: 700; }
+.sp-tiers dd { margin: 0; overflow-wrap: anywhere; }
+
+.sp-code { margin: 0; font: 500 0.8rem/1.7 var(--font-mono); white-space: pre-wrap; overflow-wrap: anywhere; }
+.sp-fig svg.sp-thumb { width: 7rem; }
+.sp-hit { background: color-mix(in srgb, var(--sp-a) 30%, transparent); }
+
+.sp-ladder { display: grid; gap: 0.6rem; margin: 0; padding: 0; list-style: none; }
+.sp-rung { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 14rem), 1fr)); gap: 0.6rem 1.5rem; padding: 0.85rem 1rem; border: 2px solid var(--sp-rule); border-radius: 6px; opacity: 0.65; transition: opacity 0.4s; }
+.sp-rung--fit { border-color: var(--sp-a); }
+.sp-rung--on { opacity: 1; }
+/* The call is a figure label, in ink like every other: the page's inline-code chip fell under 3:1 once an idle rung dimmed it. */
+.sp-fig .sp-rung code { padding: 0; background: none; color: inherit; font: 700 0.95rem/1.4 var(--font-mono); overflow-wrap: anywhere; }
+.sp-rung p { margin: 0.2rem 0 0; font: 400 0.95rem/1.45 var(--font-body); }
+.sp-rung p.sp-title { margin: 0; }

@@ -18,6 +18,8 @@
     <script>
       (function () {
         var t = localStorage.theme || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light')
+        // The spatial post opens light whatever the reader's theme; spatial-page.tsx holds the same rule.
+        if (/\/blog\/spatial-comprehension-in-llms/.test(location.pathname)) t = 'light'
         document.documentElement.classList.toggle('dark', t === 'dark')
         // Lets prerendered text that a script will animate start hidden instead of flashing.
         document.documentElement.classList.add('js')

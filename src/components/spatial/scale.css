@@ -1,0 +1,42 @@
+/* Every animation here rests on its end state, so reduced motion (animation: none) and the site's
+   .a11y-reduced-motion rule (one 0.01ms pass) both leave the finished drawing. */
+.sc-dot { fill: var(--sp-a); stroke: var(--sp-ink); stroke-width: 1.5; offset-rotate: 0deg; offset-distance: 100%; animation: sc-go 1.1s ease-in-out both; }
+@keyframes sc-go {
+  from { offset-distance: 0%; }
+}
+
+/* The paths carry pathLength="1", so one dash is the whole line whatever its real length. */
+.sc-draw { stroke-dasharray: 1; animation: sc-draw 1.8s ease-out both; }
+@keyframes sc-draw {
+  from { stroke-dashoffset: 1; }
+}
+
+/* --dx/--dy is the way back from the chip's slot to the inbox at the top of the drawing. */
+.sc-drop { animation: sc-drop 1.3s ease both; }
+@keyframes sc-drop {
+  0% { transform: translate(var(--dx), var(--dy)); opacity: 0; }
+  25%, 45% { transform: translate(var(--dx), var(--dy)); opacity: 1; }
+}
+
+.sc-fade { transition: opacity 0.5s; }
+
+/* The panel in focus takes a heavy ink frame, as a lit box does in the drawings. Dimming the others instead
+   took their grey notes down to 2.7:1 on the light page. */
+.sc-enc { transition: border-color 0.4s, box-shadow 0.4s; }
+.sc-enc--on { border-color: var(--sp-ink); box-shadow: inset 0 0 0 1px var(--sp-ink); }
+.sc-count { margin: 0; font: 400 var(--sp-text)/1.4 var(--font-mono); color: var(--sp-soft); }
+.sc-count strong { margin-right: 0.4rem; font-size: 1.6rem; font-weight: 700; color: var(--sp-ink); }
+.sc-meter { height: 0.6rem; margin: 0.5rem 0 0.9rem; border: 1px solid var(--sp-rule); border-radius: 3px; overflow: hidden; }
+.sc-meter span { display: block; height: 100%; background: var(--sp-a); transform-origin: left; transition: transform 0.9s ease-out; }
+.sc-pieces { display: flex; flex-wrap: wrap; gap: 3px 2px; margin: 0.4rem 0 0; font: 600 var(--sp-text)/1.5 var(--font-mono); }
+.sc-pieces span { min-width: 0.9em; padding: 0 2px; border: 1px solid var(--sp-rule); border-radius: 3px; text-align: center; white-space: pre; }
+.sc-pieces span:nth-child(even) { background: color-mix(in srgb, var(--sp-a) 30%, transparent); }
+
+/* two-loops (figures.tsx): its 30 beats are animation frames, so the "n/30" counter would only flicker. */
+.sp-fig[data-wf-figure='two-loops'] .sp-beat i { display: none; }
+
+.sp-fig[data-paused] :is(.sc-dot, .sc-draw, .sc-drop) { animation-play-state: paused; }
+@media (prefers-reduced-motion: reduce) {
+  .sc-dot, .sc-draw, .sc-drop { animation: none; }
+  .sc-fade, .sc-enc, .sc-meter span { transition: none; }
+}

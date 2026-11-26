@@ -29,6 +29,7 @@ import { MeaningPage } from './meaning-page'
 import { HelloWorldPage } from './hello-world-page'
 import { TextTonePage } from './text-tone-page'
 import { MillenniumPage } from './millennium-page'
+import { SpatialPage } from './spatial-page'
 import { isMeaningSlug } from '../../lib/meaning-data'
 import { OPENJEV_SLUG } from '../../lib/openjev-data'
 import { useLocalePath } from '../../i18n/use-locale-path'
@@ -97,10 +98,10 @@ export default function BlogPost() {
   // functionalist treatment rather than the shared prose shell.
   if (post.slug === 'googles-13-billion-in-finland') return <GridPage post={post} image={image} />
 
-  // The trends piece argues nobody is in a state to read the signal, so it is
   // The chatbot-power estimate sits on Plan A's paper, with a calculator for readers who dispute its inputs.
   if (post.slug === '140-mw-of-chat') return <PaperPage post={post} image={image} figures={CHAT_POWER_FIGURES} head={<ChatPowerDots />} rail={<ChatPowerRail />} />
 
+  // The trends piece argues nobody is in a state to read the signal, so it is
   // served as an onboarding portal that tracks whether you got to the end.
   if (post.slug === 'what-did-we-all-miss') return <PortalPage post={post} image={image} />
 
@@ -118,6 +119,10 @@ export default function BlogPost() {
 
   // The run of AI math results is drawn as a strange attractor that gains a trajectory per result.
   if (post.slug === 'two-millennium-problems-in-one-day') return <MillenniumPage post={post} image={image} />
+
+  // The spatial post is long enough to need chapters: one opens at a time under an
+  // animated hero, and its figures autoplay from src/components/spatial.
+  if (post.slug === 'spatial-comprehension-in-llms') return <SpatialPage post={post} image={image} />
 
   return (
     <>
