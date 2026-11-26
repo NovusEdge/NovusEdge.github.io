@@ -60,8 +60,6 @@
 .fit-sockets { --fit-min: 7.69px; --fit-line: calc(15.47px - 1.034cqw); --fit-max: 12.57px; }
 .fit-room { --fit-min: 9.02px; --fit-line: calc(13.89px - 0.885cqw); --fit-max: 11.41px; }
 .fit-celeste { --fit-min: 7.5px; --fit-line: calc(16.33px - 1.082cqw); --fit-max: 13.3px; }
-/* 11px on a phone, not 12: the slabs are 51 units wide and a seven-letter label at 12px is wider than its box. */
-.fit-slop { --fit-min: 10.63px; --fit-line: calc(12.97px - 0.406cqw); --fit-max: 11.83px; }
 .fit-scaling { --fit-min: 8.5px; --fit-line: calc(16.37px - 1.093cqw); --fit-max: 13.31px; }
 .fit-checks { --fit-min: 10.69px; --fit-line: calc(15.51px - 0.841cqw); --fit-max: 13.15px; }
 .fit-world { --fit-min: 8.75px; --fit-line: calc(16.35px - 1.087cqw); --fit-max: 13.3px; }

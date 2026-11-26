@@ -117,7 +117,7 @@ export function Fig({
   children,
 }: {
   id: string
-  caption: string
+  caption: ReactNode
   labels?: string[]
   rest?: number
   still?: number

@@ -13,5 +13,28 @@
 .fun-dot { fill: var(--sp-a); stroke: var(--sp-ink); stroke-width: 1.5; }
 
 .fun-slop { align-items: center; }
+.sp-fig figcaption a { text-decoration: underline; text-underline-offset: 2px; }
+/* The panel a beat is not about steps back. */
+.fun-ours, .fun-ori { transition: opacity 0.3s; }
+.fun-slop[data-beat="1"] .fun-ori, .fun-slop[data-beat="2"] .fun-ours, .fun-slop[data-beat="3"] .fun-ours { opacity: 0.35; }
+.fun-ori video { transition: filter 0.3s; }
+.fun-slop[data-beat="3"] .fun-ori video { filter: grayscale(1) brightness(0.55); }
+@media (prefers-reduced-motion: reduce) {
+  .fun-ours, .fun-ori, .fun-ori video { transition: none; }
+}
+
+/* Gold with a dark edge, like jump-footage: the footage under the marks does not change with the theme. */
+.fun-ori { overflow: hidden; border-radius: 6px; }
+.fun-ori-marks { position: absolute; inset: 0; pointer-events: none; }
+.fun-ori-marks svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+.fun-ori-marks g, .fun-ori-label { opacity: 0; }
+.fun-ori-marks[data-bash="0"] [data-n="0"], .fun-ori-marks[data-bash="1"] [data-n="1"] { opacity: 1; transition: opacity 0.15s; }
+.fun-ori-marks circle { fill: none; stroke: var(--color-gold); stroke-width: 4; filter: drop-shadow(0 0 1px #000) drop-shadow(0 0 1px #000); }
+.fun-ori-marks path { fill: none; stroke: var(--color-gold); stroke-width: 5; filter: drop-shadow(0 0 1px #000) drop-shadow(0 0 1px #000); }
+.fun-ori-marks marker path { fill: var(--color-gold); stroke: none; }
+.fun-ori-label { position: absolute; }
+.fun-ori-label--left { translate: -100% -50%; }
+.fun-ori-gone { position: absolute; left: 50%; bottom: 0.75rem; translate: -50% 0; opacity: 0; padding: 0.1rem 0.5rem; border: 1px solid var(--sp-ink); border-radius: 3px; background: var(--sp-surface); color: var(--sp-ink); font: 600 var(--sp-text)/1.4 var(--font-mono); white-space: nowrap; pointer-events: none; }
+.fun-ori-gone[data-on] { opacity: 1; transition: opacity 0.3s; }
 /* The ratio is set here, not left to the video, so the panel does not shift while it loads. */
 .fun-video { display: block; width: 100%; height: auto; aspect-ratio: 16 / 9; border-radius: 6px; background: var(--sp-rule); }

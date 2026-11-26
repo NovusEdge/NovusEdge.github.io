@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, type ComponentType } from 'react'
+import { useEffect, useRef, useState, type ComponentType, type RefObject } from 'react'
 import { prefersReducedMotion } from '../../lib/motion'
 import { Fig, FigPause, pace } from './kit'
 import { JumpFootage } from './jump-footage'
@@ -203,88 +203,12 @@ export function CelesteJumpDiagram() {
   )
 }
 
-// From runs/platformer/abstract-0/main.tscn in godot-checks, metres: box centres on the ground
-// plane, the height of each walkable top, and box sizes along x and z. Every slab is 0.4 m thick.
-const SLAB = { w: 3, d: 3, thick: 0.4 }
-const SURFACES = [
-  ...Array.from({ length: 6 }, (_, i) => ({ id: `Stairs_${i + 1}`, x: -5, z: -4.95 - 0.9 * i, top: 0.3 * (i + 1), w: 2, d: 0.9 })),
-  { id: 'Landing', x: -5, z: -11.4, top: 2.1, ...SLAB },
-  { id: 'Platform1', x: -5, z: -16.4, top: 2.6, ...SLAB },
-  { id: 'Platform2', x: -10.5, z: -16.4, top: 2.6, ...SLAB },
-  { id: 'Platform3', x: -10.5, z: -20.9, top: 3.4, ...SLAB },
-  { id: 'Platform4', x: -16.5, z: -20.9, top: 2.9, ...SLAB },
-]
-const START = { x: -5, z: -3 }
-const PLAYER = { speed: 5, jump_velocity: 6, gravity: 15 }
-const REACH = { up: PLAYER.jump_velocity ** 2 / (2 * PLAYER.gravity), across: (PLAYER.speed * 2 * PLAYER.jump_velocity) / PLAYER.gravity }
-
-// Top view turned so the route reads left to right: screen x runs along -z, screen y along -x.
-const K = 17
-const sx = (z: number) => (-z - 3) * K + 12
-const sy = (x: number) => (-x - 3.5) * K + 30
-const BOXES = Object.fromEntries(SURFACES.map((s) => [s.id, { ...s, bx: sx(s.z + s.d / 2), by: sy(s.x + s.w / 2), bw: s.d * K, bh: s.w * K }]))
-const SLABS = SURFACES.filter((s) => s.w === SLAB.w)
-
-// The straight line across the gap between two boxes, and its length in metres. For Landing to
-// Platform2 this gives 3.20, the figure check.json reports for that edge.
-const across = (lo1: number, len1: number, lo2: number, len2: number) => {
-  if (lo1 + len1 < lo2) return [lo1 + len1, lo2]
-  if (lo2 + len2 < lo1) return [lo1, lo2 + len2]
-  const mid = (Math.max(lo1, lo2) + Math.min(lo1 + len1, lo2 + len2)) / 2
-  return [mid, mid]
-}
-function gap(from: string, to: string) {
-  const [a, b] = [BOXES[from], BOXES[to]]
-  const [x1, x2] = across(a.bx, a.bw, b.bx, b.bw)
-  const [y1, y2] = across(a.by, a.bh, b.by, b.bh)
-  return { d: `M${x1.toFixed(1)},${y1.toFixed(1)} L${x2.toFixed(1)},${y2.toFixed(1)}`, metres: Math.hypot(x2 - x1, y2 - y1) / K }
-}
-type Edge = { from: string; to: string; x: number; y: number; anchor: 'start' | 'middle' | 'end' }
-// The order the platforms were built in. Label positions are placed by hand, clear of the boxes.
-const BUILT: Edge[] = [
-  { from: 'Landing', to: 'Platform1', x: 197, y: 22, anchor: 'middle' },
-  { from: 'Platform1', to: 'Platform2', x: 246, y: 106, anchor: 'start' },
-  { from: 'Platform2', to: 'Platform3', x: 278, y: 190, anchor: 'middle' },
-  { from: 'Platform3', to: 'Platform4', x: 310, y: 210, anchor: 'end' },
-]
-// check.json, goal-reachable: "ground -> Stairs_3 -> Stairs_6 -> Landing -> Platform2 -> Platform4".
-const SHORTCUT: Edge[] = [
-  { from: 'Landing', to: 'Platform2', x: 190, y: 112, anchor: 'end' },
-  { from: 'Platform2', to: 'Platform4', x: 268, y: 208, anchor: 'end' },
-]
-const SKIPPED = ['Platform1', 'Platform3']
-const BUILT_GAPS = BUILT.map((edge) => gap(edge.from, edge.to).metres)
-const NOTES = [
-  ['stairs, a landing, 4 platforms', '↑ is the height of each top'],
-  [`jump reach: ${REACH.up.toFixed(1)} m up, ${REACH.across.toFixed(1)} m across`, `all ${BUILT.length} gaps are inside it`],
-  [`fewest jumps: ${SHORTCUT.length}, the prompt asked for ${BUILT.length}`, 'P1 and P3 are never needed'],
-  [`${SLABS.length} slabs, each ${SLAB.w} × ${SLAB.d} × ${SLAB.thick} m`, `gaps from ${Math.min(...BUILT_GAPS).toFixed(1)} to ${Math.max(...BUILT_GAPS).toFixed(1)} m`],
-]
-const short = (id: string) => (id === 'Landing' ? 'landing' : id.replace('Platform', 'P'))
-
-function Jumps({ edges, look, mark = '' }: { edges: Edge[]; look: string; mark?: string | null }) {
-  return edges.map((edge) => {
-    const { d, metres } = gap(edge.from, edge.to)
-    return (
-      <g key={edge.to}>
-        <path className={`sp-line ${look}`} d={d} />
-        {mark !== null && (
-          <text x={edge.x} y={edge.y} textAnchor={edge.anchor} className="sp-small sp-strong">
-            {metres.toFixed(1)} m{mark}
-          </text>
-        )}
-      </g>
-    )
-  })
-}
-
 const DIR = '/assets/blog/spatial/fun'
 
 // Fig puts data-paused on the figure for the pause button, hover, focus and being off screen,
 // so the video follows that attribute.
 // The first change always comes: Fig sets the attribute as soon as it knows motion is allowed.
-function RunVideo() {
-  const ref = useRef<HTMLVideoElement>(null)
+function useFollowFig(ref: RefObject<HTMLVideoElement | null>) {
   const [still, setStill] = useState(false)
   useEffect(() => {
     if (prefersReducedMotion()) return setStill(true)
@@ -294,7 +218,13 @@ function RunVideo() {
     const observer = new MutationObserver(() => (fig.hasAttribute('data-paused') ? video.pause() : video.play().catch(() => {})))
     observer.observe(fig, { attributes: true, attributeFilter: ['data-paused'] })
     return () => observer.disconnect()
-  }, [])
+  }, [ref])
+  return still
+}
+
+function RunVideo() {
+  const ref = useRef<HTMLVideoElement>(null)
+  const still = useFollowFig(ref)
   return (
     // Under reduced motion there is no pause button and nothing autoplays, so the native controls are the only way to watch it.
     <video
@@ -316,75 +246,110 @@ function RunVideo() {
   )
 }
 
-const SLOP_BEATS = ['the level', 'every jump passes its check', 'but the route skips platforms', `and every platform is the same ${SLAB.w} × ${SLAB.d} m`]
+// ori-bash.webm/.mp4 is 6.6 s of the Ginso Tree climb in Ori and the Blind Forest, 960 × 540, no HUD.
+// Times are seconds of the clip and positions are px in its frame, read off frames 66 and 170: the
+// pink shot Ori is bashing, and the way the game's own white arrow points. The camera drifts a
+// little while Ori aims, so each mark sits where the shot is at the middle of its window.
+const BASHES = [
+  { from: 1.7, to: 2.3, slow: [1.9, 2.4], ring: [237, 232], arrow: [265, 232, 415, 232], label: { x: 290, y: 178, side: 'right' } },
+  { from: 5.3, to: 5.85, slow: [5.45, 5.95], ring: [712, 278], arrow: [716, 252, 742, 120], label: { x: 700, y: 140, side: 'left' } },
+] as const
+const RING = 24
+
+function OriClip({ marks }: { marks: boolean }) {
+  const ref = useRef<HTMLVideoElement>(null)
+  const still = useFollowFig(ref)
+  const [bash, setBash] = useState(-1)
+
+  useEffect(() => {
+    const video = ref.current!
+    // The marks follow the frame the video shows. The clip runs at half speed through each Bash so
+    // there is time to read them; requestVideoFrameCallback also fires on seeks while paused.
+    const show = (t: number) => {
+      setBash(BASHES.findIndex((b) => t >= b.from && t <= b.to))
+      video.playbackRate = BASHES.some((b) => t >= b.slow[0] && t <= b.slow[1]) ? 0.5 : 1
+    }
+    let handle = 0
+    const perFrame = 'requestVideoFrameCallback' in video
+    const tick = (_now: number, frame?: VideoFrameCallbackMetadata) => {
+      show(frame?.mediaTime ?? video.currentTime)
+      handle = perFrame ? video.requestVideoFrameCallback(tick) : requestAnimationFrame(tick)
+    }
+    handle = perFrame ? video.requestVideoFrameCallback(tick) : requestAnimationFrame(tick)
+    return () => (perFrame ? video.cancelVideoFrameCallback(handle) : cancelAnimationFrame(handle))
+  }, [])
+
+  return (
+    <div className="sp-media fun-ori">
+      <video
+        ref={ref}
+        className="fun-video"
+        muted
+        playsInline
+        loop
+        controls={still}
+        preload="none"
+        poster={`${DIR}/ori-bash.webp`}
+        width="960"
+        height="540"
+        aria-label="Ori, a small white spirit, climbs a vertical room in the Ginso Tree. A red flower-like enemy at the top left fires glowing pink shots. Ori aims at the first shot and Bashes off it, launching sideways to the next ledge, then Bashes off a second shot to launch upward and climb another level."
+      >
+        <source src={`${DIR}/ori-bash.webm`} type="video/webm" />
+        <source src={`${DIR}/ori-bash.mp4`} type="video/mp4" />
+      </video>
+      <div className="fun-ori-marks" data-bash={marks ? bash : -1} aria-hidden="true">
+        <svg viewBox="0 0 960 540">
+          <defs>
+            <marker id="fun-ori-head" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+              <path d="M0,0 L10,5 L0,10 Z" />
+            </marker>
+          </defs>
+          {BASHES.map((b, i) => (
+            <g key={i} data-n={i}>
+              <circle cx={b.ring[0]} cy={b.ring[1]} r={RING} />
+              <path d={`M${b.arrow[0]},${b.arrow[1]} L${b.arrow[2]},${b.arrow[3]}`} markerEnd="url(#fun-ori-head)" />
+            </g>
+          ))}
+        </svg>
+        {BASHES.map((b, i) => (
+          <span key={i} data-n={i} className={`jf-label fun-ori-label fun-ori-label--${b.label.side}`} style={{ left: `${b.label.x / 9.6}%`, top: `${b.label.y / 5.4}%` }}>
+            Bash off its shot
+          </span>
+        ))}
+      </div>
+      <div className="fun-ori-gone" data-on={!marks ? '' : undefined} aria-hidden="true">
+        no enemy, no shots, no way up
+      </div>
+    </div>
+  )
+}
+
+const SLOP_BEATS = ['both climb to a goal', 'ours: identical blocks, every jump passes its check', "Ori: the way up is the enemy's own shots", 'take the enemy out and that route is gone']
 
 function SlopPlatformer() {
-  const goal = BOXES.Platform4
   return (
     <Fig
       id="slop-platformer"
       labels={SLOP_BEATS}
-      rest={2}
-      // Each beat has a two-line note in the drawing to read, and the clip beside it to glance at.
       ms={pace(SLOP_BEATS, 2800)}
       ownPause
-      caption="The level our abstract-actions run built passes every per-jump check, but two of its four identical platforms can be skipped."
+      caption={
+        <>
+          The level our abstract-actions run built, next to the Ginso Tree in Ori and the Blind Forest, where the way up is the enemy's own projectiles. Footage: Carrot Helper on YouTube. Ori and the Blind Forest © Microsoft Corporation. Used under Microsoft's{' '}
+            <a href="https://www.xbox.com/en-US/developers/rules" target="_blank" rel="noreferrer">
+              Game Content Usage Rules
+            </a>
+            ; not endorsed by or affiliated with Microsoft.
+        </>
+      }
     >
       {(beat) => (
-        <div className="sp-panels fun-slop">
-          <div className="sp-fit fit-slop">
-          <svg
-            viewBox="0 0 360 296"
-            role="img"
-            aria-label={`Top view of the generated level. Six stair steps lead to a landing, then four platforms follow in an L-shaped line with the goal on the last. The landing and all four platforms are identical ${SLAB.w} by ${SLAB.d} metre slabs. The gaps along the built order are ${BUILT_GAPS.map((m) => m.toFixed(1)).join(', ')} metres and each is within the player's jump. A shorter route goes from the landing straight to Platform2 and from there to Platform4, skipping Platform1 and Platform3.`}
-          >
-            <circle className="sp-fill-b" cx={sx(START.z)} cy={sy(START.x)} r="6" />
-            <text x="4" y={sy(START.x) + 30} className="sp-soft sp-small">
-              start
-            </text>
-            <text x={(BOXES.Stairs_1.bx + BOXES.Landing.bx) / 2} y="28" textAnchor="middle" className="sp-soft sp-small">
-              stairs
-            </text>
-            {SURFACES.map((s) => {
-              const box = BOXES[s.id]
-              const slab = s.w === SLAB.w
-              const skipped = beat === 2 && SKIPPED.includes(s.id)
-              const cx = box.bx + box.bw / 2
-              return (
-                <g key={s.id}>
-                  <rect className={!slab ? 'sp-box' : skipped ? 'sp-box sp-dash' : beat === 3 ? 'sp-box sp-tint-a' : 'sp-box sp-tint-b'} x={box.bx} y={box.by} width={box.bw} height={box.bh} />
-                  {slab && (
-                    <>
-                      <text x={cx} y={box.by + 16} textAnchor="middle" className="sp-small sp-strong">
-                        {short(s.id)}
-                      </text>
-                      <text x={cx} y={box.by + 44} textAnchor="middle" className={beat === 3 ? 'sp-small sp-strong' : 'sp-small sp-soft'}>
-                        {beat === 3 ? `${s.w} × ${s.d} m` : skipped ? 'skipped' : `↑ ${s.top.toFixed(1)} m`}
-                      </text>
-                    </>
-                  )}
-                </g>
-              )
-            })}
-            <rect className="fun-dot" x={goal.bx + goal.bw / 2 - 5} y={goal.by + goal.bh / 2 - 5} width="10" height="10" />
-            {/* Under its box: beside it the word ran into the note on the left. */}
-            <text x={goal.bx + goal.bw / 2} y={goal.by + goal.bh + 13} textAnchor="middle" className="sp-soft sp-small">
-              goal
-            </text>
-            {beat === 1 && <Jumps edges={BUILT} look="" mark=" ✓" />}
-            {beat === 2 && <Jumps edges={BUILT} look="sp-faint sp-dash" mark={null} />}
-            {beat === 2 && <Jumps edges={SHORTCUT} look="sp-stroke-a sp-heavy" />}
-            {NOTES[beat].map((line, i) => (
-              <text key={line} x="12" y={246 + i * 16} className={i === 0 ? 'sp-small sp-strong' : 'sp-small sp-soft'}>
-                {line}
-              </text>
-            ))}
-          </svg>
-          </div>
-          <div className="sp-media">
+        <div className="sp-panels fun-slop" data-beat={beat}>
+          <div className="sp-media fun-ours">
             <FigPause />
             <RunVideo />
           </div>
+          <OriClip marks={beat !== 3} />
         </div>
       )}
     </Fig>
