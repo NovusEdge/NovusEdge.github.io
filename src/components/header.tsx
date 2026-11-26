@@ -17,7 +17,15 @@ const links = [
 function ThemeToggle() {
   const { t } = useTranslation()
   const [dark, setDark] = useState(false)
-  useEffect(() => setDark(document.documentElement.classList.contains('dark')), [])
+  // Some pages set or clear the class themselves after the header has mounted, so the glyph
+  // follows the class instead of remembering what it was at mount.
+  useEffect(() => {
+    const check = () => setDark(document.documentElement.classList.contains('dark'))
+    check()
+    const observer = new MutationObserver(check)
+    observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] })
+    return () => observer.disconnect()
+  }, [])
 
   return (
     <Magnetic range={40}>
@@ -27,7 +35,6 @@ function ThemeToggle() {
         onClick={() => {
           const isDark = document.documentElement.classList.toggle('dark')
           localStorage.theme = isDark ? 'dark' : 'light'
-          setDark(isDark)
         }}
       >
         {dark ? '「日」' : '「月」'}
