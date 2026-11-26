@@ -1,0 +1,23 @@
+.jf { position: relative; overflow: hidden; border-radius: 6px; }
+/* The ratio is set here, not left to the video, so the figure does not shift while it loads. */
+.jf video, .jf img { display: block; width: 100%; height: auto; aspect-ratio: 16 / 9; background: var(--sp-rule); }
+
+/* Marks leave at once: they go when the clip loops back to a frame with nothing to mark. */
+.jf-scene { position: absolute; inset: 0; pointer-events: none; opacity: 0; }
+.jf-scene[data-on] { opacity: 1; transition: opacity 0.2s; }
+.jf-scene > * { position: absolute; }
+
+/* Gold with a dark edge in both themes: the footage under the marks does not change with the theme. */
+.jf-rule { border-left: 3px dashed var(--color-gold); translate: -1.5px 0; filter: drop-shadow(0 0 1px #000) drop-shadow(0 0 1px #000); }
+.jf-dot { width: 0.7rem; height: 0.7rem; translate: -50% -50%; border: 2px solid #111; border-radius: 50%; background: var(--color-gold); }
+.jf-window { border: 2px solid var(--color-gold); background: color-mix(in srgb, var(--color-gold) 55%, transparent); box-shadow: 0 0 0 1px #111; transform-origin: left; }
+
+.sp-fig .jf-beat { margin-top: 0.7rem; }
+
+.jf-label { translate: 0 -50%; padding: 0.1rem 0.4rem; border: 1px solid var(--sp-ink); border-radius: 3px; background: var(--sp-surface); color: var(--sp-ink); font: 600 var(--sp-text)/1.4 var(--font-mono); white-space: nowrap; }
+.jf-label--mid { translate: -50% -50%; }
+.jf-label--left { translate: -100% -50%; }
+.jf-label b { font-weight: 700; }
+@media (prefers-reduced-motion: reduce) {
+  .jf-scene[data-on] { transition: none; }
+}

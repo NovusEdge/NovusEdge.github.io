@@ -121,7 +121,7 @@ export default function App() {
       </Routes>
       {Agentation && (
         <Suspense fallback={null}>
-          <Agentation />
+          <Agentation webhookUrl={import.meta.env.VITE_AGENTATION_WEBHOOK} />
         </Suspense>
       )}
     </ClickSpark>

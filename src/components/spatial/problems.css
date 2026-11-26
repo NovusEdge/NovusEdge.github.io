@@ -1,0 +1,67 @@
+/* plate-layers: one short motion per beat, so each label has something happening under it.
+   Every base style is the end state: with the animation dropped the part sits where the beat leaves it. */
+.pl-drop { animation: pl-drop 0.7s ease-in both; }
+@keyframes pl-drop {
+  0% { transform: translateY(-22px); opacity: 0; }
+  25% { opacity: 1; }
+  55% { transform: translateY(0); }
+  72% { transform: translateY(-6px); }
+  100% { transform: translateY(0); }
+}
+.pl-in { animation: pl-in 0.4s ease-out both; }
+@keyframes pl-in {
+  from { opacity: 0; }
+}
+/* 8 is one period of .sp-dash, so the loop has no seam. */
+.pl-ants { animation: pl-ants 0.5s linear infinite; }
+@keyframes pl-ants {
+  to { stroke-dashoffset: -8; }
+}
+/* The door tries and stays shut. It starts after the trigger has faded in: cause, then effect. */
+.pl-rattle { animation: pl-rattle 0.5s ease-in-out 0.7s both; }
+@keyframes pl-rattle {
+  0%, 60%, 100% { transform: translateX(0); }
+  30% { transform: translateX(-5px); }
+  80% { transform: translateX(-3px); }
+}
+/* Opaque, so the open door disappears behind it, and darker than the surface so it reads as solid. */
+.pl-wall { fill: color-mix(in srgb, var(--sp-ink) 14%, var(--sp-surface)); }
+.pl-slide { transition: transform 0.8s ease-in-out; }
+.pl-fade { transition: opacity 0.8s ease-in-out; }
+/* The delay lets the overlap flash first. */
+.pl-door { transition: transform 0.6s ease 0.45s; }
+.pl-hit { fill: var(--sp-a); animation: pl-hit 0.45s ease-in-out infinite alternate; }
+@keyframes pl-hit {
+  from { opacity: 0.15; }
+}
+
+.sp-fig[data-paused] :is(.pl-drop, .pl-in, .pl-ants, .pl-rattle, .pl-hit) { animation-play-state: paused; }
+@media (prefers-reduced-motion: reduce) {
+  .pl-drop, .pl-in, .pl-ants, .pl-rattle, .pl-hit { animation: none; }
+  .pl-slide, .pl-door, .pl-fade { transition: none; }
+}
+
+/* Label size. SVG text scales with its drawing, so type drawn at 12 units for a phone renders at
+   20 to 33px in a desktop column. Inside .sp-fit the font size, in viewBox units, falls as the
+   container widens, which holds rendered labels near 12px on a phone and at 15 to 18px on a desktop.
+   Each line runs from (phone width, 12px) to (the desktop column or the width where the drawing stops
+   growing, 17 to 18px);
+   --fit-min and --fit-max are those two ends divided by the drawing's scale there. Change a viewBox
+   and its numbers need redoing. */
+.sp-fit { container-type: inline-size; }
+.sp-fig .sp-fit svg, .sp-fig .sp-fit svg text.sp-small { font-size: clamp(var(--fit-min), var(--fit-line), var(--fit-max)); }
+.fit-facts { --fit-min: 10.5px; --fit-line: calc(15.38px - 0.814cqw); --fit-max: 12.6px; }
+.fit-plate { --fit-min: 5.47px; --fit-line: calc(15.49px - 0.846cqw); --fit-max: 12.6px; }
+.fit-pivot { --fit-min: 9.4px; --fit-line: calc(15.55px - 1.06cqw); --fit-max: 12.2px; }
+.fit-frames { --fit-min: 8.5px; --fit-line: calc(15.54px - 1.036cqw); --fit-max: 12px; }
+/* A figure's one emphasised value keeps its step up from the labels. */
+.sp-fig .sp-fit svg text.sp-mark { font-size: calc(1.33 * clamp(var(--fit-min), var(--fit-line), var(--fit-max))); }
+.fit-loops { --fit-min: 9.88px; --fit-line: calc(15.22px - 0.97cqw); --fit-max: 12.5px; }
+.fit-sockets { --fit-min: 7.69px; --fit-line: calc(15.47px - 1.034cqw); --fit-max: 12.57px; }
+.fit-room { --fit-min: 9.02px; --fit-line: calc(13.89px - 0.885cqw); --fit-max: 11.41px; }
+.fit-celeste { --fit-min: 7.5px; --fit-line: calc(16.33px - 1.082cqw); --fit-max: 13.3px; }
+.fit-scaling { --fit-min: 8.5px; --fit-line: calc(16.37px - 1.093cqw); --fit-max: 13.31px; }
+.fit-checks { --fit-min: 10.69px; --fit-line: calc(15.51px - 0.841cqw); --fit-max: 13.15px; }
+.fit-world { --fit-min: 8.75px; --fit-line: calc(16.35px - 1.087cqw); --fit-max: 13.3px; }
+/* 406 units tall, so the height cap stops it at 1.34 times its phone size: one size gives 12px there and 16.9px on a desktop. */
+.fit-adapters { --fit-min: 12.6px; --fit-line: 12.6px; --fit-max: 12.6px; }

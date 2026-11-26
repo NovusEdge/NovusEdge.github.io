@@ -1,0 +1,30 @@
+.sp-clip { position: relative; margin-bottom: 0.75rem; }
+.sp-clip video, .sp-clip img { display: block; width: 100%; height: auto; aspect-ratio: 16 / 9; border-radius: 4px; background: var(--sp-rule); }
+
+/* A grid item's default min-width is its content's, which lets a long stats line push the slide wider than the column. */
+.sp-slides > * { min-width: 0; }
+
+/* Fixed in the frame: the orbit turns the house about its own centre, so the roof stays inside this box for the whole loop.
+   Re-render the video with a different camera and these four numbers have to be measured again. */
+.sp-ring { position: absolute; left: 33%; top: 31%; width: 36%; height: 28%; border: 2.5px dashed var(--sp-a); border-radius: 6px; opacity: 0; transition: opacity 0.3s; }
+.sp-ring[data-on] { opacity: 1; }
+.sp-ring span { position: absolute; left: -2.5px; bottom: calc(100% + 6px); padding: 0.1rem 0.45rem; border-radius: 3px; border: 1px solid var(--sp-ink); background: var(--sp-surface); font: 600 var(--sp-text)/1.4 var(--font-mono); white-space: nowrap; }
+
+.sp-status { margin: 0.75rem 0 0; padding-top: 0.6rem; border-top: 1px solid var(--sp-rule); font: 600 var(--sp-text)/1.7 var(--font-mono); }
+.sp-note { margin: 0.9rem 0 0; font: 500 var(--sp-text)/1.5 var(--font-mono); color: var(--sp-soft); }
+.sp-chart-title { margin-top: 1.5rem; }
+
+/* Charts with no viewBox: x positions are percentages and y positions are pixels, so the bars
+   fill the column at any width and the type is the size every HTML label has. */
+.sp-fig svg.sp-fixed { height: var(--h); max-height: none; overflow: visible; }
+.sp-fig svg.sp-fixed, .sp-fig svg.sp-fixed text.sp-small { font-size: var(--sp-text); }
+
+.sp-grow { transform-box: fill-box; transform-origin: left center; animation: sp-grow 0.9s ease both; }
+@keyframes sp-grow {
+  from { transform: scaleX(0); }
+}
+.sp-fig[data-paused] .sp-grow { animation-play-state: paused; }
+@media (prefers-reduced-motion: reduce) {
+  .sp-grow { animation: none; }
+  .sp-ring { transition: none; }
+}

@@ -1,0 +1,156 @@
+/* Page chrome for the spatial post. Every colour comes from these properties, which map to the
+   site tokens. .spp-top is portalled to <body>, outside .spp, so it carries the .spp class too. */
+.spp {
+  --spp-ink: var(--color-charcoal);
+  --spp-paper: var(--color-bone);
+  --spp-tint: var(--color-bone-tint);
+  --spp-gold: var(--color-gold);
+  /* Gold dark enough to read as text on bone; the same value the body's italics use. */
+  --spp-gold-ink: #8a6116;
+  /* 68%, the figures' --sp-soft: at 62% this text fell under 4.5:1 on the tinted boxes. */
+  --spp-soft: color-mix(in srgb, var(--spp-ink) 68%, transparent);
+  --spp-rule: color-mix(in srgb, var(--spp-ink) 16%, transparent);
+}
+.dark .spp {
+  --spp-ink: var(--color-bone);
+  --spp-paper: var(--color-charcoal);
+  --spp-tint: var(--color-charcoal-tint);
+  --spp-gold-ink: var(--color-gold);
+}
+
+/* The site footer is charcoal on every page. This post opens light, so here the footer takes the
+   page's theme: bone in light, and the site's own charcoal in dark. The utilities being overridden
+   are the footer's bone-on-charcoal text colours. */
+.spp-page:not(.dark) .site-footer { border-top: 1px solid color-mix(in srgb, var(--color-charcoal) 16%, transparent); background-color: var(--color-bone); color: var(--color-charcoal); }
+.spp-page:not(.dark) .site-footer .footer-word { color: color-mix(in srgb, var(--color-charcoal) 7%, transparent); }
+.spp-page:not(.dark) .site-footer :is(a, p)[class*='text-bone'] { color: color-mix(in srgb, var(--color-charcoal) 70%, transparent); }
+.spp-page:not(.dark) .site-footer a[class*='decoration-bone'] { text-decoration-color: color-mix(in srgb, var(--color-charcoal) 30%, transparent); }
+
+.spp-kicker { font: 500 0.75rem/1.3 var(--font-mono); letter-spacing: 0.2em; text-transform: uppercase; color: var(--spp-soft); }
+
+.spp-psa { display: flex; gap: 1.25rem; align-items: baseline; margin: -1rem 0 1rem; padding: 0.9rem 1.25rem; border: 1px solid var(--spp-rule); border-radius: 6px; background: var(--spp-tint); }
+.spp-psa .spp-kicker { flex: none; color: var(--spp-gold-ink); }
+.spp-psa p { margin: 0; max-width: 62rem; font: 400 1rem/1.55 var(--font-body); color: var(--spp-ink); text-wrap: pretty; }
+@media (max-width: 40rem) { .spp-psa { flex-direction: column; gap: 0.4rem; } }
+
+.spp-head { margin-bottom: 2.5rem; }
+.spp-head h1 { margin: 1rem 0 0; font: 400 clamp(2.75rem, 7.5vw, 6.5rem)/0.98 var(--font-display); letter-spacing: -0.02em; text-wrap: balance; }
+.spp-head p { margin: 1.5rem 0 0; font: 400 clamp(1.1rem, 1.8vw, 1.5rem)/1.45 var(--font-body); color: var(--spp-soft); text-wrap: pretty; }
+
+/* 4.5rem a row keeps the eight titles at a readable size without a scrollbar inside the menu. */
+.spp-menu { height: 36rem; margin: 3.5rem 0 5rem; border-block: 1px solid var(--spp-rule); scroll-margin-top: 6rem; outline: none; font-family: var(--font-display); }
+/* The menu sizes its titles from the row height and keeps them on one line, which cuts long titles
+   off on a narrow screen. There the title gets a fixed size and may wrap; two lines fit the 4.5rem row.
+   The rows cannot grow instead: FlowingMenu gives them size containment. */
+@media (max-width: 48rem) {
+  .spp-menu .fm-label { min-width: 0; font-size: 1.2rem; line-height: 1.15; white-space: normal; text-wrap: balance; }
+}
+.spp-menu:focus-visible { outline: 2px solid var(--spp-gold); outline-offset: 4px; }
+/* The row number is set as a kicker. The component's own is the display face at half opacity, about 2.5:1 here. */
+.spp-menu .fm-index { opacity: 1; color: var(--spp-soft); font: 500 0.75rem/1 var(--font-mono); letter-spacing: 0.1em; }
+.spp-menu [aria-current] .fm-index { color: var(--spp-gold-ink); }
+/* A wrapped title fills its line, which leaves the open chapter's dot stranded at the far edge of the row.
+   The gold row number already marks the open chapter. */
+@media (max-width: 48rem) {
+  .spp-menu .fm-dot { display: none; }
+}
+
+.spp-chapter { scroll-margin-top: 6rem; }
+.spp-chapter-head { position: relative; display: grid; gap: 0.9rem; margin: 0 0 3rem; padding-top: 1.5rem; }
+.spp-chapter-head::before { content: ''; position: absolute; inset: 0 0 auto; height: 1px; background: var(--spp-rule); transform-origin: left; }
+.spp-chapter-head .spp-kicker { color: var(--spp-gold-ink); }
+/* One step under the hero title at every width; at 5.5vw it was the larger of the two at 1280. */
+.spp-chapter-head h2 { margin: 0; font: 400 clamp(2.1rem, 4.4vw, 4rem)/1.04 var(--font-display); letter-spacing: -0.02em; color: var(--spp-ink); text-wrap: balance; }
+.spp-chapter-head h2 span { display: inline-block; }
+/* A chapter that opens on a subsection: the head's own margin is the gap. */
+.spp-chapter-head + h3 { margin-top: 0; }
+
+/* An opening chapter draws its rule, then sets its title a word at a time. Closed chapters are
+   display:none, so the animations start over each time one is shown. */
+@media (prefers-reduced-motion: no-preference) {
+  html:not(.a11y-reduced-motion) .spp-chapter-head::before { animation: spp-draw 0.9s cubic-bezier(0.2, 0.9, 0.2, 1) backwards; }
+  html:not(.a11y-reduced-motion) .spp-chapter-head h2 span { animation: spp-rise 0.7s cubic-bezier(0.2, 0.9, 0.2, 1) backwards; animation-delay: calc(0.12s + var(--i) * 0.06s); }
+  /* backwards, not both: a finished animation that still fills keeps each figure in its own stacking context. */
+  html:not(.a11y-reduced-motion) .spp-chapter-head ~ * { animation: spp-fade 0.6s 0.25s ease-out backwards; }
+}
+@keyframes spp-draw { from { transform: scaleX(0); } }
+@keyframes spp-rise { from { opacity: 0; transform: translateY(0.4em); } }
+@keyframes spp-fade { from { opacity: 0; } }
+
+/* Prose rules below sit on :where() selectors in the typography plugin, so one class is enough to override them. */
+.spp-body a { text-decoration-color: var(--spp-gold); text-underline-offset: 0.18em; transition: color 0.15s; }
+.spp-body a:hover { color: var(--spp-gold-ink); }
+/* A display equation wider than a phone scrolls inside its own box instead of widening the page. */
+.spp-body .katex-display { overflow: auto hidden; padding-block: 0.25rem; }
+.spp-body :not(pre) > code { padding: 0.12em 0.4em; border-radius: 4px; background: var(--spp-tint); color: var(--spp-ink); font: 500 0.86em var(--font-mono); }
+.spp-body :not(pre) > code::before, .spp-body :not(pre) > code::after { content: none; }
+.spp-body pre { border: 1px solid var(--spp-rule); border-radius: 6px; background: var(--spp-tint); color: var(--spp-ink); font: 500 0.82em/1.7 var(--font-mono); }
+.spp-body pre code { color: inherit; }
+
+.spp-tag { display: inline; padding: 0.1em 0.5em; border: 1px solid var(--spp-gold); border-radius: 4px; color: var(--spp-gold-ink); font: 500 0.72em/1.5 var(--font-mono); -webkit-box-decoration-break: clone; box-decoration-break: clone; }
+
+.spp-pending { margin: 2.5rem 0; padding: 1.5rem 1.75rem; border-radius: 6px; background: var(--spp-tint); }
+.spp-pending p { margin: 0.6rem 0 0; font: 400 1rem/1.5 var(--font-body); color: var(--spp-soft); }
+
+/* Small and to the side: the chapter's opening paragraphs run beside it. No frame, and the paper is
+   the page's own, so only the figure's dots show. 720/668 is the picture's ratio. */
+.spp-reveal { float: right; width: clamp(10rem, 20vw, 15rem); margin: 0.5rem 0 1.25rem 2.5rem; }
+.spp-reveal > div { aspect-ratio: 720 / 668; overflow: hidden; background: var(--spp-paper); }
+.spp-reveal figcaption { margin-top: 0.5rem; font: 400 0.75rem/1.4 var(--font-body); color: var(--spp-soft); }
+.spp-body .sp-fig, .spp-body .spp-pending, .spp-next { clear: both; }
+@media (max-width: 40rem) {
+  /* A float this narrow leaves the paragraph three words a line. Here it is a row of its own:
+     the picture, with the credit beside it. */
+  .spp-reveal { float: none; display: flex; align-items: end; gap: 1rem; width: auto; margin: 0 0 1.5rem; }
+  .spp-reveal > div { flex: none; width: 7.5rem; }
+  .spp-reveal figcaption { margin: 0 0 0.25rem; }
+}
+
+.spp-next { display: grid; grid-template-columns: minmax(0, 1fr) auto auto; align-items: end; gap: 0.75rem 2rem; width: 100%; margin: 5rem 0 0; padding: 1.75rem 0 0; border: 0; border-top: 1px solid var(--spp-rule); background: none; color: var(--spp-ink); text-align: left; cursor: pointer; }
+.spp-next .spp-kicker { grid-area: 1 / 1; }
+.spp-next b { grid-area: 2 / 1; }
+.spp-next svg { grid-area: 2 / 3; }
+.spp-next b { font: 400 clamp(1.6rem, 3.2vw, 2.75rem)/1.08 var(--font-display); letter-spacing: -0.02em; text-wrap: balance; transition: color 0.2s; }
+/* The arrow is as tall as one line of the title beside it. Gold-ink, not gold: the arrow is the
+   control's only graphic, and plain gold on bone is about 2.2:1. */
+.spp-next svg { width: clamp(1.6rem, 3.2vw, 2.75rem); height: clamp(1.6rem, 3.2vw, 2.75rem); color: var(--spp-gold-ink); transition: translate 0.25s ease; }
+.spp-next:hover svg, .spp-next:focus-visible svg { translate: 0.4rem 0; }
+.spp-next:hover b, .spp-next:focus-visible b { color: var(--spp-gold-ink); }
+
+/* The next chapter's render, the one its menu row carries, under a grid of paper tiles. Hover or
+   focus clears the tiles in a scattered order. A screen that cannot hover gets the picture uncovered. */
+/* It spans the kicker's row too, so a picture taller than one line of title does not push the two apart. */
+.spp-peek { display: grid; grid-template: repeat(5, 1fr) / repeat(8, 1fr); grid-area: 1 / 2 / span 2 / 3; height: clamp(3.25rem, 6.4vw, 5.5rem); aspect-ratio: 16 / 9; overflow: hidden; border: 1px solid var(--spp-rule); border-radius: 6px; background: var(--spp-tint) center / cover; }
+.spp-peek i { background: var(--spp-paper); opacity: 0.72; transition: opacity 0.18s calc(var(--r) * 9ms); }
+.spp-next:hover .spp-peek i, .spp-next:focus-visible .spp-peek i { opacity: 0; }
+@media (hover: none) {
+  .spp-peek i { opacity: 0; }
+}
+@media (max-width: 40rem) {
+  .spp-peek { display: none; }
+  .spp-next { grid-template-columns: minmax(0, 1fr) auto; }
+  .spp-next svg { grid-area: 2 / 2; }
+}
+.spp-next:focus-visible { outline: 2px solid var(--spp-gold); outline-offset: 6px; }
+
+.spp-end { display: flex; justify-content: center; margin-top: 3rem; }
+
+.spp-pill { display: inline-flex; align-items: center; gap: 0.5em; padding: 0.7rem 1.2rem; border: 1px solid var(--spp-ink); border-radius: 999px; background: var(--spp-ink); color: var(--spp-paper); font: 500 0.75rem/1 var(--font-mono); letter-spacing: 0.2em; text-transform: uppercase; cursor: pointer; transition: background-color 0.2s, color 0.2s, border-color 0.2s; }
+.spp-pill svg { width: 1.25em; height: 1.25em; }
+.spp-pill:hover, .spp-pill:focus-visible { border-color: var(--spp-gold); background: var(--spp-gold); color: var(--color-charcoal); }
+.spp-pill:focus-visible { outline: 2px solid var(--spp-gold); outline-offset: 3px; }
+
+.spp-top { position: fixed; bottom: 1.5rem; left: 50%; z-index: 40; translate: -50% 0; box-shadow: 0 6px 24px rgb(0 0 0 / 0.18); transition: background-color 0.2s, color 0.2s, border-color 0.2s, opacity 0.25s, visibility 0s; }
+/* visibility, not only opacity: a hidden pill must also leave the tab order. Its switch waits for the fade out. */
+.spp-top[data-off] { opacity: 0; visibility: hidden; transition: opacity 0.25s, visibility 0s 0.25s; }
+/* A reader the mood model reads as lost: the same pill, in gold, so the way back stands out. */
+.spp-top[data-mood='lost'] { border-color: var(--spp-gold); background: var(--spp-gold); color: var(--color-charcoal); box-shadow: 0 0 0 4px color-mix(in srgb, var(--spp-gold) 30%, transparent), 0 6px 24px rgb(0 0 0 / 0.18); }
+
+/* The pill is mounted only once the menu has scrolled away, so its arrival fades too. */
+@starting-style {
+  .spp-top { opacity: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .spp-next svg, .spp-next b, .spp-peek i, .spp-body a, .spp-pill, .spp-top, .spp-top[data-off] { transition: none; }
+}

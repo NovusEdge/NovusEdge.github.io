@@ -1,0 +1,32 @@
+/* relation-view: one plan and one text block. Every transition rests on the state its beat ends in. */
+.rv { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 20rem), 1fr)); gap: 1rem 2.5rem; align-items: center; }
+/* The plan is 340 units wide: capped here, its 12-unit type renders near 17px on a desktop and 12.5px on a phone. */
+.sp-fig .rv-plan { max-width: 30rem; margin: 0 auto; }
+.rv-wall { fill: var(--sp-rule); }
+.rv-pivot { fill: var(--sp-a); stroke: var(--sp-ink); stroke-width: 1.5; }
+.rv-ink { fill: var(--sp-ink); }
+.rv-fade { transition: opacity 0.5s ease; }
+/* The path carries pathLength="1", so one dash is the whole line. */
+.rv-draw { stroke-dasharray: 1; transition: stroke-dashoffset 0.9s ease-out, opacity 0.4s ease; }
+/* The turn waits until the chair's front mark has faded in at yaw 0. */
+.rv-turn { transition: transform 1.2s ease-in-out 0.6s, opacity 0.4s ease; }
+@media (prefers-reduced-motion: reduce) {
+  .rv-fade, .rv-draw, .rv-turn { transition: none; }
+}
+
+.rv-text { font: 500 var(--sp-text)/1.65 var(--font-mono); }
+.rv-raw { white-space: pre; }
+.rv-text .sp-sum { margin: 0; }
+/* KaTeX draws a root sign as an SVG sized by its own rules, which `.sp-fig svg` would otherwise replace. */
+.rv-text .katex svg { height: inherit; max-height: none; }
+.rv-note { margin: 0.7rem 0 0; font: 400 0.95rem/1.45 var(--font-body); color: var(--sp-soft); }
+.rv-note b { color: var(--sp-ink); font-weight: 600; }
+/* The key column keeps the block's own spacing; a long row wraps inside its value column. */
+.rv-row { display: grid; grid-template-columns: auto minmax(0, 1fr); }
+.rv-row > :first-child { white-space: pre; }
+/* One relation never breaks across lines, so its highlight stays in one piece. */
+.rv-item { white-space: nowrap; }
+.rv-vs { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.4rem 1.5rem; align-items: end; }
+.rv-vs p { margin: 0; }
+.rv-vs strong { font-weight: 700; }
+.sp-fig svg.rv-glyph { width: min(100%, 7.5rem); margin-bottom: 0.5rem; }
