@@ -80,7 +80,7 @@ const RUNS = [
     id: 'plate-puzzle',
     name: 'Plate puzzle',
     runs: [
-      { seconds: 463, tokens: 44879, cost: 2.24, checks: "13 of 14: the trigger covers 18% of the plate's mesh" },
+      { seconds: 463, tokens: 44879, cost: 2.24, checks: "13 of 14: the trigger covers 18% of the plate (still works in play)" },
       { seconds: 84, tokens: 8099, cost: 0.59, checks: '14 of 14' },
     ],
   },
@@ -175,7 +175,7 @@ function Runs() {
   )
 }
 
-const RATES = [0.4, 0.89]
+const RATES = [0.65, 0.98]
 const ATTEMPTS = RATES.map((p) => 1 / p)
 const approx = (n: number) => (+n.toFixed(2) === n ? `${n}` : `≈${n.toFixed(2)}`)
 const FEWER = `≈${Math.round((1 - ATTEMPTS[1] / ATTEMPTS[0]) * 100)}% fewer attempts`
@@ -252,7 +252,7 @@ function ValidBroken() {
       // The clip is a slow orbit: a beat shorter than this changes before the roof has come round.
       ms={pace(BROKEN_BEATS, 2600)}
       ownPause
-      caption="In this recreation of the house from the intro, the lopsided roof is one valid transform line and the scene loads without an error."
+      caption="In this mock-up of the house from the intro, the lopsided roof is one valid transform line and the scene loads without an error."
     >
       {(beat) => (
         <div className="sp-panels">

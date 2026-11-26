@@ -187,7 +187,7 @@ function ObjectFacts() {
       labels={FACTS}
       rest={3}
       ms={pace(FACTS)}
-      caption="One crate's facts sit in four places across two files, and a scene description usually carries only the first."
+      caption="One crate's facts sit in four places across two files, so an agent has to open all four to know what the crate does."
     >
       {(beat) => (
         <div className="sp-fit fit-facts">

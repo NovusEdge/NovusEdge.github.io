@@ -82,15 +82,17 @@ function Adapters() {
 const K = 8
 const pairs = (n: number) => (n * (n - 1)) / 2
 const nearest = (n: number) => n * K
-// Both axes are logarithmic: a decade of n is 146 px and a decade of relations is 40 px.
-const nx = (n: number) => 48 + (Math.log10(n) - 1) * 146
-const ry = (v: number) => 216 - (Math.log10(v) - 1) * 40
+// Linear axes on purpose: on log axes both curves are straight lines and the square stops looking like one.
+const N_MAX = 1000
+// One empty step above 499,500 so its value label sits between gridlines.
+const Y_MAX = 600_000
+const Y_STEP = 100_000
+const nx = (n: number) => 48 + (n / N_MAX) * 292
+const ry = (v: number) => 216 - (v / Y_MAX) * 196
 const curve = (f: (n: number) => number) =>
-  Array.from({ length: 25 }, (_, i) => 10 ** (1 + i / 12))
+  Array.from({ length: 41 }, (_, i) => (i * N_MAX) / 40)
     .map((n, i) => `${i ? 'L' : 'M'}${nx(n).toFixed(1)},${ry(f(n)).toFixed(1)}`)
     .join(' ')
-// n(n−1)/2 = 8n when n − 1 = 16.
-const EVEN = 2 * K + 1
 const SCALING_BEATS = ['every pair: n(n−1)/2', `nearest neighbours only: n·k, k = ${K}`, `at 1,000 objects: ${num(pairs(1000))} against ${num(nearest(1000))}`]
 
 function Scaling() {
@@ -111,17 +113,17 @@ function Scaling() {
             // 14 units of headroom: the axis title and the top value sit above the 1M gridline.
             viewBox="0 -14 360 272"
             role="img"
-            aria-label={`Relations to compute against the number of objects, from 10 to 1,000, both on logarithmic axes. Every pair: ${num(pairs(100))} at 100 objects and ${num(pairs(1000))} at 1,000. Nearest ${K} neighbours only: ${num(nearest(100))} at 100 objects and ${num(nearest(1000))} at 1,000. The two are equal at ${EVEN} objects.`}
+            aria-label={`Relations to compute against the number of objects, from 0 to 1,000, on linear axes. Every pair curves up steeply: ${num(pairs(100))} at 100 objects, ${num(pairs(500))} at 500 and ${num(pairs(1000))} at 1,000. Nearest ${K} neighbours only stays almost flat along the bottom: ${num(nearest(1000))} at 1,000 objects.`}
           >
-            {['10', '100', '1k', '10k', '100k', '1M'].map((label, i) => (
-              <g key={label}>
-                <path className="sp-line sp-faint" d={`M48,${216 - i * 40} H340`} />
-                <text x="42" y={220 - i * 40} textAnchor="end" className="sp-soft sp-small">
-                  {label}
+            {Array.from({ length: Y_MAX / Y_STEP + 1 }, (_, i) => i * Y_STEP).map((v) => (
+              <g key={v}>
+                <path className="sp-line sp-faint" d={`M48,${ry(v)} H340`} />
+                <text x="42" y={ry(v) + 4} textAnchor="end" className="sp-soft sp-small">
+                  {v ? `${v / 1000}k` : '0'}
                 </text>
               </g>
             ))}
-            {[10, 100, 1000].map((n) => (
+            {[0, 250, 500, 750, 1000].map((n) => (
               <text key={n} x={nx(n)} y="233" textAnchor="middle" className="sp-soft sp-small">
                 {num(n)}
               </text>
@@ -144,25 +146,18 @@ function Scaling() {
             </g>
             <path className={`sp-line sp-heavy${beat === 0 ? ' sc-draw' : ''}`} pathLength="1" d={curve(pairs)} />
             <path className={`sp-line sp-stroke-a sp-heavy${beat === 1 ? ' sc-draw' : ''}`} pathLength="1" d={curve(nearest)} style={near} />
-            {[100, 1000].map((n) => (
-              <g key={n}>
-                <path className="sp-line sp-dash pl-ants" d={`M${nx(n)},${ry(pairs(n))} V${ry(nearest(n))}`} style={{ visibility: beat === 2 ? 'visible' : 'hidden' }} />
-                <circle className="sp-box" cx={nx(n)} cy={ry(pairs(n))} r="4" />
-                {/* Offsets keep each value clear of its own line and of the gridlines. */}
-                <text x={nx(n) - (n === 100 ? 16 : 8)} y={ry(pairs(n)) - (n === 100 ? 0 : 18)} textAnchor="end" className="sp-strong">
-                  {num(pairs(n))}
-                </text>
-                <g style={near}>
-                  <circle className="sp-box sp-tint-a" cx={nx(n)} cy={ry(nearest(n))} r="4" />
-                  <text x={n === 100 ? nx(n) + 8 : nx(n) - 6} y={ry(nearest(n)) + (n === 100 ? 18 : 24)} textAnchor={n === 100 ? 'start' : 'end'} className="sp-strong">
-                    {num(nearest(n))}
-                  </text>
-                </g>
-              </g>
-            ))}
-            <text x={nx(EVEN) + 10} y={ry(pairs(EVEN)) + 20} className="sp-soft sp-small" style={near}>
-              equal at n = {EVEN}
+            <path className="sp-line sp-dash pl-ants" d={`M${nx(N_MAX)},${ry(pairs(N_MAX))} V${ry(nearest(N_MAX))}`} style={{ visibility: beat === 2 ? 'visible' : 'hidden' }} />
+            <circle className="sp-box" cx={nx(N_MAX)} cy={ry(pairs(N_MAX))} r="4" />
+            <text x={nx(N_MAX) - 10} y={ry(pairs(N_MAX)) - 10} textAnchor="end" className="sp-strong">
+              {num(pairs(N_MAX))}
             </text>
+            <g style={near}>
+              <circle className="sp-box sp-tint-a" cx={nx(N_MAX)} cy={ry(nearest(N_MAX))} r="4" />
+              {/* Above the near-flat line, so the value never sits on it or on the axis labels. */}
+              <text x={nx(N_MAX) - 10} y={ry(nearest(N_MAX)) - 10} textAnchor="end" className="sp-strong">
+                {num(nearest(N_MAX))}
+              </text>
+            </g>
           </svg>
           </div>
         )
@@ -181,7 +176,7 @@ const CHECKS: { lines: string[]; lane: keyof typeof LANES; y: number; label: str
   { lines: ['inside-room'], lane: 'code', y: 188, label: 'inside-room: deterministic code' },
   { lines: ['facing'], lane: 'code', y: 220, label: 'facing: deterministic code' },
   { lines: ['trigger-matches-mesh'], lane: 'code', y: 252, label: 'trigger-matches-mesh: deterministic code' },
-  { lines: ['compile check', 'Roslyn, no engine'], lane: 'code', y: 284, label: 'compile check: Roslyn, before anything touches the engine' },
+  { lines: ['compile + analyzers', 'Roslyn, no engine'], lane: 'code', y: 284, label: 'compile and analyzer checks: Roslyn, before anything touches the engine' },
   { lines: ['“does this look', 'like a kitchen?”'], lane: 'model', y: 124, label: '“does this look like a kitchen?”: the one model call' },
 ]
 const INBOX = { x: 180, y: 8 }
