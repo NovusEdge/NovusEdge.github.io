@@ -52,7 +52,7 @@ Screenshots don't help much either. If the door's shut in an image, the image ca
 
 ### Setting up the math
 
-Arithmetic itself is fucking trivial for these models, you just give them a Python runtime and they'll add floats as well as anything else does. Being able to do arithmetic doesn't mean the model understands the numbers though, or what they say about a particular object: how big it is, where its edges are, which side is its top. The hard part is knowing which numbers go into the sum in the first place.
+Arithmetic itself is trivial for these models, you just give them a Python runtime and they'll add floats as well as anything else does. Being able to do arithmetic doesn't mean the model understands the numbers though, or what they say about a particular object: how big it is, where its edges are, which side is its top. The hard part is knowing which numbers go into the sum in the first place.
 
 To put a roof on four walls you need the wall positions and heights, which face of a wall counts as its top, the roof's own size, where its pivot is, maybe a rotation, and which way is up in this engine. Which way is up isn't even the same between engines: Godot and Unity are $+y$ up, Unreal is $+z$ up and works in centimetres, and Godot calls $-z$ forward while Unity calls $+z$ forward. Godot's primitive meshes are centred on their origin too, so a box you want sitting on the ground needs lifting by half its height, and a roof dropped at wall height sinks halfway into the walls.
 
