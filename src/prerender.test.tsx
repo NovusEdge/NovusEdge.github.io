@@ -110,7 +110,7 @@ describe('structured data', () => {
     const page = await prerender({ url: '/' })
     const elements = [...page.head.elements]
 
-    expect(page.head.title).toBe('Aliasgar Khimani | NovusEdge | Systems Architect')
+    expect(page.head.title).toBe('Aliasgar Khimani | NovusEdge | Founding-style engineer, agent systems')
     expect(graphNode(elements, 'WebSite')).toMatchObject({ name: 'Aliasgar Khimani', url: 'https://khimani.dev/' })
     expect(graphNode(elements, 'Person')).toMatchObject({ '@id': PERSON_ID, name: 'Aliasgar Khimani', alternateName: 'NovusEdge' })
     expect(graphNode(elements, 'WebPage')).toMatchObject({ mainEntity: { '@id': PERSON_ID } })

@@ -342,7 +342,7 @@ export default function PortfolioIndex() {
 
   return (
     <main ref={scope} className="relative bg-charcoal text-bone">
-      <Meta title={t('portfolio.title')} description="Projects and builds, from AI memory to forkbombs." />
+      <Meta title={t('portfolio.title')} description="Projects by Aliasgar Khimani: docket and other agent infrastructure, Claude Code tools, research code, and earlier security work." />
       <HeroBackground />
       <MarginQuote lines={POEM_LINES} translation={POEM_EN} side="right" />
 

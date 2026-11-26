@@ -58,7 +58,7 @@ export default function BlogIndex() {
 
   return (
     <>
-      <Meta title={t('blog.title')} description="Weekly notes, CTF writeups, and Linux journeys." />
+      <Meta title={t('blog.title')} description="Essays by Aliasgar Khimani on AI agents, research, energy, governance and security, plus older CTF writeups and tutorials." />
       <SideFlourish variant={2} /> {/* Kana */}
       <section ref={scope} className="relative mx-auto max-w-4xl px-6 pb-24 pt-36">
         <TopFlourish variant={0} stats={stats} /> {/* Readout */}
