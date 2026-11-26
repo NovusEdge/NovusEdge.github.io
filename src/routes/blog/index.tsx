@@ -60,7 +60,9 @@ export default function BlogIndex() {
     <>
       <Meta title={t('blog.title')} description="Weekly notes, CTF writeups, and Linux journeys." />
       <SideFlourish variant={2} /> {/* Kana */}
-      <section ref={scope} className="relative mx-auto max-w-4xl px-6 pb-24 pt-36">
+      {/* revealBlogList parks every other row 52px to the right until it scrolls in, which widened the page on phones.
+          Only below lg: from lg up the JP label hangs outside the section and clipping would cut it. */}
+      <section ref={scope} className="relative mx-auto max-w-4xl px-6 pb-24 pt-36 max-lg:overflow-x-clip">
         <TopFlourish variant={0} stats={stats} /> {/* Readout */}
         <div data-reveal className="flex flex-col gap-6 md:flex-row md:items-baseline md:justify-between">
           <div className="relative">
@@ -137,7 +139,7 @@ export default function BlogIndex() {
                     </div>
                   )
                 }
-                if (post.slug === '140-mw-of-chat' && img) {
+                if ((post.slug === '140-mw-of-chat' || post.slug === 'spatial-comprehension-in-llms') && img) {
                   return (
                     <div key={post.slug}>
                       <PlanACard post={post} img={img} clip={null} dayOf={dayOf} monthOf={monthOf} />
