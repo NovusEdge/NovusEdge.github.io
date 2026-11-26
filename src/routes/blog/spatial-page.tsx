@@ -241,6 +241,15 @@ export function SpatialPage({ post, image }: { post: Post; image?: string | null
         </Magnetic>
       </nav>
 
+      <aside data-wf-region="psa" className="spp-psa">
+        <span className="spp-kicker">PSA</span>
+        <p>
+          I'm very opinionated about this one. If you think the way to go is just slapping on a better model, or leaning on whatever the model can already do
+          natively, you can kindly fuck off :) Even when a model is already good at something, we should still be trying to make it more efficient, because why
+          the fuck not?
+        </p>
+      </aside>
+
       <SpatialHero title={post.title} description={post.description} date={post.date} />
 
       <article
